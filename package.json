@@ -15,7 +15,6 @@
     "@prismicio/react": "^2.7.3",
     "@react-three/drei": "^9.102.6",
     "@react-three/fiber": "^8.16.0",
-    "@tailwindcss/typography": "^0.5.10",
     "@types/three": "^0.162.0",
     "clsx": "^2.1.0",
     "gsap": "^3.12.5",
@@ -27,6 +26,7 @@
   },
   "devDependencies": {
     "@slicemachine/adapter-next": "^0.3.38",
+    "@tailwindcss/typography": "^0.5.11",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
