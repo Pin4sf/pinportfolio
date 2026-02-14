@@ -1,42 +1,75 @@
 import type { Metadata } from "next";
-import { Urbanist } from "next/font/google";
-import "./globals.css";
-import Header from "./components/header";
-import Footer from "./components/Footer";
-import clsx from "clsx";
-import { PrismicPreview } from "@prismicio/next";
-import { CreateClient } from "@prismicio/client";
-import { createClient,repositoryName } from "@/prismicio";
+import { Inter, Instrument_Serif, JetBrains_Mono } from "next/font/google";
+import "./globals.scss";
+import { siteConfig } from "@/data/portfolio";
+import ClientShell from "./components/ClientShell";
 
-const urbanist = Urbanist({ subsets: ["latin"] });
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
+  display: "swap",
+});
 
-export async function generateMetadata(): Promise<Metadata> {
-    const client = createClient();
-    const settings = await client.getSingle("settings")
+const instrumentSerif = Instrument_Serif({
+  subsets: ["latin"],
+  weight: "400",
+  variable: "--font-instrument-serif",
+  display: "swap",
+});
 
-    return {
-        title: "Shivansh Fulper",
-        description: "Shivansh Fulper's Portfolio",
-    };
-}
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
+  variable: "--font-jetbrains-mono",
+  display: "swap",
+});
 
-
+export const metadata: Metadata = {
+  title: siteConfig.title,
+  description: siteConfig.description,
+  keywords: siteConfig.keywords,
+  authors: [{ name: siteConfig.author }],
+  metadataBase: new URL(siteConfig.url),
+  openGraph: {
+    title: siteConfig.title,
+    description: siteConfig.description,
+    url: siteConfig.url,
+    siteName: siteConfig.author,
+    images: [siteConfig.ogImage],
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: siteConfig.title,
+    description: siteConfig.description,
+  },
+  icons: {
+    icon: [
+      { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+      { url: "/favicon-96x96.png", sizes: "96x96", type: "image/png" },
+    ],
+    apple: "/apple-icon-180x180.png",
+  },
+};
 
 export default function RootLayout({
-    children,
+  children,
 }: Readonly<{
-    children: React.ReactNode;
+  children: React.ReactNode;
 }>) {
-    return (
-        <html lang="en" className="bg-slate-900 text-slate-100">
-            <body className={clsx(urbanist.className, "relative min-h-screen")}>
-                <Header />
-                {children}
-                <Footer />
-                <div className="background-gradient absolute inset-0 -z-50 max-h-screen"></div>
-                <div className="absolute pointer-events-none insert-0 -z-40 h-full bg-[url('/noisetexture.jpg')] opacity-20 mix-blend-soft-light"></div>
-            </body>
-            <PrismicPreview repositoryName={ repositoryName } />
-        </html>
-    );
+  return (
+    <html
+      lang="en"
+      className={`${inter.variable} ${instrumentSerif.variable} ${jetbrainsMono.variable}`}
+    >
+      <body>
+        <a href="#main-content" className="sr-only" style={{ position: 'absolute', top: 0, left: 0, zIndex: 9999, padding: '1rem', background: 'var(--accent)', color: 'var(--bg-primary)' }}>
+          Skip to content
+        </a>
+        <ClientShell>
+          {children}
+        </ClientShell>
+      </body>
+    </html>
+  );
 }

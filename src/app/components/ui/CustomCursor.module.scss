@@ -1,0 +1,55 @@
+.trailCanvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 9998;
+
+  @media (pointer: coarse) {
+    display: none;
+  }
+}
+
+.dot,
+.ring {
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 9999;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+
+  @media (pointer: coarse) {
+    display: none;
+  }
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  background: #6cff8d;
+  transition: background 0.3s ease;
+}
+
+.ring {
+  width: 40px;
+  height: 40px;
+  border: 1.5px solid rgba(108, 255, 141, 0.5);
+  mix-blend-mode: difference;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.label {
+  font-family: var(--font-mono);
+  font-size: 0.5625rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #6cff8d;
+  white-space: nowrap;
+  opacity: 0;
+  transform: scale(0.8);
+  pointer-events: none;
+}

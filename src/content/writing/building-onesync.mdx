@@ -1,0 +1,47 @@
+---
+title: "Building OneSync: From Biosignals to Cognitive Readiness"
+date: "2026-01-15"
+category: "building"
+description: "What I learned building a cognitive performance platform — from biosignal processing to making invisible data actionable for high-pressure teams."
+featured: true
+---
+
+# Building OneSync: From Biosignals to Cognitive Readiness
+
+When we started OneSync, the pitch was simple: what if you could know whether someone is cognitively ready before they make a high-stakes decision? The execution was anything but simple.
+
+## The Gap Nobody Talks About
+
+A pilot sleeps seven hours, passes a medical check, and still makes a bad call. Three days of accumulated stress have degraded their cognitive function in ways no fitness tracker can detect. Heart rate at 72 and a "good" sleep score tell you nothing about whether someone can think clearly under pressure right now.
+
+Consumer wearables track fitness. Medical devices work in controlled labs. Nothing practical sits in the middle — and that's where the real decisions happen.
+
+## What We're Building
+
+OneBand is a wristband that reads multiple biosignals — heart rhythm variability, galvanic skin response, motion patterns, muscle tension — and cross-references them to produce a cognitive readiness index.
+
+```
+Biosignals → Signal Processing → Feature Extraction → AI Model → Readiness Score
+```
+
+The key insight: the system stays quiet when it's not confident. In environments where a bad call has real consequences, showing nothing is better than a false green light.
+
+## The Technical Challenge
+
+Biosignal processing at the edge is hard. You're dealing with noisy data from sensors that move with the body, ambient interference, and the fundamental challenge of inferring cognitive state from peripheral physiological signals.
+
+We process raw signals on-device for latency-sensitive features and stream aggregated data to the cloud for the heavier ML inference. The AI layer builds a personal digital twin — learning individual baselines so that "normal" for one person isn't confused with "stressed" for another.
+
+## Lessons So Far
+
+**Trust before features.** We're building for institutions — defense units, training academies, elite sports teams. These organizations can't afford false signals. Earning trust means being honest about uncertainty, not just optimizing for accuracy metrics.
+
+**The hardest part isn't the AI.** It's the hardware-software integration. Getting reliable biosignal readings from a wristband form factor while someone is physically active requires mechanical engineering, signal processing, and ML to work in concert.
+
+**Ship the dashboard before the device.** We started by building the team-facing dashboard first — using simulated data — to validate that coaches and training officers actually wanted the readiness scores we were designing. They did, but they also wanted features we hadn't considered.
+
+## What's Next
+
+Hardware prototyping is underway. Early concept testing with athletes is providing the ground truth data we need to train the readiness models. The team is small — four of us with backgrounds spanning biosensing, AI systems, manufacturing, and product design.
+
+This is the hardest thing I've ever worked on. It's also the most meaningful.

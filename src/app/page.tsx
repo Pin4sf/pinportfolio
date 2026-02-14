@@ -1,22 +1,68 @@
-import { Metadata } from "next";
-import { SliceZone } from "@prismicio/react";
-import { CreateClient } from "@prismicio/client";
-import { createClient } from "@/prismicio" 
-import { components } from "@/slices";
+import dynamic from "next/dynamic";
 
-export default async function Page() {
-  const client = createClient();
-  const page = await client.getSingle("homepage");
+// Dynamic imports for client components — avoid SSR for GSAP/Three.js
+const LoadingScreen = dynamic(
+  () => import("./components/LoadingScreen"),
+  { ssr: false }
+);
+const SmoothScroll = dynamic(
+  () => import("./components/SmoothScroll"),
+  { ssr: false }
+);
+const Header = dynamic(
+  () => import("./components/layout/Header"),
+  { ssr: false }
+);
+const Hero = dynamic(
+  () => import("./components/sections/Hero"),
+  { ssr: false }
+);
+const SelectedWork = dynamic(
+  () => import("./components/sections/SelectedWork"),
+  { ssr: false }
+);
+const About = dynamic(
+  () => import("./components/sections/About"),
+  { ssr: false }
+);
+const Writing = dynamic(
+  () => import("./components/sections/Writing"),
+  { ssr: false }
+);
+const SkillsExperience = dynamic(
+  () => import("./components/sections/SkillsExperience"),
+  { ssr: false }
+);
+const Timeline = dynamic(
+  () => import("./components/sections/Timeline"),
+  { ssr: false }
+);
+const Contact = dynamic(
+  () => import("./components/sections/Contact"),
+  { ssr: false }
+);
+const Footer = dynamic(
+  () => import("./components/sections/Footer"),
+  { ssr: false }
+);
 
-  return <SliceZone slices={page.data.slices} components={components} />;
-}
-
-export async function generateMetadata(): Promise<Metadata> {
-  const client = createClient();
-  const page = await client.getSingle("homepage");
-
-  return {
-    title: page.data.meta_title,
-    description: page.data.meta_description,
-  };
+export default function Page() {
+  return (
+    <>
+      <LoadingScreen />
+      <Header />
+      <SmoothScroll>
+        <main id="main-content">
+          <Hero />
+          <SelectedWork />
+          <About />
+          <Writing />
+          <Timeline />
+          <SkillsExperience />
+          <Contact />
+        </main>
+        <Footer />
+      </SmoothScroll>
+    </>
+  );
 }

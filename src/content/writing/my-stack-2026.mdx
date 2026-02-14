@@ -1,0 +1,47 @@
+---
+title: "My Stack in 2026: What I Use and Why"
+date: "2026-01-05"
+category: "technical"
+description: "A breakdown of the tools, frameworks, and workflows I use daily — from LLM pipelines to agentic systems — and the reasoning behind each choice."
+featured: true
+---
+
+# My Stack in 2026: What I Use and Why
+
+Every engineer has opinions about their tools. Here are mine — not because they're the "best," but because they match how I think and what I build.
+
+## Frontend
+
+**Next.js 14 + TypeScript** is my default for anything web. The App Router and server components give me the rendering flexibility I need. Static generation for portfolios, SSR for dynamic apps, API routes when I need a quick backend.
+
+**GSAP** for animation. CSS transitions handle the basics, but when you need scroll-linked reveals, complex timelines, or physics-based motion, nothing touches GSAP. ScrollTrigger alone is worth it.
+
+**Three.js + GLSL** when a project calls for 3D. Custom shaders give pixel-level control. I pair it with `postprocessing` for bloom, chromatic aberration, and other effects.
+
+## AI / ML
+
+This is where most of my time goes now.
+
+**Python** is the backbone — LangChain for LLM orchestration, FastAPI for serving, PyTorch for anything custom. I've built RAG pipelines, agentic workflows, and fine-tuning loops all in Python.
+
+**Vector databases** — Pinecone for production, ChromaDB for prototyping. The choice matters less than your chunking strategy and embedding model selection.
+
+**LLM APIs** — Claude for reasoning-heavy tasks, GPT-4 for general use, open-source models (Mistral, Llama) when I need to run inference locally or fine-tune.
+
+## Infrastructure
+
+**Docker** for everything. I don't trust "it works on my machine" and neither should you.
+
+**Vercel** for frontend deployments — zero-config, instant previews, edge functions. **Railway** or **Fly.io** for backend services that need persistent connections or GPU access.
+
+**MongoDB** for document storage when schemas are evolving. **PostgreSQL** when I need relational integrity. **Redis** for caching, rate limiting, and pub/sub.
+
+## Dev Environment
+
+**VS Code** with Vim keybindings. **Claude Code** as my AI pair programmer. **Git** with conventional commits. **Figma** for design — I believe engineers should be able to design, even if they're not designers.
+
+## The Philosophy
+
+I optimize for iteration speed over theoretical purity. The best stack is the one that lets you ship fast, learn from users, and change direction without rewriting everything.
+
+I don't chase trends. I adopt tools when they solve a problem I actually have, not because Twitter said I should.

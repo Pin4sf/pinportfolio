@@ -1,0 +1,166 @@
+.hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1.5rem;
+  overflow: hidden;
+  background: radial-gradient(
+    ellipse at 50% 50%,
+    rgba(108, 255, 141, 0.04) 0%,
+    var(--bg-primary) 70%
+  );
+
+  @media (min-width: 768px) {
+    padding: 2rem 5rem;
+  }
+}
+
+.particles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.particle {
+  position: absolute;
+  border-radius: 50%;
+  background: var(--accent);
+  opacity: 0;
+  box-shadow: 0 0 8px rgba(108, 255, 141, 0.4);
+}
+
+.glow {
+  position: absolute;
+  width: 700px;
+  height: 700px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(108, 255, 141, 0.08) 0%,
+    rgba(108, 255, 141, 0.03) 40%,
+    transparent 70%
+  );
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.content {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  text-align: center;
+}
+
+/* Character-level text for magnetic effect */
+.name {
+  font-family: var(--font-display);
+  font-size: clamp(3.5rem, 12vw, 10rem);
+  font-weight: 400;
+  line-height: 1;
+  color: var(--text-heading);
+  margin-bottom: 1.5rem;
+  letter-spacing: -0.03em;
+}
+
+.charWrap {
+  display: inline-block;
+  overflow: visible;
+  padding: 0.1em 0;
+}
+
+.char {
+  display: inline-block;
+  will-change: transform;
+  transition: color 0.3s ease;
+}
+
+.charSpace {
+  display: inline-block;
+  width: 0.25em;
+}
+
+.tagline {
+  font-family: var(--font-body);
+  font-size: clamp(1rem, 2.2vw, 1.35rem);
+  font-weight: 400;
+  color: var(--text-secondary);
+  margin-bottom: 0.5rem;
+  letter-spacing: 0.06em;
+}
+
+.subtitle {
+  font-family: var(--font-mono);
+  font-size: clamp(0.75rem, 1.3vw, 0.875rem);
+  font-weight: 400;
+  color: var(--text-tertiary);
+  letter-spacing: 0.04em;
+}
+
+.socials {
+  position: absolute;
+  bottom: 3rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  z-index: 1;
+}
+
+.socialLink {
+  color: var(--text-secondary);
+  transition: color 0.3s ease, transform 0.3s ease;
+
+  &:hover {
+    color: var(--accent);
+    transform: translateY(-2px);
+  }
+}
+
+.scrollIndicator {
+  position: absolute;
+  bottom: 3rem;
+  right: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  z-index: 1;
+
+  @media (min-width: 768px) {
+    right: 5rem;
+  }
+}
+
+.scrollLine {
+  display: block;
+  width: 1px;
+  height: 40px;
+  background: var(--text-tertiary);
+  animation: scrollPulse 2s ease-in-out infinite;
+}
+
+.scrollText {
+  font-size: 0.6875rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  writing-mode: vertical-rl;
+}
+
+@keyframes scrollPulse {
+  0%, 100% {
+    opacity: 0.3;
+    transform: scaleY(0.6);
+    transform-origin: top;
+  }
+  50% {
+    opacity: 1;
+    transform: scaleY(1);
+  }
+}

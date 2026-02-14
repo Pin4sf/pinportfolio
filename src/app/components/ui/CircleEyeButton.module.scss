@@ -1,0 +1,71 @@
+.coolCircleEyeButton {
+  position: relative;
+  display: inline-block;
+
+  .textcircle {
+    display: block;
+    width: 250px;
+    animation: rotatte 6s infinite linear;
+
+    text {
+      font-size: 34px;
+      font-weight: 400;
+      text-transform: uppercase;
+      fill: #000000;
+    }
+  }
+
+  &:hover {
+    text {
+      font-weight: 700;
+    }
+
+    .eye__inner,
+    .eye__iris,
+    .eye__lashesUp {
+      animation: hide 2s step-end infinite;
+    }
+
+    .eye__lashesDown {
+      animation: show 2s step-end infinite;
+    }
+  }
+}
+
+.eye {
+  position: absolute;
+  width: 60px;
+  height: 60px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  &__outer,
+  &__inner,
+  &__lashesUp,
+  &__lashesDown {
+    stroke: #000;
+    fill: none;
+    stroke-width: 1.5px;
+  }
+
+  &__lashesDown {
+    opacity: 0;
+  }
+}
+
+@keyframes rotatte {
+  to {
+    transform: rotate(-360deg);
+  }
+}
+
+@keyframes hide {
+  0% { opacity: 0; }
+  10% { opacity: 1; }
+}
+
+@keyframes show {
+  0% { opacity: 1; }
+  10% { opacity: 0; }
+}

@@ -1,0 +1,117 @@
+.loading {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: var(--bg-primary);
+  display: grid;
+  place-items: center;
+  clip-path: inset(0 0 0 0);
+}
+
+.inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+/* Hand seal area */
+.sealArea {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  margin-bottom: 0.5rem;
+}
+
+.seal {
+  position: absolute;
+  inset: 0;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+}
+
+.activeSeal {
+  display: flex !important;
+}
+
+.sealIcon {
+  width: 64px;
+  height: 64px;
+  color: var(--accent);
+  filter: drop-shadow(0 0 12px rgba(108, 255, 141, 0.3));
+
+  svg {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.sealInfo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.sealKanji {
+  font-size: 0.9375rem;
+  color: var(--text-heading);
+  opacity: 0.6;
+}
+
+.sealName {
+  font-size: 0.6875rem;
+  font-family: var(--font-mono);
+  color: var(--text-tertiary);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* Counter */
+.counter {
+  font-family: var(--font-display);
+  color: var(--text-heading);
+}
+
+.number {
+  font-size: clamp(3rem, 8vw, 5rem);
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+
+/* Progress bar */
+.bar {
+  width: 120px;
+  height: 1px;
+  background: var(--border-subtle);
+  overflow: hidden;
+}
+
+.barFill {
+  height: 100%;
+  background: var(--accent);
+  transition: width 0.05s linear;
+}
+
+/* Seal sequence dots */
+.dots {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.25rem;
+}
+
+.dotIndicator {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--border-visible);
+  transition: background 0.2s ease, box-shadow 0.2s ease;
+}
+
+.dotActive {
+  background: var(--accent);
+  box-shadow: 0 0 6px rgba(108, 255, 141, 0.4);
+}
