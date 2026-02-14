@@ -137,7 +137,7 @@ export const aboutData: AboutData = {
 As CTO of OneSync, I'm building the intelligence layer that turns wearable biosignals into cognitive readiness scores. I also co-founded EcoFresh Greensync — a decentralized waste-to-value infrastructure company with 3 IP discoveries and recognition at the Hult Prize. At Atlan, I build AI-native developer agents. At Soket AI Labs, I built multilingual dataset pipelines for Indic LLM training.
 
 I'm a final-year B.Tech student at IIITDM Jabalpur. I think in systems. I ship fast. And I'd rather fail at 20 than wait until I'm "qualified."`,
-  photo: "/images/expme/me1.png",
+  photo: "/Shivansh.png",
   facts: [
     { label: "Location", value: "Nagpur, India" },
     { label: "Education", value: "B.Tech '26, IIITDM Jabalpur" },
@@ -154,7 +154,7 @@ export const caseStudies: CaseStudy[] = [
     slug: "onesync",
     name: "OneSync",
     tagline: "Beyond vital signs. Into the mind.",
-    heroImage: "/images/projects/4.png",
+    heroImage: "/images/projects/onesync.png",
     role: "Co-Founder & CTO",
     timeline: "2026 — Present",
     techStack: ["AI/ML", "Biosignal Processing", "Edge Computing", "React", "TypeScript"],
@@ -167,7 +167,7 @@ export const caseStudies: CaseStudy[] = [
       "We built OneBand — a wristband that reads multiple body signals (heart rhythm, skin response, motion, muscle tension) and cross-checks them to produce a cognitive readiness index. The system stays quiet when it's not confident — in environments where a bad call has real consequences, showing nothing is better than a false green light. Built for institutions from day one: training academies, defense units, elite sports teams. Dashboards designed around how teams actually operate, not just how individuals track personal fitness.",
     solution:
       "OneSync is a cognitive performance platform. OneBand captures biosignals 24/7 and an AI interpretation layer translates raw data into readiness scores, recovery trends, and actionable guidance. Think of it as a fuel gauge for the brain — not a diagnosis, not a mood ring, just a reliable indicator that a coach, training officer, or team lead can glance at and act on. The system builds a personal digital twin that learns individual baselines and adapts over time.",
-    solutionImages: ["/images/projects/4.png"],
+    solutionImages: ["/images/projects/onesync.png"],
     impact:
       "Active development with hardware prototyping underway. Early concept testing with athletes. Team of 4 (CEO, CTO, COO, CPO) with backgrounds spanning biosensing, AI systems, manufacturing, and product hardware. Pursuing HIPAA and FDA compliance pathways.",
     reflection:
@@ -178,7 +178,7 @@ export const caseStudies: CaseStudy[] = [
     slug: "ecofresh",
     name: "EcoFresh Greensync",
     tagline: "Waste-to-value infrastructure. No segregation required.",
-    heroImage: "/images/projects/6.png",
+    heroImage: "/images/projects/ecofresh.png",
     role: "Co-Founder",
     timeline: "Nov 2025 — Present",
     techStack: ["AI/ML", "Polymer Modeling", "Bio-processing", "Catalytic Systems"],
@@ -191,7 +191,7 @@ export const caseStudies: CaseStudy[] = [
       "We designed modular Eco-Converter units that accept mixed municipal solid waste as-is and process it through staged biological and catalytic pathways. No dependency on perfect segregation, no reliance on continuous skilled manpower, no silent failure modes. The first high-value output pathway is PHA-class biodegradable polymers, with secondary streams like bio-fertilizer and eco-composites.",
     solution:
       "EcoFresh Greensync is a decentralized waste-to-value infrastructure company. Eco-Converters deploy at the point of waste generation — institutions, municipal zones, campuses, hospitals — and convert mixed waste into standardized, recoverable outputs. AI modeling is used to explore biodegradable material design and bridge computational discovery with real-world processing constraints.",
-    solutionImages: ["/images/projects/6.png"],
+    solutionImages: ["/images/projects/ecofresh.png"],
     impact:
       "Registered as EcoFresh Greensync LLP. MSME (Udyam) registered as Micro Enterprise. Incubated at IIITDM Jabalpur under the Institution's Innovation Council (Ministry of Education). 16th among 2,500+ teams at Hult Prize, IIT Bombay. National recognition from Ministry of Education. 3 IP discoveries with patent filing procedures documented for Indian Patent Office and international PCT routes.",
     reflection:
