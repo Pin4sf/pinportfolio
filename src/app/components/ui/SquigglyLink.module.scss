@@ -1,0 +1,27 @@
+.coolFunnyLink {
+  position: relative;
+  font-family: "Comic Neue", sans-serif;
+  font-size: 18px;
+  font-weight: 500;
+
+  svg {
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    stroke-width: 2px;
+    width: 98px;
+
+    path {
+      stroke-dasharray: 1;
+      stroke-dashoffset: 1;
+      transition: stroke-dashoffset 0.3s cubic-bezier(0.7, 0, 0.3, 1);
+    }
+  }
+
+  &:hover {
+    svg path {
+      stroke-dashoffset: 0;
+      transition-timing-function: cubic-bezier(0.8, 1, 0.7, 1);
+    }
+  }
+}

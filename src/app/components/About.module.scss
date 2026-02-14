@@ -1,0 +1,157 @@
+.experties {
+  background: var(--darkish-blue);
+  color: #fff;
+}
+
+.expertiesHeader {
+  padding: 2rem 0;
+}
+
+.instructor {
+  position: relative;
+
+  &Curve {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(108, 255, 140, 0.15);
+    width: 30%;
+    height: 120%;
+    border-radius: 50%;
+    transform: rotate(-20deg);
+    box-shadow: 0 8px 32px 0 var(--box-shadow-blue2);
+  }
+
+  &Infos {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    font-size: 17px;
+    font-family: monospace;
+  }
+
+  &Img {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 50%;
+    border-right: 2px solid var(--green);
+    border-left: 2px solid red;
+  }
+
+  &Col {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  &Info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+}
+
+.swiperWrapper {
+  padding: 2rem 0;
+}
+
+.review {
+  position: relative;
+  display: flex;
+  font-size: 20px;
+  padding: 5px;
+
+  &Card {
+    position: relative;
+    width: 100%;
+    padding: 2rem 0;
+    display: flex;
+  }
+
+  &Topborder {
+    width: 100%;
+    height: 1px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: #fff;
+  }
+
+  &Text {
+    span {
+      font-family: "Amatic SC", cursive;
+      font-stretch: expanded;
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--green);
+
+      @media (max-width: 600px) {
+        font-size: 28px;
+        font-weight: 400;
+        font-stretch: condensed;
+      }
+    }
+
+    i {
+      font-family: "Amatic SC", cursive;
+      font-stretch: expanded;
+      font-size: 40px;
+      font-weight: 700;
+      color: var(--green);
+    }
+
+    h3 {
+      font-family: "Montserrat Alternates", sans-serif;
+      font-size: 22px;
+      font-weight: 400;
+      color: teal;
+    }
+  }
+}
+
+.techList {
+  background-color: #000;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin: 20px auto;
+  max-width: 700px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 20px;
+
+  ul {
+    list-style: none;
+    padding: 0;
+    color: #fff;
+  }
+
+  li::before {
+    content: "\2022";
+    color: #4caf50;
+    font-weight: bold;
+    display: inline-block;
+    width: 1em;
+    margin-left: -1em;
+  }
+}
+
+/* Swiper overrides - scoped under .experties */
+.experties {
+  :global(.swiper) {
+    user-select: none;
+  }
+
+  :global(.swiper-slide) {
+    filter: blur(2px);
+    transform: scale(0.5);
+    transition: all 0.2s;
+  }
+
+  :global(.swiper-slide-active) {
+    filter: blur(0) !important;
+    transform: scale(1);
+  }
+}

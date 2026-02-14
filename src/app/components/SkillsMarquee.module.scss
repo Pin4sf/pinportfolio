@@ -1,0 +1,44 @@
+.skills {
+  background: var(--yellow);
+  padding: 2rem 0;
+  overflow: hidden;
+  color: #000;
+}
+
+.header {
+  font-family: "Montserrat Alternates", sans-serif;
+  font-size: 60px;
+  font-weight: 700;
+  font-style: italic;
+  padding: 0 2rem 1rem;
+}
+
+.text {
+  font-size: 28px;
+  font-weight: 500;
+  white-space: nowrap;
+  padding: 0.5rem 0;
+
+  i {
+    font-size: 24px;
+    vertical-align: middle;
+  }
+}
+
+.textLeft {
+  animation: moveleft 30s linear infinite;
+}
+
+.textRight {
+  animation: moveright 30s linear infinite;
+}
+
+@keyframes moveleft {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+@keyframes moveright {
+  from { transform: translateX(-50%); }
+  to { transform: translateX(0); }
+}

@@ -1,22 +1,42 @@
-import { Metadata } from "next";
-import { SliceZone } from "@prismicio/react";
-import { CreateClient } from "@prismicio/client";
-import { createClient } from "@/prismicio" 
-import { components } from "@/slices";
+import dynamic from "next/dynamic";
 
-export default async function Page() {
-  const client = createClient();
-  const page = await client.getSingle("homepage");
+// Dynamic imports for client components - avoid SSR for Three.js/GSAP
+const LoadingScreen = dynamic(
+  () => import("./components/LoadingScreen"),
+  { ssr: false }
+);
+const SmoothScroll = dynamic(
+  () => import("./components/SmoothScroll"),
+  { ssr: false }
+);
+const Hero = dynamic(() => import("./components/Hero"), { ssr: false });
+const SkillsMarquee = dynamic(
+  () => import("./components/SkillsMarquee"),
+  { ssr: false }
+);
+const About = dynamic(() => import("./components/About"), { ssr: false });
+const Projects = dynamic(
+  () => import("./components/Projects"),
+  { ssr: false }
+);
+const FAQ = dynamic(() => import("./components/FAQ"), { ssr: false });
+const Contact = dynamic(
+  () => import("./components/Contact"),
+  { ssr: false }
+);
 
-  return <SliceZone slices={page.data.slices} components={components} />;
-}
-
-export async function generateMetadata(): Promise<Metadata> {
-  const client = createClient();
-  const page = await client.getSingle("homepage");
-
-  return {
-    title: page.data.meta_title,
-    description: page.data.meta_description,
-  };
+export default function Page() {
+  return (
+    <>
+      <LoadingScreen />
+      <SmoothScroll>
+        <Hero />
+        <SkillsMarquee />
+        <About />
+        <Projects />
+        <FAQ />
+        <Contact />
+      </SmoothScroll>
+    </>
+  );
 }

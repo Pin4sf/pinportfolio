@@ -1,0 +1,118 @@
+.loading {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 100vh;
+  width: 100%;
+  z-index: 99;
+  background: #060509;
+  display: grid;
+  place-items: center;
+  font-family: "Rubik Glitch", sans-serif;
+}
+
+.box {
+  position: relative;
+  width: 500px;
+  height: 200px;
+  border: 3px solid var(--green);
+  border-top: 3px solid var(--dark-green);
+  border-bottom: 3px solid var(--dark-green);
+
+  @media (max-width: 600px) {
+    width: 90vw;
+  }
+}
+
+.bar {
+  width: 90%;
+  position: absolute;
+  height: 10px;
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #ccc;
+  border-radius: 2px;
+
+  .barInner {
+    height: 100%;
+    width: 0;
+    border-radius: 2px;
+    background: var(--green);
+    transition: width 0.05s linear;
+  }
+}
+
+.text {
+  position: relative;
+  color: #fff;
+  padding: 1rem;
+  font-size: 20px;
+  font-weight: 400;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  @media (max-width: 355px) {
+    font-size: 16px;
+  }
+}
+
+.textDot {
+  width: 15px;
+  height: 15px;
+  margin: 0 3px;
+  border-radius: 50%;
+  background: #fff;
+  animation: pulse 1s infinite alternate;
+}
+
+.textBorder {
+  width: 85%;
+  height: 1px;
+  background: var(--dark-green);
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  animation: width_animation 1s forwards;
+}
+
+.counterWrap {
+  position: absolute;
+  top: 70%;
+  left: 0;
+  color: #fff;
+  font-size: 20px;
+  font-weight: 400;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+}
+
+.counterNumber {
+  color: #850101;
+}
+
+.svg {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90%;
+  opacity: 0;
+}
+
+@keyframes pulse {
+  from { opacity: 0; background: #850101; }
+  to { opacity: 1; }
+}
+
+@keyframes width_animation {
+  0% { width: 85%; }
+  100% { width: 280px; }
+}
