@@ -5,17 +5,24 @@ import BlobButton from "./ui/BlobButton";
 import CircleEyeButton from "./ui/CircleEyeButton";
 import SquigglyLink from "./ui/SquigglyLink";
 import { contactData } from "@/data/portfolio";
+import { useScrollReveal } from "@/app/hooks/useScrollReveal";
 
 export default function Contact() {
+  const sectionRef = useScrollReveal<HTMLElement>({ clipReveal: true });
+
   return (
-    <section className={`section ${styles.contact}`} id="contact">
+    <section
+      ref={sectionRef}
+      className={`section ${styles.contact}`}
+      id="contact"
+    >
       <div className={styles.wrapper}>
-        <div className={styles.header}>
+        <div className={styles.header} data-reveal>
           <div className={styles.headerTitle}>/Contact</div>
           <div className={styles.headerSubtitle}>Get in touch</div>
         </div>
 
-        <div className={styles.form}>
+        <div className={styles.form} data-reveal>
           <form action={contactData.formAction} method="POST">
             <input type="hidden" name="_captcha" value="true" />
             <div className={styles.formFlex}>
@@ -55,7 +62,7 @@ export default function Contact() {
           </form>
         </div>
 
-        <div className={styles.profile}>
+        <div className={styles.profile} data-reveal>
           <div className={styles.profileItem}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
@@ -92,7 +99,7 @@ export default function Contact() {
           <CircleEyeButton text=".Get In Touch." />
         </div>
 
-        <div className={styles.socials}>
+        <div className={styles.socials} data-reveal>
           {contactData.socials.map((social) => (
             <SquigglyLink
               key={social.name}
@@ -102,7 +109,7 @@ export default function Contact() {
           ))}
         </div>
 
-        <div className={styles.footer}>
+        <div className={styles.footer} data-reveal>
           <div className={styles.footerInfo}>Shivansh Fulper</div>
           <div className={styles.footerInfo}>
             <b>Made by Pin4sf 2025</b>

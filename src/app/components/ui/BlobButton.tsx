@@ -2,6 +2,7 @@
 
 import styles from "./BlobButton.module.scss";
 import clsx from "clsx";
+import { useMagnetic } from "@/app/hooks/useMagnetic";
 
 interface BlobButtonProps {
   children: React.ReactNode;
@@ -18,6 +19,8 @@ export default function BlobButton({
   className,
   darkFill,
 }: BlobButtonProps) {
+  const magneticRef = useMagnetic<HTMLDivElement>(0.3);
+
   const button = (
     <button
       className={clsx(styles.coolButton, darkFill && styles.darkFill, className)}
@@ -29,11 +32,17 @@ export default function BlobButton({
 
   if (href) {
     return (
-      <a href={href} target="_blank" rel="noopener noreferrer">
-        {button}
-      </a>
+      <div ref={magneticRef} style={{ display: "inline-block" }}>
+        <a href={href} target="_blank" rel="noopener noreferrer">
+          {button}
+        </a>
+      </div>
     );
   }
 
-  return button;
+  return (
+    <div ref={magneticRef} style={{ display: "inline-block" }}>
+      {button}
+    </div>
+  );
 }

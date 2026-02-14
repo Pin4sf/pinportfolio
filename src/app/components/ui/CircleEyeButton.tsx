@@ -3,6 +3,7 @@
 import { useId } from "react";
 import styles from "./CircleEyeButton.module.scss";
 import clsx from "clsx";
+import { useMagnetic } from "@/app/hooks/useMagnetic";
 
 interface CircleEyeButtonProps {
   href?: string;
@@ -17,6 +18,7 @@ export default function CircleEyeButton({
 }: CircleEyeButtonProps) {
   const uniqueId = useId();
   const pathId = `textcircle-${uniqueId.replace(/:/g, "")}`;
+  const magneticRef = useMagnetic<HTMLDivElement>(0.4);
 
   const content = (
     <>
@@ -63,20 +65,24 @@ export default function CircleEyeButton({
 
   if (href) {
     return (
-      <a
-        href={href}
-        target="_blank"
-        rel="noopener noreferrer"
-        className={clsx(styles.coolCircleEyeButton, className)}
-      >
-        {content}
-      </a>
+      <div ref={magneticRef} style={{ display: "inline-block" }}>
+        <a
+          href={href}
+          target="_blank"
+          rel="noopener noreferrer"
+          className={clsx(styles.coolCircleEyeButton, className)}
+        >
+          {content}
+        </a>
+      </div>
     );
   }
 
   return (
-    <div className={clsx(styles.coolCircleEyeButton, className)}>
-      {content}
+    <div ref={magneticRef} style={{ display: "inline-block" }}>
+      <div className={clsx(styles.coolCircleEyeButton, className)}>
+        {content}
+      </div>
     </div>
   );
 }

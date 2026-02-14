@@ -31,66 +31,80 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
     if (counter === 100 && !completedRef.current) {
       completedRef.current = true;
 
-      // GSAP animation sequence
-      gsap.to(`.${styles.bar}`, {
-        duration: 5,
-        rotate: "90deg",
-        left: "1000%",
-      });
+      const tl = gsap.timeline();
 
-      gsap.to(`.${styles.text}, .${styles.counterWrap}`, {
-        duration: 1,
+      // 1. Fade out text and counter
+      tl.to(`.${styles.text}, .${styles.counterWrap}`, {
+        duration: 0.6,
         opacity: 0,
+        y: -20,
+        ease: "power2.in",
       });
 
-      gsap.to(`.${styles.box}`, {
-        duration: 1.5,
-        height: "500px",
-        borderRadius: "50%",
-      });
+      // 2. Morph box to circle
+      tl.to(
+        `.${styles.box}`,
+        {
+          duration: 1,
+          height: "300px",
+          width: "300px",
+          borderRadius: "50%",
+          ease: "power3.inOut",
+        },
+        "-=0.3"
+      );
 
-      gsap.to(`.${styles.svg}`, {
-        duration: 10,
-        opacity: 1,
-        rotate: "360deg",
-      });
+      // 3. Spin loader SVG
+      tl.to(
+        `.${styles.svg}`,
+        { duration: 1.5, opacity: 1, rotate: "360deg", ease: "power2.inOut" },
+        "-=0.8"
+      );
 
-      gsap.to(`.${styles.box}`, {
-        delay: 2,
-        border: "none",
-      });
-
-      // Reveal page
-      gsap.to(`.${styles.loading}`, {
-        delay: 2,
-        duration: 2,
-        zIndex: 1,
-        background: "transparent",
+      // 4. Scale box down and fade
+      tl.to(`.${styles.box}`, {
+        duration: 0.6,
+        scale: 0,
         opacity: 0,
-        pointerEvents: "none",
+        ease: "power3.in",
       });
 
-      // Animate header, socials, scroll indicator
-      gsap.to("header, [data-header]", {
-        duration: 1,
-        delay: 2,
-        top: "0.5rem",
-      });
+      // 5. Clip-path reveal — slide the loading screen upward
+      tl.to(
+        `.${styles.loading}`,
+        {
+          duration: 0.8,
+          clipPath: "inset(0 0 100% 0)",
+          ease: "power3.inOut",
+          pointerEvents: "none",
+        },
+        "-=0.3"
+      );
 
-      gsap.to("[data-socials]", {
-        duration: 1,
-        delay: 2.5,
-        bottom: "8rem",
-      });
+      // 6. Animate hero elements in
+      tl.to(
+        "header, [data-header]",
+        { duration: 0.8, top: "0.5rem", ease: "power3.out" },
+        "-=0.4"
+      );
 
-      gsap.to("[data-scroll-indicator]", {
-        duration: 1,
-        delay: 3,
-        bottom: "1rem",
-      });
+      tl.to(
+        "[data-socials]",
+        { duration: 0.8, bottom: "8rem", ease: "power3.out" },
+        "-=0.5"
+      );
+
+      tl.to(
+        "[data-scroll-indicator]",
+        { duration: 0.8, bottom: "1rem", ease: "power3.out" },
+        "-=0.5"
+      );
+
+      // 7. Clean up loading element after animation
+      tl.set(`.${styles.loading}`, { display: "none" });
 
       if (onComplete) {
-        setTimeout(onComplete, 3000);
+        tl.call(onComplete);
       }
     }
   }, [counter, onComplete]);

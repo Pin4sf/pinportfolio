@@ -45,6 +45,12 @@ body {
   color: #fff;
 }
 
+/* Custom cursor — hide default on non-touch devices */
+html.custom-cursor-active,
+html.custom-cursor-active * {
+  cursor: none !important;
+}
+
 button, input, textarea, select {
   font: inherit;
 }

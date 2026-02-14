@@ -5,15 +5,23 @@ import BlobButton from "./ui/BlobButton";
 import CircleEyeButton from "./ui/CircleEyeButton";
 import SquigglyLink from "./ui/SquigglyLink";
 import { projectsData } from "@/data/portfolio";
+import { useScrollReveal } from "@/app/hooks/useScrollReveal";
 
 export default function Projects() {
   const total = projectsData.length;
+  const sectionRef = useScrollReveal<HTMLElement>({ clipReveal: true });
 
   return (
-    <section className={`section ${styles.projects}`} id="startups">
-      <h1 className={styles.projectsHeader}>My Startups</h1>
+    <section
+      ref={sectionRef}
+      className={`section ${styles.projects}`}
+      id="startups"
+    >
+      <h1 className={styles.projectsHeader} data-reveal>
+        My Startups
+      </h1>
       {projectsData.map((project) => (
-        <div key={project.slug} className={styles.project}>
+        <div key={project.slug} className={styles.project} data-reveal>
           <div className={styles.projectHeader}>
             <span>
               {project.index}/{total}

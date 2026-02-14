@@ -3,10 +3,12 @@
 import { useEffect, useRef } from "react";
 import styles from "./About.module.scss";
 import { aboutData } from "@/data/portfolio";
+import { useScrollReveal } from "@/app/hooks/useScrollReveal";
 
 export default function About() {
-  const swiperRef = useRef<HTMLDivElement>(null);
+  const swiperContainerRef = useRef<HTMLDivElement | null>(null);
   const initialized = useRef(false);
+  const sectionRef = useScrollReveal<HTMLDivElement>({ clipReveal: true });
 
   useEffect(() => {
     if (initialized.current) return;
@@ -15,8 +17,11 @@ export default function About() {
     // Dynamic import Swiper to avoid SSR issues
     import("swiper").then(({ default: Swiper }) => {
       import("swiper/modules").then(({ Pagination }) => {
-        if (!swiperRef.current) return;
-        new Swiper(swiperRef.current.querySelector(".swiper") as HTMLElement, {
+        const el = swiperContainerRef.current;
+        if (!el) return;
+        const swiperEl = el.querySelector(".swiper") as HTMLElement;
+        if (!swiperEl) return;
+        new Swiper(swiperEl, {
           modules: [Pagination],
           slidesPerView: 1,
           spaceBetween: 10,
@@ -31,8 +36,17 @@ export default function About() {
   }, []);
 
   return (
-    <div className={`section ${styles.experties}`} id="explore" ref={swiperRef}>
-      <div className={styles.expertiesHeader}>
+    <div
+      ref={(node) => {
+        // Combine both refs
+        (sectionRef as React.MutableRefObject<HTMLDivElement | null>).current =
+          node;
+        swiperContainerRef.current = node;
+      }}
+      className={`section ${styles.experties}`}
+      id="explore"
+    >
+      <div className={styles.expertiesHeader} data-reveal>
         <div className={styles.instructor}>
           <div className={styles.instructorCurve}></div>
           <div className={styles.instructorInfos}>
@@ -53,7 +67,7 @@ export default function About() {
         </div>
       </div>
 
-      <div className={styles.swiperWrapper}>
+      <div className={styles.swiperWrapper} data-reveal>
         <div className="swiper">
           <div className="swiper-wrapper">
             {/* Slide 1: About Me */}

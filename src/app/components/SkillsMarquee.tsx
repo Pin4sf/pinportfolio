@@ -2,21 +2,25 @@
 
 import styles from "./SkillsMarquee.module.scss";
 import { skillsData } from "@/data/portfolio";
+import { useScrollReveal } from "@/app/hooks/useScrollReveal";
 
 export default function SkillsMarquee() {
+  const sectionRef = useScrollReveal<HTMLElement>({ y: 40 });
   const categoriesText = skillsData.categories
     .map((c) => `${c}\u00A0\u00A0\u00A0`)
     .join("");
 
   return (
-    <section className={styles.skills}>
-      <div className={styles.header}>Skills</div>
-      <div className={`${styles.text} ${styles.textLeft}`}>
+    <section ref={sectionRef} className={styles.skills}>
+      <div className={styles.header} data-reveal>
+        Skills
+      </div>
+      <div className={`${styles.text} ${styles.textLeft}`} data-reveal>
         {/* Duplicate for seamless loop */}
         <span>{categoriesText}</span>
         <span>{categoriesText}</span>
       </div>
-      <div className={`${styles.text} ${styles.textRight}`}>
+      <div className={`${styles.text} ${styles.textRight}`} data-reveal>
         {/* Tools with icons */}
         {[0, 1].map((dup) => (
           <span key={dup}>

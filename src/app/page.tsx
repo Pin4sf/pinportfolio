@@ -1,6 +1,10 @@
 import dynamic from "next/dynamic";
 
 // Dynamic imports for client components - avoid SSR for Three.js/GSAP
+const CustomCursor = dynamic(
+  () => import("./components/ui/CustomCursor"),
+  { ssr: false }
+);
 const LoadingScreen = dynamic(
   () => import("./components/LoadingScreen"),
   { ssr: false }
@@ -28,6 +32,7 @@ const Contact = dynamic(
 export default function Page() {
   return (
     <>
+      <CustomCursor />
       <LoadingScreen />
       <SmoothScroll>
         <Hero />
