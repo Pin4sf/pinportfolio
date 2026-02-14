@@ -1,0 +1,45 @@
+---
+title: "Building OneSync: Lessons from Real-time Collaboration"
+date: "2026-01-15"
+category: "building"
+description: "What I learned building a real-time collaboration platform — from WebSocket architecture to making complex interactions feel instant."
+featured: true
+---
+
+# Building OneSync: Lessons from Real-time Collaboration
+
+When I started building OneSync, I thought the hardest part would be the WebSocket architecture. I was wrong. The hardest part was making everything feel instant.
+
+## The Problem
+
+Teams waste hours switching between fragmented tools. Real-time collaboration exists in documents, but not across the full workflow — from ideation to execution. I wanted to build something that felt like everyone was in the same room, even when they weren't.
+
+## The Architecture
+
+OneSync is built on a WebSocket-first architecture. Every interaction — every keystroke, every cursor movement, every state change — is treated as a real-time event.
+
+```typescript
+// The core sync layer
+const syncEngine = new WebSocketEngine({
+  latencyTarget: 100, // sub-100ms sync
+  conflictResolution: 'operational-transform',
+  persistence: 'mongodb',
+  cache: 'redis',
+});
+```
+
+The frontend is Next.js with TypeScript, chosen for its hybrid rendering capabilities. The backend is a Node.js WebSocket server backed by MongoDB for persistence and Redis for caching and pub/sub between server instances.
+
+## What I Learned
+
+**1. Perceived performance matters more than actual performance.** Users don't care if your sync takes 50ms or 100ms. They care if it *feels* instant. Optimistic updates — showing the change locally before server confirmation — made everything feel 10x faster.
+
+**2. The hardest problems aren't technical.** The WebSocket layer was straightforward. The hard part was designing interactions that felt natural when multiple people were doing things simultaneously. Who gets priority? How do you show presence without being distracting?
+
+**3. Ship early, iterate often.** The first version of OneSync was embarrassingly simple. But getting it in front of real users taught me more in a week than months of building in isolation.
+
+## What's Next
+
+OneSync is in active development with a growing early user base. We're achieving consistent sub-100ms sync latency across distributed clients, and I'm now focusing on scaling the real-time layer to handle hundreds of concurrent users per workspace.
+
+The journey from "I'll build a collaboration tool" to actually building one has been the most challenging and rewarding thing I've done. If you're interested in real-time systems or want to try OneSync, reach out — I'd love to chat.

@@ -4,15 +4,93 @@ import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import styles from "./LoadingScreen.module.scss";
 
-interface LoadingScreenProps {
-  onComplete?: () => void;
-}
+// Naruto hand seals — stylized SVG line art
+const handSeals = [
+  {
+    name: "Tora",
+    kanji: "寅",
+    svg: (
+      <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M40 12 L28 28 L22 48 L30 60 L40 68 L50 60 L58 48 L52 28 Z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" />
+        <line x1="40" y1="12" x2="40" y2="40" stroke="currentColor" strokeWidth="1" opacity="0.5" />
+        <line x1="28" y1="28" x2="52" y2="28" stroke="currentColor" strokeWidth="1" opacity="0.5" />
+        <circle cx="34" cy="36" r="2" fill="currentColor" opacity="0.6" />
+        <circle cx="46" cy="36" r="2" fill="currentColor" opacity="0.6" />
+      </svg>
+    ),
+  },
+  {
+    name: "Mi",
+    kanji: "巳",
+    svg: (
+      <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M20 50 Q20 30 40 20 Q60 30 60 50" stroke="currentColor" strokeWidth="1.5" fill="none" />
+        <path d="M25 48 Q30 35 40 28 Q50 35 55 48" stroke="currentColor" strokeWidth="1" opacity="0.5" />
+        <path d="M40 20 L40 60" stroke="currentColor" strokeWidth="1" opacity="0.4" />
+        <circle cx="40" cy="40" r="4" stroke="currentColor" strokeWidth="1.5" fill="none" />
+        <path d="M20 50 Q40 65 60 50" stroke="currentColor" strokeWidth="1.5" fill="none" />
+      </svg>
+    ),
+  },
+  {
+    name: "Tatsu",
+    kanji: "辰",
+    svg: (
+      <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M15 40 L30 20 L50 20 L65 40 L50 60 L30 60 Z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" />
+        <path d="M30 40 L50 40" stroke="currentColor" strokeWidth="1.5" />
+        <path d="M40 25 L40 55" stroke="currentColor" strokeWidth="1" opacity="0.5" />
+        <circle cx="35" cy="35" r="2" fill="currentColor" opacity="0.5" />
+        <circle cx="45" cy="45" r="2" fill="currentColor" opacity="0.5" />
+      </svg>
+    ),
+  },
+  {
+    name: "Tori",
+    kanji: "酉",
+    svg: (
+      <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M40 15 L20 35 L25 55 L40 65 L55 55 L60 35 Z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" />
+        <path d="M40 15 L32 40 L40 50 L48 40 Z" stroke="currentColor" strokeWidth="1" opacity="0.5" />
+        <path d="M25 38 L40 50 L55 38" stroke="currentColor" strokeWidth="1" opacity="0.4" />
+      </svg>
+    ),
+  },
+  {
+    name: "Hitsuji",
+    kanji: "未",
+    svg: (
+      <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="40" cy="40" r="22" stroke="currentColor" strokeWidth="1.5" fill="none" />
+        <circle cx="40" cy="40" r="10" stroke="currentColor" strokeWidth="1" opacity="0.5" />
+        <line x1="40" y1="18" x2="40" y2="10" stroke="currentColor" strokeWidth="1.5" />
+        <line x1="36" y1="18" x2="33" y2="11" stroke="currentColor" strokeWidth="1.5" />
+        <circle cx="40" cy="40" r="3" fill="currentColor" opacity="0.4" />
+      </svg>
+    ),
+  },
+  {
+    name: "Ne",
+    kanji: "子",
+    svg: (
+      <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M25 55 Q25 35 35 25 L35 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+        <path d="M55 55 Q55 35 45 25 L45 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+        <path d="M25 55 Q40 65 55 55" stroke="currentColor" strokeWidth="1.5" fill="none" />
+        <ellipse cx="40" cy="42" rx="12" ry="8" stroke="currentColor" strokeWidth="1" opacity="0.4" />
+        <line x1="35" y1="12" x2="45" y2="12" stroke="currentColor" strokeWidth="1" opacity="0.3" />
+      </svg>
+    ),
+  },
+];
 
-export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
+export default function LoadingScreen() {
   const [counter, setCounter] = useState(0);
-  const loadingRef = useRef<HTMLDivElement>(null);
+  const [activeSign, setActiveSign] = useState(0);
   const completedRef = useRef(false);
+  const signRefs = useRef<(HTMLDivElement | null)[]>([]);
 
+  // Counter
   useEffect(() => {
     const interval = setInterval(() => {
       setCounter((prev) => {
@@ -20,119 +98,104 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
           clearInterval(interval);
           return 100;
         }
-        return prev + 1;
+        return Math.min(prev + 2, 100);
       });
-    }, 20);
-
+    }, 15);
     return () => clearInterval(interval);
   }, []);
 
+  // Cycle hand signs based on counter
+  useEffect(() => {
+    const signIndex = Math.min(
+      Math.floor((counter / 100) * handSeals.length),
+      handSeals.length - 1
+    );
+
+    if (signIndex !== activeSign) {
+      setActiveSign(signIndex);
+      const signEl = signRefs.current[signIndex];
+      if (signEl) {
+        gsap.fromTo(
+          signEl,
+          { scale: 0.6, opacity: 0, rotate: -10 },
+          { scale: 1, opacity: 1, rotate: 0, duration: 0.25, ease: "back.out(1.5)" }
+        );
+      }
+    }
+  }, [counter, activeSign]);
+
+  // Exit animation
   useEffect(() => {
     if (counter === 100 && !completedRef.current) {
       completedRef.current = true;
 
-      const tl = gsap.timeline();
+      const tl = gsap.timeline({ delay: 0.2 });
 
-      // 1. Fade out text and counter
-      tl.to(`.${styles.text}, .${styles.counterWrap}`, {
-        duration: 0.6,
+      tl.to(`.${styles.activeSeal}`, {
+        scale: 1.3,
         opacity: 0,
-        y: -20,
+        duration: 0.3,
         ease: "power2.in",
       });
 
-      // 2. Morph box to circle
       tl.to(
-        `.${styles.box}`,
-        {
-          duration: 1,
-          height: "300px",
-          width: "300px",
-          borderRadius: "50%",
-          ease: "power3.inOut",
-        },
-        "-=0.3"
+        `.${styles.counter}`,
+        { opacity: 0, y: -10, duration: 0.3, ease: "power2.in" },
+        "<"
       );
 
-      // 3. Spin loader SVG
-      tl.to(
-        `.${styles.svg}`,
-        { duration: 1.5, opacity: 1, rotate: "360deg", ease: "power2.inOut" },
-        "-=0.8"
-      );
-
-      // 4. Scale box down and fade
-      tl.to(`.${styles.box}`, {
+      tl.to(`.${styles.loading}`, {
+        clipPath: "inset(0 0 100% 0)",
         duration: 0.6,
-        scale: 0,
-        opacity: 0,
-        ease: "power3.in",
+        ease: "power3.inOut",
+        pointerEvents: "none",
       });
 
-      // 5. Clip-path reveal — slide the loading screen upward
-      tl.to(
-        `.${styles.loading}`,
-        {
-          duration: 0.8,
-          clipPath: "inset(0 0 100% 0)",
-          ease: "power3.inOut",
-          pointerEvents: "none",
-        },
-        "-=0.3"
-      );
-
-      // 6. Animate hero elements in
-      tl.to(
-        "header, [data-header]",
-        { duration: 0.8, top: "0.5rem", ease: "power3.out" },
-        "-=0.4"
-      );
-
-      tl.to(
-        "[data-socials]",
-        { duration: 0.8, bottom: "8rem", ease: "power3.out" },
-        "-=0.5"
-      );
-
-      tl.to(
-        "[data-scroll-indicator]",
-        { duration: 0.8, bottom: "1rem", ease: "power3.out" },
-        "-=0.5"
-      );
-
-      // 7. Clean up loading element after animation
       tl.set(`.${styles.loading}`, { display: "none" });
-
-      if (onComplete) {
-        tl.call(onComplete);
-      }
     }
-  }, [counter, onComplete]);
+  }, [counter]);
 
   return (
-    <div ref={loadingRef} className={styles.loading}>
-      <div className={styles.box}>
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="/images/loaders/loader26.svg"
-          alt="loader"
-          className={styles.svg}
-        />
-        <div className={styles.text}>
-          <div className={styles.textBorder}></div>
-          L
-          <div className={styles.textDot}></div>
-          OADING EXPERIENCE
+    <div className={styles.loading} aria-hidden="true" role="presentation">
+      <div className={styles.inner}>
+        {/* Hand seal display */}
+        <div className={styles.sealArea}>
+          {handSeals.map((seal, i) => (
+            <div
+              key={seal.name}
+              ref={(el) => {
+                signRefs.current[i] = el;
+              }}
+              className={`${styles.seal} ${i === activeSign ? styles.activeSeal : ""}`}
+              style={{ display: i === activeSign ? "flex" : "none" }}
+            >
+              <div className={styles.sealIcon}>{seal.svg}</div>
+              <div className={styles.sealInfo}>
+                <span className={styles.sealKanji}>{seal.kanji}</span>
+                <span className={styles.sealName}>{seal.name}</span>
+              </div>
+            </div>
+          ))}
         </div>
+
+        {/* Counter */}
+        <div className={styles.counter}>
+          <span className={styles.number}>{counter}</span>
+        </div>
+
+        {/* Progress bar */}
         <div className={styles.bar}>
-          <div
-            className={styles.barInner}
-            style={{ width: `${counter}%` }}
-          ></div>
+          <div className={styles.barFill} style={{ width: `${counter}%` }} />
         </div>
-        <div className={styles.counterWrap}>
-          <span>0%</span>
-          <div className={styles.counterNumber}>{counter}%</div>
+
+        {/* Seal sequence dots */}
+        <div className={styles.dots}>
+          {handSeals.map((_, i) => (
+            <span
+              key={i}
+              className={`${styles.dotIndicator} ${i <= activeSign ? styles.dotActive : ""}`}
+            />
+          ))}
         </div>
       </div>
     </div>

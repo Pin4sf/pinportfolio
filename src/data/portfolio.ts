@@ -1,180 +1,354 @@
-// ==================== HERO ====================
-export const heroData = {
-  greeting: "Hi, My name is",
-  name: "SHIVANSH FULPER",
-  taglines: [
-    "Full Stack Developer",
-    "ML Enthusiast",
-    "Startup Founder",
-    "Have a Zeal for tech",
-    "Building the Future",
-  ],
-  subtitle: "Founder @ OneSync | IIITDM Jabalpur",
-  socials: [
-    { name: "LinkedIn", icon: "uil-linkedin-alt", url: "https://www.linkedin.com/in/shivansh-fulper-463968223/" },
-    { name: "Instagram", icon: "uil-instagram", url: "https://instagram.com/pin4sf" },
-    { name: "GitHub", icon: "uil-github", url: "https://github.com/Pin4sf" },
-    { name: "Twitter", icon: "uil-twitter-alt", url: "https://twitter.com/FulperShivansh" },
-    { name: "Telegram", icon: "uil-telegram-alt", url: "https://telegram.me/Pin4sf" },
-  ],
+// ==================== TYPES ====================
+
+export interface Social {
+  name: string;
+  url: string;
+  icon: string; // Lucide icon name
+}
+
+export interface NavItem {
+  label: string;
+  href: string;
+  external?: boolean;
+}
+
+export interface HeroData {
+  name: string;
+  tagline: string;
+  subtitle: string;
+  socials: Social[];
+}
+
+export interface AboutData {
+  bio: string;
+  photo: string;
+  facts: { label: string; value: string }[];
+  interests: string[];
+}
+
+export interface CaseStudy {
+  slug: string;
+  name: string;
+  tagline: string;
+  heroImage: string;
+  role: string;
+  timeline: string;
+  techStack: string[];
+  liveUrl?: string;
+  githubUrl?: string;
+  category: "venture" | "project" | "experiment";
+  featured: boolean;
+  challenge: string;
+  approach: string;
+  solution: string;
+  solutionImages: string[];
+  impact: string;
+  reflection: string;
+  order: number;
+}
+
+export interface SkillCategory {
+  name: string;
+  skills: { name: string; icon?: string }[];
+}
+
+export interface ContactData {
+  email: string;
+  formAction: string;
+  location: string;
+  socials: Social[];
+  resumeUrl?: string;
+}
+
+export interface TimelineEntry {
+  year: string;
+  title: string;
+  organization: string;
+  description: string;
+  type: "work" | "education" | "startup" | "achievement";
+}
+
+export interface SiteConfig {
+  title: string;
+  description: string;
+  author: string;
+  keywords: string;
+  url: string;
+  ogImage: string;
+}
+
+// ==================== SITE CONFIG ====================
+
+export const siteConfig: SiteConfig = {
+  title: "Shivansh Fulper — AI Systems, Startups, Infrastructure",
+  description:
+    "AI engineer and startup founder. CTO at OneSync, building cognitive performance wearables. Co-founder of EcoFresh Greensync, building decentralized waste-to-value infrastructure. Portfolio, case studies, and writing.",
+  author: "Shivansh Fulper",
+  keywords:
+    "Shivansh Fulper, AI Engineer, OneSync, EcoFresh Greensync, Atlan, LLM, RAG, Agentic Systems, Cognitive Wearables, Waste-to-Value, IIITDM Jabalpur",
+  url: "https://shivanshfulper.com",
+  ogImage: "/images/og-image.png",
 };
 
-// ==================== SKILLS ====================
-export const skillsData = {
-  categories: [
-    "Frontend", "Backend", "Data Science",
-    "Machine Learning", "Data Analytics", "UI/UX",
-    "Web Design", "3D Modeling", "Motion Graphics",
-    "Prompt Engineering", "DevOps",
-  ],
-  tools: [
-    { name: "GSAP", icon: "" },
-    { name: "WebGL", icon: "" },
-    { name: "Three.js", icon: "" },
-    { name: "Next.js", icon: "devicon-nextjs-original" },
-    { name: "Sci-kit Learn", icon: "" },
-    { name: "Data Visualization", icon: "" },
-    { name: "Blender", icon: "devicon-blender-original" },
-    { name: "Figma", icon: "devicon-figma-plain" },
-    { name: "Adobe Premiere Pro", icon: "devicon-premierepro-plain" },
-    { name: "Git", icon: "devicon-git-plain" },
-    { name: "Github", icon: "devicon-github-original" },
-    { name: "SQL", icon: "devicon-mysql-plain" },
-    { name: "Pandas", icon: "devicon-pandas-plain" },
-    { name: "Numpy", icon: "devicon-numpy-original" },
-    { name: "Matplotlib", icon: "devicon-matlab-plain" },
-    { name: "Tensorflow", icon: "devicon-tensorflow-original" },
-    { name: "Python", icon: "devicon-python-plain" },
-    { name: "TypeScript", icon: "devicon-typescript-plain" },
-    { name: "CSS", icon: "devicon-css3-plain" },
-    { name: "JavaScript", icon: "devicon-javascript-plain" },
-    { name: "Node.js", icon: "devicon-nodejs-plain" },
-    { name: "React", icon: "devicon-react-original" },
-    { name: "Express", icon: "devicon-express-original" },
-    { name: "MongoDB", icon: "devicon-mongodb-plain" },
-    { name: "Docker", icon: "devicon-docker-plain" },
-    { name: "Linux", icon: "devicon-linux-plain" },
+// ==================== NAVIGATION ====================
+
+export const navItems: NavItem[] = [
+  { label: "Ventures", href: "#ventures" },
+  { label: "About", href: "#about" },
+  { label: "Writing", href: "#writing" },
+  { label: "Contact", href: "#contact" },
+];
+
+// ==================== HERO ====================
+
+export const heroData: HeroData = {
+  name: "Shivansh Fulper",
+  tagline: "I build AI systems that ship.",
+  subtitle: "CTO & Co-founder @ OneSync · Co-founder @ EcoFresh Greensync · IIITDM Jabalpur '26",
+  socials: [
+    {
+      name: "LinkedIn",
+      icon: "linkedin",
+      url: "https://www.linkedin.com/in/shivanshfulper/",
+    },
+    {
+      name: "GitHub",
+      icon: "github",
+      url: "https://github.com/Pin4sf",
+    },
+    {
+      name: "Twitter",
+      icon: "twitter",
+      url: "https://twitter.com/FulperShivansh",
+    },
+    {
+      name: "Instagram",
+      icon: "instagram",
+      url: "https://instagram.com/pin4sf",
+    },
   ],
 };
 
 // ==================== ABOUT ====================
-export const aboutData = {
-  profile: {
-    image: "/images/expme/me1.png",
-    tags: ["Explorer", "Gamer & Anime lover", "Jamming Music in free time"],
-  },
-  slides: [
-    {
-      title: "About Me",
-      content: `When I'm not geeking on code, you'll find me watching Anime or playing Video Games.
-I'm a student at IIITDM Jabalpur, pursuing my B.Tech in Smart Manufacturing. I'm a Full Stack Developer, ML Enthusiast, and the founder of OneSync — building tools that make collaboration seamless. I'm a quick learner and a team player, always ready to explore new technologies. I also co-founded EcoFresh, a sustainability-focused startup. You'll find me working on technologies I've seen in a cool project or any movie/show I've watched recently. Always ready to take up new challenges.`,
-    },
-    {
-      title: "Current Technologies I'm Exploring",
-      techLists: [
-        ["Next.js | React | TypeScript", "Node.js | Express | Python", "Git | GitHub | Open Source", "SQL | MongoDB | Redis"],
-        ["Pandas | Numpy | Sci-kit Learn", "Matplotlib | Plotly", "Three.js | WebGL | GSAP", "Docker | DevOps"],
-      ],
-      exploring: "DevOps, Web3, Deep Learning, AI Agents, and System Design...",
-    },
+
+export const aboutData: AboutData = {
+  bio: `I build AI systems at the infrastructure level — not wrappers, not demos, real pipelines that process data at scale and make decisions autonomously.
+
+As CTO of OneSync, I'm building the intelligence layer that turns wearable biosignals into cognitive readiness scores. I also co-founded EcoFresh Greensync — a decentralized waste-to-value infrastructure company with 3 IP discoveries and recognition at the Hult Prize. At Atlan, I build AI-native developer agents. At Soket AI Labs, I built multilingual dataset pipelines for Indic LLM training.
+
+I'm a final-year B.Tech student at IIITDM Jabalpur. I think in systems. I ship fast. And I'd rather fail at 20 than wait until I'm "qualified."`,
+  photo: "/images/expme/me1.png",
+  facts: [
+    { label: "Location", value: "Nagpur, India" },
+    { label: "Education", value: "B.Tech '26, IIITDM Jabalpur" },
+    { label: "Focus", value: "AI Systems · Startups · Infrastructure" },
+    { label: "Currently", value: "CTO @ OneSync · AI Engineer @ Atlan" },
   ],
+  interests: ["Anime", "Gaming", "Music", "Systems Thinking"],
 };
 
-// ==================== STARTUPS ====================
-export interface Project {
-  slug: string;
-  index: number;
-  subtitle: string;
-  name: string;
-  abbreviation: string;
-  image: string;
-  github: string;
-  live: string;
-  tags: string[];
-  description?: string;
-}
+// ==================== CASE STUDIES ====================
 
-export const projectsData: Project[] = [
+export const caseStudies: CaseStudy[] = [
   {
     slug: "onesync",
-    index: 1,
-    subtitle: "Real-time collaboration platform for teams",
     name: "OneSync",
-    abbreviation: "Startup",
-    image: "/images/projects/4.png",
-    github: "https://github.com/Pin4sf",
-    live: "https://onesync-website-zs1p.vercel.app/",
-    tags: ["Next.js", "TypeScript", "Real-time", "WebSockets", "MongoDB"],
-    description: "OneSync is a real-time collaboration platform designed to make teamwork seamless. Built with Next.js and WebSocket technology for instant synchronization.",
+    tagline: "Beyond vital signs. Into the mind.",
+    heroImage: "/images/projects/4.png",
+    role: "Co-Founder & CTO",
+    timeline: "2026 — Present",
+    techStack: ["AI/ML", "Biosignal Processing", "Edge Computing", "React", "TypeScript"],
+    liveUrl: "https://onesync-website-zs1p.vercel.app/",
+    category: "venture",
+    featured: true,
+    challenge:
+      "A pilot sleeps seven hours, clears a medical check, and still makes a bad call — three days of accumulated stress have worn him down. In high-pressure jobs like aviation, defense, sports, and emergency medicine, people make serious decisions constantly, but there's no practical way to tell if they're cognitively ready. What exists today is guesswork: self-reporting, gut feelings, or a fitness tracker showing heart rate at 72 and a good sleep score. None of that tells you whether someone can think clearly under pressure right now.",
+    approach:
+      "We built OneBand — a wristband that reads multiple body signals (heart rhythm, skin response, motion, muscle tension) and cross-checks them to produce a cognitive readiness index. The system stays quiet when it's not confident — in environments where a bad call has real consequences, showing nothing is better than a false green light. Built for institutions from day one: training academies, defense units, elite sports teams. Dashboards designed around how teams actually operate, not just how individuals track personal fitness.",
+    solution:
+      "OneSync is a cognitive performance platform. OneBand captures biosignals 24/7 and an AI interpretation layer translates raw data into readiness scores, recovery trends, and actionable guidance. Think of it as a fuel gauge for the brain — not a diagnosis, not a mood ring, just a reliable indicator that a coach, training officer, or team lead can glance at and act on. The system builds a personal digital twin that learns individual baselines and adapts over time.",
+    solutionImages: ["/images/projects/4.png"],
+    impact:
+      "Active development with hardware prototyping underway. Early concept testing with athletes. Team of 4 (CEO, CTO, COO, CPO) with backgrounds spanning biosensing, AI systems, manufacturing, and product hardware. Pursuing HIPAA and FDA compliance pathways.",
+    reflection:
+      "Consumer wearables track fitness. Medical systems work in labs. Nothing practical sits in the middle. That's the gap — and closing it requires building trust before building features. The hardest part isn't the AI. It's earning confidence from institutions that can't afford false signals.",
+    order: 1,
   },
   {
     slug: "ecofresh",
-    index: 2,
-    subtitle: "Sustainability-focused food delivery startup",
-    name: "EcoFresh",
-    abbreviation: "Startup",
-    image: "/images/projects/6.png",
-    github: "https://github.com/Pin4sf",
-    live: "https://www.ecofreshgreensync.com/",
-    tags: ["React", "Node.js", "Sustainability", "Full Stack"],
-    description: "EcoFresh is a sustainability-focused startup aiming to reduce food waste and promote eco-friendly delivery solutions.",
+    name: "EcoFresh Greensync",
+    tagline: "Waste-to-value infrastructure. No segregation required.",
+    heroImage: "/images/projects/6.png",
+    role: "Co-Founder",
+    timeline: "Nov 2025 — Present",
+    techStack: ["AI/ML", "Polymer Modeling", "Bio-processing", "Catalytic Systems"],
+    liveUrl: "https://www.ecofreshgreensync.com/",
+    category: "venture",
+    featured: true,
+    challenge:
+      "India's municipal waste system assumes perfect segregation. It never happens. Mixed waste ends up in landfills, and existing solutions — composters, recycling gadgets, dashboard companies — all break down when they encounter the messy reality of unsorted waste at scale. The fundamental problem isn't motivation. It's infrastructure that can't handle the input it actually receives.",
+    approach:
+      "We designed modular Eco-Converter units that accept mixed municipal solid waste as-is and process it through staged biological and catalytic pathways. No dependency on perfect segregation, no reliance on continuous skilled manpower, no silent failure modes. The first high-value output pathway is PHA-class biodegradable polymers, with secondary streams like bio-fertilizer and eco-composites.",
+    solution:
+      "EcoFresh Greensync is a decentralized waste-to-value infrastructure company. Eco-Converters deploy at the point of waste generation — institutions, municipal zones, campuses, hospitals — and convert mixed waste into standardized, recoverable outputs. AI modeling is used to explore biodegradable material design and bridge computational discovery with real-world processing constraints.",
+    solutionImages: ["/images/projects/6.png"],
+    impact:
+      "Registered as EcoFresh Greensync LLP. MSME (Udyam) registered as Micro Enterprise. Incubated at IIITDM Jabalpur under the Institution's Innovation Council (Ministry of Education). 16th among 2,500+ teams at Hult Prize, IIT Bombay. National recognition from Ministry of Education. 3 IP discoveries with patent filing procedures documented for Indian Patent Office and international PCT routes.",
+    reflection:
+      "Deep-tech without a clear go-to-market path becomes a science project. Distribution beats brilliance. Vision must be matched with execution speed. That lesson directly shapes how I approach everything I build — earn trust before building scale.",
+    order: 2,
   },
 ];
 
-// ==================== FAQ ====================
-export const faqData = [
+// ==================== SKILLS ====================
+
+export const skillCategories: SkillCategory[] = [
   {
-    question: "What am I currently working on?",
-    answer: "I'm building OneSync, a real-time collaboration platform, and EcoFresh, a sustainability-focused startup. Alongside, I keep exploring new tech, building side projects, and contributing to open source.",
+    name: "AI & ML Systems",
+    skills: [
+      { name: "Large Language Models" },
+      { name: "RAG & GraphRAG" },
+      { name: "Agentic Systems" },
+      { name: "Biosignal Processing" },
+      { name: "NER & NLP Pipelines" },
+      { name: "Dataset Curation" },
+      { name: "Memory-Augmented AI" },
+    ],
   },
   {
-    question: "What's my tech stack?",
-    answer: "Primarily Next.js, TypeScript, React for frontend. Node.js, Express, MongoDB for backend. Python, Pandas, Sci-kit Learn for data science. Three.js, GSAP, WebGL for creative dev. Currently diving deeper into DevOps and AI.",
+    name: "Engineering",
+    skills: [
+      { name: "Python", icon: "devicon-python-plain" },
+      { name: "TypeScript", icon: "devicon-typescript-plain" },
+      { name: "Next.js", icon: "devicon-nextjs-original" },
+      { name: "React", icon: "devicon-react-original" },
+      { name: "Node.js", icon: "devicon-nodejs-plain" },
+      { name: "MongoDB", icon: "devicon-mongodb-plain" },
+      { name: "Redis" },
+    ],
   },
   {
-    question: "Will you collaborate on any project?",
-    answer: "Absolutely! Ping me on my socials and I'll get back to you as soon as possible. Always excited about interesting collaborations.",
+    name: "Infrastructure",
+    skills: [
+      { name: "Distributed Systems" },
+      { name: "Data Pipeline Design" },
+      { name: "Edge Computing" },
+      { name: "API Architecture" },
+      { name: "Docker", icon: "devicon-docker-plain" },
+    ],
   },
   {
-    question: "Is there any charge to work with me?",
-    answer: "That depends on the size and complexity of the project. I'm open to work on any project. I can work for free if the project is interesting and I can learn something new from it.",
+    name: "Tools",
+    skills: [
+      { name: "Git", icon: "devicon-git-plain" },
+      { name: "Linux", icon: "devicon-linux-plain" },
+      { name: "Figma", icon: "devicon-figma-plain" },
+      { name: "PyTorch" },
+      { name: "TensorFlow", icon: "devicon-tensorflow-original" },
+    ],
+  },
+];
+
+export const currentlyExploring =
+  "MoE Architectures, AI-Native Development Environments, and Cognitive Computing";
+
+// ==================== TIMELINE ====================
+
+export const timelineData: TimelineEntry[] = [
+  {
+    year: "2026",
+    title: "AI Engineer Intern",
+    organization: "Atlan",
+    description:
+      "Building AI-native SDLC agents — autonomous debugging, GraphRAG retrieval, and long-term agent memory systems for developer workflows.",
+    type: "work",
   },
   {
-    question: "What are your Anime, Movies, Games and Manga recommendations?",
-    answer: "Well, if you want my currently ongoing watch list and my recommendations — reach out to me! Always happy to discuss.",
+    year: "2026",
+    title: "Co-Founder & CTO",
+    organization: "OneSync",
+    description:
+      "Building cognitive performance wearables. AI interpretation layer that turns biosignals into readiness scores for high-pressure environments.",
+    type: "startup",
+  },
+  {
+    year: "2025",
+    title: "Co-Founder",
+    organization: "EcoFresh Greensync",
+    description:
+      "Decentralized waste-to-value infrastructure. 3 IP discoveries, Hult Prize recognition (16th/2500+ at IIT Bombay), Ministry of Education national recognition.",
+    type: "startup",
+  },
+  {
+    year: "2025",
+    title: "Member of Technical Staff Intern",
+    organization: "Soket AI Labs",
+    description:
+      "Built multilingual dataset pipelines for Indic LLM training (Project Eka). Deduplication, quality filtering, and language alignment at scale. Collaboration with IIT Gandhinagar.",
+    type: "work",
+  },
+  {
+    year: "2024",
+    title: "AI Engineer Intern",
+    organization: "OpenFn (C4GT)",
+    description:
+      "NLP-to-workflow pipeline for government-tech data integrations. Selected under the Code for GovTech national open-source program.",
+    type: "work",
+  },
+  {
+    year: "2022",
+    title: "B.Tech — Smart Manufacturing",
+    organization: "IIITDM Jabalpur",
+    description:
+      "Started undergraduate studies. Exposure to industrial systems, optimization, and physical-world design — shaping how I approach AI infrastructure.",
+    type: "education",
   },
 ];
 
 // ==================== CONTACT ====================
-export const contactData = {
-  formAction: "https://formsubmit.co/shivanshfulper690@gmail.com",
-  profile: {
-    image: "/images/expme/me2.jpeg",
-    name: "SHIVANSH FULPER",
-    title: "Developer & Founder",
-    emails: ["shivanshfulper690@gmail.com", "22bsm054@iiitdmj.ac.in"],
-    location: { city: "Nagpur, Maharashtra", country: "INDIA" },
-  },
+
+export const contactData: ContactData = {
+  email: "piyushfulper3210@gmail.com",
+  formAction: "https://formsubmit.co/piyushfulper3210@gmail.com",
+  location: "Nagpur, India",
   socials: [
-    { name: "LinkedIn", url: "https://www.linkedin.com/in/shivansh-fulper-463968223/" },
-    { name: "Github", url: "https://github.com/Pin4sf" },
-    { name: "Twitter", url: "https://twitter.com/FulperShivansh" },
-    { name: "Instagram", url: "https://instagram.com/pin4sf" },
+    {
+      name: "LinkedIn",
+      icon: "linkedin",
+      url: "https://www.linkedin.com/in/shivanshfulper/",
+    },
+    {
+      name: "GitHub",
+      icon: "github",
+      url: "https://github.com/Pin4sf",
+    },
+    {
+      name: "Twitter",
+      icon: "twitter",
+      url: "https://twitter.com/FulperShivansh",
+    },
+    {
+      name: "Instagram",
+      icon: "instagram",
+      url: "https://instagram.com/pin4sf",
+    },
   ],
 };
 
-// ==================== NAV ====================
-export const navItems = [
-  { label: "Home", href: "#Home" },
-  { label: "Explore", href: "#explore", hideOnMobile: true },
-  { label: "Startups", href: "#startups" },
-  { label: "FAQ", href: "#FAQ", hideOnMobile: true },
-];
+// ==================== HELPERS ====================
 
-// ==================== META ====================
-export const siteConfig = {
-  title: "SHIVANSH FULPER - Pin4sf",
-  description: "Full Stack Developer, ML Enthusiast, and Startup Founder. Building OneSync & EcoFresh. IIITDM Jabalpur.",
-  author: "Shivansh Fulper",
-  keywords: "Shivansh Fulper, pin4sf, IIITDM Jabalpur, OneSync, EcoFresh, Full Stack Developer",
-};
+export function getFeaturedWork(): CaseStudy[] {
+  return caseStudies
+    .filter((cs) => cs.featured)
+    .sort((a, b) => a.order - b.order);
+}
+
+export function getVentures(): CaseStudy[] {
+  return caseStudies.filter((cs) => cs.category === "venture");
+}
+
+export function getProjects(): CaseStudy[] {
+  return caseStudies
+    .filter((cs) => cs.category === "project" || cs.category === "experiment")
+    .sort((a, b) => a.order - b.order);
+}

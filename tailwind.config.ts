@@ -2,29 +2,40 @@ import type { Config } from "tailwindcss";
 
 const config: Config = {
   content: [
-    "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
-    "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
-    "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
     extend: {
       colors: {
-        "v1-green": "#6cff8d",
-        "v1-dark-green": "rgba(108, 255, 140, 0.48)",
-        "v1-dark-bg": "#090a0e",
-        "v1-darkish-blue": "#0b1623",
-        "v1-yellow": "#e4e400",
-        "v1-tan": "rgba(174, 144, 84, 0.92)",
-        "v1-cream": "#ffd9a8",
-        "v1-faq-1": "#414345",
-        "v1-faq-2": "#232526",
+        bg: {
+          primary: "#090a0e",
+          secondary: "#0d0e13",
+          tertiary: "#111215",
+        },
+        text: {
+          primary: "#e0e0e0",
+          secondary: "#8a8a8a",
+          heading: "#f0f0f0",
+          tertiary: "#555555",
+        },
+        accent: {
+          DEFAULT: "#6cff8d",
+          hover: "#8affaa",
+          muted: "rgba(108, 255, 140, 0.15)",
+          warm: "#f0c040",
+        },
+        border: {
+          subtle: "rgba(255, 255, 255, 0.08)",
+          visible: "rgba(255, 255, 255, 0.15)",
+        },
       },
       fontFamily: {
-        poppins: ["var(--font-poppins)", "sans-serif"],
-        montserrat: ["var(--font-montserrat)", "sans-serif"],
-        amatic: ["var(--font-amatic)", "cursive"],
-        comic: ["var(--font-comic)", "cursive"],
-        rubik: ["var(--font-rubik)", "sans-serif"],
+        display: ["var(--font-instrument-serif)", "Georgia", "serif"],
+        body: ["var(--font-inter)", "system-ui", "sans-serif"],
+        mono: ["var(--font-jetbrains-mono)", "monospace"],
+      },
+      fontSize: {
+        hero: "clamp(3rem, 10vw, 10rem)",
       },
     },
   },

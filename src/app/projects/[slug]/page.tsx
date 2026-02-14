@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { projectsData } from "@/data/portfolio";
+import { caseStudies } from "@/data/portfolio";
 import type { Metadata } from "next";
 
 interface Props {
@@ -7,75 +7,65 @@ interface Props {
 }
 
 export function generateStaticParams() {
-  return projectsData.map((project) => ({
-    slug: project.slug,
+  return caseStudies.map((cs) => ({
+    slug: cs.slug,
   }));
 }
 
 export function generateMetadata({ params }: Props): Metadata {
-  const project = projectsData.find((p) => p.slug === params.slug);
-  if (!project) return { title: "Project Not Found" };
+  const cs = caseStudies.find((p) => p.slug === params.slug);
+  if (!cs) return { title: "Project Not Found" };
 
   return {
-    title: `${project.name} - Shivansh Fulper`,
-    description: project.description || project.subtitle,
+    title: `${cs.name} - Shivansh Fulper`,
+    description: cs.tagline,
   };
 }
 
 export default function ProjectPage({ params }: Props) {
-  const project = projectsData.find((p) => p.slug === params.slug);
+  const cs = caseStudies.find((p) => p.slug === params.slug);
 
-  if (!project) {
+  if (!cs) {
     notFound();
   }
 
+  // Redirect to the new /work/[slug] route
   return (
-    <main className="min-h-screen bg-v1-dark-bg text-white p-8 md:p-16">
+    <main className="min-h-screen bg-bg-primary text-text-primary p-8 md:p-16">
       <a
         href="/"
-        className="inline-block mb-8 text-v1-green hover:underline font-poppins"
+        className="inline-block mb-8 text-accent hover:underline"
       >
         &larr; Back to Home
       </a>
 
       <div className="max-w-4xl mx-auto">
-        <span className="text-v1-green font-mono text-sm">
-          Project {project.index}/{projectsData.length}
+        <span className="text-accent font-mono text-sm">
+          {cs.role} · {cs.timeline}
         </span>
-        <h1
-          className="text-4xl md:text-6xl font-bold mt-2 mb-4"
-          style={{ fontFamily: "'Comic Neue', sans-serif" }}
-        >
-          {project.name}
-          {project.abbreviation && (
-            <span className="text-2xl md:text-3xl opacity-60 ml-4">
-              ({project.abbreviation})
-            </span>
-          )}
+        <h1 className="text-4xl md:text-6xl font-display mt-2 mb-4">
+          {cs.name}
         </h1>
 
-        <p className="text-xl text-gray-300 mb-8">{project.subtitle}</p>
-
-        {project.description && (
-          <p className="text-lg text-gray-400 mb-8 leading-relaxed">
-            {project.description}
-          </p>
-        )}
+        <p className="text-xl text-text-secondary mb-8">{cs.tagline}</p>
+        <p className="text-lg text-text-secondary mb-8 leading-relaxed">
+          {cs.solution}
+        </p>
 
         <div className="mb-8">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src={project.image}
-            alt={project.name}
+            src={cs.heroImage}
+            alt={cs.name}
             className="w-full max-h-[500px] object-cover rounded-lg"
           />
         </div>
 
         <div className="flex flex-wrap gap-3 mb-8">
-          {project.tags.map((tag) => (
+          {cs.techStack.map((tag) => (
             <span
               key={tag}
-              className="px-4 py-2 bg-white/10 rounded-full text-sm font-medium"
+              className="px-4 py-2 bg-bg-tertiary border border-border-subtle rounded-full text-sm font-mono"
             >
               {tag}
             </span>
@@ -83,20 +73,22 @@ export default function ProjectPage({ params }: Props) {
         </div>
 
         <div className="flex gap-6">
-          <a
-            href={project.github}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="px-6 py-3 bg-white text-black font-bold rounded-lg hover:bg-gray-200 transition-colors"
-          >
-            View on GitHub
-          </a>
-          {project.live !== "#" && (
+          {cs.githubUrl && (
             <a
-              href={project.live}
+              href={cs.githubUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="px-6 py-3 border-2 border-v1-green text-v1-green font-bold rounded-lg hover:bg-v1-green hover:text-black transition-colors"
+              className="px-6 py-3 bg-accent text-bg-primary font-bold rounded-lg hover:bg-accent-hover transition-colors"
+            >
+              View on GitHub
+            </a>
+          )}
+          {cs.liveUrl && (
+            <a
+              href={cs.liveUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-6 py-3 border-2 border-accent text-accent font-bold rounded-lg hover:bg-accent hover:text-bg-primary transition-colors"
             >
               Live Preview
             </a>

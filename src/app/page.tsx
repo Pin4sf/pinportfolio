@@ -1,6 +1,6 @@
 import dynamic from "next/dynamic";
 
-// Dynamic imports for client components - avoid SSR for Three.js/GSAP
+// Dynamic imports for client components — avoid SSR for GSAP/Three.js
 const CustomCursor = dynamic(
   () => import("./components/ui/CustomCursor"),
   { ssr: false }
@@ -13,19 +13,40 @@ const SmoothScroll = dynamic(
   () => import("./components/SmoothScroll"),
   { ssr: false }
 );
-const Hero = dynamic(() => import("./components/Hero"), { ssr: false });
-const SkillsMarquee = dynamic(
-  () => import("./components/SkillsMarquee"),
+const Header = dynamic(
+  () => import("./components/layout/Header"),
   { ssr: false }
 );
-const About = dynamic(() => import("./components/About"), { ssr: false });
-const Projects = dynamic(
-  () => import("./components/Projects"),
+const Hero = dynamic(
+  () => import("./components/sections/Hero"),
   { ssr: false }
 );
-const FAQ = dynamic(() => import("./components/FAQ"), { ssr: false });
+const SelectedWork = dynamic(
+  () => import("./components/sections/SelectedWork"),
+  { ssr: false }
+);
+const About = dynamic(
+  () => import("./components/sections/About"),
+  { ssr: false }
+);
+const Writing = dynamic(
+  () => import("./components/sections/Writing"),
+  { ssr: false }
+);
+const SkillsExperience = dynamic(
+  () => import("./components/sections/SkillsExperience"),
+  { ssr: false }
+);
+const Timeline = dynamic(
+  () => import("./components/sections/Timeline"),
+  { ssr: false }
+);
 const Contact = dynamic(
-  () => import("./components/Contact"),
+  () => import("./components/sections/Contact"),
+  { ssr: false }
+);
+const Footer = dynamic(
+  () => import("./components/sections/Footer"),
   { ssr: false }
 );
 
@@ -34,13 +55,18 @@ export default function Page() {
     <>
       <CustomCursor />
       <LoadingScreen />
+      <Header />
       <SmoothScroll>
-        <Hero />
-        <SkillsMarquee />
-        <About />
-        <Projects />
-        <FAQ />
-        <Contact />
+        <main id="main-content">
+          <Hero />
+          <SelectedWork />
+          <About />
+          <Writing />
+          <Timeline />
+          <SkillsExperience />
+          <Contact />
+        </main>
+        <Footer />
       </SmoothScroll>
     </>
   );
