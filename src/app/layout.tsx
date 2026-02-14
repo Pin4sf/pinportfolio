@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Instrument_Serif, JetBrains_Mono } from "next/font/google";
 import "./globals.scss";
 import { siteConfig } from "@/data/portfolio";
+import ClientShell from "./components/ClientShell";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -57,7 +58,9 @@ export default function RootLayout({
         <a href="#main-content" className="sr-only" style={{ position: 'absolute', top: 0, left: 0, zIndex: 9999, padding: '1rem', background: 'var(--accent)', color: 'var(--bg-primary)' }}>
           Skip to content
         </a>
-        {children}
+        <ClientShell>
+          {children}
+        </ClientShell>
       </body>
     </html>
   );

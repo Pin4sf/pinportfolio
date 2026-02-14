@@ -8,6 +8,7 @@ import styles from "./SelectedWork.module.scss";
 import { getVentures } from "@/data/portfolio";
 import { useReducedMotion } from "@/app/hooks/useReducedMotion";
 import { ArrowUpRight, ExternalLink } from "lucide-react";
+import TransitionLink from "../ui/TransitionLink";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -130,7 +131,7 @@ export default function SelectedWork() {
 
       <div className={styles.list}>
         {projects.map((project, i) => (
-          <a
+          <TransitionLink
             key={project.slug}
             href={`/work/${project.slug}`}
             className={styles.card}
@@ -200,7 +201,7 @@ export default function SelectedWork() {
                 </span>
               </div>
             </div>
-          </a>
+          </TransitionLink>
         ))}
       </div>
     </section>

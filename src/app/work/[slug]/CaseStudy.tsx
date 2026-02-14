@@ -7,6 +7,7 @@ import styles from "./CaseStudy.module.scss";
 import type { CaseStudy as CaseStudyType } from "@/data/portfolio";
 import { useReducedMotion } from "@/app/hooks/useReducedMotion";
 import { ArrowLeft, ArrowRight, ExternalLink, Github } from "lucide-react";
+import TransitionLink from "@/app/components/ui/TransitionLink";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -51,10 +52,10 @@ export default function CaseStudy({ caseStudy, prev, next }: CaseStudyProps) {
 
   return (
     <main ref={pageRef} className={styles.page}>
-      <a href="/" className={styles.back}>
+      <TransitionLink href="/" className={styles.back}>
         <ArrowLeft size={16} />
         Home
-      </a>
+      </TransitionLink>
 
       {/* Hero */}
       <header className={styles.hero}>
@@ -165,18 +166,18 @@ export default function CaseStudy({ caseStudy, prev, next }: CaseStudyProps) {
       {/* Navigation */}
       <nav className={styles.nav}>
         {prev ? (
-          <a href={`/work/${prev.slug}`} className={styles.navLink}>
+          <TransitionLink href={`/work/${prev.slug}`} className={styles.navLink}>
             <ArrowLeft size={16} />
             <div>
               <span className={styles.navLabel}>Previous</span>
               <span className={styles.navName}>{prev.name}</span>
             </div>
-          </a>
+          </TransitionLink>
         ) : (
           <div />
         )}
         {next ? (
-          <a
+          <TransitionLink
             href={`/work/${next.slug}`}
             className={`${styles.navLink} ${styles.navRight}`}
           >
@@ -185,7 +186,7 @@ export default function CaseStudy({ caseStudy, prev, next }: CaseStudyProps) {
               <span className={styles.navName}>{next.name}</span>
             </div>
             <ArrowRight size={16} />
-          </a>
+          </TransitionLink>
         ) : (
           <div />
         )}

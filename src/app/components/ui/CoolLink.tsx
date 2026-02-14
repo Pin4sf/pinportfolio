@@ -2,6 +2,7 @@
 
 import styles from "./CoolLink.module.scss";
 import clsx from "clsx";
+import TransitionLink from "./TransitionLink";
 
 interface CoolLinkProps {
   href: string;
@@ -10,13 +11,16 @@ interface CoolLinkProps {
 }
 
 export default function CoolLink({ href, text, className }: CoolLinkProps) {
+  const isPageLink = href.startsWith("/") && !href.startsWith("#");
+  const Tag = isPageLink ? TransitionLink : "a";
+
   return (
-    <a
+    <Tag
       href={href}
       className={clsx(styles.coolLinks, className)}
       data-text={text}
     >
       <span>{text}</span>
-    </a>
+    </Tag>
   );
 }

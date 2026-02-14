@@ -4,6 +4,7 @@ import { useState } from "react";
 import styles from "./WritingArchive.module.scss";
 import type { PostMeta } from "@/lib/mdx";
 import { ArrowLeft } from "lucide-react";
+import TransitionLink from "@/app/components/ui/TransitionLink";
 
 const categories = [
   { key: "all", label: "All" },
@@ -33,10 +34,10 @@ export default function WritingArchive({ posts }: WritingArchiveProps) {
   return (
     <main className={styles.page}>
       <header className={styles.header}>
-        <a href="/" className={styles.back}>
+        <TransitionLink href="/" className={styles.back}>
           <ArrowLeft size={16} />
           Home
-        </a>
+        </TransitionLink>
         <h1 className={styles.title}>Writing</h1>
         <p className={styles.subtitle}>
           Notes on shipping products, building AI systems, and figuring it out along the way.
@@ -57,7 +58,7 @@ export default function WritingArchive({ posts }: WritingArchiveProps) {
 
       <div className={styles.list}>
         {filteredPosts.map((post) => (
-          <a
+          <TransitionLink
             key={post.slug}
             href={`/writing/${post.slug}`}
             className={styles.card}
@@ -84,7 +85,7 @@ export default function WritingArchive({ posts }: WritingArchiveProps) {
             </div>
             <h2 className={styles.cardTitle}>{post.title}</h2>
             <p className={styles.cardDescription}>{post.description}</p>
-          </a>
+          </TransitionLink>
         ))}
 
         {filteredPosts.length === 0 && (

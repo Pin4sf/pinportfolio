@@ -3,6 +3,7 @@
 import styles from "./BlogPost.module.scss";
 import type { Post } from "@/lib/mdx";
 import { ArrowLeft } from "lucide-react";
+import TransitionLink from "@/app/components/ui/TransitionLink";
 import { MDXRemote } from "next-mdx-remote/rsc";
 
 const categoryColors: Record<string, string> = {
@@ -18,10 +19,10 @@ interface BlogPostProps {
 export default function BlogPost({ post }: BlogPostProps) {
   return (
     <main className={styles.page}>
-      <a href="/writing" className={styles.back}>
+      <TransitionLink href="/writing" className={styles.back}>
         <ArrowLeft size={16} />
         Back to Writing
-      </a>
+      </TransitionLink>
 
       <article className={styles.article}>
         <header className={styles.header}>
@@ -55,9 +56,9 @@ export default function BlogPost({ post }: BlogPostProps) {
       </article>
 
       <div className={styles.footer}>
-        <a href="/writing" className={styles.backLink}>
+        <TransitionLink href="/writing" className={styles.backLink}>
           &larr; All Writing
-        </a>
+        </TransitionLink>
       </div>
     </main>
   );

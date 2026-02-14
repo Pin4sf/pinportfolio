@@ -7,6 +7,7 @@ import anime from "animejs";
 import styles from "./Writing.module.scss";
 import { useReducedMotion } from "@/app/hooks/useReducedMotion";
 import CoolLink from "../ui/CoolLink";
+import TransitionLink from "../ui/TransitionLink";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -154,7 +155,7 @@ export default function Writing() {
 
       <div className={styles.grid}>
         {featuredPosts.map((post) => (
-          <a
+          <TransitionLink
             key={post.slug}
             href={`/writing/${post.slug}`}
             className={styles.card}
@@ -189,7 +190,7 @@ export default function Writing() {
               <span className={styles.dot}>·</span>
               <span>{post.readingTime} min read</span>
             </div>
-          </a>
+          </TransitionLink>
         ))}
       </div>
     </section>
