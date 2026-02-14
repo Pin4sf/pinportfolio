@@ -2,32 +2,46 @@
 title: "My Stack in 2026: What I Use and Why"
 date: "2026-01-05"
 category: "technical"
-description: "A breakdown of the tools, frameworks, and workflows I use daily — and the reasoning behind each choice."
+description: "A breakdown of the tools, frameworks, and workflows I use daily — from LLM pipelines to agentic systems — and the reasoning behind each choice."
 featured: true
 ---
 
 # My Stack in 2026: What I Use and Why
 
-Every developer has opinions about their tools. Here are mine — not because they're the "best," but because they work for the way I think and build.
+Every engineer has opinions about their tools. Here are mine — not because they're the "best," but because they match how I think and what I build.
 
 ## Frontend
 
-**Next.js + TypeScript** is my default. The App Router, server components, and static generation give me the flexibility to build anything from a marketing site to a full-stack app. TypeScript isn't optional — it's the difference between "it works" and "it works reliably."
+**Next.js 14 + TypeScript** is my default for anything web. The App Router and server components give me the rendering flexibility I need. Static generation for portfolios, SSR for dynamic apps, API routes when I need a quick backend.
 
-**GSAP** for animation. CSS animations are great until you need scroll-linked effects, complex timelines, or physics-based motion. GSAP handles all of that with a clean API and consistent 60fps.
+**GSAP** for animation. CSS transitions handle the basics, but when you need scroll-linked reveals, complex timelines, or physics-based motion, nothing touches GSAP. ScrollTrigger alone is worth it.
 
-**Three.js** when I need 3D. Not every project needs it, but when it does, nothing else comes close. Custom GLSL shaders give you pixel-level control over every visual.
+**Three.js + GLSL** when a project calls for 3D. Custom shaders give pixel-level control. I pair it with `postprocessing` for bloom, chromatic aberration, and other effects.
 
-## Backend
+## AI / ML
 
-**Node.js + Express** for APIs. Fast to prototype, easy to deploy, and JavaScript everywhere means fewer context switches. MongoDB for document storage, Redis for caching and real-time pub/sub.
+This is where most of my time goes now.
 
-**Python** for data work. Pandas, NumPy, and Scikit-learn for analysis and ML. TensorFlow when I need deep learning.
+**Python** is the backbone — LangChain for LLM orchestration, FastAPI for serving, PyTorch for anything custom. I've built RAG pipelines, agentic workflows, and fine-tuning loops all in Python.
 
-## Tools
+**Vector databases** — Pinecone for production, ChromaDB for prototyping. The choice matters less than your chunking strategy and embedding model selection.
 
-**Git** is non-negotiable. **Docker** for consistent environments. **Figma** for design. **VS Code** with Vim keybindings because old habits die hard.
+**LLM APIs** — Claude for reasoning-heavy tasks, GPT-4 for general use, open-source models (Mistral, Llama) when I need to run inference locally or fine-tune.
+
+## Infrastructure
+
+**Docker** for everything. I don't trust "it works on my machine" and neither should you.
+
+**Vercel** for frontend deployments — zero-config, instant previews, edge functions. **Railway** or **Fly.io** for backend services that need persistent connections or GPU access.
+
+**MongoDB** for document storage when schemas are evolving. **PostgreSQL** when I need relational integrity. **Redis** for caching, rate limiting, and pub/sub.
+
+## Dev Environment
+
+**VS Code** with Vim keybindings. **Claude Code** as my AI pair programmer. **Git** with conventional commits. **Figma** for design — I believe engineers should be able to design, even if they're not designers.
 
 ## The Philosophy
 
-I don't chase trends. I choose tools that are stable, well-documented, and have strong communities. The best stack is the one that gets out of your way and lets you focus on the problem you're actually solving.
+I optimize for iteration speed over theoretical purity. The best stack is the one that lets you ship fast, learn from users, and change direction without rewriting everything.
+
+I don't chase trends. I adopt tools when they solve a problem I actually have, not because Twitter said I should.
