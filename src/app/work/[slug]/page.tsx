@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { caseStudies } from "@/data/portfolio";
+import { caseStudies, siteConfig } from "@/data/portfolio";
 import type { Metadata } from "next";
 import CaseStudy from "./CaseStudy";
 
@@ -18,6 +18,16 @@ export function generateMetadata({ params }: Props): Metadata {
   return {
     title: `${cs.name} — Shivansh Fulper`,
     description: cs.tagline,
+    alternates: {
+      canonical: `${siteConfig.url}/work/${cs.slug}`,
+    },
+    openGraph: {
+      title: `${cs.name} — Shivansh Fulper`,
+      description: cs.tagline,
+      url: `${siteConfig.url}/work/${cs.slug}`,
+      images: [cs.heroImage],
+      type: "article",
+    },
   };
 }
 

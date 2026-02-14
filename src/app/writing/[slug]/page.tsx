@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import { getAllPosts, getPostBySlug } from "@/lib/mdx";
+import { siteConfig } from "@/data/portfolio";
 import type { Metadata } from "next";
 import BlogPost from "./BlogPost";
 
@@ -19,6 +20,16 @@ export function generateMetadata({ params }: Props): Metadata {
   return {
     title: `${post.title} — Shivansh Fulper`,
     description: post.description,
+    alternates: {
+      canonical: `${siteConfig.url}/writing/${post.slug}`,
+    },
+    openGraph: {
+      title: `${post.title} — Shivansh Fulper`,
+      description: post.description,
+      url: `${siteConfig.url}/writing/${post.slug}`,
+      type: "article",
+      publishedTime: post.date,
+    },
   };
 }
 

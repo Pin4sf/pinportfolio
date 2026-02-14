@@ -1,0 +1,102 @@
+# Shivansh Fulper — Full Context
+
+> AI engineer and startup founder. CTO at OneSync, Co-Founder of EcoFresh Greensync. Building cognitive performance wearables and decentralized waste-to-value infrastructure.
+
+## Identity
+
+Name: Shivansh Fulper
+Location: Nagpur, India
+Education: B.Tech '26, IIITDM Jabalpur (Smart Manufacturing)
+Current Roles: CTO & Co-Founder @ OneSync, AI Engineer @ Atlan
+Email: piyushfulper3210@gmail.com
+
+## Professional Background
+
+Shivansh builds AI systems at the infrastructure level — not wrappers, not demos, real pipelines that process data at scale and make decisions autonomously.
+
+As CTO of OneSync, he is building the intelligence layer that turns wearable biosignals into cognitive readiness scores. He also co-founded EcoFresh Greensync — a decentralized waste-to-value infrastructure company with 3 IP discoveries and recognition at the Hult Prize.
+
+At Atlan, he builds AI-native developer agents. At Soket AI Labs, he built multilingual dataset pipelines for Indic LLM training.
+
+He thinks in systems, ships fast, and would rather fail at 20 than wait until he's "qualified."
+
+## Ventures (Detailed)
+
+### OneSync — Cognitive Performance Platform
+- Role: Co-Founder & CTO
+- Timeline: 2026 — Present
+- Website: https://onesync-website-zs1p.vercel.app/
+- Stack: AI/ML, Biosignal Processing, Edge Computing, React, TypeScript
+
+OneBand is a wristband that reads multiple biosignals — heart rhythm variability, galvanic skin response, motion patterns, muscle tension — and cross-references them to produce a cognitive readiness index.
+
+The system stays quiet when it's not confident. In environments where a bad call has real consequences, showing nothing is better than a false green light.
+
+Built for institutions: training academies, defense units, elite sports teams. The AI layer builds a personal digital twin — learning individual baselines so that "normal" for one person isn't confused with "stressed" for another.
+
+Team of 4 (CEO, CTO, COO, CPO) with backgrounds spanning biosensing, AI systems, manufacturing, and product hardware.
+
+### EcoFresh Greensync — Waste-to-Value Infrastructure
+- Role: Co-Founder
+- Timeline: Nov 2025 — Present
+- Website: https://www.ecofreshgreensync.com/
+- Stack: AI/ML, Polymer Modeling, Bio-processing, Catalytic Systems
+
+Modular Eco-Converter units that accept mixed municipal solid waste as-is and process it through staged biological and catalytic pathways. No dependency on perfect segregation.
+
+First high-value output: PHA-class biodegradable polymers, with secondary streams like bio-fertilizer and eco-composites.
+
+Achievements:
+- Registered as EcoFresh Greensync LLP (MSME Micro Enterprise)
+- Incubated at IIITDM Jabalpur under Institution's Innovation Council (Ministry of Education)
+- 16th among 2,500+ teams at Hult Prize, IIT Bombay
+- National recognition from Ministry of Education
+- 3 IP discoveries with patent filing procedures documented
+
+## Work Experience
+
+### Atlan — AI Engineer Intern (2026)
+Building AI-native SDLC agents — autonomous debugging, GraphRAG retrieval, and long-term agent memory systems for developer workflows.
+
+### Soket AI Labs — MTS Intern (2025)
+Built multilingual dataset pipelines for Indic LLM training (Project Eka). Deduplication, quality filtering, and language alignment at scale. Collaboration with IIT Gandhinagar.
+
+### OpenFn (Code for GovTech) — AI Engineer Intern (2024)
+NLP-to-workflow pipeline for government-tech data integrations. Selected under the Code for GovTech national open-source program.
+
+## Technical Skills
+
+AI & ML Systems: Large Language Models, RAG & GraphRAG, Agentic Systems, Biosignal Processing, NER & NLP Pipelines, Dataset Curation, Memory-Augmented AI
+
+Engineering: Python, TypeScript, Next.js, React, Node.js, MongoDB, Redis
+
+Infrastructure: Distributed Systems, Data Pipeline Design, Edge Computing, API Architecture, Docker
+
+Tools: Git, Linux, Figma, PyTorch, TensorFlow
+
+Currently Exploring: MoE Architectures, AI-Native Development Environments, Cognitive Computing
+
+## Writing
+
+### Building OneSync: From Biosignals to Cognitive Readiness (Jan 2026)
+Category: Building
+What he learned building a cognitive performance platform — from biosignal processing to making invisible data actionable for high-pressure teams.
+URL: https://shivanshfulper.com/writing/building-onesync
+
+### My Stack in 2026: What I Use and Why (Jan 2026)
+Category: Technical
+A breakdown of the tools, frameworks, and workflows he uses daily — from LLM pipelines to agentic systems — and the reasoning behind each choice.
+URL: https://shivanshfulper.com/writing/my-stack-2026
+
+### What Starting Two Companies Taught Me About Building (Dec 2025)
+Category: Thinking
+OneSync and EcoFresh Greensync changed how he thinks about systems, distribution, and execution. Lessons from shipping real products.
+URL: https://shivanshfulper.com/writing/startup-lessons
+
+## Social Links
+
+- Website: https://shivanshfulper.com
+- LinkedIn: https://www.linkedin.com/in/shivanshfulper/
+- GitHub: https://github.com/Pin4sf
+- Twitter: https://twitter.com/FulperShivansh
+- Instagram: https://instagram.com/pin4sf

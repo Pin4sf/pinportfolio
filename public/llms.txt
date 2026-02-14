@@ -1,0 +1,43 @@
+# Shivansh Fulper — Portfolio
+
+> AI engineer and startup founder building cognitive performance wearables and decentralized waste-to-value infrastructure.
+
+## About
+
+Shivansh Fulper is a final-year B.Tech student at IIITDM Jabalpur, India. He builds AI systems at the infrastructure level — LLM pipelines, agentic workflows, biosignal processing, and data platform tooling.
+
+Currently CTO & Co-Founder at OneSync (cognitive performance wearables) and Co-Founder of EcoFresh Greensync (waste-to-value infrastructure). Previously AI Engineer at Atlan, MTS Intern at Soket AI Labs, and AI Engineer at OpenFn (Code for GovTech).
+
+## Ventures
+
+- [OneSync](https://shivanshfulper.com/work/onesync): Cognitive performance platform. Wristband that reads biosignals and produces cognitive readiness scores for high-pressure teams (defense, aviation, elite sports). AI interpretation layer builds personal digital twins.
+- [EcoFresh Greensync](https://shivanshfulper.com/work/ecofresh): Decentralized waste-to-value infrastructure. Modular Eco-Converter units that process mixed municipal waste into biodegradable polymers and bio-fertilizer. 3 IP discoveries, Hult Prize recognition.
+
+## Skills
+
+- AI/ML: Large Language Models, RAG & GraphRAG, Agentic Systems, Biosignal Processing, NER & NLP Pipelines, Dataset Curation, Memory-Augmented AI
+- Engineering: Python, TypeScript, Next.js, React, Node.js, MongoDB, Redis
+- Infrastructure: Distributed Systems, Data Pipeline Design, Edge Computing, API Architecture, Docker
+- Tools: Git, Linux, Figma, PyTorch, TensorFlow
+
+## Writing
+
+- [Building OneSync: From Biosignals to Cognitive Readiness](https://shivanshfulper.com/writing/building-onesync)
+- [My Stack in 2026: What I Use and Why](https://shivanshfulper.com/writing/my-stack-2026)
+- [What Starting Two Companies Taught Me About Building](https://shivanshfulper.com/writing/startup-lessons)
+
+## Links
+
+- Website: https://shivanshfulper.com
+- LinkedIn: https://www.linkedin.com/in/shivanshfulper/
+- GitHub: https://github.com/Pin4sf
+- Twitter: https://twitter.com/FulperShivansh
+- Email: piyushfulper3210@gmail.com
+
+## Location
+
+Nagpur, India
+
+## Education
+
+B.Tech '26, IIITDM Jabalpur — Smart Manufacturing
