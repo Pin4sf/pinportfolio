@@ -6,6 +6,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import styles from "./SelectedWork.module.scss";
 import { getVentures } from "@/data/portfolio";
 import { useReducedMotion } from "@/app/hooks/useReducedMotion";
+import { useGpuTier } from "@/app/hooks/useGpuTier";
 import { ArrowUpRight, ExternalLink } from "lucide-react";
 import TransitionLink from "../ui/TransitionLink";
 
@@ -14,7 +15,9 @@ gsap.registerPlugin(ScrollTrigger);
 export default function SelectedWork() {
   const sectionRef = useRef<HTMLElement>(null);
   const reducedMotion = useReducedMotion();
+  const gpuTier = useGpuTier();
   const projects = getVentures();
+  const isLowTier = gpuTier === "low";
 
   useEffect(() => {
     if (reducedMotion) return;
@@ -40,61 +43,82 @@ export default function SelectedWork() {
           },
         });
 
-        // Alternating L/R clip-path reveal
-        tl.fromTo(
-          number,
-          { opacity: 0, x: isEven ? -20 : 20 },
-          { opacity: 0.08, x: 0, duration: 0.8, ease: "expo.out" }
-        )
-          .fromTo(
-            image,
-            { clipPath: isEven ? "inset(0 100% 0 0)" : "inset(0 0 0 100%)" },
-            {
-              clipPath: "inset(0 0% 0 0%)",
-              duration: 1.2,
-              ease: "power4.inOut",
-            },
-            0
+        if (isLowTier) {
+          // Simple fade-up on low tier (no clip-path compositing)
+          tl.fromTo(
+            number,
+            { opacity: 0 },
+            { opacity: 0.08, duration: 0.6, ease: "power2.out" }
           )
-          .fromTo(
-            text?.children ? Array.from(text.children) : [],
-            { x: isEven ? -30 : 30, opacity: 0 },
-            {
-              x: 0,
-              opacity: 1,
-              duration: 0.7,
-              stagger: 0.06,
-              ease: "expo.out",
-            },
-            0.4
-          );
-
-        // Scrub parallax on image
-        if (img) {
-          gsap.fromTo(
-            img,
-            { yPercent: -8 },
-            {
-              yPercent: 8,
-              ease: "none",
-              scrollTrigger: {
-                trigger: card,
-                start: "top bottom",
-                end: "bottom top",
-                scrub: 0.6,
+            .fromTo(
+              image,
+              { opacity: 0, y: 20 },
+              { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" },
+              0
+            )
+            .fromTo(
+              text?.children ? Array.from(text.children) : [],
+              { y: 20, opacity: 0 },
+              { y: 0, opacity: 1, duration: 0.6, stagger: 0.05, ease: "power2.out" },
+              0.2
+            );
+        } else {
+          // Alternating L/R clip-path reveal
+          tl.fromTo(
+            number,
+            { opacity: 0, x: isEven ? -20 : 20 },
+            { opacity: 0.08, x: 0, duration: 0.8, ease: "expo.out" }
+          )
+            .fromTo(
+              image,
+              { clipPath: isEven ? "inset(0 100% 0 0)" : "inset(0 0 0 100%)" },
+              {
+                clipPath: "inset(0 0% 0 0%)",
+                duration: 1.2,
+                ease: "power4.inOut",
               },
-            }
-          );
+              0
+            )
+            .fromTo(
+              text?.children ? Array.from(text.children) : [],
+              { x: isEven ? -30 : 30, opacity: 0 },
+              {
+                x: 0,
+                opacity: 1,
+                duration: 0.7,
+                stagger: 0.06,
+                ease: "expo.out",
+              },
+              0.4
+            );
+
+          // Scrub parallax on image (skip on low tier)
+          if (img) {
+            gsap.fromTo(
+              img,
+              { yPercent: -8 },
+              {
+                yPercent: 8,
+                ease: "none",
+                scrollTrigger: {
+                  trigger: card,
+                  start: "top bottom",
+                  end: "bottom top",
+                  scrub: 0.6,
+                },
+              }
+            );
+          }
         }
       });
     }, section);
 
     return () => ctx.revert();
-  }, [reducedMotion]);
+  }, [reducedMotion, isLowTier]);
 
-  // Magnetic card hover
+  // Magnetic card hover (skip on low tier)
   useEffect(() => {
-    if (reducedMotion) return;
+    if (reducedMotion || isLowTier) return;
     const section = sectionRef.current;
     if (!section) return;
 
@@ -143,7 +167,7 @@ export default function SelectedWork() {
         card.removeEventListener("mouseleave", handleMouseLeave);
       });
     };
-  }, [reducedMotion]);
+  }, [reducedMotion, isLowTier]);
 
   return (
     <section ref={sectionRef} id="ventures" className={styles.section}>

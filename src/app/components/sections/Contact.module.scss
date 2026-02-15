@@ -2,7 +2,8 @@
   position: relative;
   background: var(--bg-primary);
   padding: var(--section-py) var(--section-px);
-  min-height: 100vh;
+  min-height: min(100vh, 900px);
+  min-height: min(100dvh, 900px);
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -52,6 +53,11 @@
   position: relative;
   z-index: 1;
   letter-spacing: -0.03em;
+
+  @media (max-height: 700px) {
+    font-size: clamp(2.5rem, 6vw, 4rem);
+    margin: 0.75rem 0 2rem;
+  }
 }
 
 .grid {
@@ -130,6 +136,13 @@
   box-shadow:
     0 8px 32px rgba(0, 0, 0, 0.2),
     inset 0 1px 0 rgba(255, 255, 255, 0.05);
+
+  @media (max-width: 767px) {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background: var(--bg-secondary);
+    padding: var(--space-lg);
+  }
 }
 
 .field {

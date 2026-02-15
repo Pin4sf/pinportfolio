@@ -3,12 +3,14 @@
 import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import styles from "./CustomCursor.module.scss";
+import { useGpuTier } from "@/app/hooks/useGpuTier";
 
 export default function CustomCursor() {
   const cursorRef = useRef<HTMLDivElement>(null);
   const labelRef = useRef<HTMLSpanElement>(null);
   const spotlightRef = useRef<HTMLDivElement>(null);
   const [isTouchDevice, setIsTouchDevice] = useState(false);
+  const gpuTier = useGpuTier();
 
   useEffect(() => {
     // Skip on touch devices — don't render at all
@@ -20,7 +22,9 @@ export default function CustomCursor() {
     const cursor = cursorRef.current;
     const label = labelRef.current;
     const spotlight = spotlightRef.current;
-    if (!cursor || !label || !spotlight) return;
+    if (!cursor || !label) return;
+
+    const isLowTier = gpuTier === "low";
 
     // GSAP quickTo for smooth cursor following (0.2s lag)
     const moveCursorX = gsap.quickTo(cursor, "x", {
@@ -32,35 +36,33 @@ export default function CustomCursor() {
       ease: "power3",
     });
 
-    // Velocity deformation via quickTo
-    const setScaleX = gsap.quickTo(cursor, "scaleX", {
-      duration: 0.3,
-      ease: "power3",
-    });
-    const setScaleY = gsap.quickTo(cursor, "scaleY", {
-      duration: 0.3,
-      ease: "power3",
-    });
-    const setRotation = gsap.quickTo(cursor, "rotation", {
-      duration: 0.3,
-      ease: "power3",
-    });
+    // Velocity deformation — skip on low tier (saves 3 quickTo per frame)
+    const setScaleX = !isLowTier
+      ? gsap.quickTo(cursor, "scaleX", { duration: 0.3, ease: "power3" })
+      : null;
+    const setScaleY = !isLowTier
+      ? gsap.quickTo(cursor, "scaleY", { duration: 0.3, ease: "power3" })
+      : null;
+    const setRotation = !isLowTier
+      ? gsap.quickTo(cursor, "rotation", { duration: 0.3, ease: "power3" })
+      : null;
 
     let prevX = 0;
     let prevY = 0;
     let isHovering = false;
 
     const onMouseMove = (e: MouseEvent) => {
-      // Update cursor position
       moveCursorX(e.clientX);
       moveCursorY(e.clientY);
 
-      // Update spotlight CSS custom properties
-      spotlight.style.setProperty("--cursor-x", `${e.clientX}px`);
-      spotlight.style.setProperty("--cursor-y", `${e.clientY}px`);
+      // Update spotlight CSS custom properties (skip on low tier)
+      if (spotlight && !isLowTier) {
+        spotlight.style.setProperty("--cursor-x", `${e.clientX}px`);
+        spotlight.style.setProperty("--cursor-y", `${e.clientY}px`);
+      }
 
-      // Velocity deformation (skip during hover expand)
-      if (!isHovering) {
+      // Velocity deformation (skip on low tier and during hover expand)
+      if (setScaleX && setScaleY && setRotation && !isHovering) {
         const dx = e.clientX - prevX;
         const dy = e.clientY - prevY;
         const speed = Math.sqrt(dx * dx + dy * dy);
@@ -120,7 +122,6 @@ export default function CustomCursor() {
       const el = e.currentTarget as Element;
       const cursorLabel = getCursorLabel(el);
 
-      // Expand circle: 12px → 80px
       gsap.to(cursor, {
         width: 80,
         height: 80,
@@ -130,10 +131,11 @@ export default function CustomCursor() {
         ease: "power2.out",
       });
 
-      // Reset deformation during hover
-      setScaleX(1);
-      setScaleY(1);
-      setRotation(0);
+      if (setScaleX && setScaleY && setRotation) {
+        setScaleX(1);
+        setScaleY(1);
+        setRotation(0);
+      }
 
       if (cursorLabel) {
         label.textContent = cursorLabel;
@@ -149,7 +151,6 @@ export default function CustomCursor() {
     const onMouseLeaveInteractive = () => {
       isHovering = false;
 
-      // Shrink back to 12px
       gsap.to(cursor, {
         width: 12,
         height: 12,
@@ -208,13 +209,13 @@ export default function CustomCursor() {
       });
       document.documentElement.classList.remove("custom-cursor-active");
     };
-  }, []);
+  }, [gpuTier]);
 
   if (isTouchDevice) return null;
 
   return (
     <>
-      <div ref={spotlightRef} className={styles.spotlight} />
+      {gpuTier !== "low" && <div ref={spotlightRef} className={styles.spotlight} />}
       <div ref={cursorRef} className={styles.cursor}>
         <span ref={labelRef} className={styles.label} />
       </div>

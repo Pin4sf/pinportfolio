@@ -56,6 +56,10 @@
   --radius-lg: 12px;
   --radius-full: 100px;
 
+  /* Viewport height — dvh with vh fallback */
+  --vh-full: 100vh;
+  --vh-full: 100dvh;
+
   /* Section padding — fluid */
   --section-px: clamp(1.5rem, 4vw, 5rem);
   --section-py: clamp(4rem, 8vw, 8rem);
@@ -160,7 +164,7 @@ ul {
   padding-top: var(--section-py);
   padding-bottom: var(--section-py);
   overflow: hidden;
-  min-height: 100vh;
+  min-height: var(--vh-full);
 }
 
 /* ---- Section Label ---- */
@@ -245,6 +249,13 @@ ul {
 /* Giant marquee text — fills entire viewport */
 .marquee__text--giant {
   font-size: clamp(8rem, 25vw, 22rem);
+}
+
+/* Hide marquees on mobile — GPU waste for barely visible decoration */
+@media (max-width: 767px) {
+  .marquee {
+    display: none;
+  }
 }
 
 @keyframes marquee {
@@ -385,6 +396,20 @@ body::after {
   body::after {
     animation: none;
     opacity: 0.03;
+  }
+}
+
+/* Disable film grain on mobile — pure GPU waste */
+@media (max-width: 767px) {
+  body::after {
+    display: none;
+  }
+}
+
+/* ---- Short / Wide Viewport Adjustments ---- */
+@media (max-height: 700px) {
+  :root {
+    --section-py: clamp(2rem, 4vw, 4rem);
   }
 }
 

@@ -6,6 +6,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import styles from "./Contact.module.scss";
 import { contactData } from "@/data/portfolio";
 import { useReducedMotion } from "@/app/hooks/useReducedMotion";
+import { useGpuTier } from "@/app/hooks/useGpuTier";
 import { Github as GithubIcon, Linkedin as LinkedinIcon, Twitter as TwitterIcon, Instagram as InstagramIcon, Send, Loader2, Check, type LucideIcon } from "lucide-react";
 
 
@@ -22,6 +23,8 @@ export default function Contact() {
   const sectionRef = useRef<HTMLElement>(null);
   const emailRef = useRef<HTMLAnchorElement>(null);
   const reducedMotion = useReducedMotion();
+  const gpuTier = useGpuTier();
+  const isLowTier = gpuTier === "low";
 
   const [formData, setFormData] = useState({
     name: "",
@@ -45,40 +48,48 @@ export default function Contact() {
         },
       });
 
-      // Vertical clip-path heading reveal
       const heading = section.querySelector(`.${styles.heading}`);
       if (heading) {
-        tl.fromTo(
-          heading,
-          { clipPath: "inset(100% 0 0 0)" },
-          { clipPath: "inset(0% 0 0 0)", duration: 1, ease: "power4.inOut" },
-          0
-        );
+        if (isLowTier) {
+          // Simple fade on low tier (no clip-path compositing)
+          tl.fromTo(heading, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" }, 0);
+        } else {
+          tl.fromTo(
+            heading,
+            { clipPath: "inset(100% 0 0 0)" },
+            { clipPath: "inset(0% 0 0 0)", duration: 1, ease: "power4.inOut" },
+            0
+          );
+        }
       }
 
-      // Email reveal
+      // Email reveal (skip char split on low tier)
       const emailEl = emailRef.current;
       if (emailEl) {
-        const text = emailEl.textContent || "";
-        emailEl.innerHTML = "";
+        if (isLowTier) {
+          tl.fromTo(emailEl, { opacity: 0, y: 15 }, { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" }, 0.2);
+        } else {
+          const text = emailEl.textContent || "";
+          emailEl.innerHTML = "";
 
-        text.split("").forEach((char) => {
-          const span = document.createElement("span");
-          span.style.display = "inline-block";
-          span.textContent = char === " " ? "\u00A0" : char;
-          span.style.transform = "translateY(100%)";
-          span.style.opacity = "0";
-          span.classList.add("email-char");
-          emailEl.appendChild(span);
-        });
+          text.split("").forEach((char) => {
+            const span = document.createElement("span");
+            span.style.display = "inline-block";
+            span.textContent = char === " " ? "\u00A0" : char;
+            span.style.transform = "translateY(100%)";
+            span.style.opacity = "0";
+            span.classList.add("email-char");
+            emailEl.appendChild(span);
+          });
 
-        tl.to(".email-char", {
-          y: 0,
-          opacity: 1,
-          duration: 0.5,
-          stagger: 0.02,
-          ease: "power4.out",
-        }, 0.3);
+          tl.to(".email-char", {
+            y: 0,
+            opacity: 1,
+            duration: 0.5,
+            stagger: 0.02,
+            ease: "power4.out",
+          }, 0.3);
+        }
       }
 
       // Scrub-linked form field reveals
@@ -104,7 +115,7 @@ export default function Contact() {
     }, section);
 
     return () => ctx.revert();
-  }, [reducedMotion]);
+  }, [reducedMotion, isLowTier]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>

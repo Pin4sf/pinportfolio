@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
+import { useGpuTier, type GpuTier } from "@/app/hooks/useGpuTier";
 
 const vertexShader = `
   varying vec2 vUv;
@@ -11,7 +12,11 @@ const vertexShader = `
   }
 `;
 
-const fragmentShader = `
+const buildFragmentShader = (tier: GpuTier) => {
+  const octaves = tier === "low" ? 3 : 4;
+  const cursorEnabled = tier !== "low";
+
+  return `
   precision highp float;
 
   uniform float uTime;
@@ -20,7 +25,6 @@ const fragmentShader = `
 
   varying vec2 vUv;
 
-  // Simplex-like noise
   vec3 mod289(vec3 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
   vec2 mod289(vec2 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
   vec3 permute(vec3 x) { return mod289(((x * 34.0) + 1.0) * x); }
@@ -56,7 +60,7 @@ const fragmentShader = `
     float value = 0.0;
     float amplitude = 0.5;
     float frequency = 1.0;
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < ${octaves}; i++) {
       value += amplitude * snoise(p * frequency);
       frequency *= 2.0;
       amplitude *= 0.5;
@@ -71,25 +75,25 @@ const fragmentShader = `
 
     float t = uTime * 0.15;
 
-    // Cursor influence — subtle warp
+    ${cursorEnabled ? `
     vec2 mouse = vec2(uMouse.x * aspect, uMouse.y);
     float cursorDist = length(st - mouse);
     float cursorWarp = smoothstep(0.8, 0.0, cursorDist) * 0.15;
+    ` : `
+    float cursorWarp = 0.0;
+    `}
 
-    // Layered noise
     float n1 = fbm(st * 1.5 + vec2(t, t * 0.7) + cursorWarp);
     float n2 = fbm(st * 2.5 + vec2(-t * 0.5, t * 0.3));
     float n3 = fbm(st * 0.8 + vec2(t * 0.2, -t * 0.4));
 
     float noise = n1 * 0.5 + n2 * 0.3 + n3 * 0.2;
 
-    // Color palette
-    vec3 bgDark = vec3(0.035, 0.039, 0.055);     // #090a0e
-    vec3 accent  = vec3(0.424, 1.0, 0.553);       // #6cff8d green
-    vec3 warm    = vec3(0.941, 0.753, 0.251);      // #f0c040 gold
-    vec3 deep    = vec3(0.15, 0.18, 0.25);         // muted blue-grey
+    vec3 bgDark = vec3(0.035, 0.039, 0.055);
+    vec3 accent  = vec3(0.424, 1.0, 0.553);
+    vec3 warm    = vec3(0.941, 0.753, 0.251);
+    vec3 deep    = vec3(0.15, 0.18, 0.25);
 
-    // Gradient from bottom-left to top-right with noise distortion
     float grad = (uv.x * 0.3 + uv.y * 0.7) + noise * 0.3;
 
     vec3 col = bgDark;
@@ -97,13 +101,13 @@ const fragmentShader = `
     col = mix(col, accent * 0.15, smoothstep(0.3, 0.8, noise + cursorWarp * 2.0) * 0.3);
     col = mix(col, warm * 0.08, smoothstep(0.5, 0.9, n2) * 0.2);
 
-    // Subtle vignette
     float vignette = 1.0 - smoothstep(0.4, 1.4, length(uv - 0.5) * 1.5);
     col *= mix(0.7, 1.0, vignette);
 
     gl_FragColor = vec4(col, 1.0);
   }
 `;
+};
 
 interface HeroBackgroundProps {
   onCanvasReady?: (canvas: HTMLCanvasElement) => void;
@@ -111,17 +115,20 @@ interface HeroBackgroundProps {
 
 export default function HeroBackground({ onCanvasReady }: HeroBackgroundProps) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const gpuTier = useGpuTier();
 
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
+
+    const maxDpr = gpuTier === "low" ? 1 : gpuTier === "mid" ? 1.5 : 2;
 
     const scene = new THREE.Scene();
     const camera = new THREE.Camera();
 
     const renderer = new THREE.WebGLRenderer({ antialias: false, alpha: false, preserveDrawingBuffer: true });
     renderer.setSize(container.clientWidth, container.clientHeight);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, maxDpr));
     container.appendChild(renderer.domElement);
     onCanvasReady?.(renderer.domElement);
 
@@ -136,20 +143,22 @@ export default function HeroBackground({ onCanvasReady }: HeroBackgroundProps) {
     const geometry = new THREE.PlaneGeometry(2, 2);
     const material = new THREE.ShaderMaterial({
       vertexShader,
-      fragmentShader,
+      fragmentShader: buildFragmentShader(gpuTier),
       uniforms,
     });
 
     scene.add(new THREE.Mesh(geometry, material));
 
-    // Mouse tracking
+    // Mouse tracking (skip listener on low tier — shader ignores it)
     let targetMouse = { x: 0.5, y: 0.5 };
-    const onMouseMove = (e: MouseEvent) => {
-      const rect = container.getBoundingClientRect();
-      targetMouse.x = (e.clientX - rect.left) / rect.width;
-      targetMouse.y = 1.0 - (e.clientY - rect.top) / rect.height;
-    };
-    window.addEventListener("mousemove", onMouseMove);
+    const onMouseMove = gpuTier !== "low"
+      ? (e: MouseEvent) => {
+          const rect = container.getBoundingClientRect();
+          targetMouse.x = (e.clientX - rect.left) / rect.width;
+          targetMouse.y = 1.0 - (e.clientY - rect.top) / rect.height;
+        }
+      : null;
+    if (onMouseMove) window.addEventListener("mousemove", onMouseMove);
 
     // Resize
     const onResize = () => {
@@ -169,9 +178,10 @@ export default function HeroBackground({ onCanvasReady }: HeroBackgroundProps) {
       if (isVisible) {
         uniforms.uTime.value = clock.getElapsedTime();
 
-        // Smooth mouse lerp
-        uniforms.uMouse.value.x += (targetMouse.x - uniforms.uMouse.value.x) * 0.05;
-        uniforms.uMouse.value.y += (targetMouse.y - uniforms.uMouse.value.y) * 0.05;
+        if (onMouseMove) {
+          uniforms.uMouse.value.x += (targetMouse.x - uniforms.uMouse.value.x) * 0.05;
+          uniforms.uMouse.value.y += (targetMouse.y - uniforms.uMouse.value.y) * 0.05;
+        }
 
         renderer.render(scene, camera);
       }
@@ -189,7 +199,7 @@ export default function HeroBackground({ onCanvasReady }: HeroBackgroundProps) {
     return () => {
       cancelAnimationFrame(animationId);
       observer.disconnect();
-      window.removeEventListener("mousemove", onMouseMove);
+      if (onMouseMove) window.removeEventListener("mousemove", onMouseMove);
       window.removeEventListener("resize", onResize);
       geometry.dispose();
       material.dispose();
@@ -198,7 +208,7 @@ export default function HeroBackground({ onCanvasReady }: HeroBackgroundProps) {
         container.removeChild(renderer.domElement);
       }
     };
-  }, [onCanvasReady]);
+  }, [onCanvasReady, gpuTier]);
 
   return (
     <div

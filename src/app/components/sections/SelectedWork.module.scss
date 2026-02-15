@@ -15,6 +15,10 @@
   @media (min-width: 768px) {
     gap: 8rem;
   }
+
+  @media (max-height: 700px) and (min-width: 768px) {
+    gap: 5rem;
+  }
 }
 
 .card {
@@ -74,6 +78,10 @@
   aspect-ratio: 16 / 10;
   background: var(--bg-tertiary);
   z-index: 1;
+
+  @media (max-height: 700px) and (min-width: 768px) {
+    aspect-ratio: 16 / 9;
+  }
 
   /* Scan-line overlay on hover */
   &::before {

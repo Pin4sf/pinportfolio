@@ -6,6 +6,7 @@ import gsap from "gsap";
 import styles from "./Hero.module.scss";
 import { heroData } from "@/data/portfolio";
 import { useReducedMotion } from "@/app/hooks/useReducedMotion";
+import { useGpuTier } from "@/app/hooks/useGpuTier";
 import { Github, Linkedin, Twitter, Instagram, type LucideIcon } from "lucide-react";
 import ErrorBoundary from "../ErrorBoundary";
 
@@ -36,21 +37,30 @@ export default function Hero() {
   const particlesRef = useRef<HTMLDivElement>(null);
   const charsRef = useRef<HTMLSpanElement[]>([]);
   const reducedMotion = useReducedMotion();
+  const gpuTier = useGpuTier();
   const [bgCanvas, setBgCanvas] = useState<HTMLCanvasElement | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    setIsMobile(window.matchMedia("(max-width: 767px)").matches);
+  }, []);
 
   const handleBgCanvasReady = useCallback((canvas: HTMLCanvasElement) => {
     setBgCanvas(canvas);
   }, []);
 
+  // Particle count: mobile=8, low=15, mid=25, high=30
+  const particleCount = isMobile ? 8 : gpuTier === "low" ? 15 : gpuTier === "mid" ? 25 : 30;
+
   const particles = useMemo(
     () =>
-      Array.from({ length: 30 }, (_, i) => ({
+      Array.from({ length: particleCount }, (_, i) => ({
         id: i,
         left: `${Math.random() * 100}%`,
         top: `${Math.random() * 100}%`,
         size: Math.random() * 4 + 2,
       })),
-    []
+    [particleCount]
   );
 
   // Split name into individual character spans for magnetic effect
@@ -74,7 +84,6 @@ export default function Hero() {
     const chars = charsRef.current.filter(Boolean);
     if (chars.length === 0) return;
 
-    // Set initial state
     gsap.set(chars, { y: "110%", opacity: 0 });
     gsap.set(taglineRef.current, { y: 20, opacity: 0 });
     gsap.set(subtitleRef.current, { y: 15, opacity: 0 });
@@ -114,21 +123,19 @@ export default function Hero() {
       );
   }, [reducedMotion]);
 
-  // Magnetic text — characters repel from cursor
+  // Magnetic text — characters repel from cursor (skip on low tier + mobile)
   useEffect(() => {
-    if (reducedMotion) return;
+    if (reducedMotion || gpuTier === "low") return;
 
     const section = sectionRef.current;
     const chars = charsRef.current.filter(Boolean);
     if (!section || chars.length === 0) return;
 
-    // Skip on mobile
     if (window.matchMedia("(pointer: coarse)").matches) return;
 
     const RADIUS = 150;
     const STRENGTH = 25;
 
-    // Create quickTo instances for each character (x and y)
     const quickX = chars.map((el) =>
       gsap.quickTo(el, "x", { duration: 0.4, ease: "power3" })
     );
@@ -172,11 +179,11 @@ export default function Hero() {
       section.removeEventListener("mousemove", handleMouseMove);
       section.removeEventListener("mouseleave", handleMouseLeave);
     };
-  }, [reducedMotion]);
+  }, [reducedMotion, gpuTier]);
 
-  // Cursor-responsive glow (enlarged)
+  // Cursor-responsive glow (skip on low tier)
   useEffect(() => {
-    if (reducedMotion) return;
+    if (reducedMotion || gpuTier === "low") return;
 
     const section = sectionRef.current;
     const glow = glowRef.current;
@@ -199,7 +206,7 @@ export default function Hero() {
 
     section.addEventListener("mousemove", handleMouseMove);
     return () => section.removeEventListener("mousemove", handleMouseMove);
-  }, [reducedMotion]);
+  }, [reducedMotion, gpuTier]);
 
   // Floating particles — pause when offscreen
   useEffect(() => {
@@ -210,7 +217,6 @@ export default function Hero() {
 
     const dots = container.querySelectorAll(`.${styles.particle}`);
 
-    // Staggered entrance from center
     gsap.fromTo(
       dots,
       { opacity: 0, scale: 0 },
@@ -223,7 +229,6 @@ export default function Hero() {
       }
     );
 
-    // Continuous gentle float per particle — collected for pausing
     const floatTweens: gsap.core.Tween[] = [];
     Array.from(dots).forEach((dot) => {
       floatTweens.push(
@@ -239,7 +244,6 @@ export default function Hero() {
       );
     });
 
-    // Pause when hero is offscreen
     const observer = new IntersectionObserver(
       ([entry]) => {
         floatTweens.forEach((t) => entry.isIntersecting ? t.resume() : t.pause());
@@ -256,15 +260,13 @@ export default function Hero() {
 
   return (
     <section ref={sectionRef} id="home" className={styles.hero}>
-      {/* Three.js noise gradient background */}
-      {!reducedMotion && (
+      {/* Three.js backgrounds — disabled on mobile for GPU savings */}
+      {!reducedMotion && !isMobile && (
         <ErrorBoundary>
           <HeroBackground onCanvasReady={handleBgCanvasReady} />
         </ErrorBoundary>
       )}
-
-      {/* Water refraction overlay */}
-      {!reducedMotion && (
+      {!reducedMotion && !isMobile && (
         <ErrorBoundary>
           <FluidBackground backgroundCanvas={bgCanvas} />
         </ErrorBoundary>
@@ -288,8 +290,10 @@ export default function Hero() {
         </div>
       )}
 
-      {/* Cursor-responsive glow */}
-      <div ref={glowRef} className={styles.glow} aria-hidden="true" />
+      {/* Cursor-responsive glow (hidden on low tier) */}
+      {gpuTier !== "low" && (
+        <div ref={glowRef} className={styles.glow} aria-hidden="true" />
+      )}
 
       <div className={styles.content}>
         <h1 className={styles.name}>
