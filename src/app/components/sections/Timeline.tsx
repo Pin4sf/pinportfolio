@@ -207,107 +207,66 @@ export default function Timeline() {
         );
       }
 
-      // ── Scrub-linked dot activation ──
-      const dots = track.querySelectorAll(`.${styles.dot}`);
+      // ── Per-entry animations (dot + connector + card in single ST each) ──
       const entries = track.querySelectorAll(`.${styles.entry}`);
-      dots.forEach((dot, i) => {
-        const entry = entries[i];
-        if (!entry) return;
-
-        gsap.set(dot, { scale: 0.6, opacity: 0.3 });
-
-        gsap.to(dot, {
-          scale: 1,
-          opacity: 1,
-          duration: 0.4,
-          ease: "back.out(1.7)",
-          scrollTrigger: {
-            trigger: entry,
-            containerAnimation: st,
-            start: "left 90%",
-            toggleActions: "play none none reverse",
-          },
-        });
+      entries.forEach((entry, i) => {
+        const dot = entry.querySelector(`.${styles.dot}`);
+        const conn = entry.querySelector(`.${styles.connector}`);
+        const card = entry.querySelector(`.${styles.card}`);
+        if (!dot || !card) return;
 
         const color = typeColors[timelineData[i]?.type] || "var(--accent)";
         const resolved = resolveColor(color);
-        gsap.to(dot, {
+        const isAbove = i % 2 === 0;
+
+        // Initial states
+        gsap.set(dot, { scale: 0.6, opacity: 0.3 });
+        if (conn) gsap.set(conn, { opacity: 0 });
+
+        // Combined dot + connector + glow in single ScrollTrigger
+        const dotTl = gsap.timeline({
+          scrollTrigger: {
+            trigger: entry,
+            containerAnimation: st,
+            start: "left 90%",
+            toggleActions: "play none none reverse",
+          },
+        });
+
+        dotTl.to(dot, { scale: 1, opacity: 1, duration: 0.4, ease: "back.out(1.7)" }, 0);
+        dotTl.to(dot, {
           boxShadow: `0 0 20px ${resolved}40, 0 0 40px ${resolved}20`,
           duration: 0.6,
           ease: "power2.out",
-          scrollTrigger: {
-            trigger: entry,
-            containerAnimation: st,
-            start: "left 90%",
-            toggleActions: "play none none reverse",
-          },
-        });
-      });
+        }, 0);
+        if (conn) {
+          dotTl.to(conn, { opacity: 0.3, duration: 0.5, ease: "power2.out" }, 0);
+        }
 
-      // ── Connector activation (fade in with dot) ──
-      const connectors = track.querySelectorAll(`.${styles.connector}`);
-      connectors.forEach((conn, i) => {
-        const entry = entries[i];
-        if (!entry) return;
-
-        gsap.set(conn, { opacity: 0 });
-        gsap.to(conn, {
-          opacity: 0.3,
-          duration: 0.5,
-          ease: "power2.out",
-          scrollTrigger: {
-            trigger: entry,
-            containerAnimation: st,
-            start: "left 90%",
-            toggleActions: "play none none reverse",
-          },
-        });
-      });
-
-      // ── Clip-path card reveals (zigzag-matched directions) ──
-      const cards = track.querySelectorAll(`.${styles.card}`);
-      cards.forEach((card, i) => {
-        const isAbove = i % 2 === 0;
-        // Above cards grow upward from dot, below cards grow downward
+        // Card clip-path reveal + content stagger in single ScrollTrigger
         const fromClip = isAbove ? "inset(100% 0 0 0)" : "inset(0 0 100% 0)";
-        const toClip = "inset(0 0 0 0)";
+        const cardTl = gsap.timeline({
+          scrollTrigger: {
+            trigger: card,
+            containerAnimation: st,
+            start: "left 90%",
+            toggleActions: "play none none none",
+          },
+        });
 
-        gsap.fromTo(
-          card,
-          { clipPath: fromClip, opacity: 0 },
-          {
-            clipPath: toClip,
-            opacity: 1,
-            duration: 0.8,
-            ease: "power4.inOut",
-            scrollTrigger: {
-              trigger: card,
-              containerAnimation: st,
-              start: "left 90%",
-              toggleActions: "play none none none",
-            },
-          }
-        );
+        cardTl.fromTo(card, { clipPath: fromClip, opacity: 0 }, {
+          clipPath: "inset(0 0 0 0)",
+          opacity: 1,
+          duration: 0.8,
+          ease: "power4.inOut",
+        }, 0);
 
-        // ── Card content stagger ──
         const children = card.children;
         if (children.length) {
-          gsap.fromTo(
-            children,
+          cardTl.fromTo(children,
             { y: isAbove ? -12 : 12, opacity: 0 },
-            {
-              y: 0,
-              opacity: 1,
-              duration: 0.5,
-              stagger: 0.08,
-              ease: "power3.out",
-              scrollTrigger: {
-                trigger: card,
-                containerAnimation: st,
-                start: "left 85%",
-                toggleActions: "play none none none",
-              },
-            }
+            { y: 0, opacity: 1, duration: 0.5, stagger: 0.08, ease: "power3.out" },
+            0.15
           );
         }
       });

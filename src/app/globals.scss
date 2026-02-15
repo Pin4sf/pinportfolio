@@ -314,6 +314,24 @@ ul {
   }
 }
 
+/* Firefox scrollbar */
+* {
+  scrollbar-color: var(--text-tertiary) var(--bg-primary);
+  scrollbar-width: thin;
+}
+
+/* ---- Reduced Motion ---- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
 /* ---- Keyframe Animations ---- */
 @keyframes fadeUp {
   from {
@@ -361,6 +379,13 @@ body::after {
   70% { transform: translate(9%, 4%); }
   80% { transform: translate(2%, -8%); }
   90% { transform: translate(-1%, 7%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body::after {
+    animation: none;
+    opacity: 0.03;
+  }
 }
 
 /* ---- Scroll-Velocity Skew ---- */

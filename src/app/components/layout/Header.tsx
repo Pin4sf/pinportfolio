@@ -60,6 +60,47 @@ export default function Header() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // Focus trap + Escape key for mobile overlay
+  useEffect(() => {
+    if (!menuOpen) return;
+
+    const overlay = document.querySelector(
+      `.${styles.overlay}`
+    ) as HTMLElement | null;
+    if (!overlay) return;
+
+    const focusable = overlay.querySelectorAll<HTMLElement>(
+      'a[href], button, [tabindex]:not([tabindex="-1"])'
+    );
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setMenuOpen(false);
+        return;
+      }
+      if (e.key !== "Tab") return;
+
+      if (e.shiftKey) {
+        if (document.activeElement === first) {
+          e.preventDefault();
+          last?.focus();
+        }
+      } else {
+        if (document.activeElement === last) {
+          e.preventDefault();
+          first?.focus();
+        }
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    first?.focus();
+
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [menuOpen]);
+
   // Reveal header after loading screen
   useEffect(() => {
     const header = headerRef.current;

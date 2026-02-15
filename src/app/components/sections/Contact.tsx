@@ -36,72 +36,74 @@ export default function Contact() {
     const section = sectionRef.current;
     if (!section) return;
 
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: section,
-        start: "top 75%",
-        toggleActions: "play none none none",
-      },
-    });
-
-    // Vertical clip-path heading reveal
-    const heading = section.querySelector(`.${styles.heading}`);
-    if (heading) {
-      tl.fromTo(
-        heading,
-        { clipPath: "inset(100% 0 0 0)" },
-        { clipPath: "inset(0% 0 0 0)", duration: 1, ease: "power4.inOut" },
-        0
-      );
-    }
-
-    // Email reveal
-    const emailEl = emailRef.current;
-    if (emailEl) {
-      const text = emailEl.textContent || "";
-      emailEl.innerHTML = "";
-
-      text.split("").forEach((char) => {
-        const span = document.createElement("span");
-        span.style.display = "inline-block";
-        span.textContent = char === " " ? "\u00A0" : char;
-        span.style.transform = "translateY(100%)";
-        span.style.opacity = "0";
-        span.classList.add("email-char");
-        emailEl.appendChild(span);
+    const ctx = gsap.context(() => {
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: section,
+          start: "top 75%",
+          toggleActions: "play none none none",
+        },
       });
 
-      tl.to(".email-char", {
-        y: 0,
-        opacity: 1,
-        duration: 0.5,
-        stagger: 0.02,
-        ease: "power4.out",
-      }, 0.3);
-    }
+      // Vertical clip-path heading reveal
+      const heading = section.querySelector(`.${styles.heading}`);
+      if (heading) {
+        tl.fromTo(
+          heading,
+          { clipPath: "inset(100% 0 0 0)" },
+          { clipPath: "inset(0% 0 0 0)", duration: 1, ease: "power4.inOut" },
+          0
+        );
+      }
 
-    // Scrub-linked form field reveals
-    const fields = section.querySelectorAll(`.${styles.field}`);
-    if (fields.length > 0) {
-      gsap.fromTo(
-        fields,
-        { y: 40, opacity: 0 },
-        {
+      // Email reveal
+      const emailEl = emailRef.current;
+      if (emailEl) {
+        const text = emailEl.textContent || "";
+        emailEl.innerHTML = "";
+
+        text.split("").forEach((char) => {
+          const span = document.createElement("span");
+          span.style.display = "inline-block";
+          span.textContent = char === " " ? "\u00A0" : char;
+          span.style.transform = "translateY(100%)";
+          span.style.opacity = "0";
+          span.classList.add("email-char");
+          emailEl.appendChild(span);
+        });
+
+        tl.to(".email-char", {
           y: 0,
           opacity: 1,
-          stagger: 0.15,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: section.querySelector(`.${styles.form}`),
-            start: "top 85%",
-            end: "top 50%",
-            scrub: 0.8,
-          },
-        }
-      );
-    }
+          duration: 0.5,
+          stagger: 0.02,
+          ease: "power4.out",
+        }, 0.3);
+      }
 
-    return () => ScrollTrigger.getAll().forEach((t) => t.kill());
+      // Scrub-linked form field reveals
+      const fields = section.querySelectorAll(`.${styles.field}`);
+      if (fields.length > 0) {
+        gsap.fromTo(
+          fields,
+          { y: 40, opacity: 0 },
+          {
+            y: 0,
+            opacity: 1,
+            stagger: 0.15,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: section.querySelector(`.${styles.form}`),
+              start: "top 85%",
+              end: "top 50%",
+              scrub: 0.8,
+            },
+          }
+        );
+      }
+    }, section);
+
+    return () => ctx.revert();
   }, [reducedMotion]);
 
   const handleChange = (
@@ -124,14 +126,14 @@ export default function Contact() {
       if (res.ok) {
         setSubmitState("sent");
         setFormData({ name: "", email: "", message: "" });
-        setTimeout(() => setSubmitState("idle"), 4000);
+        setTimeout(() => setSubmitState("idle"), 6000);
       } else {
         setSubmitState("error");
-        setTimeout(() => setSubmitState("idle"), 4000);
+        setTimeout(() => setSubmitState("idle"), 6000);
       }
     } catch {
       setSubmitState("error");
-      setTimeout(() => setSubmitState("idle"), 4000);
+      setTimeout(() => setSubmitState("idle"), 6000);
     }
   };
 

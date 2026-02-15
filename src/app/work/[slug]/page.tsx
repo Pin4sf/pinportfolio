@@ -15,18 +15,33 @@ export function generateMetadata({ params }: Props): Metadata {
   const cs = caseStudies.find((c) => c.slug === params.slug);
   if (!cs) return { title: "Not Found" };
 
+  const description = `${cs.tagline} — ${cs.challenge.slice(0, 140)}...`;
+
   return {
-    title: `${cs.name} — Shivansh Fulper`,
-    description: cs.tagline,
+    title: cs.name,
+    description,
     alternates: {
-      canonical: `${siteConfig.url}/work/${cs.slug}`,
+      canonical: `/work/${cs.slug}`,
     },
     openGraph: {
-      title: `${cs.name} — Shivansh Fulper`,
-      description: cs.tagline,
+      title: `${cs.name} — ${cs.role}`,
+      description,
       url: `${siteConfig.url}/work/${cs.slug}`,
-      images: [cs.heroImage],
+      images: [
+        {
+          url: cs.heroImage,
+          width: 1200,
+          height: 630,
+          alt: `${cs.name} — ${cs.tagline}`,
+        },
+      ],
       type: "article",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${cs.name} — Shivansh Fulper`,
+      description,
+      images: [cs.heroImage],
     },
   };
 }
@@ -46,5 +61,31 @@ export default function WorkPage({ params }: Props) {
       ? caseStudies[currentIndex + 1]
       : null;
 
-  return <CaseStudy caseStudy={cs} prev={prev} next={next} />;
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: cs.name,
+    description: cs.tagline,
+    image: `${siteConfig.url}${cs.heroImage}`,
+    url: `${siteConfig.url}/work/${cs.slug}`,
+    author: {
+      "@type": "Person",
+      name: "Shivansh Fulper",
+      url: siteConfig.url,
+    },
+    publisher: {
+      "@type": "Person",
+      name: "Shivansh Fulper",
+    },
+  };
+
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <CaseStudy caseStudy={cs} prev={prev} next={next} />
+    </>
+  );
 }

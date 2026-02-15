@@ -3,7 +3,6 @@ import { Inter, Instrument_Serif, JetBrains_Mono } from "next/font/google";
 import "./globals.scss";
 import { siteConfig } from "@/data/portfolio";
 import ClientShell from "./components/ClientShell";
-import Script from "next/script";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -25,20 +24,45 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: siteConfig.title,
+  title: {
+    default: siteConfig.title,
+    template: `%s — ${siteConfig.author}`,
+  },
   description: siteConfig.description,
-  keywords: siteConfig.keywords,
-  authors: [{ name: siteConfig.author }],
+  keywords: [
+    "Shivansh Fulper",
+    "AI Engineer",
+    "OneSync",
+    "EcoFresh Greensync",
+    "Atlan",
+    "LLM",
+    "RAG",
+    "Agentic Systems",
+    "Cognitive Wearables",
+    "Startup Founder",
+    "Full Stack Developer",
+    "IIITDM Jabalpur",
+    "Portfolio",
+  ],
+  authors: [{ name: siteConfig.author, url: siteConfig.url }],
+  creator: siteConfig.author,
   metadataBase: new URL(siteConfig.url),
   alternates: {
-    canonical: siteConfig.url,
+    canonical: "/",
   },
   openGraph: {
     title: siteConfig.title,
     description: siteConfig.description,
     url: siteConfig.url,
     siteName: siteConfig.author,
-    images: [siteConfig.ogImage],
+    images: [
+      {
+        url: siteConfig.ogImage,
+        width: 1200,
+        height: 630,
+        alt: `${siteConfig.author} — AI Engineer & Startup Founder`,
+      },
+    ],
     type: "website",
     locale: "en_US",
   },
@@ -47,6 +71,18 @@ export const metadata: Metadata = {
     title: siteConfig.title,
     description: siteConfig.description,
     creator: "@FulperShivansh",
+    images: [siteConfig.ogImage],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
   },
   icons: {
     icon: [
@@ -121,10 +157,8 @@ export default function RootLayout({
       className={`${inter.variable} ${instrumentSerif.variable} ${jetbrainsMono.variable}`}
     >
       <body>
-        <Script
-          id="json-ld"
+        <script
           type="application/ld+json"
-          strategy="afterInteractive"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
         <a href="#main-content" className="sr-only" style={{ position: 'absolute', top: 0, left: 0, zIndex: 9999, padding: '1rem', background: 'var(--accent)', color: 'var(--bg-primary)' }}>

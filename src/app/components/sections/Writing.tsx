@@ -57,47 +57,49 @@ export default function Writing() {
     const section = sectionRef.current;
     if (!section) return;
 
-    // Letter-spacing tighten on heading
-    const heading = section.querySelector(`.${styles.heading}`);
-    if (heading) {
+    const ctx = gsap.context(() => {
+      // Letter-spacing tighten on heading
+      const heading = section.querySelector(`.${styles.heading}`);
+      if (heading) {
+        gsap.fromTo(
+          heading,
+          { letterSpacing: "0.1em", opacity: 0 },
+          {
+            letterSpacing: "-0.03em",
+            opacity: 1,
+            duration: 1,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: section,
+              start: "top 80%",
+              toggleActions: "play none none none",
+            },
+          }
+        );
+      }
+
+      // Left-slide + 3D rotation on cards
+      const cards = section.querySelectorAll(`.${styles.card}`);
       gsap.fromTo(
-        heading,
-        { letterSpacing: "0.1em", opacity: 0 },
+        cards,
+        { x: -60, opacity: 0, rotateY: -8 },
         {
-          letterSpacing: "-0.03em",
+          x: 0,
           opacity: 1,
-          duration: 1,
+          rotateY: 0,
+          duration: 0.8,
+          stagger: 0.1,
           ease: "power3.out",
           scrollTrigger: {
             trigger: section,
-            start: "top 80%",
+            start: "top 75%",
             toggleActions: "play none none none",
           },
         }
       );
-    }
+    }, section);
 
-    // Left-slide + 3D rotation on cards
-    const cards = section.querySelectorAll(`.${styles.card}`);
-    gsap.fromTo(
-      cards,
-      { x: -60, opacity: 0, rotateY: -8 },
-      {
-        x: 0,
-        opacity: 1,
-        rotateY: 0,
-        duration: 0.8,
-        stagger: 0.1,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: section,
-          start: "top 75%",
-          toggleActions: "play none none none",
-        },
-      }
-    );
-
-    return () => ScrollTrigger.getAll().forEach((t) => t.kill());
+    return () => ctx.revert();
   }, [reducedMotion]);
 
   // 3D card tilt on hover
@@ -155,7 +157,7 @@ export default function Writing() {
   return (
     <section ref={sectionRef} id="writing" className={styles.section}>
       {/* Background marquee */}
-      <div className="marquee marquee--reverse" style={{ bottom: "10%", top: "auto" }}>
+      <div className="marquee marquee--reverse" style={{ bottom: "10%", top: "auto" }} aria-hidden="true">
         <div className="marquee__inner">
           <span className="marquee__text">THOUGHTS</span>
           <span className="marquee__text">筆</span>

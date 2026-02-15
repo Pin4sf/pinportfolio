@@ -118,9 +118,9 @@ export const heroData: HeroData = {
       url: "https://github.com/Pin4sf",
     },
     {
-      name: "Twitter",
+      name: "X",
       icon: "twitter",
-      url: "https://twitter.com/FulperShivansh",
+      url: "https://x.com/shivanshfulper",
     },
     {
       name: "Instagram",
@@ -138,7 +138,7 @@ export const aboutData: AboutData = {
 As CTO of OneSync, I'm building the intelligence layer that turns wearable biosignals into cognitive readiness scores. I also co-founded EcoFresh Greensync — a decentralized waste-to-value infrastructure company with 3 IP discoveries and recognition at the Hult Prize. At Atlan, I build AI-native developer agents. At Soket AI Labs, I built multilingual dataset pipelines for Indic LLM training.
 
 I'm a final-year B.Tech student at IIITDM Jabalpur. I think in systems. I ship fast. And I'd rather fail at 20 than wait until I'm "qualified."`,
-  photo: "/Shivansh.png",
+  photo: "/Shivansh.jpg",
   facts: [
     { label: "Location", value: "Nagpur, India" },
     { label: "Education", value: "B.Tech '26, IIITDM Jabalpur" },
@@ -155,7 +155,7 @@ export const caseStudies: CaseStudy[] = [
     slug: "onesync",
     name: "OneSync",
     tagline: "Beyond vital signs. Into the mind.",
-    heroImage: "/images/projects/onesync.png",
+    heroImage: "/images/projects/onesync.jpg",
     role: "Co-Founder & CTO",
     timeline: "2026 — Present",
     techStack: ["AI/ML", "Biosignal Processing", "Edge Computing", "React", "TypeScript"],
@@ -168,7 +168,7 @@ export const caseStudies: CaseStudy[] = [
       "We built OneBand — a wristband that reads multiple body signals (heart rhythm, skin response, motion, muscle tension) and cross-checks them to produce a cognitive readiness index. The system stays quiet when it's not confident — in environments where a bad call has real consequences, showing nothing is better than a false green light. Built for institutions from day one: training academies, defense units, elite sports teams. Dashboards designed around how teams actually operate, not just how individuals track personal fitness.",
     solution:
       "OneSync is a cognitive performance platform. OneBand captures biosignals 24/7 and an AI interpretation layer translates raw data into readiness scores, recovery trends, and actionable guidance. Think of it as a fuel gauge for the brain — not a diagnosis, not a mood ring, just a reliable indicator that a coach, training officer, or team lead can glance at and act on. The system builds a personal digital twin that learns individual baselines and adapts over time.",
-    solutionImages: ["/images/projects/onesync.png"],
+    solutionImages: ["/images/projects/onesync.jpg"],
     impact:
       "Active development with hardware prototyping underway. Early concept testing with athletes. Team of 4 (CEO, CTO, COO, CPO) with backgrounds spanning biosensing, AI systems, manufacturing, and product hardware. Pursuing HIPAA and FDA compliance pathways.",
     reflection:
@@ -328,9 +328,9 @@ export const contactData: ContactData = {
       url: "https://github.com/Pin4sf",
     },
     {
-      name: "Twitter",
+      name: "X",
       icon: "twitter",
-      url: "https://twitter.com/FulperShivansh",
+      url: "https://x.com/shivanshfulper",
     },
     {
       name: "Instagram",

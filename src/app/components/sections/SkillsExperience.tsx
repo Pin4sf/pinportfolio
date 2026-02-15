@@ -29,39 +29,41 @@ export default function SkillsExperience() {
     const section = sectionRef.current;
     if (!section) return;
 
-    const categories = section.querySelectorAll(`.${styles.category}`);
+    const ctx = gsap.context(() => {
+      const categories = section.querySelectorAll(`.${styles.category}`);
 
-    categories.forEach((cat, i) => {
-      const label = cat.querySelector(`.${styles.categoryName}`);
-      const pills = cat.querySelectorAll(`.${styles.pill}`);
+      categories.forEach((cat, i) => {
+        const label = cat.querySelector(`.${styles.categoryName}`);
+        const pills = cat.querySelectorAll(`.${styles.pill}`);
 
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: cat,
-          start: "top 85%",
-          toggleActions: "play none none none",
-        },
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: cat,
+            start: "top 85%",
+            toggleActions: "play none none none",
+          },
+        });
+
+        tl.fromTo(
+          label,
+          { x: -30, opacity: 0 },
+          { x: 0, opacity: 1, duration: 0.6, delay: i * 0.05, ease: "back.out(1.7)" }
+        ).fromTo(
+          pills,
+          { scale: 0.8, opacity: 0 },
+          {
+            scale: 1,
+            opacity: 1,
+            duration: 0.5,
+            stagger: 0.04,
+            ease: "back.out(1.7)",
+          },
+          "-=0.3"
+        );
       });
+    }, section);
 
-      tl.fromTo(
-        label,
-        { x: -30, opacity: 0 },
-        { x: 0, opacity: 1, duration: 0.6, delay: i * 0.05, ease: "back.out(1.7)" }
-      ).fromTo(
-        pills,
-        { scale: 0.8, opacity: 0 },
-        {
-          scale: 1,
-          opacity: 1,
-          duration: 0.5,
-          stagger: 0.04,
-          ease: "back.out(1.7)",
-        },
-        "-=0.3"
-      );
-    });
-
-    return () => ScrollTrigger.getAll().forEach((t) => t.kill());
+    return () => ctx.revert();
   }, [reducedMotion]);
 
   // Dot grid wave animation
@@ -127,26 +129,27 @@ export default function SkillsExperience() {
 
   return (
     <section ref={sectionRef} className={styles.section}>
-      {/* anime.js dot grid background */}
-      <div ref={gridRef} className={styles.dotGrid}>
+      {/* Dot grid background */}
+      <div ref={gridRef} className={styles.dotGrid} aria-hidden="true">
         {dots.map((i) => (
           <span key={i} className={styles.gridDot} />
         ))}
       </div>
 
       <span className="section__label">Skills &amp; Tools</span>
+      <h2 className="sr-only">Skills &amp; Tools</h2>
 
       <div className={styles.categories}>
         {skillCategories.map((cat) => (
           <div key={cat.name} className={styles.category}>
             <span className={styles.categoryName}>{cat.name}</span>
-            <div className={styles.pills}>
+            <ul className={styles.pills}>
               {cat.skills.map((skill) => (
-                <span key={skill.name} className={styles.pill}>
+                <li key={skill.name} className={styles.pill}>
                   {skill.name}
-                </span>
+                </li>
               ))}
-            </div>
+            </ul>
           </div>
         ))}
       </div>

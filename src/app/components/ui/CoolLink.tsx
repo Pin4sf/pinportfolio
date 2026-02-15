@@ -59,8 +59,9 @@ export default function CoolLink({ href, text, className }: CoolLinkProps) {
       className={clsx(styles.coolLinks, className)}
       onMouseEnter={scramble}
       onMouseLeave={reset}
+      aria-label={text}
     >
-      <span ref={spanRef}>{text}</span>
+      <span ref={spanRef} aria-hidden="true">{text}</span>
     </Tag>
   );
 }

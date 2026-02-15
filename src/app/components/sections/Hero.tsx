@@ -201,11 +201,12 @@ export default function Hero() {
     return () => section.removeEventListener("mousemove", handleMouseMove);
   }, [reducedMotion]);
 
-  // Floating particles
+  // Floating particles — pause when offscreen
   useEffect(() => {
     if (reducedMotion) return;
+    const section = sectionRef.current;
     const container = particlesRef.current;
-    if (!container) return;
+    if (!container || !section) return;
 
     const dots = container.querySelectorAll(`.${styles.particle}`);
 
@@ -222,18 +223,35 @@ export default function Hero() {
       }
     );
 
-    // Continuous gentle float per particle
+    // Continuous gentle float per particle — collected for pausing
+    const floatTweens: gsap.core.Tween[] = [];
     Array.from(dots).forEach((dot) => {
-      gsap.to(dot, {
-        y: gsap.utils.random(-60, 60),
-        x: gsap.utils.random(-30, 30),
-        duration: gsap.utils.random(3, 6),
-        delay: gsap.utils.random(0, 2),
-        yoyo: true,
-        repeat: -1,
-        ease: "sine.inOut",
-      });
+      floatTweens.push(
+        gsap.to(dot, {
+          y: gsap.utils.random(-60, 60),
+          x: gsap.utils.random(-30, 30),
+          duration: gsap.utils.random(3, 6),
+          delay: gsap.utils.random(0, 2),
+          yoyo: true,
+          repeat: -1,
+          ease: "sine.inOut",
+        })
+      );
     });
+
+    // Pause when hero is offscreen
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        floatTweens.forEach((t) => entry.isIntersecting ? t.resume() : t.pause());
+      },
+      { threshold: 0.05 }
+    );
+    observer.observe(section);
+
+    return () => {
+      observer.disconnect();
+      floatTweens.forEach((t) => t.kill());
+    };
   }, [reducedMotion]);
 
   return (
@@ -254,7 +272,7 @@ export default function Hero() {
 
       {/* Floating particles */}
       {!reducedMotion && (
-        <div ref={particlesRef} className={styles.particles} aria-hidden="true">
+        <div ref={particlesRef} className={styles.particles} aria-hidden="true" role="presentation">
           {particles.map((p) => (
             <span
               key={p.id}

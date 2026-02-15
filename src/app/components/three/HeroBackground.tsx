@@ -160,24 +160,35 @@ export default function HeroBackground({ onCanvasReady }: HeroBackgroundProps) {
     };
     window.addEventListener("resize", onResize);
 
-    // Render loop
+    // Render loop with visibility check
     const clock = new THREE.Clock();
     let animationId: number;
+    let isVisible = true;
 
     const animate = () => {
-      uniforms.uTime.value = clock.getElapsedTime();
+      if (isVisible) {
+        uniforms.uTime.value = clock.getElapsedTime();
 
-      // Smooth mouse lerp
-      uniforms.uMouse.value.x += (targetMouse.x - uniforms.uMouse.value.x) * 0.05;
-      uniforms.uMouse.value.y += (targetMouse.y - uniforms.uMouse.value.y) * 0.05;
+        // Smooth mouse lerp
+        uniforms.uMouse.value.x += (targetMouse.x - uniforms.uMouse.value.x) * 0.05;
+        uniforms.uMouse.value.y += (targetMouse.y - uniforms.uMouse.value.y) * 0.05;
 
-      renderer.render(scene, camera);
+        renderer.render(scene, camera);
+      }
       animationId = requestAnimationFrame(animate);
     };
     animate();
 
+    // Pause rendering when offscreen
+    const observer = new IntersectionObserver(
+      ([entry]) => { isVisible = entry.isIntersecting; },
+      { threshold: 0.05 }
+    );
+    observer.observe(container);
+
     return () => {
       cancelAnimationFrame(animationId);
+      observer.disconnect();
       window.removeEventListener("mousemove", onMouseMove);
       window.removeEventListener("resize", onResize);
       geometry.dispose();
