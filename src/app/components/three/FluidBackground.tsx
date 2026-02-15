@@ -433,6 +433,7 @@ export default function FluidBackground({ backgroundCanvas }: Props) {
       gl!.uniform1i(renderProg.uniforms.uBackground, 2);
       gl!.uniform2f(renderProg.uniforms.uDelta, ripples!.texelSizeX, ripples!.texelSizeY);
       gl!.uniform1f(renderProg.uniforms.uPerturbance, PERTURBANCE);
+      gl!.uniform1i(renderProg.uniforms.uLowTier, tier === "low" ? 1 : 0);
       blit(null);
 
       animRef.current = requestAnimationFrame(step);

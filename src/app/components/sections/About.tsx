@@ -6,8 +6,20 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import styles from "./About.module.scss";
 import { aboutData } from "@/data/portfolio";
 import { useReducedMotion } from "@/app/hooks/useReducedMotion";
+import { useGpuTier } from "@/app/hooks/useGpuTier";
 
 gsap.registerPlugin(ScrollTrigger);
+
+const ALL_SHAPES = [
+  { id: 0, type: "circle", left: "88%", top: "12%", size: 14 },
+  { id: 1, type: "circle", left: "92%", top: "50%", size: 10 },
+  { id: 2, type: "square", left: "85%", top: "75%", size: 12 },
+  { id: 3, type: "circle", left: "3%", top: "85%", size: 8 },
+  { id: 4, type: "square", left: "8%", top: "25%", size: 11 },
+  { id: 5, type: "circle", left: "45%", top: "8%", size: 6 },
+  { id: 6, type: "square", left: "60%", top: "90%", size: 9 },
+  { id: 7, type: "circle", left: "35%", top: "65%", size: 7 },
+];
 
 export default function About() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -15,19 +27,12 @@ export default function About() {
   const textRef = useRef<HTMLDivElement>(null);
   const shapesRef = useRef<HTMLDivElement>(null);
   const reducedMotion = useReducedMotion();
+  const gpuTier = useGpuTier();
 
+  // Reduce from 8 shapes to 4 on low tier
   const shapes = useMemo(
-    () => [
-      { id: 0, type: "circle", left: "88%", top: "12%", size: 14 },
-      { id: 1, type: "circle", left: "92%", top: "50%", size: 10 },
-      { id: 2, type: "square", left: "85%", top: "75%", size: 12 },
-      { id: 3, type: "circle", left: "3%", top: "85%", size: 8 },
-      { id: 4, type: "square", left: "8%", top: "25%", size: 11 },
-      { id: 5, type: "circle", left: "45%", top: "8%", size: 6 },
-      { id: 6, type: "square", left: "60%", top: "90%", size: 9 },
-      { id: 7, type: "circle", left: "35%", top: "65%", size: 7 },
-    ],
-    []
+    () => gpuTier === "low" ? ALL_SHAPES.slice(0, 4) : ALL_SHAPES,
+    [gpuTier]
   );
 
   useEffect(() => {

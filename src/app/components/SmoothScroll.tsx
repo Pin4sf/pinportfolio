@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import Lenis from "lenis";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useGpuTier } from "@/app/hooks/useGpuTier";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -13,6 +14,7 @@ export default function SmoothScroll({
   children: React.ReactNode;
 }) {
   const lenisRef = useRef<Lenis | null>(null);
+  const gpuTier = useGpuTier();
 
   useEffect(() => {
     const lenis = new Lenis({
@@ -28,25 +30,27 @@ export default function SmoothScroll({
     // Connect Lenis to GSAP ScrollTrigger
     lenis.on("scroll", ScrollTrigger.update);
 
-    // Velocity-based content skew
+    const enableSkew = gpuTier !== "low";
     const skew = { current: 0 };
 
     gsap.ticker.add((time) => {
       lenis.raf(time * 1000);
 
-      // Smooth velocity skew
-      const velocity = lenis.velocity || 0;
-      const target = gsap.utils.clamp(-2, 2, velocity * 0.15);
-      skew.current += (target - skew.current) * 0.1;
+      // Velocity-based content skew (skip on low-end for perf)
+      if (enableSkew) {
+        const velocity = lenis.velocity || 0;
+        const target = gsap.utils.clamp(-2, 2, velocity * 0.15);
+        skew.current += (target - skew.current) * 0.1;
 
-      if (Math.abs(skew.current) > 0.005) {
-        document.documentElement.style.setProperty(
-          "--sv",
-          skew.current.toFixed(4)
-        );
-      } else if (skew.current !== 0) {
-        skew.current = 0;
-        document.documentElement.style.setProperty("--sv", "0");
+        if (Math.abs(skew.current) > 0.005) {
+          document.documentElement.style.setProperty(
+            "--sv",
+            skew.current.toFixed(4)
+          );
+        } else if (skew.current !== 0) {
+          skew.current = 0;
+          document.documentElement.style.setProperty("--sv", "0");
+        }
       }
     });
     gsap.ticker.lagSmoothing(0);
@@ -73,7 +77,7 @@ export default function SmoothScroll({
       lenis.destroy();
       document.removeEventListener("click", handleClick);
     };
-  }, []);
+  }, [gpuTier]);
 
   return <div>{children}</div>;
 }

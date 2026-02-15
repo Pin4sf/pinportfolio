@@ -6,20 +6,23 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import styles from "./SkillsExperience.module.scss";
 import { skillCategories, currentlyExploring } from "@/data/portfolio";
 import { useReducedMotion } from "@/app/hooks/useReducedMotion";
+import { useGpuTier } from "@/app/hooks/useGpuTier";
 
 gsap.registerPlugin(ScrollTrigger);
-
-const GRID_COLS = 15;
-const GRID_ROWS = 8;
 
 export default function SkillsExperience() {
   const sectionRef = useRef<HTMLElement>(null);
   const gridRef = useRef<HTMLDivElement>(null);
   const reducedMotion = useReducedMotion();
+  const gpuTier = useGpuTier();
+
+  // Reduced grid on low tier: 10x5=50 vs 15x8=120
+  const gridCols = gpuTier === "low" ? 10 : 15;
+  const gridRows = gpuTier === "low" ? 5 : 8;
 
   const dots = useMemo(
-    () => Array.from({ length: GRID_COLS * GRID_ROWS }, (_, i) => i),
-    []
+    () => Array.from({ length: gridCols * gridRows }, (_, i) => i),
+    [gridCols, gridRows]
   );
 
   // GSAP scroll reveals for skill categories
@@ -74,6 +77,7 @@ export default function SkillsExperience() {
     if (!grid) return;
 
     const dotEls = grid.querySelectorAll(`.${styles.gridDot}`);
+    const isLowTier = gpuTier === "low";
 
     const observer = new IntersectionObserver(
       (entries) => {
@@ -89,31 +93,33 @@ export default function SkillsExperience() {
                 duration: 0.8,
                 stagger: {
                   each: 0.03,
-                  grid: [GRID_COLS, GRID_ROWS],
+                  grid: [gridCols, gridRows],
                   from: "center",
                 },
                 ease: "elastic.out(1, 0.6)",
               }
             );
 
-            // Subtle looping pulse
-            gsap.fromTo(
-              dotEls,
-              { opacity: 0.12, scale: 0.8 },
-              {
-                opacity: 0.3,
-                scale: 1.3,
-                duration: 3,
-                stagger: {
-                  each: 0.08,
-                  grid: [GRID_COLS, GRID_ROWS],
-                  from: "center",
-                },
-                ease: "sine.inOut",
-                yoyo: true,
-                repeat: -1,
-              }
-            );
+            // Subtle looping pulse (skip on low tier — saves 120 infinite tweens)
+            if (!isLowTier) {
+              gsap.fromTo(
+                dotEls,
+                { opacity: 0.12, scale: 0.8 },
+                {
+                  opacity: 0.3,
+                  scale: 1.3,
+                  duration: 3,
+                  stagger: {
+                    each: 0.08,
+                    grid: [gridCols, gridRows],
+                    from: "center",
+                  },
+                  ease: "sine.inOut",
+                  yoyo: true,
+                  repeat: -1,
+                }
+              );
+            }
 
             observer.disconnect();
           }
@@ -125,7 +131,7 @@ export default function SkillsExperience() {
     observer.observe(grid);
 
     return () => observer.disconnect();
-  }, [reducedMotion]);
+  }, [reducedMotion, gpuTier, gridCols, gridRows]);
 
   return (
     <section ref={sectionRef} className={styles.section}>

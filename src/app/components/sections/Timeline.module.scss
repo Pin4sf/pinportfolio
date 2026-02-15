@@ -2,12 +2,18 @@
   position: relative;
   background: var(--bg-primary);
   min-height: 100vh;
+  min-height: 100dvh;
   overflow: hidden;
   transition: var(--theme-transition);
   display: flex;
   flex-direction: column;
   justify-content: center;
   padding: 2rem 0;
+
+  @media (max-width: 767px) {
+    min-height: auto;
+    padding: var(--section-py) 0;
+  }
 }
 
 .header {
@@ -23,7 +29,7 @@
   margin: 1.5rem 0 0;
 }
 
-/* ── Horizontal scrolling track ── */
+/* ── Horizontal scrolling track (desktop) ── */
 .track {
   position: relative;
   display: flex;
@@ -31,11 +37,6 @@
   gap: 2.5rem;
   padding: 0 5rem;
   padding-right: clamp(40vw, 50vw, 600px);
-
-  @media (max-width: 480px) {
-    padding-left: 2rem;
-    padding-right: 60vw;
-  }
   will-change: transform;
   cursor: grab;
   user-select: none;
@@ -43,9 +44,21 @@
   &.dragging {
     cursor: grabbing;
   }
+
+  /* Mobile: vertical stacked layout */
+  @media (max-width: 767px) {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    padding: 0 var(--section-px);
+    padding-left: calc(var(--section-px) + 8px);
+    will-change: auto;
+    cursor: auto;
+    user-select: auto;
+  }
 }
 
-/* ── Horizontal line through center ── */
+/* ── Horizontal line through center (desktop only) ── */
 .line {
   position: absolute;
   top: 50%;
@@ -55,22 +68,42 @@
   background: var(--border-subtle);
   transform-origin: left center;
   z-index: 0;
+
+  @media (max-width: 767px) {
+    /* Vertical line on mobile */
+    top: 0;
+    bottom: 0;
+    left: calc(var(--section-px) + 21px);
+    right: auto;
+    width: 1px;
+    height: 100%;
+    transform-origin: top center;
+  }
 }
 
-/* ── Single entry (zigzag grid) ── */
+/* ── Single entry (zigzag grid on desktop, flat on mobile) ── */
 .entry {
   flex-shrink: 0;
   width: clamp(280px, 80vw, 340px);
   display: grid;
   grid-template-rows: 1fr 1.25rem 32px 1.25rem 1fr;
-  /*                   card  conn  dot   conn  card */
   grid-template-columns: 1fr;
   justify-items: center;
   align-items: center;
-  height: 480px;
+  height: clamp(380px, 55vh, 480px);
+
+  @media (max-width: 767px) {
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1rem 0;
+  }
 }
 
-/* ── Dot on the line (always row 3) ── */
+/* ── Dot on the line ── */
 .dot {
   grid-row: 3;
   width: 32px;
@@ -84,14 +117,25 @@
   z-index: 2;
   box-shadow: 0 0 12px rgba(255, 255, 255, 0.05);
   transition: box-shadow 0.3s ease;
+
+  @media (max-width: 767px) {
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    margin-top: 0.25rem;
+  }
 }
 
-/* ── Connector stem ── */
+/* ── Connector stem (desktop only) ── */
 .connector {
   width: 1px;
   height: 100%;
   opacity: 0.3;
   transition: opacity 0.3s ease;
+
+  @media (max-width: 767px) {
+    display: none;
+  }
 }
 
 /* ── Card ── */
@@ -113,14 +157,23 @@
     background: rgba(255, 255, 255, 0.04);
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 8px 32px rgba(0, 0, 0, 0.15);
   }
+
+  @media (max-width: 767px) {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background: var(--bg-secondary);
+    padding: var(--space-md);
+    flex: 1;
+    min-width: 0;
+  }
 }
 
-/* ── Above entry: card top, connector row 2 ── */
+/* ── Above entry: card top, connector row 2 (desktop) ── */
 .entryAbove {
   .card {
     grid-row: 1;
     align-self: end;
-    padding-bottom: calc(var(--space-lg) + 4px); /* room for accent line at bottom */
+    padding-bottom: calc(var(--space-lg) + 4px);
   }
 
   .connector {
@@ -131,14 +184,24 @@
     top: auto;
     bottom: 0;
   }
+
+  @media (max-width: 767px) {
+    .card {
+      padding-bottom: var(--space-md);
+    }
+    .accentLine {
+      top: 0;
+      bottom: auto;
+    }
+  }
 }
 
-/* ── Below entry: card bottom, connector row 4 ── */
+/* ── Below entry: card bottom, connector row 4 (desktop) ── */
 .entryBelow {
   .card {
     grid-row: 5;
     align-self: start;
-    padding-top: calc(var(--space-lg) + 4px); /* room for accent line at top */
+    padding-top: calc(var(--space-lg) + 4px);
   }
 
   .connector {
@@ -148,6 +211,12 @@
   .accentLine {
     top: 0;
     bottom: auto;
+  }
+
+  @media (max-width: 767px) {
+    .card {
+      padding-top: var(--space-md);
+    }
   }
 }
 
@@ -224,7 +293,7 @@
   margin-top: var(--space-sm);
 }
 
-/* ── Drag Hint ── */
+/* ── Drag Hint (desktop only) ── */
 .dragHint {
   display: flex;
   align-items: center;
@@ -236,6 +305,10 @@
   letter-spacing: 0.08em;
   color: var(--text-tertiary);
   transition: opacity 0.6s ease;
+
+  @media (max-width: 767px) {
+    display: none;
+  }
 }
 
 .dragHintHidden {
@@ -248,7 +321,7 @@
   opacity: 0.5;
 }
 
-/* ── Progress Indicator ── */
+/* ── Progress Indicator (desktop only) ── */
 .progress {
   display: flex;
   align-items: center;
@@ -258,6 +331,10 @@
   font-family: var(--font-mono);
   font-size: var(--text-xs);
   letter-spacing: 0.1em;
+
+  @media (max-width: 767px) {
+    display: none;
+  }
 }
 
 .progressCurrent {
