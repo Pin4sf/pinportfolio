@@ -7,8 +7,8 @@
   transition: var(--theme-transition);
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  padding: 2rem 0;
+  justify-content: flex-start;
+  padding: clamp(3rem, 6vh, 5rem) 0 2rem;
 
   @media (max-width: 767px) {
     min-height: auto;
@@ -17,8 +17,10 @@
 }
 
 .header {
+  position: relative;
+  z-index: 2;
   padding: 0 var(--section-px);
-  margin-bottom: var(--space-lg);
+  margin-bottom: var(--space-xl);
 }
 
 .heading {

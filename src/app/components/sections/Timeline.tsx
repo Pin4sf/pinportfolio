@@ -78,10 +78,14 @@ export default function Timeline() {
     gsap.to(card, { x: 0, y: 0, duration: 0.5, ease: "elastic.out(1, 0.4)", overwrite: "auto" });
   }, []);
 
-  // ── Drag-to-scroll ──
+  // ── Drag-to-scroll (desktop only) ──
   useEffect(() => {
     const track = trackRef.current;
     if (!track) return;
+
+    // Skip drag on mobile — uses native vertical scroll
+    const isMobile = window.matchMedia("(max-width: 767px)").matches;
+    if (isMobile) return;
 
     const dismissHint = () => {
       if (!hasInteracted.current) {
@@ -161,7 +165,7 @@ export default function Timeline() {
     };
   }, []);
 
-  // ── Main horizontal scroll + animations ──
+  // ── Main animations — desktop: horizontal scroll; mobile: simple fade-up ──
   useEffect(() => {
     if (reducedMotion) return;
 
@@ -169,7 +173,43 @@ export default function Timeline() {
     const track = trackRef.current;
     if (!section || !track) return;
 
+    const isMobile = window.matchMedia("(max-width: 767px)").matches;
+
+    // On mobile, ensure no leftover horizontal transforms from desktop
+    if (isMobile) {
+      gsap.set(track, { x: 0, clearProps: "x" });
+    }
+
     const ctx = gsap.context(() => {
+      if (isMobile) {
+        // ── Mobile: simple fade-up per entry, no horizontal scroll ──
+        const entries = track.querySelectorAll(`.${styles.entry}`);
+        entries.forEach((entry) => {
+          const dot = entry.querySelector(`.${styles.dot}`);
+          const card = entry.querySelector(`.${styles.card}`);
+          if (!card) return;
+
+          gsap.fromTo(
+            [dot, card].filter(Boolean),
+            { y: 20, opacity: 0 },
+            {
+              y: 0,
+              opacity: 1,
+              duration: 0.5,
+              stagger: 0.1,
+              ease: "power3.out",
+              scrollTrigger: {
+                trigger: entry,
+                start: "top 85%",
+                toggleActions: "play none none none",
+              },
+            }
+          );
+        });
+        return;
+      }
+
+      // ── Desktop: horizontal pin + scrub ──
       const scrollWidth = track.scrollWidth - window.innerWidth;
 
       const st = gsap.to(track, {
@@ -207,7 +247,7 @@ export default function Timeline() {
         );
       }
 
-      // ── Per-entry animations (dot + connector + card in single ST each) ──
+      // ── Per-entry animations (dot + connector + card) ──
       const entries = track.querySelectorAll(`.${styles.entry}`);
       entries.forEach((entry, i) => {
         const dot = entry.querySelector(`.${styles.dot}`);
@@ -219,11 +259,9 @@ export default function Timeline() {
         const resolved = resolveColor(color);
         const isAbove = i % 2 === 0;
 
-        // Initial states
         gsap.set(dot, { scale: 0.6, opacity: 0.3 });
         if (conn) gsap.set(conn, { opacity: 0 });
 
-        // Combined dot + connector + glow in single ScrollTrigger
         const dotTl = gsap.timeline({
           scrollTrigger: {
             trigger: entry,
@@ -243,7 +281,6 @@ export default function Timeline() {
           dotTl.to(conn, { opacity: 0.3, duration: 0.5, ease: "power2.out" }, 0);
         }
 
-        // Card clip-path reveal + content stagger in single ScrollTrigger
         const fromClip = isAbove ? "inset(100% 0 0 0)" : "inset(0 0 100% 0)";
         const cardTl = gsap.timeline({
           scrollTrigger: {
@@ -272,7 +309,10 @@ export default function Timeline() {
       });
     }, section);
 
-    return () => ctx.revert();
+    return () => {
+      ctx.revert();
+      ScrollTrigger.refresh();
+    };
   }, [reducedMotion, total]);
 
   return (

@@ -6,7 +6,7 @@
   transition: var(--theme-transition);
 }
 
-/* Dot grid background */
+/* Dot grid background — hidden on mobile for clean dark bg */
 .dotGrid {
   position: absolute;
   inset: 0;
@@ -15,6 +15,10 @@
   grid-template-rows: repeat(8, 1fr);
   pointer-events: none;
   z-index: 0;
+
+  @media (max-width: 767px) {
+    display: none;
+  }
 }
 
 .gridDot {
