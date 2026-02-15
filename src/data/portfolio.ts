@@ -305,7 +305,7 @@ export const timelineData: TimelineEntry[] = [
     title: "B.Tech — Smart Manufacturing",
     organization: "IIITDM Jabalpur",
     description:
-      "Started undergraduate studies. Exposure to industrial systems, optimization, and physical-world design — shaping how I approach AI infrastructure.",
+      "B.Tech in Smart Manufacturing at a national institute of design and manufacturing. Coursework in AI/ML, mechatronics, and systems design — bridging software intelligence with physical-world engineering.",
     type: "education",
   },
 ];
