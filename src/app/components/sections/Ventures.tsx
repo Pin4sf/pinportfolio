@@ -23,26 +23,28 @@ export default function Ventures() {
     const section = sectionRef.current;
     if (!section) return;
 
-    const cards = section.querySelectorAll(`.${styles.card}`);
-    cards.forEach((card) => {
-      gsap.fromTo(
-        card,
-        { y: 40, opacity: 0 },
-        {
-          y: 0,
-          opacity: 1,
-          duration: 0.8,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: card,
-            start: "top 85%",
-            toggleActions: "play none none none",
-          },
-        }
-      );
-    });
+    const ctx = gsap.context(() => {
+      const cards = section.querySelectorAll(`.${styles.card}`);
+      cards.forEach((card) => {
+        gsap.fromTo(
+          card,
+          { y: 40, opacity: 0 },
+          {
+            y: 0,
+            opacity: 1,
+            duration: 0.8,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: card,
+              start: "top 85%",
+              toggleActions: "play none none none",
+            },
+          }
+        );
+      });
+    }, section);
 
-    return () => ScrollTrigger.getAll().forEach((t) => t.kill());
+    return () => ctx.revert();
   }, [reducedMotion]);
 
   // Tag pill hover wobble

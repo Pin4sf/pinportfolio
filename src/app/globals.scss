@@ -420,5 +420,4 @@ body::after {
 
 main img {
   transform: skewY(calc(var(--sv) * 1deg));
-  will-change: transform;
 }

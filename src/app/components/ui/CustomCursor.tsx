@@ -186,19 +186,25 @@ export default function CustomCursor() {
 
     let interactives = addHoverListeners();
 
-    // Watch for dynamic elements
+    // Watch for dynamic elements — debounced to avoid thrashing during GSAP animations
+    let mutationTimer: ReturnType<typeof setTimeout>;
     const observer = new MutationObserver(() => {
-      interactives.forEach((el) => {
-        el.removeEventListener("mouseenter", onMouseEnterInteractive);
-        el.removeEventListener("mouseleave", onMouseLeaveInteractive);
-      });
-      interactives = addHoverListeners();
+      clearTimeout(mutationTimer);
+      mutationTimer = setTimeout(() => {
+        interactives.forEach((el) => {
+          el.removeEventListener("mouseenter", onMouseEnterInteractive);
+          el.removeEventListener("mouseleave", onMouseLeaveInteractive);
+        });
+        interactives = addHoverListeners();
+      }, 150);
     });
-    observer.observe(document.body, { childList: true, subtree: true });
+    const main = document.querySelector("main");
+    observer.observe(main || document.body, { childList: true, subtree: true });
 
     document.documentElement.classList.add("custom-cursor-active");
 
     return () => {
+      clearTimeout(mutationTimer);
       window.removeEventListener("mousemove", onMouseMove);
       window.removeEventListener("mousedown", onMouseDown);
       window.removeEventListener("mouseup", onMouseUp);
