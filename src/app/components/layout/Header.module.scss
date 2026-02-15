@@ -192,3 +192,18 @@
     color: var(--accent);
   }
 }
+
+/* Scroll Progress Bar */
+.progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 2px;
+  width: 100%;
+  background: var(--accent);
+  z-index: 9999;
+  pointer-events: none;
+  transform-origin: left;
+  transform: scaleX(0);
+  will-change: transform;
+}

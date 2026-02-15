@@ -47,7 +47,7 @@ export default function SkillsExperience() {
       tl.fromTo(
         label,
         { x: -20, opacity: 0 },
-        { x: 0, opacity: 1, duration: 0.5, delay: i * 0.1, ease: "power3.out" }
+        { x: 0, opacity: 1, duration: 0.5, delay: i * 0.05, ease: "power3.out" }
       ).fromTo(
         pills,
         { y: 10, opacity: 0 },

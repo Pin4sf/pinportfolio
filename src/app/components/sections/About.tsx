@@ -57,7 +57,7 @@ export default function About() {
       tl.fromTo(
         Array.from(textRef.current.children),
         { y: 25, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.6, stagger: 0.1, ease: "power3.out" },
+        { y: 0, opacity: 1, duration: 0.6, stagger: 0.05, ease: "power3.out" },
         0.3
       );
     }

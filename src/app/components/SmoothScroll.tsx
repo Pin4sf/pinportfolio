@@ -27,7 +27,28 @@ export default function SmoothScroll({
 
     // Connect Lenis to GSAP ScrollTrigger
     lenis.on("scroll", ScrollTrigger.update);
-    gsap.ticker.add((time) => lenis.raf(time * 1000));
+
+    // Velocity-based content skew
+    const skew = { current: 0 };
+
+    gsap.ticker.add((time) => {
+      lenis.raf(time * 1000);
+
+      // Smooth velocity skew
+      const velocity = lenis.velocity || 0;
+      const target = gsap.utils.clamp(-2, 2, velocity * 0.15);
+      skew.current += (target - skew.current) * 0.1;
+
+      if (Math.abs(skew.current) > 0.005) {
+        document.documentElement.style.setProperty(
+          "--sv",
+          skew.current.toFixed(4)
+        );
+      } else if (skew.current !== 0) {
+        skew.current = 0;
+        document.documentElement.style.setProperty("--sv", "0");
+      }
+    });
     gsap.ticker.lagSmoothing(0);
 
     // Handle hash navigation
@@ -48,6 +69,7 @@ export default function SmoothScroll({
 
     return () => {
       window.__lenis = null;
+      document.documentElement.style.removeProperty("--sv");
       lenis.destroy();
       document.removeEventListener("click", handleClick);
     };

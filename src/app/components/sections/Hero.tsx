@@ -108,7 +108,7 @@ export default function Hero() {
           y: 0,
           opacity: 1,
           duration: 0.4,
-          stagger: 0.08,
+          stagger: 0.04,
           ease: "power3.out",
         },
         "-=0.2"

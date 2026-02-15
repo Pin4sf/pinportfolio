@@ -16,6 +16,7 @@ export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("");
   const lastScrollY = useRef(0);
+  const progressRef = useRef<HTMLDivElement>(null);
   const [hidden, setHidden] = useState(false);
 
   // Scroll-spy: track active section
@@ -46,6 +47,13 @@ export default function Header() {
       setScrolled(currentY > 100);
       setHidden(currentY > lastScrollY.current && currentY > 300);
       lastScrollY.current = currentY;
+
+      // Update scroll progress bar
+      if (progressRef.current) {
+        const total = document.documentElement.scrollHeight - window.innerHeight;
+        const progress = total > 0 ? currentY / total : 0;
+        progressRef.current.style.transform = `scaleX(${progress})`;
+      }
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
@@ -66,6 +74,9 @@ export default function Header() {
 
   return (
     <>
+      {/* Scroll progress indicator */}
+      <div ref={progressRef} className={styles.progress} aria-hidden="true" />
+
       <header
         ref={headerRef}
         className={cn(

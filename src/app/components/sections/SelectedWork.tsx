@@ -61,7 +61,7 @@ export default function SelectedWork() {
             y: 0,
             opacity: 1,
             duration: 0.6,
-            stagger: 0.1,
+            stagger: 0.05,
             ease: "power3.out",
           },
           0.3

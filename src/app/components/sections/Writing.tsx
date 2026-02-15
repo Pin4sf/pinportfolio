@@ -66,7 +66,7 @@ export default function Writing() {
         y: 0,
         opacity: 1,
         duration: 0.7,
-        stagger: 0.12,
+        stagger: 0.06,
         ease: "power3.out",
         scrollTrigger: {
           trigger: section,
