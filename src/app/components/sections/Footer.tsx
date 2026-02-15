@@ -1,11 +1,17 @@
 "use client";
 
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
+import dynamic from "next/dynamic";
 import anime from "animejs";
 import styles from "./Footer.module.scss";
 import { navItems, contactData } from "@/data/portfolio";
 import { useReducedMotion } from "@/app/hooks/useReducedMotion";
 import { ArrowUp, Github, Linkedin, Twitter, Instagram, type LucideIcon } from "lucide-react";
+
+const FluidBackground = dynamic(
+  () => import("../three/FluidBackground"),
+  { ssr: false }
+);
 
 const iconMap: Record<string, LucideIcon> = {
   linkedin: Linkedin,
@@ -17,6 +23,21 @@ const iconMap: Record<string, LucideIcon> = {
 export default function Footer() {
   const footerRef = useRef<HTMLElement>(null);
   const reducedMotion = useReducedMotion();
+  const [footerBgCanvas, setFooterBgCanvas] = useState<HTMLCanvasElement | null>(null);
+
+  // Create a small offscreen canvas filled with the footer bg color
+  // FluidBackground uses it as the "background" to refract through water
+  useEffect(() => {
+    const c = document.createElement("canvas");
+    c.width = 2;
+    c.height = 2;
+    const ctx = c.getContext("2d");
+    if (ctx) {
+      ctx.fillStyle = "#090a0e";
+      ctx.fillRect(0, 0, 2, 2);
+    }
+    setFooterBgCanvas(c);
+  }, []);
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -56,8 +77,11 @@ export default function Footer() {
 
   return (
     <footer ref={footerRef} className={styles.footer}>
-      {/* Large signature name */}
+      {/* Large signature name with water effect */}
       <div className={`${styles.signature} ${styles.reveal}`}>
+        {!reducedMotion && footerBgCanvas && (
+          <FluidBackground backgroundCanvas={footerBgCanvas} />
+        )}
         <span className={styles.signatureName}>Shivansh Fulper</span>
       </div>
 

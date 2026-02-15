@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useMemo, useCallback } from "react";
+import { useEffect, useRef, useMemo, useCallback, useState } from "react";
 import dynamic from "next/dynamic";
 import gsap from "gsap";
 import anime from "animejs";
@@ -8,9 +8,15 @@ import styles from "./Hero.module.scss";
 import { heroData } from "@/data/portfolio";
 import { useReducedMotion } from "@/app/hooks/useReducedMotion";
 import { Github, Linkedin, Twitter, Instagram, type LucideIcon } from "lucide-react";
+import ErrorBoundary from "../ErrorBoundary";
 
 const HeroBackground = dynamic(
   () => import("../three/HeroBackground"),
+  { ssr: false }
+);
+
+const FluidBackground = dynamic(
+  () => import("../three/FluidBackground"),
   { ssr: false }
 );
 
@@ -31,6 +37,11 @@ export default function Hero() {
   const particlesRef = useRef<HTMLDivElement>(null);
   const charsRef = useRef<HTMLSpanElement[]>([]);
   const reducedMotion = useReducedMotion();
+  const [bgCanvas, setBgCanvas] = useState<HTMLCanvasElement | null>(null);
+
+  const handleBgCanvasReady = useCallback((canvas: HTMLCanvasElement) => {
+    setBgCanvas(canvas);
+  }, []);
 
   const particles = useMemo(
     () =>
@@ -223,11 +234,22 @@ export default function Hero() {
   return (
     <section ref={sectionRef} id="home" className={styles.hero}>
       {/* Three.js noise gradient background */}
-      {!reducedMotion && <HeroBackground />}
+      {!reducedMotion && (
+        <ErrorBoundary>
+          <HeroBackground onCanvasReady={handleBgCanvasReady} />
+        </ErrorBoundary>
+      )}
+
+      {/* Water refraction overlay */}
+      {!reducedMotion && (
+        <ErrorBoundary>
+          <FluidBackground backgroundCanvas={bgCanvas} />
+        </ErrorBoundary>
+      )}
 
       {/* Floating particles */}
       {!reducedMotion && (
-        <div ref={particlesRef} className={styles.particles}>
+        <div ref={particlesRef} className={styles.particles} aria-hidden="true">
           {particles.map((p) => (
             <span
               key={p.id}
@@ -244,7 +266,7 @@ export default function Hero() {
       )}
 
       {/* Cursor-responsive glow */}
-      <div ref={glowRef} className={styles.glow} />
+      <div ref={glowRef} className={styles.glow} aria-hidden="true" />
 
       <div className={styles.content}>
         <h1 className={styles.name}>

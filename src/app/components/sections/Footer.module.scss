@@ -12,6 +12,8 @@
 
 /* ---- Large signature name ---- */
 .signature {
+  position: relative;
+  overflow: hidden;
   max-width: 1400px;
   margin: 0 auto var(--space-2xl);
   border-bottom: 1px solid var(--border-subtle);
@@ -19,6 +21,8 @@
 }
 
 .signatureName {
+  position: relative;
+  z-index: 2;
   font-family: var(--font-display);
   font-size: clamp(2.5rem, 8vw, 6rem);
   font-weight: 400;

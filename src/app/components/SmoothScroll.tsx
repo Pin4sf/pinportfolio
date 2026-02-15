@@ -23,7 +23,7 @@ export default function SmoothScroll({
     });
 
     lenisRef.current = lenis;
-    (window as any).__lenis = lenis;
+    window.__lenis = lenis;
 
     // Connect Lenis to GSAP ScrollTrigger
     lenis.on("scroll", ScrollTrigger.update);
@@ -47,7 +47,7 @@ export default function SmoothScroll({
     document.addEventListener("click", handleClick);
 
     return () => {
-      (window as any).__lenis = null;
+      window.__lenis = null;
       lenis.destroy();
       document.removeEventListener("click", handleClick);
     };

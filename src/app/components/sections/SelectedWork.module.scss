@@ -9,11 +9,11 @@
 .list {
   display: flex;
   flex-direction: column;
-  gap: 8rem;
-  margin-top: 3rem;
+  gap: var(--space-3xl);
+  margin-top: var(--space-xl);
 
-  @media (max-width: 767px) {
-    gap: 5rem;
+  @media (min-width: 768px) {
+    gap: 8rem;
   }
 }
 
@@ -57,7 +57,13 @@
 
   @media (min-width: 768px) {
     top: -3rem;
-    left: -2rem;
+    left: auto;
+    right: -2rem;
+
+    .card:nth-child(even) & {
+      right: auto;
+      left: -2rem;
+    }
   }
 }
 

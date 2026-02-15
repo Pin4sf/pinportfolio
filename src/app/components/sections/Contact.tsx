@@ -1,13 +1,13 @@
 "use client";
 
-import { useRef, useEffect, useState, useMemo } from "react";
+import { useRef, useEffect, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import anime from "animejs";
 import styles from "./Contact.module.scss";
 import { contactData } from "@/data/portfolio";
 import { useReducedMotion } from "@/app/hooks/useReducedMotion";
 import { Github as GithubIcon, Linkedin as LinkedinIcon, Twitter as TwitterIcon, Instagram as InstagramIcon, Send, Loader2, Check, type LucideIcon } from "lucide-react";
+
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -21,19 +21,7 @@ const iconMap: Record<string, LucideIcon> = {
 export default function Contact() {
   const sectionRef = useRef<HTMLElement>(null);
   const emailRef = useRef<HTMLAnchorElement>(null);
-  const constellationRef = useRef<HTMLDivElement>(null);
   const reducedMotion = useReducedMotion();
-
-  const constellationDots = useMemo(
-    () =>
-      Array.from({ length: 40 }, (_, i) => ({
-        id: i,
-        left: `${Math.random() * 100}%`,
-        top: `${Math.random() * 100}%`,
-        size: Math.random() * 3.5 + 1.5,
-      })),
-    []
-  );
 
   const [formData, setFormData] = useState({
     name: "",
@@ -84,51 +72,6 @@ export default function Contact() {
     return () => ScrollTrigger.getAll().forEach((t) => t.kill());
   }, [reducedMotion]);
 
-  // anime.js constellation background
-  useEffect(() => {
-    if (reducedMotion) return;
-    const container = constellationRef.current;
-    if (!container) return;
-
-    const dots = container.querySelectorAll(`.${styles.constellationDot}`);
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            // Staggered reveal from center
-            anime({
-              targets: dots,
-              opacity: [0, () => Math.random() * 0.45 + 0.15],
-              scale: [0, 1],
-              delay: anime.stagger(50, { from: "center" }),
-              duration: 1200,
-              easing: "easeOutExpo",
-            });
-
-            // Gentle drift
-            anime({
-              targets: dots,
-              translateX: () => anime.random(-25, 25),
-              translateY: () => anime.random(-25, 25),
-              duration: () => anime.random(4000, 7000),
-              delay: () => anime.random(0, 3000),
-              direction: "alternate",
-              loop: true,
-              easing: "easeInOutSine",
-            });
-
-            observer.disconnect();
-          }
-        });
-      },
-      { threshold: 0.2 }
-    );
-
-    observer.observe(container);
-    return () => observer.disconnect();
-  }, [reducedMotion]);
-
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -165,18 +108,6 @@ export default function Contact() {
       {/* Large background text */}
       <span className={styles.bgText} aria-hidden="true">Let&apos;s Talk</span>
 
-      {/* Constellation particle background */}
-      {!reducedMotion && (
-        <div ref={constellationRef} className={styles.constellation}>
-          {constellationDots.map((d) => (
-            <span
-              key={d.id}
-              className={styles.constellationDot}
-              style={{ left: d.left, top: d.top, width: d.size, height: d.size }}
-            />
-          ))}
-        </div>
-      )}
 
       <span className="section__label">Contact</span>
       <h2 className={styles.heading}>Let&apos;s Build Something</h2>
@@ -217,6 +148,17 @@ export default function Contact() {
           onSubmit={handleSubmit}
           className={styles.form}
         >
+          {submitState === "sent" && (
+            <div className={`${styles.toast} ${styles.toastSuccess}`} role="status">
+              <Check size={14} />
+              Message sent! I&apos;ll get back to you within 24 hours.
+            </div>
+          )}
+          {submitState === "error" && (
+            <div className={`${styles.toast} ${styles.toastError}`} role="alert">
+              Something went wrong. Please try again or email me directly.
+            </div>
+          )}
           <input type="hidden" name="_captcha" value="false" />
           <div className={styles.field}>
             <input

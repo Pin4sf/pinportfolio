@@ -105,7 +105,11 @@ const fragmentShader = `
   }
 `;
 
-export default function HeroBackground() {
+interface HeroBackgroundProps {
+  onCanvasReady?: (canvas: HTMLCanvasElement) => void;
+}
+
+export default function HeroBackground({ onCanvasReady }: HeroBackgroundProps) {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -115,10 +119,11 @@ export default function HeroBackground() {
     const scene = new THREE.Scene();
     const camera = new THREE.Camera();
 
-    const renderer = new THREE.WebGLRenderer({ antialias: false, alpha: false });
+    const renderer = new THREE.WebGLRenderer({ antialias: false, alpha: false, preserveDrawingBuffer: true });
     renderer.setSize(container.clientWidth, container.clientHeight);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     container.appendChild(renderer.domElement);
+    onCanvasReady?.(renderer.domElement);
 
     const uniforms = {
       uTime: { value: 0 },
@@ -182,7 +187,7 @@ export default function HeroBackground() {
         container.removeChild(renderer.domElement);
       }
     };
-  }, []);
+  }, [onCanvasReady]);
 
   return (
     <div
