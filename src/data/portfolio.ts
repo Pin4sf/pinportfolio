@@ -44,6 +44,7 @@ export interface CaseStudy {
   solutionImages: string[];
   impact: string;
   reflection: string;
+  pullQuote?: string;
   order: number;
 }
 
@@ -172,6 +173,8 @@ export const caseStudies: CaseStudy[] = [
       "Active development with hardware prototyping underway. Early concept testing with athletes. Team of 4 (CEO, CTO, COO, CPO) with backgrounds spanning biosensing, AI systems, manufacturing, and product hardware. Pursuing HIPAA and FDA compliance pathways.",
     reflection:
       "Consumer wearables track fitness. Medical systems work in labs. Nothing practical sits in the middle. That's the gap — and closing it requires building trust before building features. The hardest part isn't the AI. It's earning confidence from institutions that can't afford false signals.",
+    pullQuote:
+      "The hardest engineering decision was building a system that stays silent when it isn't confident — because in environments where a bad call has real consequences, showing nothing is better than a false green light.",
     order: 1,
   },
   {
@@ -196,6 +199,8 @@ export const caseStudies: CaseStudy[] = [
       "Registered as EcoFresh Greensync LLP. MSME (Udyam) registered as Micro Enterprise. Incubated at IIITDM Jabalpur under the Institution's Innovation Council (Ministry of Education). 16th among 2,500+ teams at Hult Prize, IIT Bombay. National recognition from Ministry of Education. 3 IP discoveries with patent filing procedures documented for Indian Patent Office and international PCT routes.",
     reflection:
       "Deep-tech without a clear go-to-market path becomes a science project. Distribution beats brilliance. Vision must be matched with execution speed. That lesson directly shapes how I approach everything I build — earn trust before building scale.",
+    pullQuote:
+      "We ran 47 polymer simulations before finding a PHA pathway that worked with unsorted municipal waste — the kind of iteration that separates research from real infrastructure.",
     order: 2,
   },
 ];

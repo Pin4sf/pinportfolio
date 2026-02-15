@@ -3,7 +3,6 @@
 import { useEffect, useRef, useMemo, useCallback, useState } from "react";
 import dynamic from "next/dynamic";
 import gsap from "gsap";
-import anime from "animejs";
 import styles from "./Hero.module.scss";
 import { heroData } from "@/data/portfolio";
 import { useReducedMotion } from "@/app/hooks/useReducedMotion";
@@ -202,7 +201,7 @@ export default function Hero() {
     return () => section.removeEventListener("mousemove", handleMouseMove);
   }, [reducedMotion]);
 
-  // anime.js floating particles
+  // Floating particles
   useEffect(() => {
     if (reducedMotion) return;
     const container = particlesRef.current;
@@ -210,24 +209,30 @@ export default function Hero() {
 
     const dots = container.querySelectorAll(`.${styles.particle}`);
 
-    anime({
-      targets: dots,
-      opacity: [0, () => Math.random() * 0.5 + 0.25],
-      scale: [0, 1],
-      delay: anime.stagger(120, { from: "center" }),
-      duration: 2500,
-      easing: "easeOutExpo",
-    });
+    // Staggered entrance from center
+    gsap.fromTo(
+      dots,
+      { opacity: 0, scale: 0 },
+      {
+        opacity: () => Math.random() * 0.5 + 0.25,
+        scale: 1,
+        duration: 2.5,
+        stagger: { each: 0.12, from: "center" },
+        ease: "expo.out",
+      }
+    );
 
-    anime({
-      targets: dots,
-      translateY: () => anime.random(-60, 60),
-      translateX: () => anime.random(-30, 30),
-      duration: () => anime.random(3000, 6000),
-      delay: () => anime.random(0, 2000),
-      direction: "alternate",
-      loop: true,
-      easing: "easeInOutSine",
+    // Continuous gentle float per particle
+    Array.from(dots).forEach((dot) => {
+      gsap.to(dot, {
+        y: gsap.utils.random(-60, 60),
+        x: gsap.utils.random(-30, 30),
+        duration: gsap.utils.random(3, 6),
+        delay: gsap.utils.random(0, 2),
+        yoyo: true,
+        repeat: -1,
+        ease: "sine.inOut",
+      });
     });
   }, [reducedMotion]);
 

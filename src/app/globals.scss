@@ -67,27 +67,6 @@
   --theme-transition: background 0.5s ease, color 0.5s ease, border-color 0.5s ease;
 }
 
-/* ---- Light Section (contrast within dark mode) ---- */
-.section--light {
-  --bg-primary: #ffffff;
-  --bg-secondary: #f5f5f7;
-  --bg-tertiary: #eaeaec;
-
-  --text-primary: #1a1a1a;
-  --text-heading: #0a0a0a;
-  --text-secondary: #555555; /* 7.4:1 contrast on white */
-  --text-tertiary: #777777; /* 4.6:1 contrast on white */
-
-  --accent: #059033;
-  --accent-hover: #047a2b;
-  --accent-muted: rgba(5, 144, 51, 0.1);
-  --accent-warm: #d4a020;
-
-  --border-subtle: rgba(0, 0, 0, 0.08);
-  --border-visible: rgba(0, 0, 0, 0.15);
-  --bg-text-opacity: 0.04;
-}
-
 /* ---- Reset ---- */
 *,
 *::before,
@@ -199,7 +178,7 @@ ul {
     display: inline-block;
     width: 1.5rem;
     height: 1px;
-    background: var(--accent);
+    background: var(--accent-warm);
     margin-right: var(--space-sm);
     vertical-align: middle;
   }

@@ -90,18 +90,25 @@ export default function LoadingScreen() {
   const completedRef = useRef(false);
   const signRefs = useRef<(HTMLDivElement | null)[]>([]);
 
-  // Counter
+  // Counter — accelerating curve (slow start, fast finish)
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCounter((prev) => {
-        if (prev >= 100) {
-          clearInterval(interval);
-          return 100;
-        }
-        return Math.min(prev + 2, 100);
-      });
-    }, 15);
-    return () => clearInterval(interval);
+    const DURATION = 1600;
+    const start = performance.now();
+    let raf: number;
+
+    const tick = (now: number) => {
+      const elapsed = now - start;
+      const progress = Math.min(elapsed / DURATION, 1);
+      const eased = progress * progress * progress; // power3.in
+      setCounter(Math.round(eased * 100));
+
+      if (progress < 1) {
+        raf = requestAnimationFrame(tick);
+      }
+    };
+
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
   }, []);
 
   // Cycle hand signs based on counter
@@ -124,30 +131,38 @@ export default function LoadingScreen() {
     }
   }, [counter, activeSign]);
 
-  // Exit animation
+  // Exit animation — dramatic split-reveal
   useEffect(() => {
     if (counter === 100 && !completedRef.current) {
       completedRef.current = true;
 
-      const tl = gsap.timeline({ delay: 0.2 });
+      const tl = gsap.timeline({ delay: 0.3 });
 
+      // Flash seal outward
       tl.to(`.${styles.activeSeal}`, {
-        scale: 1.3,
+        scale: 1.5,
         opacity: 0,
-        duration: 0.3,
-        ease: "power2.in",
+        duration: 0.4,
+        ease: "power3.in",
       });
 
+      // Fade counter + UI
       tl.to(
         `.${styles.counter}`,
-        { opacity: 0, y: -10, duration: 0.3, ease: "power2.in" },
+        { opacity: 0, y: -15, duration: 0.3, ease: "power2.in" },
         "<"
       );
+      tl.to(
+        [`.${styles.dots}`, `.${styles.bar}`],
+        { opacity: 0, duration: 0.2 },
+        "<0.1"
+      );
 
+      // Split-reveal curtain: top and bottom halves slide apart
       tl.to(`.${styles.loading}`, {
-        clipPath: "inset(0 0 100% 0)",
-        duration: 0.6,
-        ease: "power3.inOut",
+        clipPath: "inset(50% 0 50% 0)",
+        duration: 0.8,
+        ease: "power4.inOut",
         pointerEvents: "none",
       });
 

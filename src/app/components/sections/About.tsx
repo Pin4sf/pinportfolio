@@ -3,7 +3,6 @@
 import { useRef, useEffect, useMemo } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import anime from "animejs";
 import styles from "./About.module.scss";
 import { aboutData } from "@/data/portfolio";
 import { useReducedMotion } from "@/app/hooks/useReducedMotion";
@@ -45,27 +44,27 @@ export default function About() {
       },
     });
 
-    // Image mask wipe
+    // Scale-in image with border-radius morph
     tl.fromTo(
       imageRef.current,
-      { clipPath: "inset(0 100% 0 0)" },
-      { clipPath: "inset(0 0% 0 0)", duration: 1, ease: "power3.inOut" }
+      { scale: 0.8, opacity: 0, borderRadius: "50%" },
+      { scale: 1, opacity: 1, borderRadius: "8px", duration: 1.2, ease: "back.out(1.5)" }
     );
 
-    // Text content stagger
+    // Left-slide text content stagger
     if (textRef.current) {
       tl.fromTo(
         Array.from(textRef.current.children),
-        { y: 25, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.6, stagger: 0.05, ease: "power3.out" },
-        0.3
+        { x: -40, opacity: 0 },
+        { x: 0, opacity: 1, duration: 0.7, stagger: 0.06, ease: "power2.out" },
+        0.2
       );
     }
 
     return () => ScrollTrigger.getAll().forEach((t) => t.kill());
   }, [reducedMotion]);
 
-  // anime.js floating geometric shapes
+  // Floating geometric shapes
   useEffect(() => {
     if (reducedMotion) return;
     const container = shapesRef.current;
@@ -74,32 +73,36 @@ export default function About() {
     const els = container.querySelectorAll(`.${styles.floatingShape}`);
 
     // Staggered entrance
-    anime({
-      targets: els,
-      opacity: [0, 0.3],
-      scale: [0, 1],
-      delay: anime.stagger(150),
-      duration: 1500,
-      easing: "easeOutExpo",
-    });
+    gsap.fromTo(
+      els,
+      { opacity: 0, scale: 0 },
+      {
+        opacity: 0.3,
+        scale: 1,
+        duration: 1.5,
+        stagger: 0.15,
+        ease: "expo.out",
+      }
+    );
 
-    // Continuous gentle float
-    anime({
-      targets: els,
-      translateY: () => anime.random(-30, 30),
-      translateX: () => anime.random(-20, 20),
-      rotate: () => anime.random(-25, 25),
-      duration: () => anime.random(3000, 5000),
-      delay: () => anime.random(0, 2000),
-      direction: "alternate",
-      loop: true,
-      easing: "easeInOutQuad",
+    // Continuous gentle float per shape
+    Array.from(els).forEach((el) => {
+      gsap.to(el, {
+        y: gsap.utils.random(-30, 30),
+        x: gsap.utils.random(-20, 20),
+        rotation: gsap.utils.random(-25, 25),
+        duration: gsap.utils.random(3, 5),
+        delay: gsap.utils.random(0, 2),
+        yoyo: true,
+        repeat: -1,
+        ease: "power1.inOut",
+      });
     });
   }, [reducedMotion]);
 
   return (
     <section ref={sectionRef} id="about" className={styles.section}>
-      <span className="bg-text bg-text--top">ABOUT ME</span>
+      <span className="bg-text bg-text--top">自己紹介</span>
 
       {/* Floating geometric accents */}
       {!reducedMotion && (

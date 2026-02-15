@@ -9,7 +9,7 @@
   overflow: hidden;
   background: radial-gradient(
     ellipse at 50% 50%,
-    rgba(108, 255, 141, 0.04) 0%,
+    rgba(255, 255, 255, 0.02) 0%,
     var(--bg-primary) 70%
   );
 
@@ -28,9 +28,9 @@
 .particle {
   position: absolute;
   border-radius: 50%;
-  background: var(--accent);
+  background: rgba(255, 255, 255, 0.6);
   opacity: 0;
-  box-shadow: 0 0 8px rgba(108, 255, 141, 0.4);
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.2);
 }
 
 .glow {
@@ -40,8 +40,8 @@
   border-radius: 50%;
   background: radial-gradient(
     circle,
-    rgba(108, 255, 141, 0.08) 0%,
-    rgba(108, 255, 141, 0.03) 40%,
+    rgba(255, 255, 255, 0.03) 0%,
+    rgba(255, 255, 255, 0.01) 40%,
     transparent 70%
   );
   transform: translate(-50%, -50%);

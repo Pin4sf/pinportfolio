@@ -3,7 +3,6 @@
 import { useRef, useEffect } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import anime from "animejs";
 import styles from "./Ventures.module.scss";
 import { getProjects } from "@/data/portfolio";
 import { useReducedMotion } from "@/app/hooks/useReducedMotion";
@@ -46,7 +45,7 @@ export default function Ventures() {
     return () => ScrollTrigger.getAll().forEach((t) => t.kill());
   }, [reducedMotion]);
 
-  // anime.js tag pill hover wobble
+  // Tag pill hover wobble
   useEffect(() => {
     if (reducedMotion) return;
     const section = sectionRef.current;
@@ -57,22 +56,22 @@ export default function Ventures() {
     ) as NodeListOf<HTMLElement>;
 
     const handleEnter = (e: MouseEvent) => {
-      anime({
-        targets: e.currentTarget,
-        scale: [1, 1.1],
-        rotate: [0, anime.random(-3, 3)],
-        duration: 300,
-        easing: "easeOutBack",
+      gsap.to(e.currentTarget, {
+        scale: 1.1,
+        rotation: gsap.utils.random(-3, 3),
+        duration: 0.3,
+        ease: "back.out(2)",
+        overwrite: true,
       });
     };
 
     const handleLeave = (e: MouseEvent) => {
-      anime({
-        targets: e.currentTarget,
+      gsap.to(e.currentTarget, {
         scale: 1,
-        rotate: 0,
-        duration: 400,
-        easing: "easeOutElastic(1, .6)",
+        rotation: 0,
+        duration: 0.4,
+        ease: "elastic.out(1, 0.6)",
+        overwrite: true,
       });
     };
 
@@ -90,7 +89,7 @@ export default function Ventures() {
   }, [reducedMotion]);
 
   return (
-    <section ref={sectionRef} id="projects" className={`${styles.section} section--light`}>
+    <section ref={sectionRef} id="projects" className={styles.section}>
       {/* Viewport-filling PROJECTS marquee */}
       <div className="marquee" style={{ top: "50%", transform: "translateY(-50%)" }}>
         <div className="marquee__inner">

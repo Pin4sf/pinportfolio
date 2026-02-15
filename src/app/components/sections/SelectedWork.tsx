@@ -3,7 +3,6 @@
 import { useRef, useEffect } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import anime from "animejs";
 import styles from "./SelectedWork.module.scss";
 import { getVentures } from "@/data/portfolio";
 import { useReducedMotion } from "@/app/hooks/useReducedMotion";
@@ -25,10 +24,12 @@ export default function SelectedWork() {
 
     const cards = section.querySelectorAll(`.${styles.card}`);
 
-    cards.forEach((card) => {
+    cards.forEach((card, i) => {
       const image = card.querySelector(`.${styles.imageWrap}`);
+      const img = card.querySelector(`.${styles.image}`);
       const text = card.querySelector(`.${styles.textContent}`);
       const number = card.querySelector(`.${styles.number}`);
+      const isEven = i % 2 === 0;
 
       const tl = gsap.timeline({
         scrollTrigger: {
@@ -38,40 +39,58 @@ export default function SelectedWork() {
         },
       });
 
+      // Alternating L/R clip-path reveal
       tl.fromTo(
         number,
-        { opacity: 0, scale: 0.8 },
-        { opacity: 0.08, scale: 1, duration: 0.8, ease: "power3.out" }
+        { opacity: 0, x: isEven ? -20 : 20 },
+        { opacity: 0.08, x: 0, duration: 0.8, ease: "expo.out" }
       )
         .fromTo(
           image,
-          { clipPath: "inset(0 100% 0 0)", scale: 1.1 },
+          { clipPath: isEven ? "inset(0 100% 0 0)" : "inset(0 0 0 100%)" },
           {
-            clipPath: "inset(0 0% 0 0)",
-            scale: 1,
-            duration: 1,
-            ease: "power3.inOut",
+            clipPath: "inset(0 0% 0 0%)",
+            duration: 1.2,
+            ease: "power4.inOut",
           },
           0
         )
         .fromTo(
           text?.children ? Array.from(text.children) : [],
-          { y: 30, opacity: 0 },
+          { x: isEven ? -30 : 30, opacity: 0 },
           {
-            y: 0,
+            x: 0,
             opacity: 1,
-            duration: 0.6,
-            stagger: 0.05,
-            ease: "power3.out",
+            duration: 0.7,
+            stagger: 0.06,
+            ease: "expo.out",
           },
-          0.3
+          0.4
         );
+
+      // Scrub parallax on image
+      if (img) {
+        gsap.fromTo(
+          img,
+          { yPercent: -8 },
+          {
+            yPercent: 8,
+            ease: "none",
+            scrollTrigger: {
+              trigger: card,
+              start: "top bottom",
+              end: "bottom top",
+              scrub: 0.6,
+            },
+          }
+        );
+      }
     });
 
     return () => ScrollTrigger.getAll().forEach((t) => t.kill());
   }, [reducedMotion]);
 
-  // anime.js magnetic card hover
+  // Magnetic card hover
   useEffect(() => {
     if (reducedMotion) return;
     const section = sectionRef.current;
@@ -89,26 +108,25 @@ export default function SelectedWork() {
       const centerX = rect.width / 2;
       const centerY = rect.height / 2;
 
-      // Subtle shift toward cursor
       const moveX = ((x - centerX) / centerX) * 6;
       const moveY = ((y - centerY) / centerY) * 4;
 
-      anime({
-        targets: card,
-        translateX: moveX,
-        translateY: moveY,
-        duration: 400,
-        easing: "easeOutQuad",
+      gsap.to(card, {
+        x: moveX,
+        y: moveY,
+        duration: 0.4,
+        ease: "power1.out",
+        overwrite: "auto",
       });
     };
 
     const handleMouseLeave = (e: MouseEvent) => {
-      anime({
-        targets: e.currentTarget,
-        translateX: 0,
-        translateY: 0,
-        duration: 800,
-        easing: "easeOutElastic(1, .5)",
+      gsap.to(e.currentTarget as HTMLElement, {
+        x: 0,
+        y: 0,
+        duration: 0.8,
+        ease: "elastic.out(1, 0.5)",
+        overwrite: true,
       });
     };
 
@@ -126,7 +144,7 @@ export default function SelectedWork() {
   }, [reducedMotion]);
 
   return (
-    <section ref={sectionRef} id="ventures" className={`${styles.section} section--light`}>
+    <section ref={sectionRef} id="ventures" className={styles.section}>
       <span className="section__label">Ventures</span>
 
       <div className={styles.list}>

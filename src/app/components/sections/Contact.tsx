@@ -44,6 +44,17 @@ export default function Contact() {
       },
     });
 
+    // Vertical clip-path heading reveal
+    const heading = section.querySelector(`.${styles.heading}`);
+    if (heading) {
+      tl.fromTo(
+        heading,
+        { clipPath: "inset(100% 0 0 0)" },
+        { clipPath: "inset(0% 0 0 0)", duration: 1, ease: "power4.inOut" },
+        0
+      );
+    }
+
     // Email reveal
     const emailEl = emailRef.current;
     if (emailEl) {
@@ -66,7 +77,28 @@ export default function Contact() {
         duration: 0.5,
         stagger: 0.02,
         ease: "power4.out",
-      });
+      }, 0.3);
+    }
+
+    // Scrub-linked form field reveals
+    const fields = section.querySelectorAll(`.${styles.field}`);
+    if (fields.length > 0) {
+      gsap.fromTo(
+        fields,
+        { y: 40, opacity: 0 },
+        {
+          y: 0,
+          opacity: 1,
+          stagger: 0.15,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: section.querySelector(`.${styles.form}`),
+            start: "top 85%",
+            end: "top 50%",
+            scrub: 0.8,
+          },
+        }
+      );
     }
 
     return () => ScrollTrigger.getAll().forEach((t) => t.kill());
@@ -106,7 +138,7 @@ export default function Contact() {
   return (
     <section ref={sectionRef} id="contact" className={styles.section}>
       {/* Large background text */}
-      <span className={styles.bgText} aria-hidden="true">Let&apos;s Talk</span>
+      <span className={styles.bgText} aria-hidden="true">接続</span>
 
 
       <span className="section__label">Contact</span>

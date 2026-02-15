@@ -3,7 +3,6 @@
 import { useRef, useEffect, useMemo } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import anime from "animejs";
 import styles from "./SkillsExperience.module.scss";
 import { skillCategories, currentlyExploring } from "@/data/portfolio";
 import { useReducedMotion } from "@/app/hooks/useReducedMotion";
@@ -46,26 +45,26 @@ export default function SkillsExperience() {
 
       tl.fromTo(
         label,
-        { x: -20, opacity: 0 },
-        { x: 0, opacity: 1, duration: 0.5, delay: i * 0.05, ease: "power3.out" }
+        { x: -30, opacity: 0 },
+        { x: 0, opacity: 1, duration: 0.6, delay: i * 0.05, ease: "back.out(1.7)" }
       ).fromTo(
         pills,
-        { y: 10, opacity: 0 },
+        { scale: 0.8, opacity: 0 },
         {
-          y: 0,
+          scale: 1,
           opacity: 1,
-          duration: 0.4,
-          stagger: 0.05,
-          ease: "power3.out",
+          duration: 0.5,
+          stagger: 0.04,
+          ease: "back.out(1.7)",
         },
-        "-=0.2"
+        "-=0.3"
       );
     });
 
     return () => ScrollTrigger.getAll().forEach((t) => t.kill());
   }, [reducedMotion]);
 
-  // anime.js dot grid wave animation
+  // Dot grid wave animation
   useEffect(() => {
     if (reducedMotion) return;
 
@@ -79,32 +78,40 @@ export default function SkillsExperience() {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             // Wave stagger reveal from center
-            anime({
-              targets: dotEls,
-              scale: [0, 1],
-              opacity: [0, 0.25],
-              delay: anime.stagger(30, {
-                grid: [GRID_COLS, GRID_ROWS],
-                from: "center",
-              }),
-              duration: 800,
-              easing: "easeOutElastic(1, .6)",
-            });
+            gsap.fromTo(
+              dotEls,
+              { scale: 0, opacity: 0 },
+              {
+                scale: 1,
+                opacity: 0.25,
+                duration: 0.8,
+                stagger: {
+                  each: 0.03,
+                  grid: [GRID_COLS, GRID_ROWS],
+                  from: "center",
+                },
+                ease: "elastic.out(1, 0.6)",
+              }
+            );
 
             // Subtle looping pulse
-            anime({
-              targets: dotEls,
-              opacity: [0.12, 0.3],
-              scale: [0.8, 1.3],
-              delay: anime.stagger(80, {
-                grid: [GRID_COLS, GRID_ROWS],
-                from: "center",
-              }),
-              duration: 3000,
-              easing: "easeInOutSine",
-              direction: "alternate",
-              loop: true,
-            });
+            gsap.fromTo(
+              dotEls,
+              { opacity: 0.12, scale: 0.8 },
+              {
+                opacity: 0.3,
+                scale: 1.3,
+                duration: 3,
+                stagger: {
+                  each: 0.08,
+                  grid: [GRID_COLS, GRID_ROWS],
+                  from: "center",
+                },
+                ease: "sine.inOut",
+                yoyo: true,
+                repeat: -1,
+              }
+            );
 
             observer.disconnect();
           }

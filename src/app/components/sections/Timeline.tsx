@@ -3,7 +3,6 @@
 import { useRef, useEffect } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import anime from "animejs";
 import styles from "./Timeline.module.scss";
 import { timelineData } from "@/data/portfolio";
 import { useReducedMotion } from "@/app/hooks/useReducedMotion";
@@ -74,14 +73,14 @@ export default function Timeline() {
       );
     }
 
-    // Stagger card reveals
+    // Horizontal slide card reveals (matching the horizontal scroll direction)
     const cards = track.querySelectorAll(`.${styles.card}`);
-    cards.forEach((card, i) => {
+    cards.forEach((card) => {
       gsap.fromTo(
         card,
-        { y: 40, opacity: 0 },
+        { x: 60, opacity: 0 },
         {
-          y: 0,
+          x: 0,
           opacity: 1,
           duration: 0.6,
           ease: "power3.out",
@@ -98,7 +97,7 @@ export default function Timeline() {
     return () => ScrollTrigger.getAll().forEach((t) => t.kill());
   }, [reducedMotion]);
 
-  // anime.js dot pulse
+  // Dot pulse
   useEffect(() => {
     if (reducedMotion) return;
     const track = trackRef.current;
@@ -110,23 +109,31 @@ export default function Timeline() {
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            anime({
-              targets: dots,
-              scale: [0, 1],
-              delay: anime.stagger(200),
-              duration: 800,
-              easing: "easeOutElastic(1, .6)",
-            });
+            // Entrance
+            gsap.fromTo(
+              dots,
+              { scale: 0 },
+              {
+                scale: 1,
+                duration: 0.8,
+                stagger: 0.2,
+                ease: "elastic.out(1, 0.6)",
+              }
+            );
 
-            anime({
-              targets: dots,
-              scale: [1, 1.25],
-              duration: 1500,
-              delay: anime.stagger(300),
-              direction: "alternate",
-              loop: true,
-              easing: "easeInOutSine",
-            });
+            // Continuous pulse
+            gsap.fromTo(
+              dots,
+              { scale: 1 },
+              {
+                scale: 1.25,
+                duration: 1.5,
+                stagger: 0.3,
+                yoyo: true,
+                repeat: -1,
+                ease: "sine.inOut",
+              }
+            );
 
             observer.disconnect();
           }
@@ -140,7 +147,7 @@ export default function Timeline() {
   }, [reducedMotion]);
 
   return (
-    <section ref={sectionRef} id="experience" className={`${styles.section} section--light`}>
+    <section ref={sectionRef} id="experience" className={styles.section}>
       {/* Viewport-filling JOURNEY marquee */}
       <div className="marquee" style={{ top: "50%", transform: "translateY(-50%)" }}>
         <div className="marquee__inner">

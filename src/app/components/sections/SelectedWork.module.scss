@@ -84,8 +84,8 @@
       0deg,
       transparent,
       transparent 2px,
-      rgba(108, 255, 141, 0.03) 2px,
-      rgba(108, 255, 141, 0.03) 4px
+      rgba(255, 255, 255, 0.03) 2px,
+      rgba(255, 255, 255, 0.03) 4px
     );
     opacity: 0;
     z-index: 2;
@@ -93,7 +93,7 @@
     transition: opacity 0.4s ease;
   }
 
-  /* Green light sweep */
+  /* Light sweep on hover */
   &::after {
     content: '';
     position: absolute;
@@ -101,7 +101,7 @@
     background: linear-gradient(
       105deg,
       transparent 40%,
-      rgba(108, 255, 141, 0.08) 50%,
+      rgba(255, 255, 255, 0.06) 50%,
       transparent 60%
     );
     transform: translateX(-100%);
@@ -129,7 +129,7 @@
 
   .card:hover & {
     transform: scale(1.05);
-    filter: saturate(1.15) brightness(1.05) contrast(1.05);
+    filter: saturate(1.15) brightness(1.05) contrast(1.05) url(#chromatic);
   }
 }
 
@@ -163,11 +163,11 @@
 
 .projectName {
   font-family: var(--font-display);
-  font-size: clamp(2.25rem, 5vw, 3.5rem);
+  font-size: clamp(2.75rem, 6vw, 4.5rem);
   font-weight: 400;
   color: var(--text-heading);
   line-height: 1.05;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.03em;
   margin: 0;
   transition: color 0.3s ease;
 

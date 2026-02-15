@@ -65,7 +65,7 @@
   font-weight: 500;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--accent);
+  color: var(--accent-warm);
   width: fit-content;
 }
 
@@ -73,7 +73,7 @@
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: var(--accent);
+  background: var(--accent-warm);
   animation: pulse 2s ease-in-out infinite;
 }
 

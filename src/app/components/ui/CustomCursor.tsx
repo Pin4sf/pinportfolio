@@ -124,8 +124,8 @@ export default function CustomCursor() {
       gsap.to(cursor, {
         width: 80,
         height: 80,
-        background: "rgba(108, 255, 141, 0.1)",
-        border: "1px solid rgba(108, 255, 141, 0.5)",
+        background: "rgba(255, 255, 255, 0.08)",
+        border: "1px solid rgba(255, 255, 255, 0.3)",
         duration: 0.4,
         ease: "power2.out",
       });
@@ -153,7 +153,7 @@ export default function CustomCursor() {
       gsap.to(cursor, {
         width: 12,
         height: 12,
-        background: "rgba(108, 255, 141, 0.8)",
+        background: "rgba(255, 255, 255, 0.9)",
         border: "none",
         duration: 0.3,
         ease: "power2.out",

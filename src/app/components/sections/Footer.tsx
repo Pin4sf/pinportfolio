@@ -2,7 +2,7 @@
 
 import { useRef, useEffect, useState } from "react";
 import dynamic from "next/dynamic";
-import anime from "animejs";
+import gsap from "gsap";
 import styles from "./Footer.module.scss";
 import { navItems, contactData } from "@/data/portfolio";
 import { useReducedMotion } from "@/app/hooks/useReducedMotion";
@@ -43,7 +43,7 @@ export default function Footer() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  // anime.js footer entrance — staggered reveal
+  // Footer entrance — staggered reveal
   useEffect(() => {
     if (reducedMotion) return;
     const footer = footerRef.current;
@@ -55,14 +55,17 @@ export default function Footer() {
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            anime({
-              targets: Array.from(revealEls),
-              opacity: [0, 1],
-              translateY: [30, 0],
-              delay: anime.stagger(80),
-              duration: 800,
-              easing: "easeOutCubic",
-            });
+            gsap.fromTo(
+              revealEls,
+              { opacity: 0, y: 30 },
+              {
+                opacity: 1,
+                y: 0,
+                duration: 0.8,
+                stagger: 0.08,
+                ease: "power2.out",
+              }
+            );
 
             observer.disconnect();
           }
@@ -137,7 +140,7 @@ export default function Footer() {
         </span>
 
         <span className={styles.credit}>
-          Designed &amp; built by hand
+          Designed &amp; built by hand <span className={styles.seal} aria-hidden="true">印</span>
         </span>
 
         <button
