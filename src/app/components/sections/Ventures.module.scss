@@ -20,8 +20,11 @@
   grid-template-columns: 1fr;
   gap: 2rem;
   padding: 2rem;
-  background: var(--bg-secondary);
-  border: 1px solid var(--border-subtle);
+  background: rgba(255, 255, 255, 0.02);
+  backdrop-filter: blur(20px) saturate(1.2);
+  -webkit-backdrop-filter: blur(20px) saturate(1.2);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04), 0 8px 32px rgba(0, 0, 0, 0.12);
   border-radius: var(--radius-md);
   margin-bottom: 3rem;
 
@@ -65,7 +68,7 @@
   font-weight: 500;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--accent);
+  color: var(--accent-warm);
   width: fit-content;
 }
 
@@ -73,7 +76,7 @@
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: var(--accent);
+  background: var(--accent-warm);
   animation: pulse 2s ease-in-out infinite;
 }
 
@@ -191,9 +194,12 @@
 
 .cardContent {
   padding: 1.5rem;
-  background: var(--bg-secondary);
-  border: 1px solid var(--border-subtle);
+  background: rgba(255, 255, 255, 0.02);
+  backdrop-filter: blur(12px) saturate(1.1);
+  -webkit-backdrop-filter: blur(12px) saturate(1.1);
+  border: 1px solid rgba(255, 255, 255, 0.06);
   border-top: none;
+  box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.03);
   border-radius: 0 0 4px 4px;
   display: flex;
   flex-direction: column;

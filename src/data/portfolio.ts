@@ -44,6 +44,7 @@ export interface CaseStudy {
   solutionImages: string[];
   impact: string;
   reflection: string;
+  pullQuote?: string;
   order: number;
 }
 
@@ -117,9 +118,9 @@ export const heroData: HeroData = {
       url: "https://github.com/Pin4sf",
     },
     {
-      name: "Twitter",
+      name: "X",
       icon: "twitter",
-      url: "https://twitter.com/FulperShivansh",
+      url: "https://x.com/shivanshfulper",
     },
     {
       name: "Instagram",
@@ -137,7 +138,7 @@ export const aboutData: AboutData = {
 As CTO of OneSync, I'm building the intelligence layer that turns wearable biosignals into cognitive readiness scores. I also co-founded EcoFresh Greensync — a decentralized waste-to-value infrastructure company with 3 IP discoveries and recognition at the Hult Prize. At Atlan, I build AI-native developer agents. At Soket AI Labs, I built multilingual dataset pipelines for Indic LLM training.
 
 I'm a final-year B.Tech student at IIITDM Jabalpur. I think in systems. I ship fast. And I'd rather fail at 20 than wait until I'm "qualified."`,
-  photo: "/Shivansh.png",
+  photo: "/Shivansh.jpg",
   facts: [
     { label: "Location", value: "Nagpur, India" },
     { label: "Education", value: "B.Tech '26, IIITDM Jabalpur" },
@@ -154,7 +155,7 @@ export const caseStudies: CaseStudy[] = [
     slug: "onesync",
     name: "OneSync",
     tagline: "Beyond vital signs. Into the mind.",
-    heroImage: "/images/projects/onesync.png",
+    heroImage: "/images/projects/onesync.jpg",
     role: "Co-Founder & CTO",
     timeline: "2026 — Present",
     techStack: ["AI/ML", "Biosignal Processing", "Edge Computing", "React", "TypeScript"],
@@ -167,11 +168,13 @@ export const caseStudies: CaseStudy[] = [
       "We built OneBand — a wristband that reads multiple body signals (heart rhythm, skin response, motion, muscle tension) and cross-checks them to produce a cognitive readiness index. The system stays quiet when it's not confident — in environments where a bad call has real consequences, showing nothing is better than a false green light. Built for institutions from day one: training academies, defense units, elite sports teams. Dashboards designed around how teams actually operate, not just how individuals track personal fitness.",
     solution:
       "OneSync is a cognitive performance platform. OneBand captures biosignals 24/7 and an AI interpretation layer translates raw data into readiness scores, recovery trends, and actionable guidance. Think of it as a fuel gauge for the brain — not a diagnosis, not a mood ring, just a reliable indicator that a coach, training officer, or team lead can glance at and act on. The system builds a personal digital twin that learns individual baselines and adapts over time.",
-    solutionImages: ["/images/projects/onesync.png"],
+    solutionImages: ["/images/projects/onesync.jpg"],
     impact:
       "Active development with hardware prototyping underway. Early concept testing with athletes. Team of 4 (CEO, CTO, COO, CPO) with backgrounds spanning biosensing, AI systems, manufacturing, and product hardware. Pursuing HIPAA and FDA compliance pathways.",
     reflection:
       "Consumer wearables track fitness. Medical systems work in labs. Nothing practical sits in the middle. That's the gap — and closing it requires building trust before building features. The hardest part isn't the AI. It's earning confidence from institutions that can't afford false signals.",
+    pullQuote:
+      "The hardest engineering decision was building a system that stays silent when it isn't confident — because in environments where a bad call has real consequences, showing nothing is better than a false green light.",
     order: 1,
   },
   {
@@ -196,6 +199,8 @@ export const caseStudies: CaseStudy[] = [
       "Registered as EcoFresh Greensync LLP. MSME (Udyam) registered as Micro Enterprise. Incubated at IIITDM Jabalpur under the Institution's Innovation Council (Ministry of Education). 16th among 2,500+ teams at Hult Prize, IIT Bombay. National recognition from Ministry of Education. 3 IP discoveries with patent filing procedures documented for Indian Patent Office and international PCT routes.",
     reflection:
       "Deep-tech without a clear go-to-market path becomes a science project. Distribution beats brilliance. Vision must be matched with execution speed. That lesson directly shapes how I approach everything I build — earn trust before building scale.",
+    pullQuote:
+      "We ran 47 polymer simulations before finding a PHA pathway that worked with unsorted municipal waste — the kind of iteration that separates research from real infrastructure.",
     order: 2,
   },
 ];
@@ -300,7 +305,7 @@ export const timelineData: TimelineEntry[] = [
     title: "B.Tech — Smart Manufacturing",
     organization: "IIITDM Jabalpur",
     description:
-      "Started undergraduate studies. Exposure to industrial systems, optimization, and physical-world design — shaping how I approach AI infrastructure.",
+      "B.Tech in Smart Manufacturing at a national institute of design and manufacturing. Coursework in AI/ML, mechatronics, and systems design — bridging software intelligence with physical-world engineering.",
     type: "education",
   },
 ];
@@ -323,9 +328,9 @@ export const contactData: ContactData = {
       url: "https://github.com/Pin4sf",
     },
     {
-      name: "Twitter",
+      name: "X",
       icon: "twitter",
-      url: "https://twitter.com/FulperShivansh",
+      url: "https://x.com/shivanshfulper",
     },
     {
       name: "Instagram",

@@ -6,7 +6,7 @@
   transition: var(--theme-transition);
 }
 
-/* anime.js dot grid */
+/* Dot grid background */
 .dotGrid {
   position: absolute;
   inset: 0;
@@ -21,11 +21,11 @@
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background: var(--accent);
+  background: rgba(255, 255, 255, 0.5);
   opacity: 0;
   justify-self: center;
   align-self: center;
-  box-shadow: 0 0 6px rgba(108, 255, 141, 0.3);
+  box-shadow: 0 0 6px rgba(255, 255, 255, 0.15);
 }
 
 .categories {

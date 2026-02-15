@@ -3,7 +3,6 @@
 import { useRef, useEffect } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import anime from "animejs";
 import styles from "./Writing.module.scss";
 import { useReducedMotion } from "@/app/hooks/useReducedMotion";
 import CoolLink from "../ui/CoolLink";
@@ -58,28 +57,52 @@ export default function Writing() {
     const section = sectionRef.current;
     if (!section) return;
 
-    const cards = section.querySelectorAll(`.${styles.card}`);
-    gsap.fromTo(
-      cards,
-      { y: 40, opacity: 0 },
-      {
-        y: 0,
-        opacity: 1,
-        duration: 0.7,
-        stagger: 0.12,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: section,
-          start: "top 80%",
-          toggleActions: "play none none none",
-        },
+    const ctx = gsap.context(() => {
+      // Letter-spacing tighten on heading
+      const heading = section.querySelector(`.${styles.heading}`);
+      if (heading) {
+        gsap.fromTo(
+          heading,
+          { letterSpacing: "0.1em", opacity: 0 },
+          {
+            letterSpacing: "-0.03em",
+            opacity: 1,
+            duration: 1,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: section,
+              start: "top 80%",
+              toggleActions: "play none none none",
+            },
+          }
+        );
       }
-    );
 
-    return () => ScrollTrigger.getAll().forEach((t) => t.kill());
+      // Left-slide + 3D rotation on cards
+      const cards = section.querySelectorAll(`.${styles.card}`);
+      gsap.fromTo(
+        cards,
+        { x: -60, opacity: 0, rotateY: -8 },
+        {
+          x: 0,
+          opacity: 1,
+          rotateY: 0,
+          duration: 0.8,
+          stagger: 0.1,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: section,
+            start: "top 75%",
+            toggleActions: "play none none none",
+          },
+        }
+      );
+    }, section);
+
+    return () => ctx.revert();
   }, [reducedMotion]);
 
-  // anime.js 3D card tilt on hover
+  // 3D card tilt on hover
   useEffect(() => {
     if (reducedMotion) return;
     const section = sectionRef.current;
@@ -99,22 +122,22 @@ export default function Writing() {
       const rotateX = ((y - centerY) / centerY) * -4;
       const rotateY = ((x - centerX) / centerX) * 4;
 
-      anime({
-        targets: card,
+      gsap.to(card, {
         rotateX,
         rotateY,
-        duration: 400,
-        easing: "easeOutQuad",
+        duration: 0.4,
+        ease: "power1.out",
+        overwrite: "auto",
       });
     };
 
     const handleMouseLeave = (e: MouseEvent) => {
-      anime({
-        targets: e.currentTarget,
+      gsap.to(e.currentTarget as HTMLElement, {
         rotateX: 0,
         rotateY: 0,
-        duration: 600,
-        easing: "easeOutElastic(1, .6)",
+        duration: 0.6,
+        ease: "elastic.out(1, 0.6)",
+        overwrite: true,
       });
     };
 
@@ -134,13 +157,13 @@ export default function Writing() {
   return (
     <section ref={sectionRef} id="writing" className={styles.section}>
       {/* Background marquee */}
-      <div className="marquee marquee--reverse" style={{ bottom: "10%", top: "auto" }}>
+      <div className="marquee marquee--reverse" style={{ bottom: "10%", top: "auto" }} aria-hidden="true">
         <div className="marquee__inner">
           <span className="marquee__text">THOUGHTS</span>
-          <span className="marquee__text">NOTES</span>
+          <span className="marquee__text">筆</span>
           <span className="marquee__text">WRITING</span>
           <span className="marquee__text">THOUGHTS</span>
-          <span className="marquee__text">NOTES</span>
+          <span className="marquee__text">筆</span>
           <span className="marquee__text">WRITING</span>
         </div>
       </div>

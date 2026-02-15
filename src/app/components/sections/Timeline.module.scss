@@ -7,12 +7,12 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: 4rem 0;
+  padding: 2rem 0;
 }
 
 .header {
   padding: 0 var(--section-px);
-  margin-bottom: var(--space-xl);
+  margin-bottom: var(--space-lg);
 }
 
 .heading {
@@ -23,20 +23,32 @@
   margin: 1.5rem 0 0;
 }
 
-/* Horizontal scrolling track */
+/* ── Horizontal scrolling track ── */
 .track {
   position: relative;
   display: flex;
-  align-items: flex-start;
-  gap: 3rem;
-  padding: 4rem 5rem;
+  align-items: center;
+  gap: 2.5rem;
+  padding: 0 5rem;
+  padding-right: clamp(40vw, 50vw, 600px);
+
+  @media (max-width: 480px) {
+    padding-left: 2rem;
+    padding-right: 60vw;
+  }
   will-change: transform;
+  cursor: grab;
+  user-select: none;
+
+  &.dragging {
+    cursor: grabbing;
+  }
 }
 
-/* Horizontal line through entries */
+/* ── Horizontal line through center ── */
 .line {
   position: absolute;
-  top: calc(4rem + 16px); // Aligns with center of dots
+  top: 50%;
   left: 5rem;
   right: 0;
   height: 1px;
@@ -45,18 +57,22 @@
   z-index: 0;
 }
 
-/* Single entry */
+/* ── Single entry (zigzag grid) ── */
 .entry {
   flex-shrink: 0;
-  width: clamp(280px, 80vw, 360px);
-  display: flex;
-  flex-direction: column;
+  width: clamp(280px, 80vw, 340px);
+  display: grid;
+  grid-template-rows: 1fr 1.25rem 32px 1.25rem 1fr;
+  /*                   card  conn  dot   conn  card */
+  grid-template-columns: 1fr;
+  justify-items: center;
   align-items: center;
-  gap: var(--space-lg);
+  height: 480px;
 }
 
-/* Dot on the line */
+/* ── Dot on the line (always row 3) ── */
 .dot {
+  grid-row: 3;
   width: 32px;
   height: 32px;
   border-radius: 50%;
@@ -66,24 +82,95 @@
   align-items: center;
   justify-content: center;
   z-index: 2;
-  flex-shrink: 0;
-  box-shadow: 0 0 12px rgba(108, 255, 141, 0.25);
+  box-shadow: 0 0 12px rgba(255, 255, 255, 0.05);
   transition: box-shadow 0.3s ease;
 }
 
-/* Card */
+/* ── Connector stem ── */
+.connector {
+  width: 1px;
+  height: 100%;
+  opacity: 0.3;
+  transition: opacity 0.3s ease;
+}
+
+/* ── Card ── */
 .card {
-  background: var(--bg-tertiary);
-  border: 1px solid var(--border-subtle);
+  position: relative;
+  background: rgba(255, 255, 255, 0.02);
+  backdrop-filter: blur(8px) saturate(1.05);
+  -webkit-backdrop-filter: blur(8px) saturate(1.05);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04), 0 4px 16px rgba(0, 0, 0, 0.08);
   border-radius: var(--radius-md);
   padding: var(--space-lg);
   width: 100%;
-  transition: border-color 0.3s ease, transform 0.3s ease;
+  overflow: hidden;
+  transition: border-color 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
 
   &:hover {
-    border-color: var(--border-visible);
-    transform: translateY(-4px);
+    border-color: rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.04);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 8px 32px rgba(0, 0, 0, 0.15);
   }
+}
+
+/* ── Above entry: card top, connector row 2 ── */
+.entryAbove {
+  .card {
+    grid-row: 1;
+    align-self: end;
+    padding-bottom: calc(var(--space-lg) + 4px); /* room for accent line at bottom */
+  }
+
+  .connector {
+    grid-row: 2;
+  }
+
+  .accentLine {
+    top: auto;
+    bottom: 0;
+  }
+}
+
+/* ── Below entry: card bottom, connector row 4 ── */
+.entryBelow {
+  .card {
+    grid-row: 5;
+    align-self: start;
+    padding-top: calc(var(--space-lg) + 4px); /* room for accent line at top */
+  }
+
+  .connector {
+    grid-row: 4;
+  }
+
+  .accentLine {
+    top: 0;
+    bottom: auto;
+  }
+}
+
+/* ── Type-colored accent line (faces the timeline) ── */
+.accentLine {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 2px;
+  opacity: 0.7;
+  transition: opacity 0.3s ease;
+
+  .card:hover & {
+    opacity: 1;
+  }
+}
+
+/* ── Card header (year + badge inline) ── */
+.cardHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.25rem;
 }
 
 .year {
@@ -93,12 +180,34 @@
   letter-spacing: 0.08em;
 }
 
+.typeBadge {
+  position: relative;
+  font-family: var(--font-mono);
+  font-size: 0.5625rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.1rem 0.4rem;
+  border-radius: var(--radius-full);
+  z-index: 0;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: currentColor;
+    opacity: 0.12;
+    z-index: -1;
+  }
+}
+
 .title {
   font-family: var(--font-display);
   font-size: 1.25rem;
   font-weight: 400;
   color: var(--text-heading);
-  margin: 0.375rem 0 0.25rem;
+  margin: 0.25rem 0 0.25rem;
   line-height: 1.3;
 }
 
@@ -113,4 +222,80 @@
   color: var(--text-secondary);
   line-height: 1.6;
   margin-top: var(--space-sm);
+}
+
+/* ── Drag Hint ── */
+.dragHint {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0 var(--section-px);
+  margin-top: var(--space-md);
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
+  color: var(--text-tertiary);
+  transition: opacity 0.6s ease;
+}
+
+.dragHintHidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.dragHintArrow {
+  font-size: 0.875rem;
+  opacity: 0.5;
+}
+
+/* ── Progress Indicator ── */
+.progress {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0 var(--section-px);
+  margin-top: var(--space-sm);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.1em;
+}
+
+.progressCurrent {
+  color: var(--text-heading);
+  font-weight: 600;
+  min-width: 1.25em;
+}
+
+.progressDivider {
+  color: var(--text-tertiary);
+}
+
+.progressTotal {
+  color: var(--text-tertiary);
+  min-width: 1.25em;
+}
+
+.progressDots {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: var(--space-md);
+}
+
+.progressDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--border-subtle);
+  transition: background 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.progressDotActive {
+  background: var(--text-heading);
+  transform: scale(1.4);
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.2);
+}
+
+.progressDotPassed {
+  background: var(--text-tertiary);
 }

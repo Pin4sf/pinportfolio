@@ -39,8 +39,8 @@
 .sealIcon {
   width: 64px;
   height: 64px;
-  color: var(--accent);
-  filter: drop-shadow(0 0 12px rgba(108, 255, 141, 0.3));
+  color: var(--text-heading);
+  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.1));
 
   svg {
     width: 100%;
@@ -91,7 +91,7 @@
 
 .barFill {
   height: 100%;
-  background: var(--accent);
+  background: var(--text-heading);
   transition: width 0.05s linear;
 }
 
@@ -112,6 +112,6 @@
 }
 
 .dotActive {
-  background: var(--accent);
-  box-shadow: 0 0 6px rgba(108, 255, 141, 0.4);
+  background: var(--text-heading);
+  box-shadow: 0 0 6px rgba(255, 255, 255, 0.15);
 }

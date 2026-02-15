@@ -8,10 +8,10 @@
     animation: rotatte 6s infinite linear;
 
     text {
-      font-size: 34px;
+      font-size: clamp(1.5rem, 2.5vw, 2.125rem);
       font-weight: 400;
       text-transform: uppercase;
-      fill: #000000;
+      fill: currentColor;
     }
   }
 
@@ -44,7 +44,7 @@
   &__inner,
   &__lashesUp,
   &__lashesDown {
-    stroke: #000;
+    stroke: currentColor;
     fill: none;
     stroke-width: 1.5px;
   }

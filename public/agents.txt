@@ -1,0 +1,38 @@
+# agents.txt — Shivansh Fulper Portfolio
+# This file helps AI agents understand this website and its owner.
+# Spec: https://agentprotocol.ai/agents-txt
+
+# Identity
+name: Shivansh Fulper
+type: personal-portfolio
+url: https://shivanshfulper.com
+
+# Description
+description: Personal portfolio of Shivansh Fulper — AI engineer, startup founder, and builder. Contains case studies, blog posts, skills, and contact information.
+
+# Contact
+contact-email: piyushfulper3210@gmail.com
+contact-form: https://shivanshfulper.com/#contact
+
+# Machine-readable content
+llms-txt: https://shivanshfulper.com/llms.txt
+llms-full-txt: https://shivanshfulper.com/llms-full.txt
+sitemap: https://shivanshfulper.com/sitemap.xml
+
+# Pages
+page: / # Homepage — hero, selected work, about, ventures, writing, skills, contact
+page: /writing # Blog archive with category filtering
+page: /work/onesync # OneSync case study — cognitive performance wearables
+page: /work/ecofresh # EcoFresh Greensync case study — waste-to-value infrastructure
+page: /writing/building-onesync # Blog: Building OneSync
+page: /writing/my-stack-2026 # Blog: My Stack in 2026
+page: /writing/startup-lessons # Blog: Startup Lessons
+
+# Topics this site covers
+topics: AI systems, LLM pipelines, agentic workflows, biosignal processing, cognitive wearables, waste-to-value infrastructure, startups, full-stack engineering, Next.js, Python, TypeScript
+
+# Social profiles
+social: https://www.linkedin.com/in/shivanshfulper/
+social: https://github.com/Pin4sf
+social: https://twitter.com/FulperShivansh
+social: https://instagram.com/pin4sf

@@ -132,6 +132,13 @@ export default function CaseStudy({ caseStudy, prev, next }: CaseStudyProps) {
         <p className={styles.sectionText}>{caseStudy.approach}</p>
       </div>
 
+      {/* Pull Quote */}
+      {caseStudy.pullQuote && (
+        <blockquote className={styles.pullQuote}>
+          <p>{caseStudy.pullQuote}</p>
+        </blockquote>
+      )}
+
       {/* Solution */}
       <div className={styles.section}>
         <h2 className={styles.sectionTitle}>The Solution</h2>

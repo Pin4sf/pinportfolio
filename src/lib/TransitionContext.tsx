@@ -38,14 +38,14 @@ export function TransitionProvider({ children }: { children: ReactNode }) {
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const stopScroll = useCallback(() => {
-    const lenis = (window as any).__lenis;
+    const lenis = window.__lenis;
     if (lenis) lenis.stop();
     document.body.style.overflow = "hidden";
   }, []);
 
   const startScroll = useCallback(() => {
     document.body.style.overflow = "";
-    const lenis = (window as any).__lenis;
+    const lenis = window.__lenis;
     if (lenis) lenis.start();
   }, []);
 

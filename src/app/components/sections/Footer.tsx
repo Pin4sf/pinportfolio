@@ -1,11 +1,17 @@
 "use client";
 
-import { useRef, useEffect } from "react";
-import anime from "animejs";
+import { useRef, useEffect, useState } from "react";
+import dynamic from "next/dynamic";
+import gsap from "gsap";
 import styles from "./Footer.module.scss";
 import { navItems, contactData } from "@/data/portfolio";
 import { useReducedMotion } from "@/app/hooks/useReducedMotion";
 import { ArrowUp, Github, Linkedin, Twitter, Instagram, type LucideIcon } from "lucide-react";
+
+const FluidBackground = dynamic(
+  () => import("../three/FluidBackground"),
+  { ssr: false }
+);
 
 const iconMap: Record<string, LucideIcon> = {
   linkedin: Linkedin,
@@ -17,12 +23,27 @@ const iconMap: Record<string, LucideIcon> = {
 export default function Footer() {
   const footerRef = useRef<HTMLElement>(null);
   const reducedMotion = useReducedMotion();
+  const [footerBgCanvas, setFooterBgCanvas] = useState<HTMLCanvasElement | null>(null);
+
+  // Create a small offscreen canvas filled with the footer bg color
+  // FluidBackground uses it as the "background" to refract through water
+  useEffect(() => {
+    const c = document.createElement("canvas");
+    c.width = 2;
+    c.height = 2;
+    const ctx = c.getContext("2d");
+    if (ctx) {
+      ctx.fillStyle = "#090a0e";
+      ctx.fillRect(0, 0, 2, 2);
+    }
+    setFooterBgCanvas(c);
+  }, []);
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  // anime.js footer entrance — staggered reveal
+  // Footer entrance — staggered reveal
   useEffect(() => {
     if (reducedMotion) return;
     const footer = footerRef.current;
@@ -34,14 +55,17 @@ export default function Footer() {
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            anime({
-              targets: Array.from(revealEls),
-              opacity: [0, 1],
-              translateY: [30, 0],
-              delay: anime.stagger(80),
-              duration: 800,
-              easing: "easeOutCubic",
-            });
+            gsap.fromTo(
+              revealEls,
+              { opacity: 0, y: 30 },
+              {
+                opacity: 1,
+                y: 0,
+                duration: 0.8,
+                stagger: 0.08,
+                ease: "power2.out",
+              }
+            );
 
             observer.disconnect();
           }
@@ -56,8 +80,11 @@ export default function Footer() {
 
   return (
     <footer ref={footerRef} className={styles.footer}>
-      {/* Large signature name */}
+      {/* Large signature name with water effect */}
       <div className={`${styles.signature} ${styles.reveal}`}>
+        {!reducedMotion && footerBgCanvas && (
+          <FluidBackground backgroundCanvas={footerBgCanvas} />
+        )}
         <span className={styles.signatureName}>Shivansh Fulper</span>
       </div>
 
@@ -113,7 +140,7 @@ export default function Footer() {
         </span>
 
         <span className={styles.credit}>
-          Designed &amp; built by hand
+          Designed &amp; built by hand <span className={styles.seal} aria-hidden="true">印</span>
         </span>
 
         <button

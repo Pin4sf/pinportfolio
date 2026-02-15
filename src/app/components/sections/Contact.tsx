@@ -1,13 +1,13 @@
 "use client";
 
-import { useRef, useEffect, useState, useMemo } from "react";
+import { useRef, useEffect, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import anime from "animejs";
 import styles from "./Contact.module.scss";
 import { contactData } from "@/data/portfolio";
 import { useReducedMotion } from "@/app/hooks/useReducedMotion";
 import { Github as GithubIcon, Linkedin as LinkedinIcon, Twitter as TwitterIcon, Instagram as InstagramIcon, Send, Loader2, Check, type LucideIcon } from "lucide-react";
+
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -21,19 +21,7 @@ const iconMap: Record<string, LucideIcon> = {
 export default function Contact() {
   const sectionRef = useRef<HTMLElement>(null);
   const emailRef = useRef<HTMLAnchorElement>(null);
-  const constellationRef = useRef<HTMLDivElement>(null);
   const reducedMotion = useReducedMotion();
-
-  const constellationDots = useMemo(
-    () =>
-      Array.from({ length: 40 }, (_, i) => ({
-        id: i,
-        left: `${Math.random() * 100}%`,
-        top: `${Math.random() * 100}%`,
-        size: Math.random() * 3.5 + 1.5,
-      })),
-    []
-  );
 
   const [formData, setFormData] = useState({
     name: "",
@@ -48,85 +36,74 @@ export default function Contact() {
     const section = sectionRef.current;
     if (!section) return;
 
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: section,
-        start: "top 75%",
-        toggleActions: "play none none none",
-      },
-    });
-
-    // Email reveal
-    const emailEl = emailRef.current;
-    if (emailEl) {
-      const text = emailEl.textContent || "";
-      emailEl.innerHTML = "";
-
-      text.split("").forEach((char) => {
-        const span = document.createElement("span");
-        span.style.display = "inline-block";
-        span.textContent = char === " " ? "\u00A0" : char;
-        span.style.transform = "translateY(100%)";
-        span.style.opacity = "0";
-        span.classList.add("email-char");
-        emailEl.appendChild(span);
+    const ctx = gsap.context(() => {
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: section,
+          start: "top 75%",
+          toggleActions: "play none none none",
+        },
       });
 
-      tl.to(".email-char", {
-        y: 0,
-        opacity: 1,
-        duration: 0.5,
-        stagger: 0.02,
-        ease: "power4.out",
-      });
-    }
+      // Vertical clip-path heading reveal
+      const heading = section.querySelector(`.${styles.heading}`);
+      if (heading) {
+        tl.fromTo(
+          heading,
+          { clipPath: "inset(100% 0 0 0)" },
+          { clipPath: "inset(0% 0 0 0)", duration: 1, ease: "power4.inOut" },
+          0
+        );
+      }
 
-    return () => ScrollTrigger.getAll().forEach((t) => t.kill());
-  }, [reducedMotion]);
+      // Email reveal
+      const emailEl = emailRef.current;
+      if (emailEl) {
+        const text = emailEl.textContent || "";
+        emailEl.innerHTML = "";
 
-  // anime.js constellation background
-  useEffect(() => {
-    if (reducedMotion) return;
-    const container = constellationRef.current;
-    if (!container) return;
-
-    const dots = container.querySelectorAll(`.${styles.constellationDot}`);
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            // Staggered reveal from center
-            anime({
-              targets: dots,
-              opacity: [0, () => Math.random() * 0.45 + 0.15],
-              scale: [0, 1],
-              delay: anime.stagger(50, { from: "center" }),
-              duration: 1200,
-              easing: "easeOutExpo",
-            });
-
-            // Gentle drift
-            anime({
-              targets: dots,
-              translateX: () => anime.random(-25, 25),
-              translateY: () => anime.random(-25, 25),
-              duration: () => anime.random(4000, 7000),
-              delay: () => anime.random(0, 3000),
-              direction: "alternate",
-              loop: true,
-              easing: "easeInOutSine",
-            });
-
-            observer.disconnect();
-          }
+        text.split("").forEach((char) => {
+          const span = document.createElement("span");
+          span.style.display = "inline-block";
+          span.textContent = char === " " ? "\u00A0" : char;
+          span.style.transform = "translateY(100%)";
+          span.style.opacity = "0";
+          span.classList.add("email-char");
+          emailEl.appendChild(span);
         });
-      },
-      { threshold: 0.2 }
-    );
 
-    observer.observe(container);
-    return () => observer.disconnect();
+        tl.to(".email-char", {
+          y: 0,
+          opacity: 1,
+          duration: 0.5,
+          stagger: 0.02,
+          ease: "power4.out",
+        }, 0.3);
+      }
+
+      // Scrub-linked form field reveals
+      const fields = section.querySelectorAll(`.${styles.field}`);
+      if (fields.length > 0) {
+        gsap.fromTo(
+          fields,
+          { y: 40, opacity: 0 },
+          {
+            y: 0,
+            opacity: 1,
+            stagger: 0.15,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: section.querySelector(`.${styles.form}`),
+              start: "top 85%",
+              end: "top 50%",
+              scrub: 0.8,
+            },
+          }
+        );
+      }
+    }, section);
+
+    return () => ctx.revert();
   }, [reducedMotion]);
 
   const handleChange = (
@@ -149,34 +126,22 @@ export default function Contact() {
       if (res.ok) {
         setSubmitState("sent");
         setFormData({ name: "", email: "", message: "" });
-        setTimeout(() => setSubmitState("idle"), 4000);
+        setTimeout(() => setSubmitState("idle"), 6000);
       } else {
         setSubmitState("error");
-        setTimeout(() => setSubmitState("idle"), 4000);
+        setTimeout(() => setSubmitState("idle"), 6000);
       }
     } catch {
       setSubmitState("error");
-      setTimeout(() => setSubmitState("idle"), 4000);
+      setTimeout(() => setSubmitState("idle"), 6000);
     }
   };
 
   return (
     <section ref={sectionRef} id="contact" className={styles.section}>
       {/* Large background text */}
-      <span className={styles.bgText} aria-hidden="true">Let&apos;s Talk</span>
+      <span className={styles.bgText} aria-hidden="true">接続</span>
 
-      {/* Constellation particle background */}
-      {!reducedMotion && (
-        <div ref={constellationRef} className={styles.constellation}>
-          {constellationDots.map((d) => (
-            <span
-              key={d.id}
-              className={styles.constellationDot}
-              style={{ left: d.left, top: d.top, width: d.size, height: d.size }}
-            />
-          ))}
-        </div>
-      )}
 
       <span className="section__label">Contact</span>
       <h2 className={styles.heading}>Let&apos;s Build Something</h2>
@@ -217,6 +182,17 @@ export default function Contact() {
           onSubmit={handleSubmit}
           className={styles.form}
         >
+          {submitState === "sent" && (
+            <div className={`${styles.toast} ${styles.toastSuccess}`} role="status">
+              <Check size={14} />
+              Message sent! I&apos;ll get back to you within 24 hours.
+            </div>
+          )}
+          {submitState === "error" && (
+            <div className={`${styles.toast} ${styles.toastError}`} role="alert">
+              Something went wrong. Please try again or email me directly.
+            </div>
+          )}
           <input type="hidden" name="_captcha" value="false" />
           <div className={styles.field}>
             <input

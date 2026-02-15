@@ -3,7 +3,6 @@
 import { useRef, useEffect } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import anime from "animejs";
 import styles from "./SelectedWork.module.scss";
 import { getVentures } from "@/data/portfolio";
 import { useReducedMotion } from "@/app/hooks/useReducedMotion";
@@ -23,55 +22,77 @@ export default function SelectedWork() {
     const section = sectionRef.current;
     if (!section) return;
 
-    const cards = section.querySelectorAll(`.${styles.card}`);
+    const ctx = gsap.context(() => {
+      const cards = section.querySelectorAll(`.${styles.card}`);
 
-    cards.forEach((card) => {
-      const image = card.querySelector(`.${styles.imageWrap}`);
-      const text = card.querySelector(`.${styles.textContent}`);
-      const number = card.querySelector(`.${styles.number}`);
+      cards.forEach((card, i) => {
+        const image = card.querySelector(`.${styles.imageWrap}`);
+        const img = card.querySelector(`.${styles.image}`);
+        const text = card.querySelector(`.${styles.textContent}`);
+        const number = card.querySelector(`.${styles.number}`);
+        const isEven = i % 2 === 0;
 
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: card,
-          start: "top 80%",
-          toggleActions: "play none none none",
-        },
-      });
-
-      tl.fromTo(
-        number,
-        { opacity: 0, scale: 0.8 },
-        { opacity: 0.08, scale: 1, duration: 0.8, ease: "power3.out" }
-      )
-        .fromTo(
-          image,
-          { clipPath: "inset(0 100% 0 0)", scale: 1.1 },
-          {
-            clipPath: "inset(0 0% 0 0)",
-            scale: 1,
-            duration: 1,
-            ease: "power3.inOut",
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: card,
+            start: "top 80%",
+            toggleActions: "play none none none",
           },
-          0
+        });
+
+        // Alternating L/R clip-path reveal
+        tl.fromTo(
+          number,
+          { opacity: 0, x: isEven ? -20 : 20 },
+          { opacity: 0.08, x: 0, duration: 0.8, ease: "expo.out" }
         )
-        .fromTo(
-          text?.children ? Array.from(text.children) : [],
-          { y: 30, opacity: 0 },
-          {
-            y: 0,
-            opacity: 1,
-            duration: 0.6,
-            stagger: 0.1,
-            ease: "power3.out",
-          },
-          0.3
-        );
-    });
+          .fromTo(
+            image,
+            { clipPath: isEven ? "inset(0 100% 0 0)" : "inset(0 0 0 100%)" },
+            {
+              clipPath: "inset(0 0% 0 0%)",
+              duration: 1.2,
+              ease: "power4.inOut",
+            },
+            0
+          )
+          .fromTo(
+            text?.children ? Array.from(text.children) : [],
+            { x: isEven ? -30 : 30, opacity: 0 },
+            {
+              x: 0,
+              opacity: 1,
+              duration: 0.7,
+              stagger: 0.06,
+              ease: "expo.out",
+            },
+            0.4
+          );
 
-    return () => ScrollTrigger.getAll().forEach((t) => t.kill());
+        // Scrub parallax on image
+        if (img) {
+          gsap.fromTo(
+            img,
+            { yPercent: -8 },
+            {
+              yPercent: 8,
+              ease: "none",
+              scrollTrigger: {
+                trigger: card,
+                start: "top bottom",
+                end: "bottom top",
+                scrub: 0.6,
+              },
+            }
+          );
+        }
+      });
+    }, section);
+
+    return () => ctx.revert();
   }, [reducedMotion]);
 
-  // anime.js magnetic card hover
+  // Magnetic card hover
   useEffect(() => {
     if (reducedMotion) return;
     const section = sectionRef.current;
@@ -89,26 +110,25 @@ export default function SelectedWork() {
       const centerX = rect.width / 2;
       const centerY = rect.height / 2;
 
-      // Subtle shift toward cursor
       const moveX = ((x - centerX) / centerX) * 6;
       const moveY = ((y - centerY) / centerY) * 4;
 
-      anime({
-        targets: card,
-        translateX: moveX,
-        translateY: moveY,
-        duration: 400,
-        easing: "easeOutQuad",
+      gsap.to(card, {
+        x: moveX,
+        y: moveY,
+        duration: 0.4,
+        ease: "power1.out",
+        overwrite: "auto",
       });
     };
 
     const handleMouseLeave = (e: MouseEvent) => {
-      anime({
-        targets: e.currentTarget,
-        translateX: 0,
-        translateY: 0,
-        duration: 800,
-        easing: "easeOutElastic(1, .5)",
+      gsap.to(e.currentTarget as HTMLElement, {
+        x: 0,
+        y: 0,
+        duration: 0.8,
+        ease: "elastic.out(1, 0.5)",
+        overwrite: true,
       });
     };
 
@@ -126,8 +146,9 @@ export default function SelectedWork() {
   }, [reducedMotion]);
 
   return (
-    <section ref={sectionRef} id="ventures" className={`${styles.section} section--light`}>
+    <section ref={sectionRef} id="ventures" className={styles.section}>
       <span className="section__label">Ventures</span>
+      <h2 className="sr-only">Selected Work</h2>
 
       <div className={styles.list}>
         {projects.map((project, i) => (
@@ -152,7 +173,7 @@ export default function SelectedWork() {
               </div>
             </div>
 
-            <span className={styles.number}>
+            <span className={styles.number} aria-hidden="true">
               {String(i + 1).padStart(2, "0")}
             </span>
 
@@ -186,17 +207,27 @@ export default function SelectedWork() {
 
               <div className={styles.cardLinks}>
                 {project.liveUrl && (
-                  <a
-                    href={project.liveUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                  <span
+                    role="link"
+                    tabIndex={0}
                     className={styles.visitLink}
-                    onClick={(e) => e.stopPropagation()}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      window.open(project.liveUrl, "_blank", "noopener,noreferrer");
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        window.open(project.liveUrl, "_blank", "noopener,noreferrer");
+                      }
+                    }}
                   >
                     Visit Website <ExternalLink size={14} />
-                  </a>
+                  </span>
                 )}
-                <span className={styles.viewLink}>
+                <span className={styles.viewLink} aria-hidden="true">
                   View Case Study <ArrowUpRight size={14} />
                 </span>
               </div>

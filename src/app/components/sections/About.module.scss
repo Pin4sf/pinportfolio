@@ -15,10 +15,10 @@
 
 .floatingShape {
   position: absolute;
-  background: var(--accent);
+  background: rgba(255, 255, 255, 0.4);
   opacity: 0;
   border-radius: 50%;
-  box-shadow: 0 0 10px rgba(108, 255, 141, 0.3);
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.15);
 }
 
 .square {
@@ -31,14 +31,14 @@
   z-index: 1;
   display: grid;
   grid-template-columns: 1fr;
-  gap: 3rem;
-  margin-top: 3rem;
-  max-width: 1200px;
+  gap: var(--space-xl);
+  margin-top: var(--space-xl);
+  width: 100%;
 
   @media (min-width: 768px) {
-    grid-template-columns: 55% 1fr;
-    gap: 4rem;
-    align-items: start;
+    grid-template-columns: 3fr 2fr;
+    gap: var(--space-2xl);
+    align-items: center;
   }
 }
 
@@ -57,9 +57,8 @@
 .facts {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 1.25rem;
-  margin-top: 1rem;
-  padding-top: 1.5rem;
+  gap: var(--space-lg);
+  padding-top: var(--space-lg);
   border-top: 1px solid var(--border-subtle);
 }
 
@@ -74,7 +73,7 @@
   font-weight: 500;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--text-tertiary);
+  color: var(--accent-warm);
 }
 
 .factValue {
@@ -88,11 +87,13 @@
   overflow: hidden;
   border-radius: var(--radius-md);
   aspect-ratio: 3 / 4;
+  max-height: 70vh;
   background: var(--bg-tertiary);
 
   @media (min-width: 768px) {
-    position: sticky;
-    top: 8rem;
+    justify-self: end;
+    width: 100%;
+    max-width: 400px;
   }
 }
 
