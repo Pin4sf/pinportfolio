@@ -69,9 +69,10 @@ export default function SkillsExperience() {
     return () => ctx.revert();
   }, [reducedMotion]);
 
-  // Dot grid wave animation
+  // Dot grid wave animation (skip on mobile — grid hidden via CSS)
   useEffect(() => {
     if (reducedMotion) return;
+    if (typeof window !== "undefined" && window.matchMedia("(max-width: 767px)").matches) return;
 
     const grid = gridRef.current;
     if (!grid) return;

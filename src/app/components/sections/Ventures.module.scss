@@ -28,6 +28,12 @@
   border-radius: var(--radius-md);
   margin-bottom: 3rem;
 
+  @media (max-width: 767px) {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background: var(--bg-secondary);
+  }
+
   @media (min-width: 768px) {
     grid-template-columns: 1fr 1fr;
     gap: 3rem;
@@ -204,6 +210,12 @@
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+
+  @media (max-width: 767px) {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background: var(--bg-secondary);
+  }
 }
 
 .cardName {
