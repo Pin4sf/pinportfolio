@@ -1,0 +1,124 @@
+// ══════════════════════════════════════════════════════
+// Toast Notification
+// ══════════════════════════════════════════════════════
+
+.toast {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  min-width: 300px;
+  max-width: 420px;
+  padding: var(--space-md) var(--space-lg);
+  background: var(--bg-secondary);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-md);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4),
+              0 2px 8px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(12px);
+  overflow: hidden;
+  will-change: transform, opacity;
+
+  @media (max-width: 640px) {
+    min-width: 280px;
+    max-width: calc(100vw - 2rem);
+  }
+}
+
+.icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text-heading);
+}
+
+.message {
+  flex: 1;
+  margin: 0;
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--text-primary);
+  line-height: 1.4;
+}
+
+.close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--text-heading);
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+}
+
+// Progress bar at bottom
+.progress {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--accent);
+  transform-origin: left;
+  will-change: transform;
+}
+
+// Type variants
+.success {
+  border-left: 3px solid var(--accent);
+
+  .icon {
+    background: rgba(108, 255, 141, 0.12);
+    color: var(--accent);
+  }
+
+  .progress {
+    background: var(--accent);
+  }
+}
+
+.error {
+  border-left: 3px solid #ff6b6b;
+
+  .icon {
+    background: rgba(255, 107, 107, 0.12);
+    color: #ff6b6b;
+  }
+
+  .progress {
+    background: #ff6b6b;
+  }
+}
+
+.info {
+  border-left: 3px solid #6c9bff;
+
+  .icon {
+    background: rgba(108, 155, 255, 0.12);
+    color: #6c9bff;
+  }
+
+  .progress {
+    background: #6c9bff;
+  }
+}

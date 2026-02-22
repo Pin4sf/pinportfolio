@@ -15,6 +15,8 @@ const instrumentSerif = Instrument_Serif({
   weight: "400",
   variable: "--font-instrument-serif",
   display: "swap",
+  adjustFontFallback: false,
+  fallback: ["Georgia", "serif"], // Explicit fallback to avoid override calculation
 });
 
 const jetbrainsMono = JetBrains_Mono({

@@ -4,6 +4,8 @@ import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import styles from "./LoadingScreen.module.scss";
 
+const PRELOADER_SEEN_KEY = "preloader_seen";
+
 // Naruto hand seals — stylized SVG line art
 const handSeals = [
   {
@@ -85,25 +87,84 @@ const handSeals = [
 ];
 
 export default function LoadingScreen() {
+  const [isLoading, setIsLoading] = useState(true);
   const [counter, setCounter] = useState(0);
   const [activeSign, setActiveSign] = useState(0);
   const completedRef = useRef(false);
   const signRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const hasSeenPreloader = useRef(false);
+  const canExit = useRef(false);
 
-  // Counter — accelerating curve (slow start, fast finish)
+  // Check if this is a return visit (skip preloader if so)
   useEffect(() => {
-    const DURATION = 1600;
+    hasSeenPreloader.current = sessionStorage.getItem(PRELOADER_SEEN_KEY) === "true";
+
+    if (hasSeenPreloader.current) {
+      // Already seen this session — skip preloader entirely
+      setIsLoading(false);
+      setCounter(100);
+      return;
+    }
+
+    // Track when assets are ready (doesn't control counter speed)
+    const ANIMATION_DURATION = 2800; // Counter animation duration
+    const startTime = performance.now();
+
+    const handleAssetsReady = () => {
+      const elapsed = performance.now() - startTime;
+      const remaining = Math.max(0, ANIMATION_DURATION - elapsed);
+
+      // Wait for animation to complete before allowing exit
+      setTimeout(() => {
+        canExit.current = true;
+        // If counter already at 100, trigger exit
+        if (!completedRef.current) {
+          setIsLoading(false);
+          sessionStorage.setItem(PRELOADER_SEEN_KEY, "true");
+        }
+      }, remaining);
+    };
+
+    // Listen for all assets loaded
+    if (document.readyState === "complete") {
+      handleAssetsReady();
+    } else {
+      window.addEventListener("load", handleAssetsReady);
+    }
+
+    return () => {
+      window.removeEventListener("load", handleAssetsReady);
+    };
+  }, []);
+
+  // Counter — smooth fixed-duration animation (independent of load time)
+  useEffect(() => {
+    if (hasSeenPreloader.current) return; // Skip if already seen
+
+    const DURATION = 2800; // Fixed 2.8s animation for smooth hand seal transitions
     const start = performance.now();
     let raf: number;
 
     const tick = (now: number) => {
       const elapsed = now - start;
       const progress = Math.min(elapsed / DURATION, 1);
-      const eased = progress * progress * progress; // power3.in
-      setCounter(Math.round(eased * 100));
+
+      // Smooth easing curve (slow start, faster middle, slow end)
+      const eased = progress < 0.5
+        ? 4 * progress * progress * progress
+        : 1 - Math.pow(-2 * progress + 2, 3) / 2;
+
+      const targetCount = Math.round(eased * 100);
+      setCounter(targetCount);
 
       if (progress < 1) {
         raf = requestAnimationFrame(tick);
+      } else {
+        // Counter reached 100 — wait for assets if needed
+        if (canExit.current) {
+          setIsLoading(false);
+          sessionStorage.setItem(PRELOADER_SEEN_KEY, "true");
+        }
       }
     };
 
@@ -133,7 +194,7 @@ export default function LoadingScreen() {
 
   // Exit animation — dramatic split-reveal
   useEffect(() => {
-    if (counter === 100 && !completedRef.current) {
+    if (counter === 100 && !isLoading && !completedRef.current) {
       completedRef.current = true;
 
       const tl = gsap.timeline({ delay: 0.3 });
@@ -168,7 +229,12 @@ export default function LoadingScreen() {
 
       tl.set(`.${styles.loading}`, { display: "none" });
     }
-  }, [counter]);
+  }, [counter, isLoading]);
+
+  // Don't render if user has already seen the preloader
+  if (hasSeenPreloader.current && !isLoading) {
+    return null;
+  }
 
   return (
     <div className={styles.loading} aria-hidden="true" role="presentation">

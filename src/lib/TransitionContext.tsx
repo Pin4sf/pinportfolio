@@ -10,6 +10,11 @@ import {
   type ReactNode,
 } from "react";
 import { useRouter, usePathname } from "next/navigation";
+import {
+  getSourceSection,
+  clearSourceSection,
+  scrollToSection,
+} from "./scrollRestoration";
 
 type Phase = "idle" | "exit" | "navigate" | "enter";
 
@@ -80,7 +85,19 @@ export function TransitionProvider({ children }: { children: ReactNode }) {
     startScroll();
     setPhase("idle");
     setTargetHref(null);
-  }, [startScroll]);
+
+    // Restore scroll position if returning to homepage
+    if (pathname === "/") {
+      const sourceSection = getSourceSection();
+      if (sourceSection) {
+        // Small delay to ensure DOM is ready and Lenis is initialized
+        setTimeout(() => {
+          scrollToSection(sourceSection);
+          clearSourceSection();
+        }, 100);
+      }
+    }
+  }, [startScroll, pathname]);
 
   // Detect when the route has changed (new page loaded)
   useEffect(() => {
