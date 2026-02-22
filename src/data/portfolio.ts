@@ -67,6 +67,8 @@ export interface TimelineEntry {
   organization: string;
   description: string;
   type: "work" | "education" | "startup" | "achievement";
+  tags?: string[];
+  dateRange?: string;
 }
 
 export interface SiteConfig {
@@ -267,6 +269,8 @@ export const timelineData: TimelineEntry[] = [
     description:
       "Building AI-native SDLC agents — autonomous debugging, GraphRAG retrieval, and long-term agent memory systems for developer workflows.",
     type: "work",
+    tags: ["RAG", "GraphRAG", "LLM Agents", "TypeScript"],
+    dateRange: "Jan 2026 — Present",
   },
   {
     year: "2026",
@@ -275,6 +279,8 @@ export const timelineData: TimelineEntry[] = [
     description:
       "Building cognitive performance wearables. AI interpretation layer that turns biosignals into readiness scores for high-pressure environments.",
     type: "startup",
+    tags: ["Wearables", "AI/ML", "Biosignals"],
+    dateRange: "2026 — Present",
   },
   {
     year: "2025",
@@ -283,6 +289,8 @@ export const timelineData: TimelineEntry[] = [
     description:
       "Decentralized waste-to-value infrastructure. 3 IP discoveries, Hult Prize recognition (16th/2500+ at IIT Bombay), Ministry of Education national recognition.",
     type: "startup",
+    tags: ["CleanTech", "IoT", "3 Patents"],
+    dateRange: "2025 — Present",
   },
   {
     year: "2025",
@@ -291,6 +299,8 @@ export const timelineData: TimelineEntry[] = [
     description:
       "Built multilingual dataset pipelines for Indic LLM training (Project Eka). Deduplication, quality filtering, and language alignment at scale. Collaboration with IIT Gandhinagar.",
     type: "work",
+    tags: ["NLP", "Data Pipelines", "Indic LLMs"],
+    dateRange: "May — Aug 2025",
   },
   {
     year: "2024",
@@ -299,6 +309,8 @@ export const timelineData: TimelineEntry[] = [
     description:
       "NLP-to-workflow pipeline for government-tech data integrations. Selected under the Code for GovTech national open-source program.",
     type: "work",
+    tags: ["NLP", "Open Source", "GovTech"],
+    dateRange: "Jul — Oct 2024",
   },
   {
     year: "2022",
@@ -307,6 +319,8 @@ export const timelineData: TimelineEntry[] = [
     description:
       "B.Tech in Smart Manufacturing at a national institute of design and manufacturing. Coursework in AI/ML, mechatronics, and systems design — bridging software intelligence with physical-world engineering.",
     type: "education",
+    tags: ["AI/ML", "Mechatronics", "Systems Design"],
+    dateRange: "2022 — 2026",
   },
 ];
 

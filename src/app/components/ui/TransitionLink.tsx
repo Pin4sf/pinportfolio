@@ -3,6 +3,7 @@
 import { useTransition } from "@/lib/TransitionContext";
 import { useReducedMotion } from "@/app/hooks/useReducedMotion";
 import { useRouter } from "next/navigation";
+import { storeSourceSection } from "@/lib/scrollRestoration";
 
 interface TransitionLinkProps
   extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
@@ -36,6 +37,18 @@ export default function TransitionLink({
 
     e.preventDefault();
     onClick?.(e);
+
+    // Store source section when navigating from home to work or writing pages
+    if (
+      window.location.pathname === "/" &&
+      (href.startsWith("/work/") || href.startsWith("/writing/"))
+    ) {
+      const linkElement = e.currentTarget;
+      const section = linkElement.closest("section");
+      if (section?.id) {
+        storeSourceSection(`#${section.id}`);
+      }
+    }
 
     if (reducedMotion) {
       router.push(href);

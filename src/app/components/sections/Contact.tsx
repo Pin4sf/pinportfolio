@@ -7,7 +7,8 @@ import styles from "./Contact.module.scss";
 import { contactData } from "@/data/portfolio";
 import { useReducedMotion } from "@/app/hooks/useReducedMotion";
 import { useGpuTier } from "@/app/hooks/useGpuTier";
-import { Github as GithubIcon, Linkedin as LinkedinIcon, Twitter as TwitterIcon, Instagram as InstagramIcon, Send, Loader2, Check, type LucideIcon } from "lucide-react";
+import { Github as GithubIcon, Linkedin as LinkedinIcon, Twitter as TwitterIcon, Instagram as InstagramIcon, Send, Loader2, Check, Copy, type LucideIcon } from "lucide-react";
+import { toast } from "../ui/ToastContainer";
 
 
 gsap.registerPlugin(ScrollTrigger);
@@ -123,6 +124,15 @@ export default function Contact() {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
+  const handleCopyEmail = async () => {
+    try {
+      await navigator.clipboard.writeText(contactData.email);
+      toast("Email copied to clipboard! 📋", "success");
+    } catch (err) {
+      toast("Failed to copy email", "error");
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setSubmitState("sending");
@@ -159,13 +169,23 @@ export default function Contact() {
 
       <div className={styles.grid}>
         <div className={styles.emailSide}>
-          <a
-            ref={emailRef}
-            href={`mailto:${contactData.email}`}
-            className={styles.email}
-          >
-            {contactData.email}
-          </a>
+          <div className={styles.emailGroup}>
+            <a
+              ref={emailRef}
+              href={`mailto:${contactData.email}`}
+              className={styles.email}
+            >
+              {contactData.email}
+            </a>
+            <button
+              onClick={handleCopyEmail}
+              className={styles.copyBtn}
+              aria-label="Copy email to clipboard"
+              title="Copy email"
+            >
+              <Copy size={18} />
+            </button>
+          </div>
 
           <p className={styles.location}>{contactData.location}</p>
 

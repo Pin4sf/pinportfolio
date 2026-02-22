@@ -53,6 +53,10 @@ const Footer = dynamic(
   () => import("./components/sections/Footer"),
   { ssr: false }
 );
+const SectionProgress = dynamic(
+  () => import("./components/ui/SectionProgress"),
+  { ssr: false }
+);
 
 /**
  * SSR content block for search engine crawlers.
@@ -123,6 +127,7 @@ export default function Page() {
       <SeoContent />
       <LoadingScreen />
       <Header />
+      <SectionProgress />
       <SmoothScroll>
         <main id="main-content">
           <Hero />

@@ -11,6 +11,9 @@ const PageTransition = dynamic(() => import("./ui/PageTransition"), {
 const ViewportFrame = dynamic(() => import("./ui/ViewportFrame"), {
   ssr: false,
 });
+const ToastContainer = dynamic(() => import("./ui/ToastContainer"), {
+  ssr: false,
+});
 
 export default function ClientShell({
   children,
@@ -35,6 +38,7 @@ export default function ClientShell({
         <CustomCursor />
         <PageTransition />
         <ViewportFrame />
+        <ToastContainer />
         {children}
       </TransitionProvider>
     </GpuTierProvider>
