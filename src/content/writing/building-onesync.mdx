@@ -1,47 +1,75 @@
 ---
-title: "Building OneSync: From Biosignals to Cognitive Readiness"
-date: "2026-01-15"
+title: "Building OneSync: The Biological Intelligence Layer for AI Agents"
+date: "2026-03-10"
 category: "building"
-description: "What I learned building a cognitive performance platform — from biosignal processing to making invisible data actionable for high-pressure teams."
+description: "Why every AI agent is blind to your body, and how we're building the cognitive OS that changes that — from wearable biosignals to proactive intelligence on Telegram."
 featured: true
 ---
 
-# Building OneSync: From Biosignals to Cognitive Readiness
+# Building OneSync: The Biological Intelligence Layer for AI Agents
 
-When we started OneSync, the pitch was simple: what if you could know whether someone is cognitively ready before they make a high-stakes decision? The execution was anything but simple.
+Every AI agent being built today — Lindy, Manus, OpenClaw — can manage your calendar and draft your emails. But none of them know when you're burning out.
 
-## The Gap Nobody Talks About
+## The Blind Spot
 
-A pilot sleeps seven hours, passes a medical check, and still makes a bad call. Three days of accumulated stress have degraded their cognitive function in ways no fitness tracker can detect. Heart rate at 72 and a "good" sleep score tell you nothing about whether someone can think clearly under pressure right now.
+Y Combinator's 2026 RFS calls for "AI that can DO, not just assist." Nearly 50% of their latest batch is AI agents. NVIDIA GTC 2026 declared autonomous agents the next infrastructure layer. The agent economy is here.
 
-Consumer wearables track fitness. Medical devices work in controlled labs. Nothing practical sits in the middle — and that's where the real decisions happen.
+And every single one of these agents is blind to your body.
 
-## What We're Building
+They'll schedule your hardest meeting when your HRV has crashed. They'll push you through a 14-hour day when your biology is screaming for recovery. 62% of knowledge workers report burnout. The tools meant to help are making it worse — because they optimize what you do without understanding who you are.
 
-OneBand is a wristband that reads multiple biosignals — heart rhythm variability, galvanic skin response, motion patterns, muscle tension — and cross-references them to produce a cognitive readiness index.
+## The Insight That Changed Everything
+
+The race to build the definitive personal AI agent has a blind spot. Everyone is starting from the outside in: calendars, emails, tasks, preferences. They're building AI that knows what you do.
+
+What you do is a performance. What your body does is the truth.
+
+Your calendar says you have twelve focused hours. Your HRV says your nervous system has been recovering for three days. Your task list says you're on track. Your sleep data says you've accumulated six hours of debt this week. No AI today catches that gap — the gap between what you think you can do and what your body can actually sustain.
+
+## What We're Actually Building
+
+OneSync is an AI that reads your smartwatch and tells you each morning how to make the most of your day. It briefs you on your cognitive readiness, learns what works for YOU, tracks your stress patterns over weeks, and gets smarter every day.
 
 ```
-Biosignals → Signal Processing → Feature Extraction → AI Model → Readiness Score
+Wearable → CRS Score → Stress Detection → Claude Agent → Proactive Message → Feedback → Learns
 ```
 
-The key insight: the system stays quiet when it's not confident. In environments where a bad call has real consequences, showing nothing is better than a false green light.
+The Cognitive Readiness Score (CRS) combines sleep quality, heart rate variability, circadian rhythm, and activity data into a single 0-100 score that tells you how sharp you are RIGHT NOW. Not how you slept — how ready you are to think.
 
-## The Technical Challenge
+The agent reaches you on Telegram — not buried in another health app you'll forget to open. A morning brief. Real-time stress interventions. Conversational health chat when you need it.
 
-Biosignal processing at the edge is hard. You're dealing with noisy data from sensors that move with the body, ambient interference, and the fundamental challenge of inferring cognitive state from peripheral physiological signals.
+## The Technical Architecture
 
-We process raw signals on-device for latency-sensitive features and stream aggregated data to the cloud for the heavier ML inference. The AI layer builds a personal digital twin — learning individual baselines so that "normal" for one person isn't confused with "stressed" for another.
+We went cross-platform from day one. Apple Watch gives us beat-to-beat IBI for true HRV (the gold standard). Health Connect covers the Android ecosystem. All health data is encrypted on-device with SQLCipher — the CRS computation happens on your phone, never on our servers.
 
-## Lessons So Far
+The agent runs on Claude Haiku 4.5 with a rules-based pre-filter that handles 60-80% of decisions at $0 AI cost. Only meaningful events — stress spikes, morning briefs, user messages — hit the LLM. This keeps per-user costs under $0.90/month for Pro users, giving us 79% margins.
 
-**Trust before features.** We're building for institutions — defense units, training academies, elite sports teams. These organizations can't afford false signals. Earning trust means being honest about uncertainty, not just optimizing for accuracy metrics.
+The agent has 8 tools for MVP: read your CRS, sleep data, stress events, activity, user profile, and memory — plus write tools for updating memory and sending messages. A hook pipeline runs quality gates before and after every Claude call, ensuring the agent never sends a message it isn't confident about.
 
-**The hardest part isn't the AI.** It's the hardware-software integration. Getting reliable biosignal readings from a wristband form factor while someone is physically active requires mechanical engineering, signal processing, and ML to work in concert.
+## Two Intelligence Layers
 
-**Ship the dashboard before the device.** We started by building the team-facing dashboard first — using simulated data — to validate that coaches and training officers actually wanted the readiness scores we were designing. They did, but they also wanted features we hadn't considered.
+What makes this work is combining biological intelligence with life context:
+
+**Biology** (what your body says): Wearable data — HRV, HR, sleep stages, steps, SpO2 — computed into a cognitive readiness score updated every 15 minutes.
+
+**Life Context** (what your world looks like): Calendar, email, Slack, task managers — understanding what's coming, what's urgent, what can move.
+
+When the agent knows both, it can do things no other tool can: "Your CRS crashed to 38 and you have a board presentation at 2pm — want me to suggest moving it to tomorrow morning when you're typically at 78?"
+
+No health app can do that. No productivity agent can do that. Only an agent that reads both your body and your world.
+
+## What I've Learned So Far
+
+**Start from the body outward.** Every other agent starts from the calendar inward. That's why they all converge on the same features. Biology is the un-replicable data layer — your HRV baseline can't be copied by a competitor plugging into the same calendar API.
+
+**Proactive is the only retention mechanism.** Health apps have 3-12% 30-day retention rates. The reason: dashboards are passive. You have to go to them. OneSync comes to you. A proactive morning brief on Telegram is fundamentally different from a score sitting in an app.
+
+**The agent IS the product.** The app is just the cockpit. The real experience happens in a Telegram conversation where the agent knows your biology, your patterns, and your world — and acts before you ask.
+
+**Build for trust, not engagement.** The system stays quiet when it's not confident. In a domain where false signals erode trust, showing nothing is better than a false green light. Every message passes 5 quality gates before reaching the user.
 
 ## What's Next
 
-Hardware prototyping is underway. Early concept testing with athletes is providing the ground truth data we need to train the readiness models. The team is small — four of us with backgrounds spanning biosensing, AI systems, manufacturing, and product design.
+Architecture is finalized. MVP is in active development — cross-platform Android + iOS, morning cognitive briefs, stress pattern tracking, and the Telegram agent. Phase 2 adds workspace connectors and conversational skill creation. Phase 3 is the full Agent OS — learned behaviors, multi-agent delegation, and the "body API" that other agents query via MCP before making decisions on your behalf.
 
-This is the hardest thing I've ever worked on. It's also the most meaningful.
+In the agentic economy, every agent will need to know your body. We're building that layer.

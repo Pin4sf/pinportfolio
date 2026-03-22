@@ -1,0 +1,132 @@
+---
+title: "Designing an Agent OS That Starts With Your Body"
+date: "2026-03-20"
+category: "technical"
+description: "How we're architecting OneSync's Agent OS — a three-layer cognitive operating system that combines body intelligence, task intelligence, and autonomous agency into a single personal AI."
+featured: true
+---
+
+# Designing an Agent OS That Starts With Your Body
+
+Most agent architectures start with tools. Ours starts with a heartbeat.
+
+OneSync isn't just a health app with an AI layer. It's a personal cognitive operating system — an Agent OS — that uses your biology as the foundation for everything the agent does. This post breaks down the architecture, the design decisions, and why we think this is the right way to build a personal AI agent.
+
+## The Three Pillars
+
+The Agent OS is built in three layers, each expanding the agent's capability:
+
+**Pillar 1 — Body Intelligence (MVP).** Reads HRV, heart rate, sleep, and activity from any smartwatch. Computes a Cognitive Readiness Score. Detects stress in real-time. Proactively messages you via Telegram before you crash. All health data encrypted, on-device computation, personal baselines — not population norms.
+
+**Pillar 2 — Task Intelligence.** Connects to your calendar, email, Slack, and task manager. Understands your workload. Prioritizes tasks based on your cognitive state. "Your CRS is 87 — tackle the P0 bug now, save admin for the afternoon dip." Reschedules meetings, blocks focus time, manages your day.
+
+**Pillar 3 — Autonomous Personal OS.** The agent becomes a full operating system for your life. Not pre-programmed rules — learned behaviors. You teach it through conversation, it builds skills, and eventually acts without being asked.
+
+## The Production Architecture
+
+We studied 14 production-grade agent systems before writing a line of code — OpenClaw (171K stars), NemoClaw (NVIDIA's enterprise agent governance framework), OpenFang, CoPaw, Paperclip, and others. What emerged was a clear pattern that maps perfectly to a personal cognitive agent:
+
+```
+Brain Layer           → OneSync Agent Core
+  Claude Haiku 4.5 + soul files + memory
+  Thinks, remembers, delegates
+
+Orchestrator Layer    → Supabase Edge Functions
+  State management + routing
+  HealthKit/Health Connect adapters
+  Rules-based pre-filter (saves 60-80% API costs)
+
+Execution Layer       → Tool Execution
+  8 MVP tools → 50+ tools over time
+  Health + productivity + life management
+```
+
+This is the same Brain → Orchestrator → Execution pattern that powers enterprise agent platforms. We're applying it to the most personal domain imaginable: your body and your life.
+
+## The 25-Field Prompt Builder
+
+Every agent invocation assembles context from 25 fields across three blocks, optimized for cache hit rates:
+
+**Static block** (cached, 1-hour TTL): Soul base personality, zone modifier based on your current CRS, mode template for the trigger type, safety rules, and medical disclaimers. These rarely change, so they sit at the front of the system message for maximum cache reuse.
+
+**User block** (cached, 5-minute TTL): Your profile, core memory excerpt, health baselines, chronotype. Changes slowly — updated as the agent learns about you.
+
+**Dynamic block** (fresh every invocation): Current CRS, biometric snapshot, trigger context, conversation history, calendar context. This is the "what's happening right now" layer.
+
+Total token budget: 2,500 max. The assembly follows a U-shaped attention pattern — critical information at the START and END of the prompt, stable context in the middle where attention naturally dips.
+
+## Memory That Learns You
+
+The memory system has three tiers, inspired by OpenFang and Paperclip:
+
+**Tier 1 — Structured memory** (always loaded): Your identity, health profile, preferences, active goals, recent insights. The agent can self-modify this via tools. Each memory has temporal validity — learned dates, confidence decay, and access counts. Memories decay from hot (7 days) to warm (30 days) to cold.
+
+**Tier 2 — Summaries** (loaded on demand): Session summaries from every conversation, weekly compaction that rolls insights into core memory, an append-only pattern log, and pending followups tracking suggestion outcomes.
+
+**Tier 3 — Semantic search** (Phase 2): Embeddings over conversation history and pattern logs. A health knowledge graph mapping relationships like "caffeine → worsens → sleep latency (confidence: 0.8)."
+
+The key insight from studying production agents: memory isn't just storage. It's a learning flywheel:
+
+- **Day 1:** Population defaults. Functional but generic.
+- **Week 2:** Personal baselines. The CRS becomes yours.
+- **Month 1:** Feedback loop active. Agent tunes to your responses.
+- **Month 3:** Deep patterns. Agent knows your stress triggers and recovery strategies.
+- **Month 6:** Predictive. Agent anticipates tomorrow based on today.
+
+## The Personality Spectrum
+
+The agent doesn't have one voice — it has a spectrum, selected by your current cognitive state:
+
+- **CRS 80+** (Energized): Coach pushing an athlete. "Peak zone. Deep work window. Ship it."
+- **CRS 60-79** (Steady): Trusted friend. "Solid night. You've got runway."
+- **CRS 40-59** (Flagging): Wise advisor. "Protect your energy today."
+- **CRS < 40** (Depleted): Caretaker. "Water. Take it slow."
+- **No data** (Crisis): Honest friend. "How are you feeling?"
+
+This isn't cosmetic. When someone's CRS is at 35, they don't need a productivity coach — they need someone who speaks gently and suggests rest. When they're at 90, they need a push to capitalize on the peak.
+
+## Proactive Hands — The Agent Acts First
+
+The agent doesn't wait for you to ask. It has "Hands" — scheduled proactive actions:
+
+**Morning Brief Hand:** Fires at your wake time. Checks last night's sleep, current CRS, today's calendar, and recent patterns. Delivers a brief that tells you how your body prepared for today and what to prioritize.
+
+**Stress Monitor Hand:** Runs every 15 minutes. If your HRV drops below personal thresholds with high confidence, it messages you with a personalized intervention — before the anxiety even registers consciously.
+
+**Baseline Updater Hand:** Runs at 4 AM. Pure computation, no LLM. Updates your rolling 7-day and 30-day baselines so the CRS stays calibrated to YOU, not population averages.
+
+Every proactive message follows a Four-Phase Nudge pattern: signal ("Your HRV dropped 22%") → meaning ("This usually happens during back-to-back meetings") → micro-action ("Take 3 slow breaths. 4 seconds in, 7 seconds out") → feedback buttons ("[Helpful] [Not helpful]").
+
+## Quality Gates — No Message Without Passing
+
+Every message passes 5 gates before reaching you:
+
+1. **Data Sufficient?** — Skip if wearable data is stale or unreliable
+2. **Health Language Safe?** — No diagnostic claims, no medical advice
+3. **Timing OK?** — Respect sleep hours, cooldown periods
+4. **Not Fatiguing?** — Max 3 proactive messages per day, 2-hour cooldown
+5. **Confident Enough?** — Omit uncertain claims rather than guess
+
+If the Claude-generated message fails Gate 2, it gets regenerated (max 2 retries). If it still fails, a safe template fallback is used. The system would rather stay silent than say something wrong.
+
+## The Vision: Body API for the Agent Economy
+
+Here's where it gets interesting. Once OneSync has body intelligence + workspace intelligence, it has two things no other agent has — it knows your physiology AND your context.
+
+Phase 3 turns OneSync into something bigger: the **body API** that other agents query before making decisions on your behalf. Via MCP (Model Context Protocol) or A2A (Agent-to-Agent), any AI tool — Lindy, Manus, Cursor, Claude Code — could ask: "Is this person cognitively ready for deep work right now?"
+
+The agent also learns new skills through conversation. You say: "When my CRS drops below 50 and I have a presentation, prep me with talking points so I feel ready instead of anxious." The agent remembers. It builds the skill. Next time, it acts without being asked. Over weeks, it watches your patterns and proposes new skills: "I've noticed your HRV recovers faster on days you walk between 2 and 3pm. Want me to block that time on your calendar?"
+
+Eventually, the agent doesn't just know your body and your calendar. It knows your patterns, your triggers, your recovery strategies, your communication style, your priorities. It reads your biology to know what you can actually handle — and it acts accordingly.
+
+## Why This Architecture
+
+Every AI agent competes for the same surface data: tasks, schedules, emails, preferences. Shallow data that any competitor can replicate by plugging into the same APIs.
+
+Your HRV baseline cannot be replicated. The way your body responds to stress is yours alone. The data flywheel that builds as OneSync learns you over months is something no competitor can copy — because the data itself is irreplaceable.
+
+That's the moat. Not the model. Not the tools. The biological memory of who you are.
+
+---
+
+*Building in public. If you're interested in the agent economy, wearable intelligence, or just want to follow along — find me on [X](https://x.com/shivanshfulper).*

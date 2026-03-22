@@ -85,7 +85,7 @@ export interface SiteConfig {
 export const siteConfig: SiteConfig = {
   title: "Shivansh Fulper — AI Systems, Startups, Infrastructure",
   description:
-    "AI engineer and startup founder. CTO at OneSync, building cognitive performance wearables. Co-founder of EcoFresh Greensync, building decentralized waste-to-value infrastructure. Portfolio, case studies, and writing.",
+    "AI engineer and startup founder. CTO at OneSync, building the biological intelligence layer for the AI agent economy. Co-founder of EcoFresh Greensync, building decentralized waste-to-value infrastructure. Portfolio, case studies, and writing.",
   author: "Shivansh Fulper",
   keywords:
     "Shivansh Fulper, AI Engineer, OneSync, EcoFresh Greensync, Atlan, LLM, RAG, Agentic Systems, Cognitive Wearables, Waste-to-Value, IIITDM Jabalpur",
@@ -137,7 +137,7 @@ export const heroData: HeroData = {
 export const aboutData: AboutData = {
   bio: `I build AI systems at the infrastructure level — not wrappers, not demos, real pipelines that process data at scale and make decisions autonomously.
 
-As CTO of OneSync, I'm building the intelligence layer that turns wearable biosignals into cognitive readiness scores. I also co-founded EcoFresh Greensync — a decentralized waste-to-value infrastructure company with 3 IP discoveries and recognition at the Hult Prize. At Atlan, I build AI-native developer agents. At Soket AI Labs, I built multilingual dataset pipelines for Indic LLM training.
+As CTO of OneSync, I'm building the biological intelligence layer for the AI agent economy — a personal cognitive OS that reads your smartwatch and acts proactively before you burn out. I also co-founded EcoFresh Greensync — a decentralized waste-to-value infrastructure company with 3 IP discoveries and recognition at the Hult Prize. At Atlan, I build AI-native developer agents. At Soket AI Labs, I built multilingual dataset pipelines for Indic LLM training.
 
 I'm a final-year B.Tech student at IIITDM Jabalpur. I think in systems. I ship fast. And I'd rather fail at 20 than wait until I'm "qualified."`,
   photo: "/Shivansh.jpg",
@@ -156,27 +156,36 @@ export const caseStudies: CaseStudy[] = [
   {
     slug: "onesync",
     name: "OneSync",
-    tagline: "Beyond vital signs. Into the mind.",
+    tagline: "The biological intelligence layer for the AI agent economy.",
     heroImage: "/images/projects/onesync.jpg",
     role: "Co-Founder & CTO",
     timeline: "2026 — Present",
-    techStack: ["AI/ML", "Biosignal Processing", "Edge Computing", "React", "TypeScript"],
+    techStack: [
+      "React Native",
+      "Expo",
+      "TypeScript",
+      "Supabase",
+      "Claude Haiku 4.5",
+      "HealthKit",
+      "Health Connect",
+      "Telegram Bot API",
+    ],
     liveUrl: "https://onesync-website-zs1p.vercel.app/",
     category: "venture",
     featured: true,
     challenge:
-      "A pilot sleeps seven hours, clears a medical check, and still makes a bad call — three days of accumulated stress have worn him down. In high-pressure jobs like aviation, defense, sports, and emergency medicine, people make serious decisions constantly, but there's no practical way to tell if they're cognitively ready. What exists today is guesswork: self-reporting, gut feelings, or a fitness tracker showing heart rate at 72 and a good sleep score. None of that tells you whether someone can think clearly under pressure right now.",
+      "Every AI agent being built today — Lindy, Manus, OpenClaw — can manage your calendar and draft your emails. But none of them know when you're burning out. They'll schedule your hardest meeting when your HRV has crashed. They'll push you through a 14-hour day when your biology is screaming for recovery. 62% of knowledge workers report burnout, and the tools meant to help are making it worse — because they're blind to the one signal that matters most: your body.",
     approach:
-      "We built OneBand — a wristband that reads multiple body signals (heart rhythm, skin response, motion, muscle tension) and cross-checks them to produce a cognitive readiness index. The system stays quiet when it's not confident — in environments where a bad call has real consequences, showing nothing is better than a false green light. Built for institutions from day one: training academies, defense units, elite sports teams. Dashboards designed around how teams actually operate, not just how individuals track personal fitness.",
+      "We started from the body outward, not the calendar inward. OneSync reads your existing smartwatch — Apple Watch, Pixel Watch, Galaxy Watch — and computes a Cognitive Readiness Score (CRS) from the interplay of sleep quality, HRV, circadian rhythm, and activity. The score updates every 15 minutes, runs on-device for privacy, and uses personal baselines instead of population norms. The agent reaches you proactively on Telegram — not buried in another health app you'll forget to open.",
     solution:
-      "OneSync is a cognitive performance platform. OneBand captures biosignals 24/7 and an AI interpretation layer translates raw data into readiness scores, recovery trends, and actionable guidance. Think of it as a fuel gauge for the brain — not a diagnosis, not a mood ring, just a reliable indicator that a coach, training officer, or team lead can glance at and act on. The system builds a personal digital twin that learns individual baselines and adapts over time.",
+      "OneSync is a personal cognitive operating system built in three layers. Layer 1 (MVP): Body Intelligence — wearable data flows through encrypted on-phone processing into a CRS engine, with a Claude-powered agent that delivers morning cognitive briefs, real-time stress interventions, and conversational health chat via Telegram. Layer 2: Task Intelligence — workspace connectors (calendar, email, Slack) let the agent make biology-aware decisions like rescheduling deep work when your CRS crashes. Layer 3: Autonomous Agent OS — learned skills, multi-agent delegation, and MCP integration that turns OneSync into the biological layer under every other AI tool you use.",
     solutionImages: ["/images/projects/onesync.jpg"],
     impact:
-      "Active development with hardware prototyping underway. Early concept testing with athletes. Team of 4 (CEO, CTO, COO, CPO) with backgrounds spanning biosensing, AI systems, manufacturing, and product hardware. Pursuing HIPAA and FDA compliance pathways.",
+      "Architecture finalized and MVP in active development. Cross-platform from day one (iOS + Android). Claude Haiku 4.5 agent with 8 tools, rules-based pre-filter saving 60-80% of API costs. Business model validated: 79% margin at Rs 399/mo ($4.34), break-even at 50 Pro subscribers. Team of 4 (CEO, CTO, COO, CPO). Agent architecture informed by 14 open-source agent systems including OpenClaw (171K stars), NemoClaw (NVIDIA), and OpenFang.",
     reflection:
-      "Consumer wearables track fitness. Medical systems work in labs. Nothing practical sits in the middle. That's the gap — and closing it requires building trust before building features. The hardest part isn't the AI. It's earning confidence from institutions that can't afford false signals.",
+      "The race to build the definitive personal AI agent has a blind spot. Everyone is starting from the outside in: calendars, emails, tasks, preferences. They're building AI that knows what you do. What you do is a performance. What your body does is the truth. If an AI doesn't understand your biology, it doesn't actually know you — and if it doesn't know you, it can't truly act for you.",
     pullQuote:
-      "The hardest engineering decision was building a system that stays silent when it isn't confident — because in environments where a bad call has real consequences, showing nothing is better than a false green light.",
+      "No agent has biology. No health app has agency. OneSync is the intelligence layer that combines both — because in the agentic economy, every agent will need to know your body.",
     order: 1,
   },
   {
@@ -277,9 +286,9 @@ export const timelineData: TimelineEntry[] = [
     title: "Co-Founder & CTO",
     organization: "OneSync",
     description:
-      "Building cognitive performance wearables. AI interpretation layer that turns biosignals into readiness scores for high-pressure environments.",
+      "Building the biological intelligence layer for the AI agent economy. Personal cognitive OS that reads your smartwatch, computes cognitive readiness, and acts proactively via an AI agent on Telegram.",
     type: "startup",
-    tags: ["Wearables", "AI/ML", "Biosignals"],
+    tags: ["AI Agents", "Wearables", "React Native", "Claude"],
     dateRange: "2026 — Present",
   },
   {
