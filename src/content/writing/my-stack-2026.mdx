@@ -1,47 +1,158 @@
 ---
-title: "My Stack in 2026: What I Use and Why"
-date: "2026-01-05"
+title: "My Stack in 2026: AI-Native Development and the Tools That Ship"
+date: "2026-03-22"
 category: "technical"
-description: "A breakdown of the tools, frameworks, and workflows I use daily — from LLM pipelines to agentic systems — and the reasoning behind each choice."
+description: "Claude Code, Cursor, Claude Co-work, OpenCode, React Native, Supabase — a complete breakdown of the tools, AI workflows, and development philosophy I use daily to build OneSync, ship at Atlan, and stay dangerous."
 featured: true
 ---
 
-# My Stack in 2026: What I Use and Why
+# My Stack in 2026: AI-Native Development and the Tools That Ship
 
-Every engineer has opinions about their tools. Here are mine — not because they're the "best," but because they match how I think and what I build.
+Every engineer has opinions about their tools. Here are mine — not because they're the "best," but because they match how I think and what I build. This year, my stack changed more than any previous year. AI didn't just become part of my workflow — it became the workflow itself.
+
+---
+
+## The AI Layer: Where 80% of My Time Goes
+
+### Claude Code — My Primary Development Environment
+
+This is the tool that changed everything. Claude Code is Anthropic's agentic CLI — it reads my codebase, writes code, runs tests, manages git, and ships features while I focus on architecture and decisions.
+
+I run it on **Opus 4.6** (1M context) for complex tasks and **Sonnet 4.6** for day-to-day development. The key insight from Boris Cherny (Claude Code's creator) that transformed my workflow: **"Plan first, then code."** I start every complex task in Plan Mode, iterate on the plan with Claude, then switch to auto-accept mode where it usually completes the implementation in one shot.
+
+My setup:
+
+- **CLAUDE.md files** in every project — the single highest-leverage thing you can do. These files tell Claude your project's architecture, coding standards, gotchas, and workflow preferences. I keep them under 300 lines and prune regularly.
+- **Custom subagents** for specialized reviews — I have 9 defined for OneSync alone (planner, security-reviewer, health-data-reviewer, CRS-validator, soul-file-reviewer, etc.)
+- **Hooks** for deterministic automation — auto-format on file write, typecheck after edits, block `--no-verify` on commits. Unlike CLAUDE.md instructions (advisory), hooks are guarantees.
+- **Skills** for reusable workflows — `/commit`, `/fix-issue`, `/code-review`, `/tdd`. Each is a SKILL.md file that Claude invokes automatically or via slash command.
+- **Git worktrees** for parallel sessions — I run 3-5 terminal tabs with separate worktrees, each with its own Claude Code session. Color-coded tabs, system notifications when any session needs input.
+
+The core loop I use daily:
+```
+Plan Mode → iterate on approach
+Auto-accept Mode → Claude implements
+Verify → tests, build, typecheck
+Commit → Claude creates commit and PR
+```
+
+Cost optimization matters: I route exploration subagents to Haiku (cheapest), standard dev to Sonnet, and only use Opus for architecture decisions and deep debugging. Auto-compact at 75% context instead of the default ~95% for better coherence. `/clear` between unrelated tasks — this is the #1 mistake people make with Claude Code.
+
+### Cursor — For Visual, Fast Iteration
+
+When I need to see the code while editing — especially for frontend work, SCSS tweaks, and rapid prototyping — **Cursor** is my IDE. The AI tab completion is good, but the real value is Composer mode for multi-file edits and the inline diff review.
+
+I use Cursor for:
+- Frontend styling and component work (where visual context matters)
+- Quick multi-file refactors
+- When I want to see the diff before it's applied
+- Pair programming with colleagues who aren't on Claude Code
+
+### Claude Co-work — Async Background Agents
+
+**Claude Co-work** (formerly Claude Projects) is where I run longer, background tasks. I'll kick off a research agent to analyze a competitor's architecture, run a deep code review across a full PR, or have it draft technical documentation while I'm focused on implementation in another session.
+
+The pattern: Claude Code for active development, Co-work for async work that would bloat my main context window.
+
+### OpenCode — The Open-Source Frontier
+
+I'm actively exploring **OpenCode** and similar open-source agentic coding frameworks. The appeal: self-hosted, customizable agent loops, and the ability to plug in any model. For OneSync, where we need agent architecture patterns that we control end-to-end, understanding how these frameworks work under the hood is directly relevant.
+
+The ecosystem is moving fast — every week brings a new open-source agent framework. I'm evaluating them not just as tools but as reference architectures for OneSync's own agent system.
+
+---
 
 ## Frontend
 
 **Next.js 14 + TypeScript** is my default for anything web. The App Router and server components give me the rendering flexibility I need. Static generation for portfolios, SSR for dynamic apps, API routes when I need a quick backend.
 
-**GSAP** for animation. CSS transitions handle the basics, but when you need scroll-linked reveals, complex timelines, or physics-based motion, nothing touches GSAP. ScrollTrigger alone is worth it.
+**React Native + Expo** for mobile — this is OneSync's primary stack. Expo's managed workflow with EAS Build handles the iOS/Android split without maintaining two codebases. NativeWind v4 gives me Tailwind for React Native. Native modules in Swift (HealthKit) and Kotlin (Health Connect) for the health data layer.
 
-**Three.js + GLSL** when a project calls for 3D. Custom shaders give pixel-level control. I pair it with `postprocessing` for bloom, chromatic aberration, and other effects.
+**GSAP** for animation. CSS transitions handle the basics, but when you need scroll-linked reveals, complex timelines, or physics-based motion, nothing touches GSAP. ScrollTrigger alone is worth it. I pair it with **Lenis** for smooth scrolling.
+
+**Three.js + GLSL** when a project calls for 3D or custom visual effects. Custom shaders give pixel-level control.
+
+---
 
 ## AI / ML
 
-This is where most of my time goes now.
+**Claude Haiku 4.5** is OneSync's production model — $1/$5 per MTok with prompt caching. We run the agent on the Messages API with `tool_use`, not the Agent SDK, because our Edge Functions are stateless. A rules-based pre-filter handles 60-80% of decisions at $0 AI cost — only meaningful events hit the LLM.
 
-**Python** is the backbone — LangChain for LLM orchestration, FastAPI for serving, PyTorch for anything custom. I've built RAG pipelines, agentic workflows, and fine-tuning loops all in Python.
+**Python** remains the backbone for ML work — PyTorch for anything custom, FastAPI for serving. At Atlan, I build RAG pipelines and agentic SDLC workflows in Python + TypeScript.
 
-**Vector databases** — Pinecone for production, ChromaDB for prototyping. The choice matters less than your chunking strategy and embedding model selection.
+**Vector databases** — pgvector for OneSync (it's already in Supabase), Pinecone for production at scale, ChromaDB for prototyping. The choice matters less than your chunking strategy and embedding model selection.
 
-**LLM APIs** — Claude for reasoning-heavy tasks, GPT-4 for general use, open-source models (Mistral, Llama) when I need to run inference locally or fine-tune.
+**LLM APIs** — Claude for reasoning-heavy tasks (it's not close), open-source models (Mistral, Llama, Qwen) when I need to run inference locally or fine-tune. I use multi-model routing: rules-based pre-filter → Haiku for standard tasks → Sonnet for nuanced responses → Opus for weekly deep analysis.
 
-## Infrastructure
+---
 
-**Docker** for everything. I don't trust "it works on my machine" and neither should you.
+## Backend & Infrastructure
 
-**Vercel** for frontend deployments — zero-config, instant previews, edge functions. **Railway** or **Fly.io** for backend services that need persistent connections or GPU access.
+**Supabase** is OneSync's entire backend — Postgres with RLS, Edge Functions (Deno), pg_cron for scheduled triggers, Realtime for live updates, and Storage for assets. It's the best "backend-in-a-box" I've used. The combination of Postgres + Edge Functions + Auth handles 95% of what a startup needs.
 
-**MongoDB** for document storage when schemas are evolving. **PostgreSQL** when I need relational integrity. **Redis** for caching, rate limiting, and pub/sub.
+**op-sqlite + SQLCipher** for on-device encrypted health data storage in React Native. All CRS computation happens on-phone — no server round-trip for sensitive biosignal data.
+
+**Docker** for everything that needs to be reproducible. **Vercel** for frontend deployments. **Railway** for backend services that need persistent connections.
+
+**MongoDB** when schemas are evolving rapidly. **Redis** for caching, rate limiting, and pub/sub.
+
+---
 
 ## Dev Environment
 
-**VS Code** with Vim keybindings. **Claude Code** as my AI pair programmer. **Git** with conventional commits. **Figma** for design — I believe engineers should be able to design, even if they're not designers.
+**Claude Code** is my primary interface — terminal-first, agentic, with full codebase access. I run it in **Ghostty** (fast rendering, 24-bit color) with 3-5 tabs for parallel worktrees.
+
+**Cursor** as my visual IDE when I need to see code and diffs side-by-side.
+
+**VS Code** with Vim keybindings for quick edits and when working with colleagues.
+
+**Git** with conventional commits. Claude Code handles most git operations — commits, PRs, rebases — but I review every diff before pushing.
+
+**Figma** for design. I believe engineers should be able to design, even if they're not designers.
+
+**Voice dictation** (fn x 2 on macOS) for detailed prompts to Claude Code — 3x faster than typing for complex instructions.
+
+---
+
+## The MCP Ecosystem
+
+MCP (Model Context Protocol) servers extend Claude Code with external integrations. I keep under 10 active at any time (each one eats context). The ones I use:
+
+- **GitHub MCP** — PRs, issues, code search without leaving the terminal
+- **Supabase MCP** — direct database access from Claude Code
+- **Playwright MCP** — browser automation and E2E testing
+- **Sequential Thinking** — structured problem-solving for architecture decisions
+
+The rule: if the same thing can be done via CLI (`gh`, `supabase`, `vercel`), use the CLI. MCP servers are for integrations that don't have good CLIs.
+
+---
+
+## Context Management Philosophy
+
+This is the most important section. LLM-powered development lives or dies on context management.
+
+**Treat context like RAM.** If you fill it with garbage, everything slows down. Every decision — CLAUDE.md length, subagent usage, `/clear` frequency — should be viewed through this lens.
+
+My rules:
+- **`/clear` between unrelated tasks.** The #1 mistake is keeping stale context around.
+- **`/compact` at phase boundaries.** Research → Planning → Implementation — compact between each.
+- **Subagents for research.** Never let exploration results bloat the main context. Spawn an Explore agent, get the summary back, move on.
+- **Files under 400 lines** (800 max). Large files waste tokens every time Claude re-reads them.
+- **Auto-compact at 75%** instead of the default ~95%.
+- **Write important context to files** before compacting. CLAUDE.md, TODO lists, and memory files survive compaction. Your reasoning doesn't.
+
+---
 
 ## The Philosophy
 
-I optimize for iteration speed over theoretical purity. The best stack is the one that lets you ship fast, learn from users, and change direction without rewriting everything.
+**AI-native development is not "AI-assisted" development.** The difference: in AI-assisted development, you write code and AI helps. In AI-native development, you architect systems and AI implements. Your job shifts from typing code to making decisions — what to build, how to verify it, and when to course-correct.
 
-I don't chase trends. I adopt tools when they solve a problem I actually have, not because Twitter said I should.
+**Plan first, then code.** The separation of planning and execution is the most important workflow pattern I've adopted this year. Every complex task starts in Plan Mode.
+
+**Give Claude a way to verify its work.** If Claude can run tests, compare screenshots, or validate outputs, quality goes up 2-3x. Every task should end with a verification step — `npm run build`, `npx tsc --noEmit`, test suite, visual check.
+
+**Iterate on tools, not just code.** I spend time improving my CLAUDE.md files, hooks, skills, and subagent definitions. A better development environment compounds — every hour invested in setup saves 10 hours of future friction.
+
+**I don't chase trends. I adopt tools when they solve a problem I actually have.** Claude Code solved the "I spend 70% of my time on implementation, not architecture" problem. Cursor solved the "I need visual context for UI work" problem. Supabase solved the "I don't want to manage infrastructure" problem. Each tool earned its place.
+
+The best stack is the one that lets you ship fast, learn from users, and change direction without rewriting everything. In 2026, that stack is increasingly AI-native — and the engineers who figure out these workflows first will build 10x more than those who don't.
