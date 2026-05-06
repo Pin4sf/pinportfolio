@@ -66,10 +66,10 @@ export function scrollToSection(sectionId: string, immediate = false) {
  * Map case study slugs to their corresponding sections
  */
 const SLUG_TO_SECTION_MAP: Record<string, string> = {
-  onesync: "#timeline",
+  waldo: "#ventures",
+  onesync: "#ventures",
   "ecofresh-greensync": "#timeline",
   atlan: "#timeline",
-  // Add other case studies and their sections here
 };
 
 /**

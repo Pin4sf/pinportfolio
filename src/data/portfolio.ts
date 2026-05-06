@@ -85,10 +85,10 @@ export interface SiteConfig {
 export const siteConfig: SiteConfig = {
   title: "Shivansh Fulper — AI Systems, Startups, Infrastructure",
   description:
-    "AI engineer and startup founder. CTO at OneSync, building the biological intelligence layer for the AI agent economy. Co-founder of EcoFresh Greensync, building decentralized waste-to-value infrastructure. Portfolio, case studies, and writing.",
+    "AI engineer and startup founder. Building Waldo — the biological intelligence layer for the AI agent economy. Co-founder of EcoFresh Greensync, building decentralized waste-to-value infrastructure. Portfolio, case studies, and writing.",
   author: "Shivansh Fulper",
   keywords:
-    "Shivansh Fulper, AI Engineer, OneSync, EcoFresh Greensync, Atlan, LLM, RAG, Agentic Systems, Cognitive Wearables, Waste-to-Value, IIITDM Jabalpur",
+    "Shivansh Fulper, AI Engineer, Waldo, OneSync, EcoFresh Greensync, Atlan, LLM, RAG, Agentic Systems, Cognitive Wearables, Wearable AI, Health AI, Waste-to-Value, IIITDM Jabalpur",
   url: "https://shivanshfulper.com",
   ogImage: "/images/og-image.png",
 };
@@ -107,7 +107,7 @@ export const navItems: NavItem[] = [
 export const heroData: HeroData = {
   name: "Shivansh Fulper",
   tagline: "I build AI systems that ship.",
-  subtitle: "CTO & Co-founder @ OneSync · Co-founder @ EcoFresh Greensync · IIITDM Jabalpur '26",
+  subtitle: "Building Waldo · Co-founder @ EcoFresh Greensync · AI Engineer @ Atlan · IIITDM Jabalpur '26",
   socials: [
     {
       name: "LinkedIn",
@@ -137,7 +137,7 @@ export const heroData: HeroData = {
 export const aboutData: AboutData = {
   bio: `I build AI systems at the infrastructure level — not wrappers, not demos, real pipelines that process data at scale and make decisions autonomously.
 
-As CTO of OneSync, I'm building the biological intelligence layer for the AI agent economy — a personal cognitive OS that reads your smartwatch and acts proactively before you burn out. I also co-founded EcoFresh Greensync — a decentralized waste-to-value infrastructure company with 3 IP discoveries and recognition at the Hult Prize. At Atlan, I build AI-native developer agents. At Soket AI Labs, I built multilingual dataset pipelines for Indic LLM training.
+I'm building Waldo — the biological intelligence layer for the AI agent economy. A personal AI agent that reads your wearables, computes a Cognitive Readiness Score, and acts before you burn out. No health app you'll forget to open. Already on it. I also co-founded EcoFresh Greensync — a decentralized waste-to-value infrastructure company with 3 IP discoveries and recognition at the Hult Prize. At Atlan, I build AI-native developer agents. At Soket AI Labs, I built multilingual dataset pipelines for Indic LLM training.
 
 I'm a final-year B.Tech student at IIITDM Jabalpur. I think in systems. I ship fast. And I'd rather fail at 20 than wait until I'm "qualified."`,
   photo: "/Shivansh.jpg",
@@ -145,7 +145,7 @@ I'm a final-year B.Tech student at IIITDM Jabalpur. I think in systems. I ship f
     { label: "Location", value: "Nagpur, India" },
     { label: "Education", value: "B.Tech '26, IIITDM Jabalpur" },
     { label: "Focus", value: "AI Systems · Startups · Infrastructure" },
-    { label: "Currently", value: "CTO @ OneSync · AI Engineer @ Atlan" },
+    { label: "Currently", value: "Building Waldo · AI Engineer @ Atlan" },
   ],
   interests: ["Anime", "Gaming", "Music", "Systems Thinking"],
 };
@@ -154,38 +154,45 @@ I'm a final-year B.Tech student at IIITDM Jabalpur. I think in systems. I ship f
 
 export const caseStudies: CaseStudy[] = [
   {
-    slug: "onesync",
-    name: "OneSync",
-    tagline: "The biological intelligence layer for the AI agent economy.",
-    heroImage: "/images/projects/onesync.jpg",
+    slug: "waldo",
+    name: "Waldo",
+    tagline: "Already on it. The biological intelligence layer for the AI agent economy.",
+    heroImage: "/images/projects/waldo/hero.png",
     role: "Co-Founder & CTO",
     timeline: "2026 — Present",
     techStack: [
       "React Native",
-      "Expo",
+      "Expo SDK 53",
       "TypeScript",
-      "Supabase",
+      "Supabase Edge Functions",
+      "Cloudflare Durable Objects",
       "Claude Haiku 4.5",
       "HealthKit",
       "Health Connect",
       "Telegram Bot API",
+      "WHOOP API",
     ],
-    liveUrl: "https://onesync-website-zs1p.vercel.app/",
+    liveUrl: "https://waldo-sigma.vercel.app/",
     category: "venture",
     featured: true,
     challenge:
-      "Every AI agent being built today — Lindy, Manus, OpenClaw — can manage your calendar and draft your emails. But none of them know when you're burning out. They'll schedule your hardest meeting when your HRV has crashed. They'll push you through a 14-hour day when your biology is screaming for recovery. 62% of knowledge workers report burnout, and the tools meant to help are making it worse — because they're blind to the one signal that matters most: your body.",
+      "Every AI agent being built today — Lindy, Manus, Claude — can manage your calendar and draft your emails. But none of them know when you're burning out. They'll schedule your hardest meeting when your HRV has crashed. They'll push you through a 14-hour day when your biology is screaming for recovery. 62% of knowledge workers report burnout, and the tools meant to help are making it worse — because they're blind to the one signal that matters most: your body.",
     approach:
-      "We started from the body outward, not the calendar inward. OneSync reads your existing smartwatch — Apple Watch, Pixel Watch, Galaxy Watch — and computes a Cognitive Readiness Score (CRS) from the interplay of sleep quality, HRV, circadian rhythm, and activity. The score updates every 15 minutes, runs on-device for privacy, and uses personal baselines instead of population norms. The agent reaches you proactively on Telegram — not buried in another health app you'll forget to open.",
+      "Body outward, not calendar inward. Waldo reads your existing smartwatch — Apple Watch, WHOOP, Galaxy Watch, CMF Watch — and computes a Cognitive Readiness Score (Nap Score) from sleep quality, HRV, circadian rhythm, and activity. The score updates continuously, runs on-device for privacy, and uses personal baselines instead of population norms. Waldo reaches you proactively on Telegram — Morning Wag, Fetch Alerts, and Spots — not buried in another health app you'll forget to open.",
     solution:
-      "OneSync is a personal cognitive operating system built in three layers. Layer 1 (MVP): Body Intelligence — wearable data flows through encrypted on-phone processing into a CRS engine, with a Claude-powered agent that delivers morning cognitive briefs, real-time stress interventions, and conversational health chat via Telegram. Layer 2: Task Intelligence — workspace connectors (calendar, email, Slack) let the agent make biology-aware decisions like rescheduling deep work when your CRS crashes. Layer 3: Autonomous Agent OS — learned skills, multi-agent delegation, and MCP integration that turns OneSync into the biological layer under every other AI tool you use.",
-    solutionImages: ["/images/projects/onesync.jpg"],
+      "Waldo is a personal AI agent built in three layers. Layer 1 (Live): Body Intelligence — wearable data flows through encrypted on-phone processing into a CRS engine grounded in SAFTE-FAST (US Army validated). A Claude-powered agent delivers Morning Wags (daily cognitive briefs), Fetch Alerts (real-time stress interventions), and Spots (single-pattern observations) via Telegram. Layer 2: Life Intelligence — workspace connectors (calendar, email, tasks) let the agent make biology-aware decisions like rescheduling deep work when your Nap Score crashes. Layer 3: Autonomous OS — per-user Cloudflare Durable Objects with persistent SQLite memory, learned skills, and an MCP server that exposes Waldo's biological intelligence to every other AI tool you use.",
+    solutionImages: [
+      "/images/projects/waldo/hero.png",
+      "/images/projects/waldo/app-screens.png",
+      "/images/projects/waldo/iphone-1.png",
+      "/images/projects/waldo/iphone-2.png",
+    ],
     impact:
-      "Architecture finalized and MVP in active development. Cross-platform from day one (iOS + Android). Claude Haiku 4.5 agent with 8 tools, rules-based pre-filter saving 60-80% of API costs. Business model validated: 79% margin at Rs 399/mo ($4.34), break-even at 50 Pro subscribers. Team of 4 (CEO, CTO, COO, CPO). Agent architecture informed by 14 open-source agent systems including OpenClaw (171K stars), NemoClaw (NVIDIA), and OpenFang.",
+      "Live on iOS + Android. WHOOP connector end-to-end. Claude Haiku 4.5 agent with 8 tools and rules-based pre-filter saving 60-80% of API costs. CRS engine validated on 856 days of real Apple Health + WHOOP data. 21 of 25 backend blockers shipped. Business model validated: 79% margin at ₹399/mo, break-even at 50 Pro subscribers. Architecture informed by 16 open-source agent systems including Claude Code (1,905 files), Hermes Agent (38K stars), and MemPalace (28.5K stars).",
     reflection:
       "The race to build the definitive personal AI agent has a blind spot. Everyone is starting from the outside in: calendars, emails, tasks, preferences. They're building AI that knows what you do. What you do is a performance. What your body does is the truth. If an AI doesn't understand your biology, it doesn't actually know you — and if it doesn't know you, it can't truly act for you.",
     pullQuote:
-      "No agent has biology. No health app has agency. OneSync is the intelligence layer that combines both — because in the agentic economy, every agent will need to know your body.",
+      "No agent has biology. No health app has agency. Waldo is the intelligence layer that combines both — because in the agentic economy, every agent will need to know how you're really doing.",
     order: 1,
   },
   {
@@ -284,11 +291,11 @@ export const timelineData: TimelineEntry[] = [
   {
     year: "2026",
     title: "Co-Founder & CTO",
-    organization: "OneSync",
+    organization: "Waldo",
     description:
-      "Building the biological intelligence layer for the AI agent economy. Personal cognitive OS that reads your smartwatch, computes cognitive readiness, and acts proactively via an AI agent on Telegram.",
+      "Building the biological intelligence layer for the AI agent economy. Personal AI agent (dalmatian mascot) that reads your wearable, computes a Cognitive Readiness Score, and proactively acts via Telegram. Already on it.",
     type: "startup",
-    tags: ["AI Agents", "Wearables", "React Native", "Claude"],
+    tags: ["AI Agents", "Wearables", "React Native", "Claude Haiku 4.5", "Cloudflare DO"],
     dateRange: "2026 — Present",
   },
   {
