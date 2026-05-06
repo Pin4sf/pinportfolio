@@ -13,13 +13,13 @@ gsap.registerPlugin(ScrollTrigger);
 // Placeholder featured posts — will be replaced with MDX data
 const featuredPosts = [
   {
-    slug: "building-onesync",
-    title: "Building OneSync: From Biosignals to Cognitive Readiness",
+    slug: "building-waldo",
+    title: "Building Waldo: From Biosignals to Biological Intelligence",
     category: "building" as const,
     date: "2026-01-15",
     readingTime: 8,
     description:
-      "What I learned building a cognitive performance platform — from biosignal processing to making invisible data actionable for high-pressure teams.",
+      "What I learned building a biological intelligence agent — from biosignal processing and CRS algorithms to proactive AI that acts before you notice you're burning out.",
   },
   {
     slug: "my-stack-2026",
@@ -37,7 +37,7 @@ const featuredPosts = [
     date: "2025-12-20",
     readingTime: 6,
     description:
-      "OneSync and EcoFresh Greensync changed how I think about systems, distribution, and execution. Here's what shipping real products teaches you.",
+      "Waldo and EcoFresh Greensync changed how I think about systems, distribution, and execution. Here's what shipping real products teaches you.",
   },
 ];
 

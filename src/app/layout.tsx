@@ -34,6 +34,7 @@ export const metadata: Metadata = {
   keywords: [
     "Shivansh Fulper",
     "AI Engineer",
+    "Waldo",
     "OneSync",
     "EcoFresh Greensync",
     "Atlan",
@@ -41,6 +42,8 @@ export const metadata: Metadata = {
     "RAG",
     "Agentic Systems",
     "Cognitive Wearables",
+    "Health AI",
+    "Wearable AI Agent",
     "Startup Founder",
     "Full Stack Developer",
     "IIITDM Jabalpur",
@@ -113,7 +116,7 @@ const jsonLd = {
       url: siteConfig.url,
       jobTitle: "AI Engineer & Startup Founder",
       description:
-        "AI engineer building cognitive performance wearables (OneSync) and decentralized waste-to-value infrastructure (EcoFresh Greensync). CTO at OneSync, AI Engineer at Atlan.",
+        "AI engineer building Waldo — the biological intelligence layer for the AI agent economy — and EcoFresh Greensync, decentralized waste-to-value infrastructure. AI Engineer at Atlan.",
       email: "piyushfulper3210@gmail.com",
       alumniOf: {
         "@type": "CollegeOrUniversity",
@@ -122,8 +125,8 @@ const jsonLd = {
       worksFor: [
         {
           "@type": "Organization",
-          name: "OneSync",
-          url: "https://onesync-website-zs1p.vercel.app/",
+          name: "Waldo",
+          url: "https://waldo-sigma.vercel.app/",
         },
         {
           "@type": "Organization",

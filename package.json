@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "update-stats": "node scripts/update-stats.js"
   },
   "dependencies": {
     "clsx": "^2.1.0",

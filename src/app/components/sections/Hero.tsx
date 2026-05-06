@@ -5,9 +5,10 @@ import dynamic from "next/dynamic";
 import gsap from "gsap";
 import styles from "./Hero.module.scss";
 import { heroData } from "@/data/portfolio";
+import aiStats from "@/data/ai-stats";
 import { useReducedMotion } from "@/app/hooks/useReducedMotion";
 import { useGpuTier } from "@/app/hooks/useGpuTier";
-import { Github, Linkedin, Twitter, Instagram, type LucideIcon } from "lucide-react";
+import { Github, Linkedin, Twitter, Instagram, Zap, Brain, Flame, type LucideIcon } from "lucide-react";
 import ErrorBoundary from "../ErrorBoundary";
 
 const HeroBackground = dynamic(
@@ -32,6 +33,7 @@ export default function Hero() {
   const nameRef = useRef<HTMLHeadingElement>(null);
   const taglineRef = useRef<HTMLParagraphElement>(null);
   const subtitleRef = useRef<HTMLParagraphElement>(null);
+  const monikersRef = useRef<HTMLDivElement>(null);
   const socialsRef = useRef<HTMLDivElement>(null);
   const glowRef = useRef<HTMLDivElement>(null);
   const particlesRef = useRef<HTMLDivElement>(null);
@@ -87,6 +89,7 @@ export default function Hero() {
     gsap.set(chars, { y: "110%", opacity: 0 });
     gsap.set(taglineRef.current, { y: 20, opacity: 0 });
     gsap.set(subtitleRef.current, { y: 15, opacity: 0 });
+    if (monikersRef.current) gsap.set(Array.from(monikersRef.current.children), { y: 8, opacity: 0 });
 
     const tl = gsap.timeline({ delay: 1.8 });
 
@@ -106,6 +109,11 @@ export default function Hero() {
         subtitleRef.current,
         { y: 0, opacity: 1, duration: 0.5, ease: "power3.out" },
         "-=0.3"
+      )
+      .to(
+        monikersRef.current ? Array.from(monikersRef.current.children) : [],
+        { y: 0, opacity: 1, duration: 0.4, stagger: 0.06, ease: "power2.out" },
+        "-=0.2"
       )
       .fromTo(
         socialsRef.current?.children
@@ -320,6 +328,11 @@ export default function Hero() {
         <p ref={subtitleRef} className={styles.subtitle}>
           {heroData.subtitle}
         </p>
+        <div ref={monikersRef} className={styles.monikers} aria-label="identity tags">
+          <span className={`${styles.moniker} ${styles.accent}`}><Zap size={11} />Token Burner</span>
+          <span className={`${styles.moniker} ${styles.warm}`}><Brain size={11} />AI Native Builder</span>
+          <span className={`${styles.moniker} ${styles.muted}`}><Flame size={11} />{aiStats.claude.totalTokens} tokens</span>
+        </div>
       </div>
 
       <div ref={socialsRef} className={styles.socials}>
