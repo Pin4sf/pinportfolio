@@ -8,7 +8,7 @@ type: personal-portfolio
 url: https://shivanshfulper.com
 
 # Description
-description: Personal portfolio of Shivansh Fulper — AI engineer, startup founder, and builder. Contains case studies, blog posts, skills, and contact information.
+description: Personal portfolio of Shivansh Fulper — founder and AI systems engineer building Waldo and Kennel. Contains evidence-backed case studies, writing, prior work, and contact information.
 
 # Contact
 contact-email: piyushfulper3210@gmail.com
@@ -22,17 +22,22 @@ sitemap: https://shivanshfulper.com/sitemap.xml
 # Pages
 page: / # Homepage — hero, selected work, about, ventures, writing, skills, contact
 page: /writing # Blog archive with category filtering
-page: /work/onesync # OneSync case study — cognitive performance wearables
+page: /work/waldo # Waldo case study — user-owned continuity, Kennel, personal agency, and bodies for AI
 page: /work/ecofresh # EcoFresh Greensync case study — waste-to-value infrastructure
-page: /writing/building-onesync # Blog: Building OneSync
 page: /writing/my-stack-2026 # Blog: My Stack in 2026
+page: /writing/mirai-setu-japan # Blog: MIRAI-Setu and Japan
 page: /writing/startup-lessons # Blog: Startup Lessons
 
+# Experience artifacts
+artifact: https://soket.ai/project-eka # Project EKA at Soket AI Labs
+artifact: https://www.hackbyte.in/ # HackByte, led with The Programming Club from 2023 to 2025
+artifact: https://issuu.com/afsindia/docs/mirai-setu_2025?fr=sNWZlZTgzNTM2NzQ # MIRAI-Setu 2025 Yearbook
+
 # Topics this site covers
-topics: AI systems, LLM pipelines, agentic workflows, biosignal processing, cognitive wearables, waste-to-value infrastructure, startups, full-stack engineering, Next.js, Python, TypeScript
+topics: Physical AI, Industry 4.0, Quantum + AI, personal agents, user-owned AI, Kennel, agent orchestration, human-agent systems, LLM infrastructure, outcome verification, native macOS development, waste-to-value infrastructure, startups, Swift, Python, TypeScript
 
 # Social profiles
-social: https://www.linkedin.com/in/shivanshfulper/
+social: https://www.linkedin.com/in/shivansh-fulper/
 social: https://github.com/Pin4sf
 social: https://twitter.com/FulperShivansh
 social: https://instagram.com/pin4sf

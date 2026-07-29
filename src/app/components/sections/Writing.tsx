@@ -10,25 +10,24 @@ import TransitionLink from "../ui/TransitionLink";
 
 gsap.registerPlugin(ScrollTrigger);
 
-// Placeholder featured posts — will be replaced with MDX data
 const featuredPosts = [
   {
-    slug: "building-waldo",
-    title: "Building Waldo: From Biosignals to Biological Intelligence",
-    category: "building" as const,
-    date: "2026-01-15",
-    readingTime: 8,
+    slug: "my-stack-2026",
+    title: "My Stack in 2026: AI-Native Development and the Tools That Ship",
+    category: "technical" as const,
+    date: "2026-03-22",
+    readingTime: 9,
     description:
-      "What I learned building a biological intelligence agent — from biosignal processing and CRS algorithms to proactive AI that acts before you notice you're burning out.",
+      "The coding agents, models, infrastructure, and development practices I use to build production AI systems.",
   },
   {
-    slug: "my-stack-2026",
-    title: "My Stack in 2026: What I Use and Why",
-    category: "technical" as const,
-    date: "2026-01-05",
-    readingTime: 5,
+    slug: "mirai-setu-japan",
+    title: "What Japan Taught Me About Building Things That Last",
+    category: "personal" as const,
+    date: "2025-10-20",
+    readingTime: 14,
     description:
-      "A breakdown of the tools, frameworks, and workflows I use daily — from LLM pipelines to agentic systems — and the reasoning behind each choice.",
+      "A month across Fukuoka, Nagasaki, and Tokyo changed how I think about engineering, craft, and long time horizons.",
   },
   {
     slug: "startup-lessons",
@@ -45,6 +44,7 @@ const categoryColors: Record<string, string> = {
   building: "var(--accent)",
   technical: "#6c9bff",
   thinking: "var(--accent-warm)",
+  personal: "var(--accent)",
 };
 
 export default function Writing() {
@@ -74,7 +74,7 @@ export default function Writing() {
               start: "top 80%",
               toggleActions: "play none none none",
             },
-          }
+          },
         );
       }
 
@@ -95,7 +95,7 @@ export default function Writing() {
             start: "top 75%",
             toggleActions: "play none none none",
           },
-        }
+        },
       );
     }, section);
 
@@ -109,7 +109,7 @@ export default function Writing() {
     if (!section) return;
 
     const cards = section.querySelectorAll(
-      `.${styles.card}`
+      `.${styles.card}`,
     ) as NodeListOf<HTMLElement>;
 
     const handleMouseMove = (e: MouseEvent) => {
@@ -157,7 +157,11 @@ export default function Writing() {
   return (
     <section ref={sectionRef} id="writing" className={styles.section}>
       {/* Background marquee */}
-      <div className="marquee marquee--reverse" style={{ bottom: "10%", top: "auto" }} aria-hidden="true">
+      <div
+        className="marquee marquee--reverse"
+        style={{ bottom: "10%", top: "auto" }}
+        aria-hidden="true"
+      >
         <div className="marquee__inner">
           <span className="marquee__text">THOUGHTS</span>
           <span className="marquee__text">筆</span>

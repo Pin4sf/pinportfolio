@@ -2,11 +2,13 @@
 title: "My Stack in 2026: AI-Native Development and the Tools That Ship"
 date: "2026-03-22"
 category: "technical"
-description: "Claude Code, Cursor, Claude Co-work, OpenCode, React Native, Supabase — a complete breakdown of the tools, AI workflows, and development philosophy I use daily to build OneSync, ship at Atlan, and stay dangerous."
+description: "A March 2026 snapshot of the coding agents, models, infrastructure, and development practices behind my work."
 featured: true
 ---
 
 # My Stack in 2026: AI-Native Development and the Tools That Ship
+
+> **July 2026 update:** This article is a March snapshot, not a live dependency manifest. Since then, Waldo has shifted toward Kennel, a native Mac surface for agent coordination and outcome continuity, and the stack now includes Swift, SwiftUI, Codex App Server, and SQLite/GRDB alongside the durable TypeScript harness.
 
 Every engineer has opinions about their tools. Here are mine — not because they're the "best," but because they match how I think and what I build. This year, my stack changed more than any previous year. AI didn't just become part of my workflow — it became the workflow itself.
 
@@ -29,6 +31,7 @@ My setup:
 - **Git worktrees** for parallel sessions — I run 3-5 terminal tabs with separate worktrees, each with its own Claude Code session. Color-coded tabs, system notifications when any session needs input.
 
 The core loop I use daily:
+
 ```
 Plan Mode → iterate on approach
 Auto-accept Mode → Claude implements
@@ -43,6 +46,7 @@ Cost optimization matters: I route exploration subagents to Haiku (cheapest), st
 When I need to see the code while editing — especially for frontend work, SCSS tweaks, and rapid prototyping — **Cursor** is my IDE. The AI tab completion is good, but the real value is Composer mode for multi-file edits and the inline diff review.
 
 I use Cursor for:
+
 - Frontend styling and component work (where visual context matters)
 - Quick multi-file refactors
 - When I want to see the diff before it's applied
@@ -134,6 +138,7 @@ This is the most important section. LLM-powered development lives or dies on con
 **Treat context like RAM.** If you fill it with garbage, everything slows down. Every decision — CLAUDE.md length, subagent usage, `/clear` frequency — should be viewed through this lens.
 
 My rules:
+
 - **`/clear` between unrelated tasks.** The #1 mistake is keeping stale context around.
 - **`/compact` at phase boundaries.** Research → Planning → Implementation — compact between each.
 - **Subagents for research.** Never let exploration results bloat the main context. Spawn an Explore agent, get the summary back, move on.

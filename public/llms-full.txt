@@ -1,102 +1,146 @@
 # Shivansh Fulper — Full Context
 
-> AI engineer and startup founder. CTO at OneSync, Co-Founder of EcoFresh Greensync. Building cognitive performance wearables and decentralized waste-to-value infrastructure.
+> AI engineer and startup founder building production agent systems, Waldo, Kennel, and EcoFresh Greensync.
 
 ## Identity
 
 Name: Shivansh Fulper
 Location: Nagpur, India
-Education: B.Tech '26, IIITDM Jabalpur (Smart Manufacturing)
-Current Roles: CTO & Co-Founder @ OneSync, AI Engineer @ Atlan
+Education: B.Tech, Smart Manufacturing, IIITDM Jabalpur (completed 2026)
+Current Roles: Co-Founder & CEO @ Waldo, Co-Founder @ EcoFresh Greensync
 Email: piyushfulper3210@gmail.com
 
 ## Professional Background
 
-Shivansh builds AI systems at the infrastructure level — not wrappers, not demos, real pipelines that process data at scale and make decisions autonomously.
+Shivansh builds the infrastructure that makes AI agents useful once people rely on them: context, tools, authentication, permissions, memory, delivery, and evaluation.
 
-As CTO of OneSync, he is building the intelligence layer that turns wearable biosignals into cognitive readiness scores. He also co-founded EcoFresh Greensync — a decentralized waste-to-value infrastructure company with 3 IP discoveries and recognition at the Hult Prize.
+At Atlan, he helped build and operate more than 30 production agent instances through AtlanClaw. He worked across context, tools, authentication, integrations, deployment, and production failure modes.
 
-At Atlan, he builds AI-native developer agents. At Soket AI Labs, he built multilingual dataset pipelines for Indic LLM training.
+That work shaped Waldo: a user-owned personal agent that carries the context a person permits across models, tools, work, and life. Kennel is Waldo's first Mac home. It begins with agent-native users who need to see what finished, what needs their judgment, and what is still open.
 
-He thinks in systems, ships fast, and would rather fail at 20 than wait until he's "qualified."
+Shivansh also co-founded EcoFresh Greensync, contributed to Project EKA at Soket AI Labs, built an NLP-to-workflow system through Code for GovTech, and implemented Qwen3 MoE from scratch. In 2025, MIRAI-Setu took him across Japan and influenced how he thinks about craft, reliable systems, manufacturing, and long time horizons.
 
-## Ventures (Detailed)
+## Ventures
 
-### OneSync — Cognitive Performance Platform
-- Role: Co-Founder & CTO
-- Timeline: 2026 — Present
-- Website: https://onesync-website-zs1p.vercel.app/
-- Stack: AI/ML, Biosignal Processing, Edge Computing, React, TypeScript
+### Waldo — User-Owned Personal Agent
 
-OneBand is a wristband that reads multiple biosignals — heart rhythm variability, galvanic skin response, motion patterns, muscle tension — and cross-references them to produce a cognitive readiness index.
+- Role: Co-Founder & CEO
+- Timeline: May 2026 — Present
+- Website: https://www.heywaldo.in/
+- First surface: Kennel, a native macOS companion
+- Stack: Swift, SwiftUI, Codex App Server, SQLite/GRDB, Cloudflare Durable Objects, TypeScript, React Native
 
-The system stays quiet when it's not confident. In environments where a bad call has real consequences, showing nothing is better than a false green light.
+Waldo is being built for continuity across models, tools, work, and life. It carries only the human context the user permits: priorities, commitments, boundaries, capacity, relationships, health context, corrections, and outcome history. Health and body data are foundational life context, not Waldo's product category.
 
-Built for institutions: training academies, defense units, elite sports teams. The AI layer builds a personal digital twin — learning individual baselines so that "normal" for one person isn't confused with "stressed" for another.
+Kennel is the current Mac wedge. It starts with Codex sessions and keeps three kinds of truth separate:
 
-Team of 4 (CEO, CTO, COO, CPO) with backgrounds spanning biosensing, AI systems, manufacturing, and product hardware.
+- Agent Session: what the provider reports.
+- Outcome Verification: what evidence exists about the intended result.
+- Open Loop: what the person still needs to finish, defer, transfer, or release.
+
+Since May 2026, the team has built three working foundations used internally: Kennel on macOS, a durable agent harness, and an earlier Waldo iOS foundation. Recorded Codex acceptance covers bounded multi-session discovery, populated conversation history, real-time processing state, same-task continuation, first-message handling, and archive cleanup. Broader provider coverage, automatic artifact verification, cross-session continuity, and full Mac–mobile–harness integration remain next product proofs.
+
+Core insight: An agent finishing a task and the task actually being done are two different things.
+
+Waldo is model-agnostic: it is intended to preserve the user's context, workflow, trust, and permissions while routing work to replaceable models, tools, and specialist agents. The long-term direction is one continuous agent with many presences, followed by consumer "bodies for AI" such as a desk object, wearable, home device, or small robot operating under the same user-owned identity and permission system.
+
+Team:
+
+- Shivansh Fulper — Co-Founder & CEO; AI systems, agent architecture, infrastructure, and engineering
+- Suyash Pingale — Co-Founder; product, experience, brand, and design
+- Ashish Tembhekar — Founding Engineer; technical execution
+
+Artifacts:
+
+- Product site: https://www.heywaldo.in/
+- Technical and vision brief: https://waldo-technical-brief.pages.dev/
+- Founder video: https://waldo-technical-brief.pages.dev/founder-video.mp4
+- Product video (earlier mobile foundation): https://waldo-technical-brief.pages.dev/product-video.mp4
+- Pitch deck: https://waldo-technical-brief.pages.dev/waldo-pitchdeck.pdf
 
 ### EcoFresh Greensync — Waste-to-Value Infrastructure
+
 - Role: Co-Founder
 - Timeline: Nov 2025 — Present
 - Website: https://www.ecofreshgreensync.com/
 - Stack: AI/ML, Polymer Modeling, Bio-processing, Catalytic Systems
 
-Modular Eco-Converter units that accept mixed municipal solid waste as-is and process it through staged biological and catalytic pathways. No dependency on perfect segregation.
-
-First high-value output: PHA-class biodegradable polymers, with secondary streams like bio-fertilizer and eco-composites.
+EcoFresh is building decentralized waste-to-value infrastructure through modular Eco-Converter units designed for mixed municipal solid waste.
 
 Achievements:
-- Registered as EcoFresh Greensync LLP (MSME Micro Enterprise)
-- Incubated at IIITDM Jabalpur under Institution's Innovation Council (Ministry of Education)
-- 16th among 2,500+ teams at Hult Prize, IIT Bombay
-- National recognition from Ministry of Education
-- 3 IP discoveries with patent filing procedures documented
 
-## Work Experience
+- Registered as EcoFresh Greensync LLP and as an MSME Micro Enterprise
+- Incubated at IIITDM Jabalpur under the Institution's Innovation Council
+- Placed 16th among 2,500+ teams at Hult Prize, IIT Bombay
+- Received national recognition from India's Ministry of Education
+- Developed three IP discoveries with patent procedures documented
 
-### Atlan — AI Engineer Intern (2026)
-Building AI-native SDLC agents — autonomous debugging, GraphRAG retrieval, and long-term agent memory systems for developer workflows.
+## Work and Education
 
-### Soket AI Labs — MTS Intern (2025)
-Built multilingual dataset pipelines for Indic LLM training (Project Eka). Deduplication, quality filtering, and language alignment at scale. Collaboration with IIT Gandhinagar.
+### Atlan — FDE & AI Engineer Intern (Jan — Jun 2026)
 
-### OpenFn (Code for GovTech) — AI Engineer Intern (2024)
-NLP-to-workflow pipeline for government-tech data integrations. Selected under the Code for GovTech national open-source program.
+Helped build and operate more than 30 production agent instances through AtlanClaw, working across context, tools, authentication, integrations, deployment, and production reliability.
 
-## Technical Skills
+### Soket AI Labs — MTS Intern, LLM Pre-training (Jul — Sep 2025)
 
-AI & ML Systems: Large Language Models, RAG & GraphRAG, Agentic Systems, Biosignal Processing, NER & NLP Pipelines, Dataset Curation, Memory-Augmented AI
+Contributed to Project EKA and built Eka Curator for its 120B-parameter Indic Mixture-of-Experts model, plus COOM infrastructure for reproducible LLM experiments under constrained GPU resources.
 
-Engineering: Python, TypeScript, Next.js, React, Node.js, MongoDB, Redis
+Project EKA: https://soket.ai/project-eka
 
-Infrastructure: Distributed Systems, Data Pipeline Design, Edge Computing, API Architecture, Docker
+### MIRAI-Setu — India–Japan Exchange (Oct 2025)
 
-Tools: Git, Linux, Figma, PyTorch, TensorFlow
+Selected among 40 students from India by Japan's Ministry of Foreign Affairs for a month-long India–Japan exchange, including a 15-day technology internship and meetings with public and technology leaders in Fukuoka.
 
-Currently Exploring: MoE Architectures, AI-Native Development Environments, Cognitive Computing
+MIRAI-Setu 2025 Yearbook: https://issuu.com/afsindia/docs/mirai-setu_2025?fr=sNWZlZTgzNTM2NzQ
+
+### Ionio AI — Developer Advocate Intern (Feb — May 2025)
+
+Built AI proof-of-concepts, developer demos, internal tools, sample applications, and technical resources for the platform.
+
+### OpenFn / Code for GovTech — AI Engineer Intern (Jun — Sep 2024)
+
+Built an NLP-to-workflow pipeline for government-technology data integrations through the national Code for GovTech open-source program.
+
+### HackByte — Lead Organiser (2023 — 2025)
+
+Helped grow IIITDM Jabalpur's student-run hackathon from an internal college event to 5,154 registrations across three years. Also started ML Summer School and Winter of ML as a Programming Club core member and mentor.
+
+Website: https://www.hackbyte.in/
+
+### IIITDM Jabalpur — B.Tech, Smart Manufacturing (2022 — 2026, completed)
+
+Studied AI/ML, mechatronics, manufacturing, and systems design.
+
+## Technical Focus
+
+AI agents, agent orchestration, LLM systems, RAG and GraphRAG, memory and context systems, outcome verification, distributed systems, data pipelines, Swift, TypeScript, Python, React Native, Cloudflare Durable Objects, SQLite, and native macOS development.
+
+Currently exploring Physical AI, Industry 4.0, Quantum + AI, personal agents, human-agent orchestration, and outcome verification.
 
 ## Writing
 
-### Building OneSync: From Biosignals to Cognitive Readiness (Jan 2026)
-Category: Building
-What he learned building a cognitive performance platform — from biosignal processing to making invisible data actionable for high-pressure teams.
-URL: https://shivanshfulper.com/writing/building-onesync
+### My Stack in 2026: AI-Native Development and the Tools That Ship
 
-### My Stack in 2026: What I Use and Why (Jan 2026)
-Category: Technical
-A breakdown of the tools, frameworks, and workflows he uses daily — from LLM pipelines to agentic systems — and the reasoning behind each choice.
+The coding agents, models, infrastructure, and development practices Shivansh uses to build production AI systems.
+
 URL: https://shivanshfulper.com/writing/my-stack-2026
 
-### What Starting Two Companies Taught Me About Building (Dec 2025)
-Category: Thinking
-OneSync and EcoFresh Greensync changed how he thinks about systems, distribution, and execution. Lessons from shipping real products.
+### What Japan Taught Me About Innovation, Discipline, and Building Things That Last
+
+A month across Fukuoka, Nagasaki, and Tokyo and the lessons it produced about engineering, craft, and long time horizons.
+
+URL: https://shivanshfulper.com/writing/mirai-setu-japan
+
+### What Starting Two Companies Taught Me About Building
+
+Lessons about systems, distribution, trust, and execution from building startups.
+
 URL: https://shivanshfulper.com/writing/startup-lessons
 
 ## Social Links
 
 - Website: https://shivanshfulper.com
-- LinkedIn: https://www.linkedin.com/in/shivanshfulper/
+- LinkedIn: https://www.linkedin.com/in/shivansh-fulper/
 - GitHub: https://github.com/Pin4sf
-- Twitter: https://twitter.com/FulperShivansh
+- X: https://x.com/shivanshfulper
 - Instagram: https://instagram.com/pin4sf

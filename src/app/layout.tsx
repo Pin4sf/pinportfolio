@@ -35,15 +35,16 @@ export const metadata: Metadata = {
     "Shivansh Fulper",
     "AI Engineer",
     "Waldo",
-    "OneSync",
+    "Kennel",
     "EcoFresh Greensync",
     "Atlan",
     "LLM",
     "RAG",
-    "Agentic Systems",
-    "Cognitive Wearables",
-    "Health AI",
-    "Wearable AI Agent",
+    "AI Agents",
+    "Agent Orchestration",
+    "Human-Agent Systems",
+    "Codex",
+    "Personal AI Agent",
     "Startup Founder",
     "Full Stack Developer",
     "IIITDM Jabalpur",
@@ -65,7 +66,7 @@ export const metadata: Metadata = {
         url: siteConfig.ogImage,
         width: 1200,
         height: 630,
-        alt: `${siteConfig.author} — AI Engineer & Startup Founder`,
+        alt: `${siteConfig.author} — Founder & AI Systems Engineer`,
       },
     ],
     type: "website",
@@ -114,9 +115,9 @@ const jsonLd = {
       "@id": `${siteConfig.url}/#person`,
       name: "Shivansh Fulper",
       url: siteConfig.url,
-      jobTitle: "AI Engineer & Startup Founder",
+      jobTitle: "Founder & AI Systems Engineer",
       description:
-        "AI engineer building Waldo — the biological intelligence layer for the AI agent economy — and EcoFresh Greensync, decentralized waste-to-value infrastructure. AI Engineer at Atlan.",
+        "Founder and AI systems engineer building Waldo and Kennel, a user-owned personal agent and its first Mac home. Previously built and operated production agent systems at Atlan.",
       email: "piyushfulper3210@gmail.com",
       alumniOf: {
         "@type": "CollegeOrUniversity",
@@ -126,25 +127,23 @@ const jsonLd = {
         {
           "@type": "Organization",
           name: "Waldo",
-          url: "https://waldo-sigma.vercel.app/",
-        },
-        {
-          "@type": "Organization",
-          name: "Atlan",
+          url: "https://www.heywaldo.in/",
         },
       ],
       knowsAbout: [
         "Artificial Intelligence",
         "Large Language Models",
-        "Agentic Systems",
-        "Biosignal Processing",
+        "AI Agents",
+        "Agent Orchestration",
+        "Human-Agent Systems",
+        "Distributed Systems",
         "Full-Stack Engineering",
         "Startups",
       ],
       sameAs: [
-        "https://www.linkedin.com/in/shivanshfulper/",
+        "https://www.linkedin.com/in/shivansh-fulper/",
         "https://github.com/Pin4sf",
-        "https://twitter.com/FulperShivansh",
+        "https://x.com/shivanshfulper",
         "https://instagram.com/pin4sf",
       ],
     },
@@ -166,12 +165,22 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
-        <a href="#main-content" className="sr-only" style={{ position: 'absolute', top: 0, left: 0, zIndex: 9999, padding: '1rem', background: 'var(--accent)', color: 'var(--bg-primary)' }}>
+        <a
+          href="#main-content"
+          className="sr-only"
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            zIndex: 9999,
+            padding: "1rem",
+            background: "var(--accent)",
+            color: "var(--bg-primary)",
+          }}
+        >
           Skip to content
         </a>
-        <ClientShell>
-          {children}
-        </ClientShell>
+        <ClientShell>{children}</ClientShell>
       </body>
     </html>
   );

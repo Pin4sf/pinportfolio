@@ -31,8 +31,8 @@ export default function About() {
 
   // Reduce from 8 shapes to 4 on low tier
   const shapes = useMemo(
-    () => gpuTier === "low" ? ALL_SHAPES.slice(0, 4) : ALL_SHAPES,
-    [gpuTier]
+    () => (gpuTier === "low" ? ALL_SHAPES.slice(0, 4) : ALL_SHAPES),
+    [gpuTier],
   );
 
   useEffect(() => {
@@ -54,7 +54,13 @@ export default function About() {
       tl.fromTo(
         imageRef.current,
         { scale: 0.8, opacity: 0, borderRadius: "50%" },
-        { scale: 1, opacity: 1, borderRadius: "8px", duration: 1.2, ease: "back.out(1.5)" }
+        {
+          scale: 1,
+          opacity: 1,
+          borderRadius: "8px",
+          duration: 1.2,
+          ease: "back.out(1.5)",
+        },
       );
 
       // Left-slide text content stagger
@@ -62,8 +68,14 @@ export default function About() {
         tl.fromTo(
           Array.from(textRef.current.children),
           { x: -40, opacity: 0 },
-          { x: 0, opacity: 1, duration: 0.7, stagger: 0.06, ease: "power2.out" },
-          0.2
+          {
+            x: 0,
+            opacity: 1,
+            duration: 0.7,
+            stagger: 0.06,
+            ease: "power2.out",
+          },
+          0.2,
         );
       }
     }, section);
@@ -90,7 +102,7 @@ export default function About() {
         duration: 1.5,
         stagger: 0.15,
         ease: "expo.out",
-      }
+      },
     );
 
     // Continuous gentle float — collected for pausing
@@ -106,16 +118,18 @@ export default function About() {
           yoyo: true,
           repeat: -1,
           ease: "power1.inOut",
-        })
+        }),
       );
     });
 
     // Pause when about section is offscreen
     const observer = new IntersectionObserver(
       ([entry]) => {
-        floatTweens.forEach((t) => entry.isIntersecting ? t.resume() : t.pause());
+        floatTweens.forEach((t) =>
+          entry.isIntersecting ? t.resume() : t.pause(),
+        );
       },
-      { threshold: 0.05 }
+      { threshold: 0.05 },
     );
     observer.observe(section);
 
@@ -127,7 +141,9 @@ export default function About() {
 
   return (
     <section ref={sectionRef} id="about" className={styles.section}>
-      <span className="bg-text bg-text--top" aria-hidden="true">自己紹介</span>
+      <span className="bg-text bg-text--top" aria-hidden="true">
+        自己紹介
+      </span>
 
       {/* Floating geometric accents */}
       {!reducedMotion && (
@@ -166,6 +182,19 @@ export default function About() {
                 <span className={styles.factValue}>{fact.value}</span>
               </div>
             ))}
+          </div>
+
+          <div className={styles.interests}>
+            <span className={styles.interestsLabel}>
+              {aboutData.interestsLabel}
+            </span>
+            <div className={styles.interestList}>
+              {aboutData.interests.map((interest) => (
+                <span key={interest} className={styles.interest}>
+                  {interest}
+                </span>
+              ))}
+            </div>
           </div>
         </div>
 

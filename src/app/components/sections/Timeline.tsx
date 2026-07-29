@@ -7,7 +7,13 @@ import styles from "./Timeline.module.scss";
 import { timelineData } from "@/data/portfolio";
 import { useReducedMotion } from "@/app/hooks/useReducedMotion";
 import { useGpuTier } from "@/app/hooks/useGpuTier";
-import { Rocket, GraduationCap, Briefcase, Trophy } from "lucide-react";
+import {
+  ArrowUpRight,
+  Rocket,
+  GraduationCap,
+  Briefcase,
+  Trophy,
+} from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -64,7 +70,7 @@ export default function Timeline() {
   // Pre-resolve all type colors once at mount
   const resolvedColors = useMemo(() => {
     return timelineData.map((entry) =>
-      resolveColor(typeColors[entry.type] || "var(--accent)")
+      resolveColor(typeColors[entry.type] || "var(--accent)"),
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -124,7 +130,7 @@ export default function Timeline() {
         }
       });
     },
-    [reducedMotion, isLowTier, resolvedColors]
+    [reducedMotion, isLowTier, resolvedColors],
   );
 
   // ── Position dots to align with chapters ──
@@ -188,7 +194,7 @@ export default function Timeline() {
               end: "bottom 40%",
               scrub: 0.5,
             },
-          }
+          },
         );
       }, section);
     }
@@ -208,7 +214,7 @@ export default function Timeline() {
           root: null,
           rootMargin: "-40% 0px -40% 0px",
           threshold: 0,
-        }
+        },
       );
 
       observer.observe(chapter);
@@ -244,7 +250,7 @@ export default function Timeline() {
           label,
           { y: 16, opacity: 0 },
           { y: 0, opacity: 1, duration: 0.6, ease: "power3.out" },
-          0
+          0,
         );
       }
 
@@ -253,7 +259,7 @@ export default function Timeline() {
           heading,
           { y: 20, opacity: 0 },
           { y: 0, opacity: 1, duration: 0.8, ease: "power3.out" },
-          0.1
+          0.1,
         );
       }
     }, section);
@@ -290,7 +296,7 @@ export default function Timeline() {
                 start: "top 85%",
                 toggleActions: "play none none none",
               },
-            }
+            },
           );
           return;
         }
@@ -310,7 +316,7 @@ export default function Timeline() {
             card,
             { y: 30, opacity: 0 },
             { y: 0, opacity: 1, duration: 0.7, ease: "power3.out" },
-            0
+            0,
           );
         } else {
           // Clip-path left-to-right reveal
@@ -323,7 +329,7 @@ export default function Timeline() {
               duration: 1,
               ease: "power4.inOut",
             },
-            0
+            0,
           );
 
           // Children stagger
@@ -339,7 +345,7 @@ export default function Timeline() {
                 stagger: 0.06,
                 ease: "power3.out",
               },
-              0.35
+              0.35,
             );
           }
         }
@@ -527,6 +533,27 @@ export default function Timeline() {
                           {tag}
                         </span>
                       ))}
+                    </div>
+                  )}
+
+                  {entry.links && entry.links.length > 0 && (
+                    <div className={styles.links}>
+                      {entry.links.map((link) => {
+                        return (
+                          <a
+                            key={link.url}
+                            href={link.url}
+                            className={styles.link}
+                            target={link.external ? "_blank" : undefined}
+                            rel={
+                              link.external ? "noopener noreferrer" : undefined
+                            }
+                          >
+                            {link.label}
+                            <ArrowUpRight size={14} aria-hidden="true" />
+                          </a>
+                        );
+                      })}
                     </div>
                   )}
                 </div>

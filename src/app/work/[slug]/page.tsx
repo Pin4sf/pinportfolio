@@ -15,7 +15,13 @@ export function generateMetadata({ params }: Props): Metadata {
   const cs = caseStudies.find((c) => c.slug === params.slug);
   if (!cs) return { title: "Not Found" };
 
-  const description = `${cs.tagline} — ${cs.challenge.slice(0, 140)}...`;
+  const fullDescription = cs.narrative
+    ? `${cs.tagline} ${cs.narrative.heroBody}`
+    : `${cs.tagline} — ${cs.challenge.slice(0, 140)}...`;
+  const description =
+    fullDescription.length > 160
+      ? `${fullDescription.slice(0, 157).trimEnd()}…`
+      : fullDescription;
 
   return {
     title: cs.name,
@@ -30,8 +36,6 @@ export function generateMetadata({ params }: Props): Metadata {
       images: [
         {
           url: cs.heroImage,
-          width: 1200,
-          height: 630,
           alt: `${cs.name} — ${cs.tagline}`,
         },
       ],

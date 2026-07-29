@@ -8,18 +8,25 @@ import { heroData } from "@/data/portfolio";
 import aiStats from "@/data/ai-stats";
 import { useReducedMotion } from "@/app/hooks/useReducedMotion";
 import { useGpuTier } from "@/app/hooks/useGpuTier";
-import { Github, Linkedin, Twitter, Instagram, Zap, Brain, Flame, type LucideIcon } from "lucide-react";
+import {
+  Github,
+  Linkedin,
+  Twitter,
+  Instagram,
+  Zap,
+  Brain,
+  Flame,
+  type LucideIcon,
+} from "lucide-react";
 import ErrorBoundary from "../ErrorBoundary";
 
-const HeroBackground = dynamic(
-  () => import("../three/HeroBackground"),
-  { ssr: false }
-);
+const HeroBackground = dynamic(() => import("../three/HeroBackground"), {
+  ssr: false,
+});
 
-const FluidBackground = dynamic(
-  () => import("../three/FluidBackground"),
-  { ssr: false }
-);
+const FluidBackground = dynamic(() => import("../three/FluidBackground"), {
+  ssr: false,
+});
 
 const iconMap: Record<string, LucideIcon> = {
   linkedin: Linkedin,
@@ -52,7 +59,13 @@ export default function Hero() {
   }, []);
 
   // Particle count: mobile=8, low=15, mid=25, high=30
-  const particleCount = isMobile ? 8 : gpuTier === "low" ? 15 : gpuTier === "mid" ? 25 : 30;
+  const particleCount = isMobile
+    ? 8
+    : gpuTier === "low"
+      ? 15
+      : gpuTier === "mid"
+        ? 25
+        : 30;
 
   const particles = useMemo(
     () =>
@@ -62,7 +75,7 @@ export default function Hero() {
         top: `${Math.random() * 100}%`,
         size: Math.random() * 4 + 2,
       })),
-    [particleCount]
+    [particleCount],
   );
 
   // Split name into individual character spans for magnetic effect
@@ -89,7 +102,8 @@ export default function Hero() {
     gsap.set(chars, { y: "110%", opacity: 0 });
     gsap.set(taglineRef.current, { y: 20, opacity: 0 });
     gsap.set(subtitleRef.current, { y: 15, opacity: 0 });
-    if (monikersRef.current) gsap.set(Array.from(monikersRef.current.children), { y: 8, opacity: 0 });
+    if (monikersRef.current)
+      gsap.set(Array.from(monikersRef.current.children), { y: 8, opacity: 0 });
 
     const tl = gsap.timeline({ delay: 1.8 });
 
@@ -103,17 +117,17 @@ export default function Hero() {
       .to(
         taglineRef.current,
         { y: 0, opacity: 1, duration: 0.6, ease: "power3.out" },
-        "-=0.3"
+        "-=0.3",
       )
       .to(
         subtitleRef.current,
         { y: 0, opacity: 1, duration: 0.5, ease: "power3.out" },
-        "-=0.3"
+        "-=0.3",
       )
       .to(
         monikersRef.current ? Array.from(monikersRef.current.children) : [],
         { y: 0, opacity: 1, duration: 0.4, stagger: 0.06, ease: "power2.out" },
-        "-=0.2"
+        "-=0.2",
       )
       .fromTo(
         socialsRef.current?.children
@@ -127,7 +141,7 @@ export default function Hero() {
           stagger: 0.04,
           ease: "power3.out",
         },
-        "-=0.2"
+        "-=0.2",
       );
   }, [reducedMotion]);
 
@@ -145,10 +159,10 @@ export default function Hero() {
     const STRENGTH = 25;
 
     const quickX = chars.map((el) =>
-      gsap.quickTo(el, "x", { duration: 0.4, ease: "power3" })
+      gsap.quickTo(el, "x", { duration: 0.4, ease: "power3" }),
     );
     const quickY = chars.map((el) =>
-      gsap.quickTo(el, "y", { duration: 0.4, ease: "power3" })
+      gsap.quickTo(el, "y", { duration: 0.4, ease: "power3" }),
     );
 
     const handleMouseMove = (e: MouseEvent) => {
@@ -234,7 +248,7 @@ export default function Hero() {
         duration: 2.5,
         stagger: { each: 0.12, from: "center" },
         ease: "expo.out",
-      }
+      },
     );
 
     const floatTweens: gsap.core.Tween[] = [];
@@ -248,15 +262,17 @@ export default function Hero() {
           yoyo: true,
           repeat: -1,
           ease: "sine.inOut",
-        })
+        }),
       );
     });
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        floatTweens.forEach((t) => entry.isIntersecting ? t.resume() : t.pause());
+        floatTweens.forEach((t) =>
+          entry.isIntersecting ? t.resume() : t.pause(),
+        );
       },
-      { threshold: 0.05 }
+      { threshold: 0.05 },
     );
     observer.observe(section);
 
@@ -282,7 +298,12 @@ export default function Hero() {
 
       {/* Floating particles */}
       {!reducedMotion && (
-        <div ref={particlesRef} className={styles.particles} aria-hidden="true" role="presentation">
+        <div
+          ref={particlesRef}
+          className={styles.particles}
+          aria-hidden="true"
+          role="presentation"
+        >
           {particles.map((p) => (
             <span
               key={p.id}
@@ -312,14 +333,11 @@ export default function Hero() {
               </span>
             ) : (
               <span key={i} className={styles.charWrap}>
-                <span
-                  ref={(el) => setCharRef(el, i)}
-                  className={styles.char}
-                >
+                <span ref={(el) => setCharRef(el, i)} className={styles.char}>
                   {c.char}
                 </span>
               </span>
-            )
+            ),
           )}
         </h1>
         <p ref={taglineRef} className={styles.tagline}>
@@ -328,10 +346,27 @@ export default function Hero() {
         <p ref={subtitleRef} className={styles.subtitle}>
           {heroData.subtitle}
         </p>
-        <div ref={monikersRef} className={styles.monikers} aria-label="identity tags">
-          <span className={`${styles.moniker} ${styles.accent}`}><Zap size={11} />Token Burner</span>
-          <span className={`${styles.moniker} ${styles.warm}`}><Brain size={11} />AI Native Builder</span>
-          <span className={`${styles.moniker} ${styles.muted}`}><Flame size={11} />{aiStats.claude.totalTokens} tokens</span>
+        <div
+          ref={monikersRef}
+          className={styles.monikers}
+          aria-label="identity tags"
+        >
+          <span className={`${styles.moniker} ${styles.accent}`}>
+            <Zap size={11} />
+            Token Burner
+          </span>
+          <span className={`${styles.moniker} ${styles.warm}`}>
+            <Brain size={11} />
+            AI Native Builder
+          </span>
+          <span className={`${styles.moniker} ${styles.muted}`}>
+            <Flame size={11} />
+            {aiStats.codex.totalTokens} Codex
+          </span>
+          <span className={`${styles.moniker} ${styles.muted}`}>
+            <Flame size={11} />
+            {aiStats.claude.totalTokens} Claude
+          </span>
         </div>
       </div>
 
