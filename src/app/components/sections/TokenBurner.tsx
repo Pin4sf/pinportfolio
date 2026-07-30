@@ -112,10 +112,6 @@ export default function TokenBurner() {
           Token Burner
         </div>
         <h2 className={styles.headline}>AI runs in my veins.</h2>
-        <p className={styles.sub}>
-          Codex lifetime and tracked Claude usage, kept separate so the number
-          stays honest.
-        </p>
 
         <div ref={statsRef} className={styles.statsGrid}>
           {USAGE_STATS.map((stat) => (
