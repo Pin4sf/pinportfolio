@@ -416,9 +416,9 @@ export const caseStudies: CaseStudy[] = [
           eyebrow: "04 · My platform bet",
           title: "One agent. Many presences. Still yours.",
           body: [
-            "I don’t believe one model or interface will own our entire digital life. People will use many models, specialist agents, tools, and devices. Waldo should be the continuous layer on the person’s side: remembering the context they choose, briefing each system for the work in front of it, and keeping the resulting decisions and outcomes connected.",
-            "The models are replaceable. Your continuity is not. Context, workflow, trust, permission, corrections, and outcome history should stay with the person while the work moves to the best available model or tool.",
-            "Many agents may work for you. One agent should remain on your side. Sometimes its presence is mobile, sometimes it is a careful judgment in Kennel, and eventually it may have a physical form—but it should remain the same user-owned relationship.",
+            "I don’t believe one model or interface will own our entire digital life. People will use many models, specialist agents, tools, and devices. Waldo should carry the context they choose into the work in front of them, then connect the decisions and outcomes that come back.",
+            "An organization may own the infrastructure. The individual should own the continuity. Models and tools can change; context, permissions, corrections, and outcome history should remain with the person.",
+            "Many agents may work for you. One should remain on your side. Its presence may be mobile, a judgment in Kennel, or eventually physical—but it should remain the same user-owned relationship.",
           ],
           cards: [
             {
@@ -432,9 +432,9 @@ export const caseStudies: CaseStudy[] = [
               body: "Work, life context, corrections, and outcomes stay connected without being trapped in one provider.",
             },
             {
-              label: "Permission",
-              title: "Authority stays explicit",
-              body: "Waldo can suggest before it executes, show provenance, and never let insight silently grant itself permission.",
+              label: "Portability",
+              title: "The relationship survives the provider",
+              body: "The person can change models, tools, or employers without abandoning the context and outcome history they own.",
             },
           ],
         },
@@ -478,8 +478,8 @@ export const caseStudies: CaseStudy[] = [
             "More capable agents should mean less life held together in your head.",
           body: [
             "An agent waiting five minutes is inexpensive. A person reconstructing context across five agents, reviewing unverified changes, and finding the correct terminal is expensive. Infinite machine capacity does not create infinite human attention.",
-            "The burnout economy is not a separate feature category for Waldo. It is a constraint on the product: do not make people supervise more software, monitor more feeds, stay permanently available, or optimize every part of life. Carry routine responsibility quietly and return only when timing, consequence, or authority genuinely belongs to the person.",
-            "Success can mean less mental reassembly, fewer silently decaying commitments, a more realistic next action when capacity changes, and permission to decide that enough is enough. More machine work should mean less life held together in someone’s head.",
+            "Burnout is not a feature category. It is a product constraint: Waldo should not make people supervise more software, monitor more feeds, or remain permanently available. It should carry routine responsibility quietly and return only when timing, consequence, or authority belongs to the person.",
+            "Success means less mental reassembly, fewer silently decaying commitments, a realistic next action when capacity changes, and permission to decide that enough is enough.",
           ],
           cards: [
             {
@@ -509,8 +509,8 @@ export const caseStudies: CaseStudy[] = [
           eyebrow: "07 · Principles I won’t trade away",
           title: "A personal agent is a relationship with clear boundaries.",
           body: [
-            "More execution should never mean less agency. I’m building the system underneath Waldo for durable work, tools, scheduling, delivery, memory composition, provider adapters, and security—but those technical choices follow a human philosophy: continuity should be inspectable, correction should be easy, and authority should fail closed.",
-            "I want Waldo to learn from what a person explicitly says, the corrections they make, and outcomes they verify. What the person says about themselves should outrank patterns inferred from activity. I do not want behavioral traces turned into a hidden personality score.",
+            "More execution should never mean less agency. Waldo’s technical foundations—durable work, tools, scheduling, memory, provider adapters, and security—follow a human rule: continuity must be inspectable, correction easy, and authority fail closed.",
+            "Waldo should learn from what a person says, the corrections they make, and outcomes they verify. Explicit self-knowledge should outrank behavioral inference; activity should never become a hidden personality score.",
           ],
           cards: [
             {
@@ -614,7 +614,7 @@ export const caseStudies: CaseStudy[] = [
       artifactsEyebrow: "11 · Artifacts",
       artifactsTitle: "See the work, then go deeper.",
       artifactsIntro:
-        "The shortest route through the work: meet the founders, see the earlier product foundation, then go deeper into the system and the company.",
+        "Start with the work itself: the founders, product, system, company, and site. The outside signals come after.",
       artifacts: [
         {
           kind: "video",
@@ -645,33 +645,6 @@ export const caseStudies: CaseStudy[] = [
         },
         {
           kind: "link",
-          eyebrow: "External signal · Andrew Chen",
-          title: "More outcomes, fewer copilots",
-          description:
-            "Andrew Chen describes the shift from AI that assists to agents that act—and the frustration of receiving more work to review. Waldo’s answer is not action alone: it is evidence-backed acceptance, visible human judgment, and continuity the user owns.",
-          href: "https://www.linkedin.com/posts/andrewchen_last-years-startup-trend-copilot-for-x-share-7488472791541985280-2t0X",
-          cta: "Read Andrew Chen’s post",
-        },
-        {
-          kind: "link",
-          eyebrow: "External signal · Y Combinator",
-          title: "YC reached the fleet problem at fifty-plus agents",
-          description:
-            "YC provisioned more than 50 Hermes agents as personal assistants for individual employees, then found even that fleet difficult to manage. QM combines flexible agents with simpler administration. I see the same signal behind Waldo: personal agents become useful quickly, and the continuity and coordination layer matters just as quickly.",
-          href: "https://qm.ycombinator.com/",
-          cta: "Read YC’s QM notes",
-        },
-        {
-          kind: "link",
-          eyebrow: "Historical reference · Steve Jobs Archive",
-          title: "Make complex technology personal",
-          description:
-            "In his 1999 Macintosh anniversary email, Jobs described Apple’s role as bridging sophisticated technology and ordinary people. That interface lesson shapes how I think about making agents useful beyond today’s hobbyists and operators.",
-          href: "https://book.stevejobsarchive.com/#email-apple-macintosh-fifteen",
-          cta: "Read Steve in his own words",
-        },
-        {
-          kind: "link",
           eyebrow: "Pitch deck",
           title: "The company in twelve slides",
           description:
@@ -687,6 +660,33 @@ export const caseStudies: CaseStudy[] = [
             "The public product story and the earlier interaction system that led to today’s Kennel-first direction.",
           href: "https://www.heywaldo.in/",
           cta: "Visit heywaldo.in",
+        },
+        {
+          kind: "link",
+          eyebrow: "External signal · Andrew Chen",
+          title: "More outcomes, fewer copilots",
+          description:
+            "Andrew Chen describes the shift from AI that assists to agents that act—and the frustration of receiving more work to review. Waldo’s answer is not action alone: it is evidence-backed acceptance, visible human judgment, and continuity the user owns.",
+          href: "https://www.linkedin.com/posts/andrewchen_last-years-startup-trend-copilot-for-x-share-7488472791541985280-2t0X",
+          cta: "Read Andrew Chen’s post",
+        },
+        {
+          kind: "link",
+          eyebrow: "External signal · Y Combinator",
+          title: "Fifty personal agents later, coordination became the problem",
+          description:
+            "YC gave individual employees personal agents, then built QM when managing the fleet became difficult. QM is the organizational answer. Waldo asks the personal question: as agents multiply across work and life, what keeps your context, permissions, judgment, and accepted outcomes coherent—and on your side?",
+          href: "https://qm.ycombinator.com/",
+          cta: "Read YC’s QM notes",
+        },
+        {
+          kind: "link",
+          eyebrow: "Historical reference · Steve Jobs Archive",
+          title: "Make complex technology personal",
+          description:
+            "In his 1999 Macintosh anniversary email, Jobs described Apple’s role as bridging sophisticated technology and ordinary people. That interface lesson shapes how I think about making agents useful beyond today’s hobbyists and operators.",
+          href: "https://book.stevejobsarchive.com/#email-apple-macintosh-fifteen",
+          cta: "Read Steve in his own words",
         },
       ],
       closing:
