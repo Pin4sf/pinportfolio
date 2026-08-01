@@ -445,7 +445,7 @@ export const caseStudies: CaseStudy[] = [
           body: [
             "I wanted to begin where the problem is already painful and observable: people running several coding agents on a Mac. Kennel gives that work one calm place to land, showing what finished, what evidence supports, what needs a decision, and what remains open without asking the user to reopen every session.",
             "This is Waldo’s immediate customer problem: output is abundant, but review, judgment, verification, and closure are scarce. Kennel is not another multi-agent activity monitor; the underlying transcript remains available, but it is no longer the only way to understand the work.",
-            "With Suyash and Ashish, I’m building Kennel, an earlier mobile foundation, and Waldo’s durable harness as pieces we use internally. There are no external users or revenue yet. The next proof is trustworthy continuity across those foundations—not a claim that the full vision is already shipped.",
+            "With Suyash and Ashish, I’m building Kennel, an earlier mobile foundation, and Waldo’s durable harness as pieces we use internally. The next proof is trustworthy continuity across those foundations—not a claim that the full vision is already shipped.",
           ],
           cards: [
             {
