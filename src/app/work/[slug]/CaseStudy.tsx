@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, type KeyboardEvent } from "react";
 import clsx from "clsx";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -31,6 +31,15 @@ interface CaseStudyProps {
 interface RichCaseStudyProps {
   caseStudy: CaseStudyType;
   narrative: CaseStudyNarrative;
+}
+
+function handleMatrixKeyDown(event: KeyboardEvent<HTMLDivElement>) {
+  if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
+
+  event.preventDefault();
+  event.currentTarget.scrollBy({
+    left: event.key === "ArrowRight" ? 180 : -180,
+  });
 }
 
 function RichCaseStudy({ caseStudy, narrative }: RichCaseStudyProps) {
@@ -146,6 +155,51 @@ function RichCaseStudy({ caseStudy, narrative }: RichCaseStudyProps) {
                       <p>{card.body}</p>
                     </article>
                   ))}
+                </div>
+              )}
+
+              {section.matrix && (
+                <div className={styles.matrixBlock}>
+                  <p
+                    id={`${section.id}-matrix-hint`}
+                    className={styles.matrixHint}
+                  >
+                    {section.matrix.hint}
+                  </p>
+                  <div
+                    className={styles.matrixWrap}
+                    role="region"
+                    aria-label={section.matrix.caption}
+                    aria-describedby={`${section.id}-matrix-hint`}
+                    tabIndex={0}
+                    onKeyDown={handleMatrixKeyDown}
+                  >
+                    <table className={styles.matrix}>
+                      <caption>{section.matrix.caption}</caption>
+                      <thead>
+                        <tr>
+                          <th scope="col">{section.matrix.columns.pressure}</th>
+                          <th scope="col">
+                            {section.matrix.columns.strategicRole}
+                          </th>
+                          <th scope="col">{section.matrix.columns.fit}</th>
+                          <th scope="col">
+                            {section.matrix.columns.confidence}
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {section.matrix.rows.map((row) => (
+                          <tr key={row.pressure}>
+                            <th scope="row">{row.pressure}</th>
+                            <td>{row.strategicRole}</td>
+                            <td>{row.fit}</td>
+                            <td>{row.confidence}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
               )}
 
