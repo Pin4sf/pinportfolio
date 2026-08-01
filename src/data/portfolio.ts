@@ -654,6 +654,15 @@ export const caseStudies: CaseStudy[] = [
         },
         {
           kind: "link",
+          eyebrow: "External signal · Y Combinator",
+          title: "YC reached the fleet problem at fifty-plus agents",
+          description:
+            "YC provisioned more than 50 Hermes agents as personal assistants for individual employees, then found even that fleet difficult to manage. QM combines flexible agents with simpler administration. I see the same signal behind Waldo: personal agents become useful quickly, and the continuity and coordination layer matters just as quickly.",
+          href: "https://qm.ycombinator.com/",
+          cta: "Read YC’s QM notes",
+        },
+        {
+          kind: "link",
           eyebrow: "Historical reference · Steve Jobs Archive",
           title: "Make complex technology personal",
           description:
