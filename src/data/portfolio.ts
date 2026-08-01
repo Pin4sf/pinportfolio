@@ -313,9 +313,9 @@ export const caseStudies: CaseStudy[] = [
         {
           id: "what-changed",
           eyebrow: "01 · What I learned",
-          title: "The session is a work log. The outcome is the product.",
+          title: "Agents got more capable. We inherited the coordination.",
           body: [
-            "Agents got more capable. We inherited the coordination. When I was building and operating more than 30 production agent instances at Atlan, the difficult part was rarely getting an agent to produce something. It was remembering why each session existed, moving context between tools, catching a waiting decision, and checking whether the result actually solved the original problem.",
+            "The session is a work log. The outcome is the product. When I was building and operating more than 30 production agent instances at Atlan, the difficult part was rarely getting an agent to produce something. It was remembering why each session existed, moving context between tools, catching a waiting decision, and checking whether the result actually solved the original problem.",
             "Suyash felt the same pressure from another direction while running a design studio and training for an Ironman. His work, commitments, routines, and health lived in tools that never understood how those things affected one another. The software could show more information. It could not decide what mattered now, what could wait, or what no longer deserved to be carried.",
             "The person delegated a problem, not a transcript—and should not inherit a second job stitching every result back into life. AI can do more work than ever. It should not leave you with more to carry.",
           ],
@@ -341,7 +341,7 @@ export const caseStudies: CaseStudy[] = [
           id: "three-pressures",
           eyebrow: "02 · The strategic map",
           title:
-            "One immediate problem. One product constitution. One longer horizon.",
+            "Judgment now. Sustainable agency throughout. Physical authority later.",
           body: [
             "I see three connected pressures, but I do not treat them as three equal markets. AI-output overload is the customer problem we can attack now through Kennel. Burnout and finite human capacity are the constitution for how Waldo should behave. Physical AI is the expansion horizon where the same questions of permission, evidence, interruption, and recovery become more consequential.",
             "The confidence is different too: the overload and burnout problems are already visible; the physical-world tailwind is strong, but Waldo has not yet validated a hardware product or customer wedge there.",
@@ -474,7 +474,8 @@ export const caseStudies: CaseStudy[] = [
         {
           id: "attention",
           eyebrow: "06 · The product constitution",
-          title: "Human attention is the scarce runtime of agentic systems.",
+          title:
+            "More capable agents should mean less life held together in your head.",
           body: [
             "An agent waiting five minutes is inexpensive. A person reconstructing context across five agents, reviewing unverified changes, and finding the correct terminal is expensive. Infinite machine capacity does not create infinite human attention.",
             "The burnout economy is not a separate feature category for Waldo. It is a constraint on the product: do not make people supervise more software, monitor more feeds, stay permanently available, or optimize every part of life. Carry routine responsibility quietly and return only when timing, consequence, or authority genuinely belongs to the person.",
@@ -506,9 +507,9 @@ export const caseStudies: CaseStudy[] = [
         {
           id: "boundaries",
           eyebrow: "07 · Principles I won’t trade away",
-          title: "More execution should never mean less agency.",
+          title: "A personal agent is a relationship with clear boundaries.",
           body: [
-            "A personal agent is a relationship with clear boundaries. I’m building the system underneath Waldo for durable work, tools, scheduling, delivery, memory composition, provider adapters, and security—but those technical choices follow a human philosophy: continuity should be inspectable, correction should be easy, and authority should fail closed.",
+            "More execution should never mean less agency. I’m building the system underneath Waldo for durable work, tools, scheduling, delivery, memory composition, provider adapters, and security—but those technical choices follow a human philosophy: continuity should be inspectable, correction should be easy, and authority should fail closed.",
             "I want Waldo to learn from what a person explicitly says, the corrections they make, and outcomes they verify. What the person says about themselves should outrank patterns inferred from activity. I do not want behavioral traces turned into a hidden personality score.",
           ],
           cards: [
@@ -537,7 +538,7 @@ export const caseStudies: CaseStudy[] = [
         {
           id: "personal-computing",
           eyebrow: "08 · The interface lesson",
-          title: "They did not invent computing. They helped make it personal.",
+          title: "Agents exist. I want to make them personal.",
           body: [
             "Steve Jobs and Steve Wozniak helped turn computers from something hobbyists operated into something ordinary people could make part of their lives. I see agents at the same interface transition: the capability exists, but using it still asks people to think like operators.",
             "A line Jobs wrote about the Macintosh stays with me: “It’s our job to make complex technology easy to use and fun to use.” Waldo is my attempt to do that for agents without hiding intent, consequence, control, or who remains responsible.",
@@ -680,7 +681,7 @@ export const caseStudies: CaseStudy[] = [
         },
       ],
       closing:
-        "The goal is not one more assistant competing for attention. It is a user-owned layer that helps people keep their agency as models, tools, and machines become more capable.",
+        "Many agents may work for you. One should always remain on your side.",
     },
     order: 1,
   },
