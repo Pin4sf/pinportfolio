@@ -16,11 +16,13 @@ export function generateMetadata({ params }: Props): Metadata {
   if (!cs) return { title: "Not Found" };
 
   const fullDescription = cs.narrative
-    ? `${cs.tagline} ${cs.narrative.heroBody}`
+    ? `${cs.tagline} ${cs.narrative.heroStatement}`
     : `${cs.tagline} — ${cs.challenge.slice(0, 140)}...`;
+  const descriptionCandidate = fullDescription.slice(0, 157).trimEnd();
+  const lastCompleteWord = descriptionCandidate.lastIndexOf(" ");
   const description =
-    fullDescription.length > 160
-      ? `${fullDescription.slice(0, 157).trimEnd()}…`
+    fullDescription.length > 160 && lastCompleteWord > 0
+      ? `${descriptionCandidate.slice(0, lastCompleteWord)}…`
       : fullDescription;
 
   return {

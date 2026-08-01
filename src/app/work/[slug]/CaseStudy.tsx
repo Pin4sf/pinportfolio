@@ -155,11 +155,30 @@ function RichCaseStudy({ caseStudy, narrative }: RichCaseStudyProps) {
                     styles.storyMedia,
                     section.media.presentation === "poster" &&
                       styles.posterMedia,
+                    section.media.presentation === "portrait" &&
+                      styles.portraitMedia,
                   )}
                 >
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={section.media.src} alt={section.media.alt} />
-                  <figcaption>{section.media.caption}</figcaption>
+                  <img
+                    src={section.media.src}
+                    alt={section.media.alt}
+                    loading="lazy"
+                    decoding="async"
+                  />
+                  <figcaption>
+                    <span>{section.media.caption}</span>
+                    {section.media.source && (
+                      <a
+                        href={section.media.source.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {section.media.source.label}
+                        <ExternalLink size={11} aria-hidden="true" />
+                      </a>
+                    )}
+                  </figcaption>
                 </figure>
               )}
             </div>
@@ -169,8 +188,8 @@ function RichCaseStudy({ caseStudy, narrative }: RichCaseStudyProps) {
 
       <section className={clsx(styles.section, styles.teamSection)} data-reveal>
         <div className={styles.storyHeading}>
-          <p className={styles.eyebrow}>07 · Who I’m building with</p>
-          <h2>The people shaping Waldo with me.</h2>
+          <p className={styles.eyebrow}>{narrative.teamEyebrow}</p>
+          <h2>{narrative.teamTitle}</h2>
         </div>
         <div className={styles.storyBody}>
           <p className={styles.sectionLead}>{narrative.teamIntro}</p>
@@ -193,8 +212,8 @@ function RichCaseStudy({ caseStudy, narrative }: RichCaseStudyProps) {
       >
         <div className={styles.artifactsHeader}>
           <div className={styles.storyHeading}>
-            <p className={styles.eyebrow}>08 · Artifacts</p>
-            <h2>See the work, then go deeper.</h2>
+            <p className={styles.eyebrow}>{narrative.artifactsEyebrow}</p>
+            <h2>{narrative.artifactsTitle}</h2>
           </div>
           <p>{narrative.artifactsIntro}</p>
         </div>
@@ -377,7 +396,11 @@ export default function CaseStudy({ caseStudy, prev, next }: CaseStudyProps) {
   const reducedMotion = useReducedMotion();
 
   useEffect(() => {
-    if (reducedMotion) return;
+    if (
+      reducedMotion ||
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    )
+      return;
 
     const page = pageRef.current;
     if (!page) return;
