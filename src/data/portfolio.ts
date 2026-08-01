@@ -344,7 +344,7 @@ export const caseStudies: CaseStudy[] = [
             "Judgment now. Sustainable agency throughout. Physical authority later.",
           body: [
             "I see three connected pressures, but I do not treat them as three equal markets. AI-output overload is the customer problem we can attack now through Kennel. Burnout and finite human capacity are the constitution for how Waldo should behave. Physical AI is the expansion horizon where the same questions of permission, evidence, interruption, and recovery become more consequential.",
-            "The confidence is different too: the overload and burnout problems are already visible; the physical-world tailwind is strong, but Waldo has not yet validated a hardware product or customer wedge there.",
+            "The confidence is different too: the overload and burnout problems are already visible; the physical-world tailwind is strong, but Waldo has not yet validated a hardware product or customer wedge there. The wider curve is consumer: capable intelligence is becoming cheap enough to move agents from specialist tools into everyday products.",
           ],
           matrix: {
             caption:
@@ -678,6 +678,15 @@ export const caseStudies: CaseStudy[] = [
             "YC gave individual employees personal agents, then built QM when managing the fleet became difficult. QM is the organizational answer. Waldo asks the personal question: as agents multiply across work and life, what keeps your context, permissions, judgment, and accepted outcomes coherent—and on your side?",
           href: "https://qm.ycombinator.com/",
           cta: "Read YC’s QM notes",
+        },
+        {
+          kind: "link",
+          eyebrow: "External signal · YC RFS",
+          title: "The consumer moment follows the cost curve",
+          description:
+            "YC’s Fall 2026 RFS argues that intelligence is becoming capable and cheap enough for everyday products across how people get things done, learn, stay healthy, and connect. Waldo is being built into that curve as one user-owned agent across work and life.",
+          href: "https://www.ycombinator.com/rfs#ai-powered-consumer-products-for-1-billion-people",
+          cta: "Read YC’s consumer AI request",
         },
         {
           kind: "link",
