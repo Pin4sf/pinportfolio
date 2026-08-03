@@ -439,8 +439,19 @@ export const caseStudies: CaseStudy[] = [
           ],
         },
         {
+          id: "one-system",
+          eyebrow: "05 · One relationship",
+          title:
+            "Your life and your agents should not belong to two different systems.",
+          body: [
+            "Personal assistants and work orchestrators have evolved as separate products, even though the user needs them to operate as one relationship.",
+            "Personal assistants understand calendars, messages, reminders, commitments, and daily administration. Work orchestrators understand sessions, runtimes, sandboxes, budgets, tools, and policies. People need both—but not as disconnected products or identities.",
+            "Waldo joins them through the same Outcome, authority, evidence, and continuity contracts. Home carries the person’s life forward. Work coordinates the agents helping make it happen.",
+          ],
+        },
+        {
           id: "kennel",
-          eyebrow: "05 · Why start here",
+          eyebrow: "06 · Why start here",
           title: "Kennel is the first home, not the whole vision.",
           body: [
             "I wanted to begin where the problem is already painful and observable: people running several coding agents on a Mac. Kennel gives that work one calm place to land, showing what finished, what evidence supports, what needs a decision, and what remains open without asking the user to reopen every session.",
@@ -473,7 +484,7 @@ export const caseStudies: CaseStudy[] = [
         },
         {
           id: "attention",
-          eyebrow: "06 · The product constitution",
+          eyebrow: "07 · The product constitution",
           title:
             "More capable agents should mean less life held together in your head.",
           body: [
@@ -506,7 +517,7 @@ export const caseStudies: CaseStudy[] = [
         },
         {
           id: "boundaries",
-          eyebrow: "07 · Principles I won’t trade away",
+          eyebrow: "08 · Principles I won’t trade away",
           title: "A personal agent is a relationship with clear boundaries.",
           body: [
             "More execution should never mean less agency. Waldo’s technical foundations—durable work, tools, scheduling, memory, provider adapters, and security—follow a human rule: continuity must be inspectable, correction easy, and authority fail closed.",
@@ -537,7 +548,7 @@ export const caseStudies: CaseStudy[] = [
         },
         {
           id: "personal-computing",
-          eyebrow: "08 · The interface lesson",
+          eyebrow: "09 · The interface lesson",
           title: "Agents exist. I want to make them personal.",
           body: [
             "Steve Jobs and Steve Wozniak helped turn computers from something hobbyists operated into something ordinary people could make part of their lives. I see agents at the same interface transition: the capability exists, but using it still asks people to think like operators.",
@@ -557,7 +568,7 @@ export const caseStudies: CaseStudy[] = [
         },
         {
           id: "long-horizon",
-          eyebrow: "09 · The expansion horizon",
+          eyebrow: "10 · The expansion horizon",
           title: "Software earns the right to become physical.",
           body: [
             "I keep returning to bodies for AI: physical forms people would actually welcome into daily life—a desk object, wearable, home device, vehicle, or small robot. The same Waldo should inhabit each of them, carrying one identity and permission system instead of making every object another disconnected assistant.",
@@ -590,7 +601,7 @@ export const caseStudies: CaseStudy[] = [
           },
         },
       ],
-      teamEyebrow: "10 · Who I’m building with",
+      teamEyebrow: "11 · Who I’m building with",
       teamTitle: "Waldo is the first company the three of us are building.",
       teamIntro:
         "Ashish and I became friends at school over a shared obsession with iOS jailbreaking. Years later, I met Suyash in the Computer Center at IIITDM Jabalpur and showed him how to build a website by describing it to an AI coding tool. Waldo is the first company the three of us are building together.",
@@ -611,7 +622,7 @@ export const caseStudies: CaseStudy[] = [
           body: "Spent nine months working as an AI engineer before joining Waldo. He built much of the first app and health-data pipeline and now works across native iOS, Supabase, and agent infrastructure.",
         },
       ],
-      artifactsEyebrow: "11 · Artifacts",
+      artifactsEyebrow: "12 · Artifacts",
       artifactsTitle: "See the work, then go deeper.",
       artifactsIntro:
         "Start with the work itself: the founders, product, system, company, and site. The outside signals come after.",
