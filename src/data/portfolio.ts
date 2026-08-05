@@ -275,7 +275,7 @@ export const caseStudies: CaseStudy[] = [
     challenge:
       "As people delegate more work to agents, they inherit a new job: reconciling what agents produced, what became true, and what still needs human judgment. Today's agents know the prompt and the current session. The person still carries the real outcome, the surrounding commitments, the follow-ups, and the consequences when work stalls.",
     approach:
-      "Start with the users who already feel the coordination problem. Kennel is Waldo's native home on the Mac, beginning with attributable Codex sessions, conversation, live state, and same-task continuation. Underneath, Agent Session, Outcome Verification, and the human Open Loop remain different kinds of truth. Waldo adds only the personal context the user permits — priorities, commitments, boundaries, capacity, health context, and prior corrections — so assistance stays grounded in the person rather than just the prompt.",
+      "Start with the users who already feel the coordination problem. Kennel is Waldo's native home on the Mac, beginning with attributable Codex sessions, conversation, live state, and same-task continuation. Underneath, Agent Session, Outcome Verification, and the human Open Loop remain different kinds of truth. Waldo is being designed to add only the personal context the user permits — priorities, commitments, boundaries, capacity, health context, and prior corrections — so assistance stays grounded in the person rather than just the prompt.",
     solution:
       "We have three working foundations used internally: Kennel on macOS, a durable agent harness, and Waldo on iOS. Kennel provides the governed desktop surface and a local durable event foundation. The harness covers resumable agent work, typed tools, permissions, scheduling, delivery, and audit. The iOS foundation carries personal and health context. The next product proof is integrating those foundations around evidence-linked outcomes, user-confirmed open loops, and low-risk orchestration help — without turning activity into an opaque score or letting insight silently grant authority.",
     solutionImages: [
@@ -299,7 +299,7 @@ export const caseStudies: CaseStudy[] = [
       heroStatement:
         "An agent finishing a task and the task actually being done are two different things.",
       heroBody:
-        "I’m building Waldo: a private, user-owned personal agent that carries the context you permit across models, tools, work, life, and—eventually—physical devices. One agent, many presences, always on your side. Kennel is its first home on the Mac.",
+        "I’m building Waldo: a user-owned personal agent designed to carry the context you permit across models, tools, work, life, and—eventually—physical devices. One agent, many presences, always on your side. Kennel is its first home on the Mac.",
       status: [
         "Judgment now",
         "Sustainable agency throughout",
@@ -401,7 +401,7 @@ export const caseStudies: CaseStudy[] = [
             {
               label: "Agency over lock-in",
               title: "The layer belongs to you",
-              body: "The person can inspect it, correct it, change providers, and release what no longer matters.",
+              body: "The person should be able to inspect it, correct it, change providers, and release what no longer matters.",
             },
           ],
           media: {
@@ -424,17 +424,17 @@ export const caseStudies: CaseStudy[] = [
             {
               label: "Context",
               title: "Composed, not copied",
-              body: "Each tool receives the smallest useful view of what matters now—not an indiscriminate memory dump.",
+              body: "Each agent or tool should receive the smallest attributable view required for the current Outcome—not an indiscriminate memory dump.",
             },
             {
               label: "Continuity",
               title: "Across every surface",
-              body: "Work, life context, corrections, and outcomes stay connected without being trapped in one provider.",
+              body: "Work, life context, corrections, and outcomes should stay connected without being trapped in one provider.",
             },
             {
               label: "Portability",
               title: "The relationship survives the provider",
-              body: "The person can change models, tools, or employers without abandoning the context and outcome history they own.",
+              body: "The person should be able to change models, tools, or employers without abandoning the context and outcome history they own.",
             },
           ],
         },
@@ -446,12 +446,44 @@ export const caseStudies: CaseStudy[] = [
           body: [
             "Personal assistants and work orchestrators have evolved as separate products, even though the user needs them to operate as one relationship.",
             "Personal assistants understand calendars, messages, reminders, commitments, and daily administration. Work orchestrators understand sessions, runtimes, sandboxes, budgets, tools, and policies. People need both—but not as disconnected products or identities.",
-            "Waldo joins them through the same Outcome, authority, evidence, and continuity contracts. Home carries the person’s life forward. Work coordinates the agents helping make it happen.",
+            "Waldo is being designed to join them through the same Outcome, authority, evidence, and continuity contracts. Home will carry the person’s life forward. Work will coordinate the agents helping make it happen.",
+          ],
+        },
+        {
+          id: "governance",
+          eyebrow: "06 · The missing layer",
+          title: "The missing layer is agent governance.",
+          body: [
+            "Running many agents taught me that starting them is not the hardest part. The hard part is deciding what they may see, what they may change, whether they acted once or twice, what actually became true, and what still belongs to the person.",
+            "Waldo is being designed as the owner-side Agent Governance Layer between a person and every model, specialist agent, tool, connector, service, or future machine acting on their behalf. It should keep those decisions coherent even when the models, tools, and surfaces change.",
+            "Kennel and the other working foundations let us test parts of this today. End-to-end cross-surface governance is the target architecture, not a capability we claim as shipped. Kennel and other surfaces can propose work; Waldo’s online governed backend will decide what may become canonical or consequential.",
+          ],
+          cards: [
+            {
+              label: "Context",
+              title: "Purpose-bound context",
+              body: "An agent should receive the smallest attributable context required for the current Outcome—not the person’s complete memory.",
+            },
+            {
+              label: "Authority",
+              title: "Exact authority",
+              body: "Permission must be bounded to an action, resource, purpose, use, and expiry. Memory, past approval, or inferred preference is never current authority.",
+            },
+            {
+              label: "Execution",
+              title: "Constrained execution",
+              body: "Capabilities, credentials, budgets, cancellation, containment, and revocation must remain governed outside the model.",
+            },
+            {
+              label: "Truth",
+              title: "Governed truth",
+              body: "Provider completion, receipts, Evidence, Verification, Acceptance, and remaining Open Loops must stay separate. An agent cannot close the person’s obligation merely by saying “done.”",
+            },
           ],
         },
         {
           id: "kennel",
-          eyebrow: "06 · Why start here",
+          eyebrow: "07 · Why start here",
           title: "Kennel is the first home, not the whole vision.",
           body: [
             "I wanted to begin where the problem is already painful and observable: people running several coding agents on a Mac. Kennel gives that work one calm place to land, showing what finished, what evidence supports, what needs a decision, and what remains open without asking the user to reopen every session.",
@@ -484,7 +516,7 @@ export const caseStudies: CaseStudy[] = [
         },
         {
           id: "attention",
-          eyebrow: "07 · The product constitution",
+          eyebrow: "08 · The product constitution",
           title:
             "More capable agents should mean less life held together in your head.",
           body: [
@@ -517,10 +549,10 @@ export const caseStudies: CaseStudy[] = [
         },
         {
           id: "boundaries",
-          eyebrow: "08 · Principles I won’t trade away",
+          eyebrow: "09 · Principles I won’t trade away",
           title: "A personal agent is a relationship with clear boundaries.",
           body: [
-            "More execution should never mean less agency. Waldo’s technical foundations—durable work, tools, scheduling, memory, provider adapters, and security—follow a human rule: continuity must be inspectable, correction easy, and authority fail closed.",
+            "More execution should never mean less agency. We are building Waldo’s working foundations and target architecture around a human rule: continuity must be inspectable, correction easy, and authority fail closed.",
             "Waldo should learn from what a person says, the corrections they make, and outcomes they verify. Explicit self-knowledge should outrank behavioral inference; activity should never become a hidden personality score.",
           ],
           cards: [
@@ -532,7 +564,7 @@ export const caseStudies: CaseStudy[] = [
             {
               label: "Proactivity",
               title: "Suggest before execute",
-              body: "Low-risk assistance can be proactive; consequential action stays bounded by visible permission.",
+              body: "Low-risk assistance may be proactive; consequential action must stay bounded by visible permission.",
             },
             {
               label: "Durable responsibility",
@@ -542,13 +574,13 @@ export const caseStudies: CaseStudy[] = [
             {
               label: "Personal memory",
               title: "Memory can be corrected and released",
-              body: "The user can inspect, correct, export, delete, and revoke what Waldo carries. Memory never silently becomes permission.",
+              body: "The user must be able to inspect, correct, export, delete, and revoke what Waldo carries. Memory must never silently become permission.",
             },
           ],
         },
         {
           id: "personal-computing",
-          eyebrow: "09 · The interface lesson",
+          eyebrow: "10 · The interface lesson",
           title: "Agents exist. I want to make them personal.",
           body: [
             "Steve Jobs and Steve Wozniak helped turn computers from something hobbyists operated into something ordinary people could make part of their lives. I see agents at the same interface transition: the capability exists, but using it still asks people to think like operators.",
@@ -568,7 +600,7 @@ export const caseStudies: CaseStudy[] = [
         },
         {
           id: "long-horizon",
-          eyebrow: "10 · The expansion horizon",
+          eyebrow: "11 · The expansion horizon",
           title: "Software earns the right to become physical.",
           body: [
             "I keep returning to bodies for AI: physical forms people would actually welcome into daily life—a desk object, wearable, home device, vehicle, or small robot. The same Waldo should inhabit each of them, carrying one identity and permission system instead of making every object another disconnected assistant.",
@@ -601,7 +633,7 @@ export const caseStudies: CaseStudy[] = [
           },
         },
       ],
-      teamEyebrow: "11 · Who I’m building with",
+      teamEyebrow: "12 · Who I’m building with",
       teamTitle: "Waldo is the first company the three of us are building.",
       teamIntro:
         "Ashish and I became friends at school over a shared obsession with iOS jailbreaking. Years later, I met Suyash in the Computer Center at IIITDM Jabalpur and showed him how to build a website by describing it to an AI coding tool. Waldo is the first company the three of us are building together.",
@@ -622,7 +654,7 @@ export const caseStudies: CaseStudy[] = [
           body: "Spent nine months working as an AI engineer before joining Waldo. He built much of the first app and health-data pipeline and now works across native iOS, Supabase, and agent infrastructure.",
         },
       ],
-      artifactsEyebrow: "12 · Artifacts",
+      artifactsEyebrow: "13 · Artifacts",
       artifactsTitle: "See the work, then go deeper.",
       artifactsIntro:
         "Start with the work itself: the founders, product, system, company, and site. The outside signals come after.",

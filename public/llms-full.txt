@@ -16,7 +16,7 @@ Shivansh builds the infrastructure that makes AI agents useful once people rely 
 
 At Atlan, he helped build and operate more than 30 production agent instances through AtlanClaw. He worked across context, tools, authentication, integrations, deployment, and production failure modes.
 
-That work shaped Waldo: a user-owned personal agent that carries the context a person permits across models, tools, work, and life. Kennel is Waldo's first Mac home. It begins with agent-native users who need to see what finished, what needs their judgment, and what is still open.
+That work shaped Waldo: a user-owned personal agent being designed to carry the context a person permits across models, tools, work, and life. Kennel is Waldo's first Mac home. It begins with agent-native users who need to see what finished, what needs their judgment, and what is still open.
 
 Shivansh also co-founded EcoFresh Greensync, contributed to Project EKA at Soket AI Labs, built an NLP-to-workflow system through Code for GovTech, and implemented Qwen3 MoE from scratch. In 2025, MIRAI-Setu took him across Japan and influenced how he thinks about craft, reliable systems, manufacturing, and long time horizons.
 
@@ -30,7 +30,7 @@ Shivansh also co-founded EcoFresh Greensync, contributed to Project EKA at Soket
 - First surface: Kennel, a native macOS companion
 - Stack: Swift, SwiftUI, Codex App Server, SQLite/GRDB, Cloudflare Durable Objects, TypeScript, React Native
 
-Waldo is being built for continuity across models, tools, work, and life. It carries only the human context the user permits: priorities, commitments, boundaries, capacity, relationships, health context, corrections, and outcome history. Health and body data are foundational life context, not Waldo's product category.
+Waldo is being built for continuity across models, tools, work, and life. It is being designed to carry only the human context the user permits: priorities, commitments, boundaries, capacity, relationships, health context, corrections, and outcome history. Health and body data are foundational life context, not Waldo's product category or an authority source.
 
 Kennel is the current Mac wedge. It starts with Codex sessions and keeps three kinds of truth separate:
 
@@ -42,7 +42,9 @@ Since May 2026, the team has built three working foundations used internally: Ke
 
 Core insight: An agent finishing a task and the task actually being done are two different things.
 
-Waldo is model-agnostic: it is intended to preserve the user's context, workflow, trust, and permissions while routing work to replaceable models, tools, and specialist agents. The long-term direction is one continuous agent with many presences, followed by consumer "bodies for AI" such as a desk object, wearable, home device, or small robot operating under the same user-owned identity and permission system.
+Waldo is being designed as the owner-side Agent Governance Layer between a person and every model, specialist agent, tool, connector, service, or future machine acting on their behalf. Its target mechanisms are purpose-bound context, exact authority, constrained execution outside the model, and governed truth that keeps provider completion, evidence, verification, acceptance, and remaining Open Loops separate. Kennel and the other working foundations test parts of this today; end-to-end cross-surface governance remains target architecture under online backend authority.
+
+Waldo is intended to preserve the user's context, workflow, trust, and permissions while routing work to replaceable models, tools, and specialist agents. The long-term direction is one continuous agent with many presences, followed by consumer "bodies for AI" such as a desk object, wearable, home device, or small robot operating under the same user-owned identity and permission system.
 
 Team:
 
