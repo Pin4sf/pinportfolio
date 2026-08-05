@@ -324,6 +324,7 @@ export const caseStudies: CaseStudy[] = [
           body: [
             "The session is a work log. The outcome is the product. When I was building and operating more than 30 production agent instances at Atlan, the difficult part was rarely getting an agent to produce something. It was remembering why each session existed, moving context between tools, catching a waiting decision, and checking whether the result actually solved the original problem.",
             "Suyash felt the same pressure from another direction while running a design studio and training for an Ironman. His work, commitments, routines, and health lived in tools that never understood how those things affected one another. The software could show more information. It could not decide what mattered now, what could wait, or what no longer deserved to be carried.",
+            "Delegation has its own cognitive cost: deciding what to hand off, briefing it, supervising it, recovering from failure, and judging whether the risk was worth it. When that cost exceeds the work avoided, the agent has not really reduced the person’s burden.",
             "The person delegated a problem, not a transcript—and should not inherit a second job stitching every result back into life. AI can do more work than ever. It should not leave you with more to carry.",
           ],
           cards: [
@@ -382,6 +383,7 @@ export const caseStudies: CaseStudy[] = [
           title: "Delegate responsibility without surrendering control.",
           body: [
             "Running many agents taught me that starting them is not the hardest part. The hard part is deciding what they may see, what they may change, whether they acted once or twice, what actually became true, and what still belongs to the person.",
+            "Waldo is being designed to absorb that delegation tax: compose the permitted context, brief specialist agents, supervise bounded work, recover when a path fails, verify what became true, and return only the judgment or permission that belongs to the person.",
             "The missing layer is agent governance. Waldo is being designed as the owner-side layer between a person and every model, specialist agent, tool, connector, service, or future machine acting on their behalf. It should make delegation useful without letting the machinery grant itself authority or decide that the person’s responsibility is closed.",
             "Kennel and the other working foundations let us test parts of this today. End-to-end cross-surface governance is the target architecture, not a capability we claim as shipped. Kennel and other surfaces can propose work; Waldo’s online governed backend will decide what may become canonical or consequential.",
             "The person must remain able to accept, repair, reopen, defer, transfer, change, or release the responsibility. More machine action should expand personal agency, not replace it.",
@@ -515,7 +517,7 @@ export const caseStudies: CaseStudy[] = [
           body: [
             "ChatGPT or Claude can answer what you ask. I want Waldo to understand why you need it, when it matters, what it affects, and whether it was actually resolved. The current prompt is only one fragment of a person’s priorities, relationships, boundaries, capacity, corrections, and commitments.",
             "Life is already distributed across calendars, messages, files, health systems, models, tools, and other people. Waldo should help carry it forward without making the person rebuild themselves—or become the integration layer—every time the interface changes.",
-            "The chatbox made intelligence available. It cannot be the whole interface for asynchronous work. The next layer is continuity, timing, permission, evidence, and closure: proactive enough to prepare what matters, but never presumptive about consequential action.",
+            "The chatbox made intelligence available. It cannot be the whole interface for asynchronous work, and ordinary people should not have to become natural-language programmers or agent managers to benefit. The next layer is continuity, timing, permission, evidence, and closure: proactive enough to prepare what matters, but never presumptive about consequential action.",
           ],
           cards: [
             {
@@ -738,6 +740,15 @@ export const caseStudies: CaseStudy[] = [
             "The public product story and the earlier interaction system that led to today’s Kennel-first direction.",
           href: "https://www.heywaldo.in/",
           cta: "Visit heywaldo.in",
+        },
+        {
+          kind: "link",
+          eyebrow: "External signal · Paras Chopra",
+          title: "The delegation tax is the product problem",
+          description:
+            "Paras Chopra frames agent use as learned delegation: discovering what to hand off, briefing it, supervising it, recovering from failure, and absorbing risk. His conclusion sharpens Waldo’s product test—the agent must reduce that cognitive cost behind interfaces ordinary people already know how to use.",
+          href: "https://x.com/paraschopra/status/2084946385619845182",
+          cta: "Read Paras Chopra’s post",
         },
         {
           kind: "link",
