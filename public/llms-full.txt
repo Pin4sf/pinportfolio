@@ -30,13 +30,15 @@ Shivansh also co-founded EcoFresh Greensync, contributed to Project EKA at Soket
 - First surface: Kennel, a native macOS companion
 - Stack: Swift, SwiftUI, Codex App Server, SQLite/GRDB, Cloudflare Durable Objects, TypeScript, React Native
 
-Waldo is being built for continuity across models, tools, work, and life. It is being designed to carry only the human context the user permits: priorities, commitments, boundaries, capacity, relationships, health context, corrections, and outcome history. Health and body data are foundational life context, not Waldo's product category or an authority source.
+Basic promise: Give Waldo a responsibility. Stop carrying it in your head.
+
+Waldo is being built to keep hold of the desired real-world result, coordinate the agents and tools working toward it, return when judgment or permission belongs to the person, and preserve what remains until the result is verified or consciously changed. It is intended to provide continuity across models, tools, work, and life while carrying only the human context the user permits. Health and body data are foundational life context, not Waldo's product category or an authority source.
 
 Kennel is the current Mac wedge. It starts with Codex sessions and keeps three kinds of truth separate:
 
 - Agent Session: what the provider reports.
 - Outcome Verification: what evidence exists about the intended result.
-- Open Loop: what the person still needs to finish, defer, transfer, or release.
+- Open Loop: Waldo's durable record of what remains unresolved relative to the desired result, why it remains unresolved, and where the work should return. A failed task or agent run is evidence about one attempted path; it is not itself an Open Loop.
 
 Since May 2026, the team has built three working foundations used internally: Kennel on macOS, a durable agent harness, and an earlier Waldo iOS foundation. Recorded Codex acceptance covers bounded multi-session discovery, populated conversation history, real-time processing state, same-task continuation, first-message handling, and archive cleanup. Broader provider coverage, automatic artifact verification, cross-session continuity, and full Mac–mobile–harness integration remain next product proofs.
 

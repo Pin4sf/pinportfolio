@@ -158,6 +158,14 @@ function RichCaseStudy({ caseStudy, narrative }: RichCaseStudyProps) {
                 </div>
               )}
 
+              {section.afterword && (
+                <div className={clsx(styles.prose, styles.proseAfter)}>
+                  {section.afterword.map((paragraph) => (
+                    <p key={paragraph}>{paragraph}</p>
+                  ))}
+                </div>
+              )}
+
               {section.matrix && (
                 <div className={styles.matrixBlock}>
                   <p
@@ -234,6 +242,19 @@ function RichCaseStudy({ caseStudy, narrative }: RichCaseStudyProps) {
                     )}
                   </figcaption>
                 </figure>
+              )}
+
+              {section.link && (
+                <a
+                  href={section.link.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={clsx(styles.link, styles.sectionLink)}
+                >
+                  <FileText size={15} aria-hidden="true" />
+                  {section.link.label}
+                  <ExternalLink size={13} aria-hidden="true" />
+                </a>
               )}
             </div>
           </section>
