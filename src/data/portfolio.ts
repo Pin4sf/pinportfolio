@@ -97,6 +97,7 @@ export interface CaseStudyNarrative {
   };
   heroEyebrow: string;
   heroStatement: string;
+  heroQuote?: string;
   heroBody: string;
   status: string[];
   heroImageAlt: string;
@@ -302,8 +303,10 @@ export const caseStudies: CaseStudy[] = [
       heroEyebrow: "Waldo · Why I am building it",
       heroStatement:
         "Give Waldo a responsibility. Stop carrying it in your head.",
+      heroQuote:
+        "An agent finishing a task and the task actually being done are two different things.",
       heroBody:
-        "An agent finishing a task and the task actually being done are two different things. I’m building Waldo to keep hold of the desired result, coordinate the agents and tools working toward it, bring you in when judgment or permission matters, and preserve what remains until the result is verified or consciously changed.",
+        "I’m building Waldo to keep hold of the desired result, coordinate the agents and tools working toward it, bring you in when judgment or permission matters, and preserve what remains until the result is verified or consciously changed.",
       status: [
         "Judgment now",
         "Sustainable agency throughout",

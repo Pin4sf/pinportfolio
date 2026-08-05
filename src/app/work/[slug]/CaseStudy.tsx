@@ -71,6 +71,11 @@ function RichCaseStudy({ caseStudy, narrative }: RichCaseStudyProps) {
           </div>
           <h1 className={styles.richTitle}>{caseStudy.name}</h1>
           <p className={styles.heroStatement}>{narrative.heroStatement}</p>
+          {narrative.heroQuote && (
+            <blockquote className={styles.heroQuote}>
+              <p>{narrative.heroQuote}</p>
+            </blockquote>
+          )}
           <p className={styles.heroBody}>{narrative.heroBody}</p>
           <ul className={styles.statusList} aria-label="Waldo project status">
             {narrative.status.map((status) => (
