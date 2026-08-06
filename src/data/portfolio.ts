@@ -326,6 +326,7 @@ export const caseStudies: CaseStudy[] = [
             "Suyash felt the same pressure from another direction while running a design studio and training for an Ironman. His work, commitments, routines, and health lived in tools that never understood how those things affected one another. The software could show more information. It could not decide what mattered now, what could wait, or what no longer deserved to be carried.",
             "Delegation has its own cognitive cost: deciding what to hand off, briefing it, supervising it, recovering from failure, and judging whether the risk was worth it. When that cost exceeds the work avoided, the agent has not really reduced the person’s burden.",
             "The person delegated a problem, not a transcript—and should not inherit a second job stitching every result back into life. AI can do more work than ever. It should not leave you with more to carry.",
+            "That is the opportunity I see: access to intelligence is becoming ordinary, but reliable follow-through is not. As AI moves from drafts into recurring workflows, the hard problem shifts to the connective tissue—context, permission, handoffs, recovery, verification, and what returns to the person.",
           ],
           cards: [
             {
@@ -582,6 +583,7 @@ export const caseStudies: CaseStudy[] = [
           body: [
             "I see three connected pressures, but I do not treat them as three equal markets. AI-output overload is the customer problem we can attack now through Kennel. Burnout and finite human capacity are the constitution for how Waldo should behave. Physical AI is the expansion horizon where the same questions of permission, evidence, interruption, and recovery become more consequential.",
             "The confidence is different too: the overload and burnout problems are already visible; the physical-world tailwind is strong, but Waldo has not yet validated a hardware product or customer wedge there. The wider curve is consumer: capable intelligence is becoming cheap enough to move agents from specialist tools into everyday products.",
+            "Notion’s 2026 workplace survey offers a useful directional signal: 88% of respondents placed themselves or their organizations in its thought-partner or assistant stages, while 71% of AI Users said they would use AI more if they trusted it not to make mistakes on important work. Among more advanced users, automation and cross-tool routing rose—but so did tool sprawl, difficulty seeing real impact, and inconsistent model performance. For surveyed decision-makers, the largest implementation gaps between early and advanced groups were integration, governance, and defined measurement. That is the opportunity Waldo is building toward: not more access to AI, but a person-owned layer that makes distributed AI work coherent, governable, and verifiable.",
           ],
           matrix: {
             caption:
@@ -749,6 +751,24 @@ export const caseStudies: CaseStudy[] = [
             "Paras Chopra frames agent use as learned delegation: discovering what to hand off, briefing it, supervising it, recovering from failure, and absorbing risk. His conclusion sharpens Waldo’s product test—the agent must reduce that cognitive cost behind interfaces ordinary people already know how to use.",
           href: "https://x.com/paraschopra/status/2084946385619845182",
           cta: "Read Paras Chopra’s post",
+        },
+        {
+          kind: "link",
+          eyebrow: "External research · Notion",
+          title: "The gap is governed follow-through.",
+          description:
+            "Notion’s 2026 survey of 6,118 AI decision-makers and active workplace AI users found 88% still in its thought-partner or assistant stages. Among decision-makers, the largest advanced-versus-early gaps were integration, governance, and measurement. It supports Waldo’s problem framing—not consumer product-market fit.",
+          href: "https://downloads.ctfassets.net/spoqsaf9291f/4C7Y2LaCO2rMJJEYzfPXPy/1370b80db4bab1b615fecd051843e811/ResearchReport_TheGreatRenovation.pdf",
+          cta: "Read The Great Renovation",
+        },
+        {
+          kind: "link",
+          eyebrow: "External framework · Notion",
+          title: "The assistant-to-system jump needs a governing layer.",
+          description:
+            "Notion’s companion model traces the move from ad-hoc prompting to recurring cross-tool agents and multi-agent systems. At the higher levels, checkpoints, permissions, monitoring, policy, incident handling, orchestration, and governance become part of the product—not back-office details.",
+          href: "https://notion.notion.site/official-the-ai-transformation-model",
+          cta: "Explore the AI Transformation Model",
         },
         {
           kind: "link",
