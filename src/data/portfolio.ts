@@ -386,6 +386,7 @@ export const caseStudies: CaseStudy[] = [
             "Running many agents taught me that starting them is not the hardest part. The hard part is deciding what they may see, what they may change, whether they acted once or twice, what actually became true, and what still belongs to the person.",
             "Waldo is being designed to absorb that delegation tax: compose the permitted context, brief specialist agents, supervise bounded work, recover when a path fails, verify what became true, and return only the judgment or permission that belongs to the person.",
             "The missing layer is agent governance. Waldo is being designed as the owner-side layer between a person and every model, specialist agent, tool, connector, service, or future machine acting on their behalf. It should make delegation useful without letting the machinery grant itself authority or decide that the person’s responsibility is closed.",
+            "Memory and reusable skills make an agent more capable. They do not give it authority, prove that an Outcome became true, or close the person’s responsibility. Waldo is being designed as the governed layer between compounding intelligence and consequential action.",
             "Kennel and the other working foundations let us test parts of this today. End-to-end cross-surface governance is the target architecture, not a capability we claim as shipped. Kennel and other surfaces can propose work; Waldo’s online governed backend will decide what may become canonical or consequential.",
             "The person must remain able to accept, repair, reopen, defer, transfer, change, or release the responsibility. More machine action should expand personal agency, not replace it.",
           ],
@@ -458,6 +459,7 @@ export const caseStudies: CaseStudy[] = [
             "Your life and your agents should not belong to two different systems. Personal assistants and work orchestrators have evolved as separate products, even though the user is the same person. Calendars, messages, reminders, commitments, and daily administration should not belong to a different identity from the sessions, runtimes, tools, budgets, and policies involved in getting work done.",
             "I don’t believe one model or interface will own our entire digital life. People will use many models, specialist agents, tools, services, and devices. Waldo is being designed to join personal assistance and work orchestration through the same Outcome, authority, evidence, and continuity contracts.",
             "An organization may own some infrastructure. The individual should own the continuing relationship. Models, tools, employers, and surfaces can change; the context a person chooses to share, their permissions, corrections, responsibility history, and unresolved work should remain with them.",
+            "The models may be rented and replaceable. What should compound for the person is their context, corrections, permissions, procedures, responsibility history, and accepted outcomes. Waldo is being built to keep that intelligence on the person’s side even as the machinery underneath changes.",
             "Waldo may appear as mobile, a judgment in Kennel, messaging, voice, or eventually a physical form. Those are presences of one user-owned personal agent—not disconnected assistants that make the person rebuild context every time. One agent. Many presences. Still yours.",
           ],
           cards: [
@@ -623,6 +625,7 @@ export const caseStudies: CaseStudy[] = [
           title: "Agents exist. I want to make them personal.",
           body: [
             "Steve Jobs and Steve Wozniak helped turn computers from something hobbyists operated into something ordinary people could make part of their lives. I see agents at the same interface transition: the capability exists, but using it still asks people to think like operators.",
+            "Today, the personal-agent stack still asks people to assemble models, repositories, memory systems, skills, scheduled jobs, credentials, and agent harnesses. This is the Apple I moment. Waldo’s job is to turn that machinery into one understandable relationship: give it a responsibility, and return only when judgment or permission belongs to you.",
             "A line Jobs wrote about the Macintosh stays with me: “It’s our job to make complex technology easy to use and fun to use.” Waldo is my attempt to do that for agents without hiding intent, consequence, control, or who remains responsible.",
           ],
           media: {
@@ -787,6 +790,16 @@ export const caseStudies: CaseStudy[] = [
             "YC gave individual employees personal agents, then built QM when managing the fleet became difficult. QM is the organizational answer. Waldo asks the personal question: as agents multiply across work and life, what keeps your context, permissions, judgment, and accepted outcomes coherent—and on your side?",
           href: "https://qm.ycombinator.com/",
           cta: "Read YC’s QM notes",
+        },
+        {
+          kind: "link",
+          eyebrow: "External signal · Garry Tan / YC",
+          title:
+            "The model is replaceable. The intelligence that compounds should be yours.",
+          description:
+            "At Startup School 2026, Garry Tan described personal AGI as a person-controlled combination of context, memory, reusable skills, and a replaceable agent harness. It is a strong external articulation of Waldo’s ownership curve. Waldo is being designed to extend that thesis through purpose-bound context, exact authority, evidence-backed Outcomes, and an interface that does not require people to operate the underlying agent stack.",
+          href: "https://www.youtube.com/watch?v=eRrc1pUY5oU",
+          cta: "Watch Own Your Intelligence",
         },
         {
           kind: "link",
