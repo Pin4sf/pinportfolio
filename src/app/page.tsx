@@ -25,6 +25,10 @@ const Hero = dynamic(
   () => import("./components/sections/Hero"),
   { ssr: false }
 );
+const Trajectory = dynamic(
+  () => import("./components/sections/Trajectory"),
+  { ssr: false }
+);
 const SelectedWork = dynamic(
   () => import("./components/sections/SelectedWork"),
   { ssr: false }
@@ -135,6 +139,7 @@ export default function Page() {
       <SmoothScroll>
         <main id="main-content">
           <Hero />
+          <Trajectory />
           <SelectedWork />
           <About />
           <TokenBurner />

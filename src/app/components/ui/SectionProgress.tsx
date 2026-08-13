@@ -10,12 +10,14 @@ interface Section {
 }
 
 const sections: Section[] = [
-  { id: "hero", label: "Home" },
-  { id: "ventures", label: "Work" },
+  { id: "home", label: "Home" },
+  { id: "trajectory", label: "Trajectory" },
+  { id: "evidence", label: "Evidence" },
+  { id: "research", label: "Research" },
   { id: "about", label: "About" },
   { id: "writing", label: "Writing" },
-  { id: "experience", label: "Timeline" },
-  { id: "skills", label: "Skills" },
+  { id: "experience", label: "Chronology" },
+  { id: "capabilities", label: "Capabilities" },
   { id: "contact", label: "Contact" },
 ];
 
