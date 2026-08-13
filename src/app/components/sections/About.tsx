@@ -175,6 +175,11 @@ export default function About() {
             </p>
           ))}
 
+          <aside className={styles.personalNote}>
+            <span>How I tend to work</span>
+            <p>{aboutData.personalNote}</p>
+          </aside>
+
           <div className={styles.facts}>
             {aboutData.facts.map((fact) => (
               <div key={fact.label} className={styles.fact}>

@@ -1,169 +1,81 @@
 "use client";
 
-import { useRef, useEffect, useMemo } from "react";
+import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import styles from "./SkillsExperience.module.scss";
+import { ArrowDownRight } from "lucide-react";
 import { skillCategories, currentlyExploring } from "@/data/portfolio";
 import { useReducedMotion } from "@/app/hooks/useReducedMotion";
-import { useGpuTier } from "@/app/hooks/useGpuTier";
+import styles from "./SkillsExperience.module.scss";
 
 gsap.registerPlugin(ScrollTrigger);
 
 export default function SkillsExperience() {
   const sectionRef = useRef<HTMLElement>(null);
-  const gridRef = useRef<HTMLDivElement>(null);
   const reducedMotion = useReducedMotion();
-  const gpuTier = useGpuTier();
 
-  // Reduced grid on low tier: 10x5=50 vs 15x8=120
-  const gridCols = gpuTier === "low" ? 10 : 15;
-  const gridRows = gpuTier === "low" ? 5 : 8;
-
-  const dots = useMemo(
-    () => Array.from({ length: gridCols * gridRows }, (_, i) => i),
-    [gridCols, gridRows]
-  );
-
-  // GSAP scroll reveals for skill categories
   useEffect(() => {
-    if (reducedMotion) return;
-
-    const section = sectionRef.current;
-    if (!section) return;
-
-    const ctx = gsap.context(() => {
-      const categories = section.querySelectorAll(`.${styles.category}`);
-
-      categories.forEach((cat, i) => {
-        const label = cat.querySelector(`.${styles.categoryName}`);
-        const pills = cat.querySelectorAll(`.${styles.pill}`);
-
-        const tl = gsap.timeline({
+    if (reducedMotion || !sectionRef.current) return;
+    const context = gsap.context(() => {
+      gsap.fromTo(
+        `.${styles.category}`,
+        { y: 32, opacity: 0 },
+        {
+          y: 0,
+          opacity: 1,
+          duration: 0.75,
+          stagger: 0.12,
+          ease: "power3.out",
           scrollTrigger: {
-            trigger: cat,
-            start: "top 85%",
+            trigger: sectionRef.current,
+            start: "top 76%",
             toggleActions: "play none none none",
           },
-        });
-
-        tl.fromTo(
-          label,
-          { x: -30, opacity: 0 },
-          { x: 0, opacity: 1, duration: 0.6, delay: i * 0.05, ease: "back.out(1.7)" }
-        ).fromTo(
-          pills,
-          { scale: 0.8, opacity: 0 },
-          {
-            scale: 1,
-            opacity: 1,
-            duration: 0.5,
-            stagger: 0.04,
-            ease: "back.out(1.7)",
-          },
-          "-=0.3"
-        );
-      });
-    }, section);
-
-    return () => ctx.revert();
+        },
+      );
+    }, sectionRef);
+    return () => context.revert();
   }, [reducedMotion]);
 
-  // Dot grid wave animation (skip on mobile — grid hidden via CSS)
-  useEffect(() => {
-    if (reducedMotion) return;
-    if (typeof window !== "undefined" && window.matchMedia("(max-width: 767px)").matches) return;
-
-    const grid = gridRef.current;
-    if (!grid) return;
-
-    const dotEls = grid.querySelectorAll(`.${styles.gridDot}`);
-    const isLowTier = gpuTier === "low";
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            // Wave stagger reveal from center
-            gsap.fromTo(
-              dotEls,
-              { scale: 0, opacity: 0 },
-              {
-                scale: 1,
-                opacity: 0.25,
-                duration: 0.8,
-                stagger: {
-                  each: 0.03,
-                  grid: [gridCols, gridRows],
-                  from: "center",
-                },
-                ease: "elastic.out(1, 0.6)",
-              }
-            );
-
-            // Subtle looping pulse (skip on low tier — saves 120 infinite tweens)
-            if (!isLowTier) {
-              gsap.fromTo(
-                dotEls,
-                { opacity: 0.12, scale: 0.8 },
-                {
-                  opacity: 0.3,
-                  scale: 1.3,
-                  duration: 3,
-                  stagger: {
-                    each: 0.08,
-                    grid: [gridCols, gridRows],
-                    from: "center",
-                  },
-                  ease: "sine.inOut",
-                  yoyo: true,
-                  repeat: -1,
-                }
-              );
-            }
-
-            observer.disconnect();
-          }
-        });
-      },
-      { threshold: 0.2 }
-    );
-
-    observer.observe(grid);
-
-    return () => observer.disconnect();
-  }, [reducedMotion, gpuTier, gridCols, gridRows]);
-
   return (
-    <section ref={sectionRef} className={styles.section}>
-      {/* Dot grid background */}
-      <div ref={gridRef} className={styles.dotGrid} aria-hidden="true">
-        {dots.map((i) => (
-          <span key={i} className={styles.gridDot} />
-        ))}
-      </div>
-
-      <span className="section__label">Skills &amp; Tools</span>
-      <h2 className="sr-only">Skills &amp; Tools</h2>
+    <section ref={sectionRef} id="capabilities" className={styles.section}>
+      <header className={styles.header}>
+        <span className="section__label">Capabilities with provenance</span>
+        <h2>What the work required.</h2>
+        <p>
+          Technologies matter here only when an artifact, system, or observed
+          constraint gives them context.
+        </p>
+      </header>
 
       <div className={styles.categories}>
-        {skillCategories.map((cat) => (
-          <div key={cat.name} className={styles.category}>
-            <span className={styles.categoryName}>{cat.name}</span>
-            <ul className={styles.pills}>
-              {cat.skills.map((skill) => (
-                <li key={skill.name} className={styles.pill}>
-                  {skill.name}
-                </li>
-              ))}
-            </ul>
-          </div>
+        {skillCategories.map((category, index) => (
+          <article key={category.name} className={styles.category}>
+            <span className={styles.number}>
+              {String(index + 1).padStart(2, "0")}
+            </span>
+            <div>
+              <h3>{category.name}</h3>
+              <p className={styles.description}>{category.description}</p>
+              <ul className={styles.skills}>
+                {category.skills.map((skill) => (
+                  <li key={skill.name}>{skill.name}</li>
+                ))}
+              </ul>
+              <div className={styles.evidenceLinks}>
+                {(category.evidenceSlugs ?? []).map((slug) => (
+                  <a key={slug} href={`#evidence-${slug}`}>
+                    Evidence: {slug.replace("-", " ")}
+                    <ArrowDownRight size={13} aria-hidden="true" />
+                  </a>
+                ))}
+              </div>
+            </div>
+          </article>
         ))}
       </div>
 
-      <p className={styles.exploring}>
-        Currently exploring: {currentlyExploring}
-      </p>
+      <p className={styles.exploring}>Currently investigating: {currentlyExploring}</p>
     </section>
   );
 }
