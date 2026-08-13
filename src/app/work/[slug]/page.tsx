@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { caseStudies, siteConfig } from "@/data/portfolio";
+import { getPublicCaseStudies, siteConfig } from "@/data/portfolio";
 import type { Metadata } from "next";
 import CaseStudy from "./CaseStudy";
 
@@ -7,12 +7,16 @@ interface Props {
   params: { slug: string };
 }
 
+export const dynamicParams = false;
+
+const publicCaseStudies = getPublicCaseStudies();
+
 export function generateStaticParams() {
-  return caseStudies.map((cs) => ({ slug: cs.slug }));
+  return publicCaseStudies.map((cs) => ({ slug: cs.slug }));
 }
 
 export function generateMetadata({ params }: Props): Metadata {
-  const cs = caseStudies.find((c) => c.slug === params.slug);
+  const cs = publicCaseStudies.find((c) => c.slug === params.slug);
   if (!cs) return { title: "Not Found" };
 
   const fullDescription = cs.narrative
@@ -53,18 +57,20 @@ export function generateMetadata({ params }: Props): Metadata {
 }
 
 export default function WorkPage({ params }: Props) {
-  const cs = caseStudies.find((c) => c.slug === params.slug);
+  const cs = publicCaseStudies.find((c) => c.slug === params.slug);
 
   if (!cs) {
     notFound();
   }
 
   // Find adjacent case studies for next/prev navigation
-  const currentIndex = caseStudies.findIndex((c) => c.slug === params.slug);
-  const prev = currentIndex > 0 ? caseStudies[currentIndex - 1] : null;
+  const currentIndex = publicCaseStudies.findIndex(
+    (c) => c.slug === params.slug,
+  );
+  const prev = currentIndex > 0 ? publicCaseStudies[currentIndex - 1] : null;
   const next =
-    currentIndex < caseStudies.length - 1
-      ? caseStudies[currentIndex + 1]
+    currentIndex < publicCaseStudies.length - 1
+      ? publicCaseStudies[currentIndex + 1]
       : null;
 
   const jsonLd = {

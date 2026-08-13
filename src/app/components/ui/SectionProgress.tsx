@@ -13,7 +13,7 @@ const sections: Section[] = [
   { id: "home", label: "Home" },
   { id: "ventures", label: "Ventures" },
   { id: "about", label: "About" },
-  { id: "writing", label: "Writing" },
+  { id: "research", label: "Research + Writing" },
   { id: "experience", label: "Timeline" },
   { id: "skills", label: "Skills" },
   { id: "contact", label: "Contact" },

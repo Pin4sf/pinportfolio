@@ -2,7 +2,7 @@ import dynamic from "next/dynamic";
 import {
   heroData,
   aboutData,
-  caseStudies,
+  getPublicCaseStudies,
   skillCategories,
   contactData,
   siteConfig,
@@ -78,8 +78,8 @@ function SeoContent() {
       </ul>
 
       <h2>Selected Work</h2>
-      {caseStudies
-        .filter((project) => project.category === "venture")
+      {getPublicCaseStudies()
+        .filter((project) => project.slug === "waldo")
         .map((project) => (
           <article key={project.slug}>
             <h3>{project.name}</h3>

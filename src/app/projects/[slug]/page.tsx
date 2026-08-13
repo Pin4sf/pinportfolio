@@ -1,19 +1,23 @@
 import { notFound } from "next/navigation";
-import { caseStudies } from "@/data/portfolio";
+import { getPublicCaseStudies } from "@/data/portfolio";
 import type { Metadata } from "next";
 
 interface Props {
   params: { slug: string };
 }
 
+export const dynamicParams = false;
+
+const publicCaseStudies = getPublicCaseStudies();
+
 export function generateStaticParams() {
-  return caseStudies.map((cs) => ({
+  return publicCaseStudies.map((cs) => ({
     slug: cs.slug,
   }));
 }
 
 export function generateMetadata({ params }: Props): Metadata {
-  const cs = caseStudies.find((p) => p.slug === params.slug);
+  const cs = publicCaseStudies.find((p) => p.slug === params.slug);
   if (!cs) return { title: "Project Not Found" };
 
   return {
@@ -23,7 +27,7 @@ export function generateMetadata({ params }: Props): Metadata {
 }
 
 export default function ProjectPage({ params }: Props) {
-  const cs = caseStudies.find((p) => p.slug === params.slug);
+  const cs = publicCaseStudies.find((p) => p.slug === params.slug);
 
   if (!cs) {
     notFound();

@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { caseStudies, siteConfig } from "@/data/portfolio";
+import { getPublicCaseStudies, siteConfig } from "@/data/portfolio";
 import { getAllPosts } from "@/lib/mdx";
 
 export default function sitemap(): MetadataRoute.Sitemap {
@@ -22,7 +22,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   ];
 
   // Case study pages
-  const workPages: MetadataRoute.Sitemap = caseStudies.map((cs) => ({
+  const workPages: MetadataRoute.Sitemap = getPublicCaseStudies().map((cs) => ({
     url: `${baseUrl}/work/${cs.slug}`,
     lastModified: new Date(),
     changeFrequency: "monthly" as const,

@@ -12,6 +12,9 @@ const portfolio = read("src/data/portfolio.ts");
 const page = read("src/app/page.tsx");
 const hero = read("src/app/components/sections/Hero.tsx");
 const selectedWork = read("src/app/components/sections/SelectedWork.tsx");
+const writing = read("src/app/components/sections/Writing.tsx");
+const writingStyles = read("src/app/components/sections/Writing.module.scss");
+const blogPost = read("src/app/writing/[slug]/BlogPost.tsx");
 const homepageSources = [portfolio, page, hero].join("\n");
 
 test("homepage restores the personal founder introduction", () => {
@@ -41,6 +44,25 @@ test("homepage uses the lighter personal flow", () => {
       workIndex < aboutIndex &&
       aboutIndex < writingIndex,
   );
+});
+
+test("homepage keeps one venture and a compact research-writing section", () => {
+  assert.match(portfolio, /Research \+ Writing/);
+  assert.match(selectedWork, /getVentures/);
+  assert.match(portfolio, /getVentures[\s\S]*slug === "waldo"/);
+  assert.doesNotMatch(hero, /EcoFresh|Co-founder/i);
+  assert.match(writing, /What I’m trying to understand/i);
+  assert.match(writing, /Research notes/i);
+});
+
+test("article reading stays server-rendered and avoids heavy card effects", () => {
+  assert.doesNotMatch(blogPost, /^"use client"/);
+  assert.match(blogPost, /from "next\/link"/);
+  assert.doesNotMatch(
+    writing,
+    /gsap|ScrollTrigger|TransitionLink|"use client"/,
+  );
+  assert.doesNotMatch(writingStyles, /backdrop-filter|rotateY|perspective/);
 });
 
 test("about keeps the lived personal story on the homepage", () => {

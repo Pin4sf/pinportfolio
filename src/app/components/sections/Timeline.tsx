@@ -438,7 +438,7 @@ export default function Timeline() {
       {/* Section header */}
       <div className={styles.header}>
         <span className="section__label">Experience</span>
-        <h2 className={styles.heading}>Timeline</h2>
+        <h2 className={styles.heading}>What each chapter made me ask.</h2>
       </div>
 
       {/* Two-column scrollytelling container */}
@@ -525,6 +525,13 @@ export default function Timeline() {
                   <span className={styles.org}>{entry.organization}</span>
 
                   <p className={styles.description}>{entry.description}</p>
+
+                  {entry.nextQuestion && (
+                    <div className={styles.nextQuestion}>
+                      <span>The question I carried forward</span>
+                      <p>{entry.nextQuestion}</p>
+                    </div>
+                  )}
 
                   {entry.tags && entry.tags.length > 0 && (
                     <div className={styles.tags}>

@@ -243,9 +243,10 @@ export const siteConfig: SiteConfig = {
 // ==================== NAVIGATION ====================
 
 export const navItems: NavItem[] = [
-  { label: "Ventures", href: "#ventures" },
+  { label: "Venture", href: "#ventures" },
   { label: "About", href: "#about" },
-  { label: "Writing", href: "#writing" },
+  { label: "Research + Writing", href: "#research" },
+  { label: "Experience", href: "#experience" },
   { label: "Contact", href: "#contact" },
 ];
 
@@ -255,7 +256,7 @@ export const heroData: HeroData = {
   name: "Shivansh Fulper",
   tagline: "I’m building the agent that stays on your side.",
   subtitle:
-    "Waldo + Kennel · Co-founder, EcoFresh Greensync · B.Tech, IIITDM Jabalpur ’26",
+    "Waldo + Kennel · AI systems researcher · B.Tech, IIITDM Jabalpur ’26",
   socials: [
     {
       name: "LinkedIn",
@@ -287,7 +288,7 @@ export const aboutData: AboutData = {
 
 At Atlan, I helped build and operate more than 30 production agent instances through AtlanClaw. That work made one gap impossible to ignore: an agent finishing a task and the task actually being done are two different things. It shaped how I think about continuity, permission, evidence, and personal agency.
 
-I started coding at 12 to build a Pokédex, then spent years jailbreaking phones and tracing systems past their intended limits. At IIITDM Jabalpur, I grew HackByte from an internal college event to 5,154 registrations as a lead organiser across three years. Project EKA, Code for GovTech, EcoFresh, and rebuilding Qwen3 MoE took that instinct into models and real-world systems. MIRAI-Setu took me across Japan in 2025 and deepened my interest in craft, manufacturing, infrastructure, and long time horizons.`,
+I started coding at 12 to build a Pokédex, then spent years jailbreaking phones and tracing systems past their intended limits. At IIITDM Jabalpur, I grew HackByte from an internal college event to 5,154 registrations as a lead organiser across three years. Project EKA, Code for GovTech, and rebuilding Qwen3 MoE took that instinct into models and real-world systems. MIRAI-Setu took me across Japan in 2025 and deepened my interest in craft, manufacturing, infrastructure, and long time horizons.`,
   photo: "/Shivansh.jpg",
   facts: [
     { label: "Location", value: "Nagpur, India" },
@@ -567,7 +568,7 @@ export const caseStudies: CaseStudy[] = [
     name: "Waldo",
     tagline: "A user-owned agent that stays on your side.",
     heroImage: "/images/projects/waldo/waldo-ecosystem.webp",
-    role: "Co-Founder & CEO",
+    role: "Founder & CEO",
     timeline: "May 2026 — Present",
     techStack: [
       "Swift",
@@ -1252,7 +1253,7 @@ export const currentlyExploring =
 export const timelineData: TimelineEntry[] = [
   {
     year: "2026",
-    title: "Co-Founder & CEO",
+    title: "Founder & CEO",
     organization: "Waldo",
     description:
       "Building a user-owned personal agent and its first Mac home, while keeping product claims separate from the deeper research questions the work exposes.",
@@ -1408,9 +1409,13 @@ export const contactData: ContactData = {
 // ==================== HELPERS ====================
 
 export function getFeaturedWork(): CaseStudy[] {
-  return caseStudies
+  return getPublicCaseStudies()
     .filter((cs) => cs.featured)
     .sort((a, b) => a.order - b.order);
+}
+
+export function getPublicCaseStudies(): CaseStudy[] {
+  return caseStudies.filter((cs) => cs.slug !== "ecofresh");
 }
 
 export function getFeaturedEvidence(): EvidenceRecord[] {
@@ -1422,7 +1427,9 @@ export function getEvidenceBySlug(slug: string): EvidenceRecord | undefined {
 }
 
 export function getVentures(): CaseStudy[] {
-  return caseStudies.filter((cs) => cs.category === "venture");
+  return getPublicCaseStudies().filter(
+    (cs) => cs.category === "venture" && cs.slug === "waldo",
+  );
 }
 
 export function getProjects(): CaseStudy[] {

@@ -33,7 +33,7 @@ export default function Header() {
           }
         });
       },
-      { threshold: 0.3, rootMargin: "-80px 0px 0px 0px" }
+      { threshold: 0.3, rootMargin: "-80px 0px 0px 0px" },
     );
 
     sections.forEach((section) => observer.observe(section));
@@ -50,7 +50,8 @@ export default function Header() {
 
       // Update scroll progress bar
       if (progressRef.current) {
-        const total = document.documentElement.scrollHeight - window.innerHeight;
+        const total =
+          document.documentElement.scrollHeight - window.innerHeight;
         const progress = total > 0 ? currentY / total : 0;
         progressRef.current.style.transform = `scaleX(${progress})`;
       }
@@ -65,12 +66,12 @@ export default function Header() {
     if (!menuOpen) return;
 
     const overlay = document.querySelector(
-      `.${styles.overlay}`
+      `.${styles.overlay}`,
     ) as HTMLElement | null;
     if (!overlay) return;
 
     const focusable = overlay.querySelectorAll<HTMLElement>(
-      'a[href], button, [tabindex]:not([tabindex="-1"])'
+      'a[href], button, [tabindex]:not([tabindex="-1"])',
     );
     const first = focusable[0];
     const last = focusable[focusable.length - 1];
@@ -109,7 +110,7 @@ export default function Header() {
     gsap.fromTo(
       header,
       { y: -100, opacity: 0 },
-      { y: 0, opacity: 1, duration: 0.8, delay: 2, ease: "power3.out" }
+      { y: 0, opacity: 1, duration: 0.65, delay: 0.2, ease: "power3.out" },
     );
   }, []);
 
@@ -123,7 +124,7 @@ export default function Header() {
         className={cn(
           styles.header,
           scrolled && styles.scrolled,
-          hidden && styles.hidden
+          hidden && styles.hidden,
         )}
       >
         <div className={styles.inner}>
@@ -139,7 +140,7 @@ export default function Header() {
                 text={item.label}
                 className={cn(
                   styles.navLink,
-                  activeSection === item.href && styles.active
+                  activeSection === item.href && styles.active,
                 )}
               />
             ))}
