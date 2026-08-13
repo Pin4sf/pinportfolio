@@ -353,7 +353,11 @@ export const trajectoryPhases: TrajectoryPhase[] = [
     title: "Agents",
     summary:
       "At Atlan and through Waldo, the unit of work shifted from a model response to a system with context, tools, permissions, memory, failure, and a goal.",
-    evidence: ["30+ production agent instances", "40+ harnesses studied", "Waldo + Kennel"],
+    evidence: [
+      "30+ production agent instances",
+      "40+ harnesses studied",
+      "Waldo + Kennel",
+    ],
     insight:
       "Once a model receives tools, context, permissions, and a goal, the systems around it become part of its effective behavior.",
   },
@@ -363,7 +367,11 @@ export const trajectoryPhases: TrajectoryPhase[] = [
     title: "World",
     summary:
       "Smart Manufacturing, sensing, invention, and industrial exposure keep pulling the research toward environments where software decisions acquire physical consequences.",
-    evidence: ["Smart Manufacturing", "Sensing + edge inference", "Published patent applications"],
+    evidence: [
+      "Smart Manufacturing",
+      "Sensing + edge inference",
+      "Published patent applications",
+    ],
     insight:
       "Physical systems make uncertainty, latency, state, control, and the cost of failure impossible to ignore.",
   },
@@ -520,7 +528,9 @@ export const researchAreas: ResearchArea[] = [
     maturity: "practice",
     summary:
       "Context composition, typed tools, permissions, durable execution, recovery, delivery, and observability shape deployed behavior alongside the model.",
-    questions: ["Which runtime boundaries must remain first-party because they encode trust?"],
+    questions: [
+      "Which runtime boundaries must remain first-party because they encode trust?",
+    ],
     evidenceSlugs: ["atlan", "waldo"],
   },
   {
@@ -528,7 +538,9 @@ export const researchAreas: ResearchArea[] = [
     maturity: "practice",
     summary:
       "Real agent systems fail across tools, credentials, providers, retries, and human handoffs—not only at the model response.",
-    questions: ["Where should intervention happen before recovery becomes expensive or unsafe?"],
+    questions: [
+      "Where should intervention happen before recovery becomes expensive or unsafe?",
+    ],
     evidenceSlugs: ["atlan", "waldo"],
   },
   {
@@ -536,7 +548,9 @@ export const researchAreas: ResearchArea[] = [
     maturity: "investigating",
     summary:
       "Memory changes future behavior. Provenance, freshness, correction, forgetting, and user ownership therefore become policy questions.",
-    questions: ["What should persist, expire, or be reopened when the world changes?"],
+    questions: [
+      "What should persist, expire, or be reopened when the world changes?",
+    ],
     evidenceSlugs: ["waldo"],
   },
   {
@@ -552,7 +566,9 @@ export const researchAreas: ResearchArea[] = [
     maturity: "investigating",
     summary:
       "Accumulated context should remain inspectable, correctable, revocable, exportable, and separate from permission to act.",
-    questions: ["How can a system become more personal without silently becoming more powerful?"],
+    questions: [
+      "How can a system become more personal without silently becoming more powerful?",
+    ],
     evidenceSlugs: ["waldo"],
   },
   {
@@ -560,7 +576,9 @@ export const researchAreas: ResearchArea[] = [
     maturity: "long-term",
     summary:
       "Multimodal and embodied agents operate under noisy observation, continuous time, latency, physical constraints, and irreversible consequences.",
-    questions: ["How should agent state and control change when action crosses into the physical world?"],
+    questions: [
+      "How should agent state and control change when action crosses into the physical world?",
+    ],
     evidenceSlugs: ["physical-systems"],
   },
 ];
@@ -596,11 +614,11 @@ export const caseStudies: CaseStudy[] = [
     category: "venture",
     featured: true,
     challenge:
-      "As people delegate more work to agents, they inherit a new job: reconciling what agents produced, what became true, and what still needs human judgment. Today's agents know the prompt and the current session. The person still carries the real outcome, the surrounding commitments, the follow-ups, and the consequences when work stalls.",
+      "Machine execution is scaling faster than human understanding, verification, and responsibility. Producing plausible artifacts and initiating machine work are becoming cheaper, while the person still has to understand assumptions, reconcile contradictions, judge consequences, and know whether the work changed anything that mattered.",
     approach:
-      "Start with the users who already feel the coordination problem. Kennel is Waldo's native home on the Mac, beginning with attributable Codex sessions, conversation, live state, and same-task continuation. Underneath, Agent Session, Outcome Verification, and the human Open Loop remain different kinds of truth. Waldo is being designed to add only the personal context the user permits — priorities, commitments, boundaries, capacity, health context, and prior corrections — so assistance stays grounded in the person rather than just the prompt.",
+      "Start with the human constraint system, not a fixed interface. Responsibility continuity is our current connective hypothesis: one user-owned relationship should preserve intent, evidence, corrections, authority, and what remains across changing agents and surfaces—while compressing routine management rather than creating another agent-management job.",
     solution:
-      "We have three working foundations used internally: Kennel on macOS, a durable agent harness, and Waldo on iOS. Kennel provides the governed desktop surface and a local durable event foundation. The harness covers resumable agent work, typed tools, permissions, scheduling, delivery, and audit. The iOS foundation carries personal and health context. The next product proof is integrating those foundations around evidence-linked outcomes, user-confirmed open loops, and low-risk orchestration help — without turning activity into an opaque score or letting insight silently grant authority.",
+      "Kennel on macOS, Waldo on iOS, and a durable agent harness are working internal foundations for testing continuity, governance, evidence, and low-friction presence—not the permanent definition of the company. A surface earns its place only if it reduces reconstruction, review, unsafe action, forgotten follow-through, or attention per accepted outcome without silently expanding authority.",
     solutionImages: [
       "/images/projects/waldo/hero.png",
       "/images/projects/waldo/app-screens.png",
@@ -608,126 +626,134 @@ export const caseStudies: CaseStudy[] = [
       "/images/projects/waldo/iphone-2.png",
     ],
     impact:
-      "Since May 2026, we have built the three foundations and use them internally. Kennel has recorded live Codex acceptance for bounded multi-session discovery, populated conversation history, real-time processing state, same-task continuation, first-message handling, and archive cleanup. Its local contracts deliberately keep provider activity, outcome evidence, and the user's remaining obligation separate. Broader provider coverage, automatic artifact verification, cross-session continuity, and a fully integrated Mac–iOS–harness experience are the next proofs, not claims we present as shipped.",
+      "The current evidence is foundation-level, not market validation. Kennel has recorded live Codex acceptance for bounded multi-session discovery, populated conversation history, real-time state, same-task continuation, first-message handling, and archive cleanup. Waldo has not yet established external retention, revenue, willingness to pay, or product-market validation. The research test is whether it lowers sessions or raw artifacts opened per accepted outcome and interruptions per accepted outcome.",
     reflection:
-      "More agent autonomy does not remove the person's coordination burden; it can hide it behind more activity. The personal agent worth building is not the one that produces the most tasks or remembers the most data. It is the one that preserves intent, asks for judgment at the right moment, distinguishes evidence from confidence, and helps the user consciously finish, defer, transfer, or release what remains open.",
+      "Waldo's center of gravity is epistemic: helping a person know what is true, what changed, what remains, and what machine work actually bought. Orchestration, memory, and interface are means. If Waldo merely adds another surface to manage, it becomes the third loop rather than the break.",
     pullQuote:
-      "An agent finishing a task and the task actually being done are two different things.",
+      "The product is fluid. The human constraint system is the thesis.",
     narrative: {
       brandMark: {
         src: "/images/projects/waldo/logo.svg",
         alt: "Waldo",
       },
-      heroEyebrow: "Waldo · Why I am building it",
+      heroEyebrow: "Waldo · The revised thesis",
       heroStatement:
-        "Give Waldo a responsibility. Stop carrying it in your head.",
+        "Machine execution is scaling. Human understanding and responsibility are not.",
       heroQuote:
-        "An agent finishing a task and the task actually being done are two different things.",
+        "Machine execution can scale. Consequences do not automatically transfer with it.",
       heroBody:
-        "I’m building Waldo to keep hold of the desired result, coordinate the agents and tools working toward it, bring you in when judgment or permission matters, and preserve what remains until the result is verified or consciously changed.",
+        "I’m building Waldo from an emerging pool of interlinked human constraints—not from one fixed workflow. As personal agents reach more people and specialist execution multiplies, Waldo is testing how one user-owned relationship can preserve understanding, authority, continuity, and responsibility across whatever agents and interfaces come next.",
       status: [
-        "Judgment now",
-        "Sustainable agency throughout",
-        "Physical authority later",
+        "Problem pool first",
+        "Evidence before category",
+        "Product surface stays fluid",
       ],
       heroImageAlt:
         "Waldo product system map connecting a person with agents, accounts, and work tools",
       heroImageCaption:
-        "The wider product idea: one personal agent coordinating the tools, models, accounts, and specialist agents a person chooses.",
+        "One possible system response—not a fixed product boundary: a personal agent relating the person to the tools, models, accounts, and specialist agents they choose.",
       sections: [
         {
           id: "what-changed",
-          eyebrow: "01 · What I learned",
-          title: "Agents got more capable. We inherited the coordination.",
+          eyebrow: "01 · The world change",
+          title: "Producing got cheap. Understanding did not.",
+          status: "derived",
           body: [
-            "The session is a work log. The outcome is the product. When I was building and operating more than 30 production agent instances at Atlan, the difficult part was rarely getting an agent to produce something. It was remembering why each session existed, moving context between tools, catching a waiting decision, and checking whether the result actually solved the original problem.",
-            "Suyash felt the same pressure from another direction while running a design studio and training for an Ironman. His work, commitments, routines, and health lived in tools that never understood how those things affected one another. The software could show more information. It could not decide what mattered now, what could wait, or what no longer deserved to be carried.",
-            "Delegation has its own cognitive cost: deciding what to hand off, briefing it, supervising it, recovering from failure, and judging whether the risk was worth it. When that cost exceeds the work avoided, the agent has not really reduced the person’s burden.",
-            "The person delegated a problem, not a transcript—and should not inherit a second job stitching every result back into life. AI can do more work than ever. It should not leave you with more to carry.",
-            "That is the opportunity I see: access to intelligence is becoming ordinary, but reliable follow-through is not. As AI moves from drafts into recurring workflows, the hard problem shifts to the connective tissue—context, permission, handoffs, recovery, verification, and what returns to the person.",
+            "For many bounded tasks, machines can now produce plausible code, documents, plans, and analyses in minutes. The cost has not disappeared. It has moved into understanding assumptions, reconciling contradictions, reviewing consequences, and knowing whether the work changed anything that mattered.",
+            "I first felt this while building and operating more than 30 production agent instances at Atlan. Starting another run was easy. Remembering why it existed, moving context between tools, detecting a waiting decision, and checking whether the original problem was actually resolved remained human work.",
+            "Suyash encountered the same structure while running a design studio and training for an Ironman: more tools could produce more information, but no system could reliably decide what mattered now, what could wait, or what no longer deserved to be carried.",
+            "The transition is larger than coordination. Capability is becoming abundant while comprehension, attention, legitimate authority, and accountability remain finite. That is the constraint system Waldo is investigating.",
           ],
           cards: [
             {
-              label: "The session",
-              title: "What the agent sees",
-              body: "The prompt, available tools, messages, artifacts, and whether its run finished.",
+              label: "Observed",
+              title: "The old bottleneck was production",
+              body: "Writing the code, document, analysis, plan, or message often constrained how much work could be attempted.",
+              status: "observed",
             },
             {
-              label: "The outcome",
-              title: "What actually changed",
-              body: "Whether the person’s original problem was solved, supported by evidence rather than confidence.",
+              label: "Derived",
+              title: "The new bottleneck is outcome truth",
+              body: "Understanding, verification, acceptance, consequence, and the causal story behind machine-produced work remain scarce.",
+              status: "derived",
             },
             {
-              label: "The person",
-              title: "What still matters",
-              body: "The judgment, follow-ups, consequences, capacity, and commitments left after the run.",
+              label: "Failure mode",
+              title: "Activity mistaken for progress",
+              body: "More tokens, sessions, commits, and artifacts can increase visible activity while leaving the person with more uncertainty and review.",
+              status: "hypothesis",
             },
           ],
         },
         {
           id: "responsibility",
-          eyebrow: "02 · The product promise",
-          title:
-            "The responsibility is the desired result—not the latest task, run, or failure.",
+          eyebrow: "02 · The problem pool",
+          title: "Three centers. One accountability floor.",
+          status: "derived",
           body: [
-            "Give Waldo what you need to become true—not a checklist of every step it should take. Waldo should keep hold of that desired result, coordinate the agents, tools, services, and people contributing to it, and return when judgment, permission, or a change of plan belongs to you.",
-            "A responsibility survives the latest task, agent run, interface, and failed attempt. Routine progress should not become another feed to supervise; what remains should not disappear merely because one agent stopped.",
+            "AI is not creating one neatly bounded problem. It is producing a reinforcing pool: more output raises evaluation load; more agents raise management work; fragmented memory raises reconstruction; easier action raises governance and consequence; cheaper intelligence raises the need to decide what the spend actually bought.",
+            "The center of gravity is epistemic. Waldo should help a person know what is true, what changed, what remains, and why—not orchestrate for its own sake. Coordination, memory, and interfaces are candidate means.",
           ],
           cards: [
             {
-              label: "Work",
-              title: "Make sure the product update reaches customers this week.",
-              body: "Implementation, release, communication, and verification may involve different agents and tools. The responsibility remains the customer-visible result.",
+              label: "Epistemic",
+              title: "I cannot cheaply know what is true.",
+              body: "Abundance without comprehension. Activity without outcome truth. Memory without coherent continuity. Cheap intelligence without allocation discipline.",
+              status: "derived",
             },
             {
-              label: "Life",
-              title:
-                "Make sure my mother’s appointment is booked and she knows what to bring.",
-              body: "Scheduling, confirmation, preparation, and communication are contributing paths. The responsibility remains the real-world arrangement.",
+              label: "Attentional",
+              title: "I cannot allocate myself.",
+              body: "Delegation without management capacity. Adoption without the agent-management literacy most people never asked to acquire.",
+              status: "derived",
             },
             {
-              label: "Relationships",
-              title: "Make sure nothing gets dropped after the investor meeting.",
-              body: "Commitments, follow-ups, replies, and decisions can unfold over days. The responsibility persists without living in the person’s working memory.",
+              label: "Custodial",
+              title: "I cannot keep what I have built.",
+              body: "Personalization without durable user agency: context, corrections, permissions, and history become provider-bound or opaque.",
+              status: "derived",
+            },
+            {
+              label: "Accountability floor",
+              title: "Consequence stays with me regardless.",
+              body: "Agents can act, but legal, social, professional, and moral accountability does not automatically transfer with execution.",
+              status: "observed",
             },
           ],
           afterword: [
-            "A failed deployment is evidence about one attempted path. It is not the responsibility, and the failure itself is not an Open Loop. Waldo must still verify whether customers can access the intended update.",
-            "An Open Loop is Waldo’s durable record of what remains unresolved relative to the desired result, why it remains unresolved, and where the work should return. The responsibility stays open until evidence supports the result and the person accepts it—or consciously repairs, reopens, defers, transfers, changes, or releases it.",
+            "The problems reinforce one another. More delegation creates more sessions; more sessions create more reconstruction and review; weak review creates false closure and consequence debt; that burden encourages another orchestration layer that can itself create more activity.",
+            "Waldo must break that loop. If it raises sessions or raw artifacts opened per accepted outcome, or interruptions per accepted outcome, it has merely relocated the burden.",
           ],
         },
         {
           id: "governance",
-          eyebrow: "03 · Agent governance",
-          title: "Delegate responsibility without surrendering control.",
+          eyebrow: "03 · Current connective hypothesis",
+          title: "Responsibility continuity—not another agent-management job.",
+          status: "hypothesis",
           body: [
-            "Running many agents taught me that starting them is not the hardest part. The hard part is deciding what they may see, what they may change, whether they acted once or twice, what actually became true, and what still belongs to the person.",
-            "Waldo is being designed to absorb that delegation tax: compose the permitted context, brief specialist agents, supervise bounded work, recover when a path fails, verify what became true, and return only the judgment or permission that belongs to the person.",
-            "The missing layer is agent governance. Waldo is being designed as the owner-side layer between a person and every model, specialist agent, tool, connector, service, or future machine acting on their behalf. It should make delegation useful without letting the machinery grant itself authority or decide that the person’s responsibility is closed.",
-            "Memory and reusable skills make an agent more capable. They do not give it authority, prove that an Outcome became true, or close the person’s responsibility. Waldo is being designed as the governed layer between compounding intelligence and consequential action.",
-            "Kennel and the other working foundations let us test parts of this today. End-to-end cross-surface governance is the target architecture, not a capability we claim as shipped. Kennel and other surfaces can propose work; Waldo’s online governed backend will decide what may become canonical or consequential.",
-            "The person must remain able to accept, repair, reopen, defer, transfer, change, or release the responsibility. More machine action should expand personal agency, not replace it.",
+            "One human intention can span many sessions, specialist agents, tools, people, and days. Provider memory can preserve a transcript; it does not necessarily preserve why the work exists, what evidence changed the plan, what was accepted, or which consequence still remains.",
+            "Responsibility continuity is our current hypothesis for that connective tissue. Waldo should retain the desired result, current constraints, authoritative evidence, corrections, decisions, unresolved consequences, and the smallest truthful re-entry point—even as the executor changes.",
+            "This does not mean giving everyone an operator console. The person should not inherit the skill of managing an agent fleet. Waldo should compress routine discovery, briefing, monitoring, reconciliation, recovery, and re-entry, then surface uncertainty, changed scope, irreversible effects, cost, or permission only when human judgment is truly required.",
+            "The hypothesis remains replaceable. If native providers absorb this burden, if people prefer direct control, or if the representation creates more cognitive load than it removes, Waldo must change rather than defend the label.",
           ],
           cards: [
             {
-              label: "Context",
-              title: "Purpose-bound context",
-              body: "An agent should receive the smallest attributable context required for the current Outcome—not the person’s complete memory.",
+              label: "Preserve",
+              title: "Intent, evidence, and what remains",
+              body: "Carry the causal story across sessions rather than storing an undifferentiated transcript archive.",
+              status: "hypothesis",
             },
             {
-              label: "Authority",
-              title: "Exact authority",
-              body: "Permission must be bounded to an action, resource, purpose, use, and expiry. Memory, past approval, or inferred preference is never current authority.",
+              label: "Compress",
+              title: "Routine management",
+              body: "Absorb coordination work without hiding uncertainty or silently taking authority from the person.",
+              status: "hypothesis",
             },
             {
-              label: "Execution",
-              title: "Constrained execution",
-              body: "Capabilities, credentials, budgets, cancellation, containment, and revocation must remain governed outside the model.",
-            },
-            {
-              label: "Truth",
-              title: "Governed truth",
-              body: "Activity is not completion. Provider reports, receipts, evidence, verification, acceptance, and what remains unresolved must stay separate.",
+              label: "Return",
+              title: "The smallest decision-complete intervention",
+              body: "Bring back the evidence, consequence, and exact judgment required—not another feed of machine activity.",
+              status: "hypothesis",
             },
           ],
         },
@@ -1015,10 +1041,37 @@ export const caseStudies: CaseStudy[] = [
         },
       ],
       artifactsEyebrow: "13 · Artifacts",
-      artifactsTitle: "See the work, then go deeper.",
+      artifactsTitle: "Inspect the thesis, research, and working foundations.",
       artifactsIntro:
-        "Start with the work itself: the founders, product, system, company, and site. The outside signals come after.",
+        "The essays state the research position and its falsifiers. The technical brief and product artifacts show the current foundations. External sources support the direction, not Waldo product-market fit.",
       artifacts: [
+        {
+          kind: "link",
+          eyebrow: "Research · Outcome truth",
+          title: "When an agent says done, what is actually true?",
+          description:
+            "The distinction between a session, artifact, evidence, accepted outcome, and unresolved human responsibility.",
+          href: "/writing/agent-done-outcome-truth",
+          cta: "Read the essay",
+        },
+        {
+          kind: "link",
+          eyebrow: "Research · Memory",
+          title: "Memory is governed state, not storage",
+          description:
+            "A design position on provenance, scope, contradiction, correction, authority, and forgetting in a persistent personal agent.",
+          href: "/writing/memory-is-not-storage",
+          cta: "Read the essay",
+        },
+        {
+          kind: "link",
+          eyebrow: "Research · Harnesses",
+          title: "The harness is part of the agent",
+          description:
+            "A synthesis from studying more than 40 public agent harnesses, with the production-versus-research boundary kept explicit.",
+          href: "/writing/harness-is-part-of-the-agent",
+          cta: "Read the essay",
+        },
         {
           kind: "video",
           eyebrow: "Founder video · 01:13",
@@ -1396,9 +1449,7 @@ export function getFeaturedEvidence(): EvidenceRecord[] {
   return evidenceRecords.filter((record) => record.featured);
 }
 
-export function getEvidenceBySlug(
-  slug: string,
-): EvidenceRecord | undefined {
+export function getEvidenceBySlug(slug: string): EvidenceRecord | undefined {
   return evidenceRecords.find((record) => record.slug === slug);
 }
 

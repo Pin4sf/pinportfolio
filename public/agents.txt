@@ -1,14 +1,19 @@
 # agents.txt — Shivansh Fulper Portfolio
-# This file helps AI agents understand this website and its owner.
-# Spec: https://agentprotocol.ai/agents-txt
+# Machine-readable guide to the site's evidence and writing.
 
 # Identity
 name: Shivansh Fulper
-type: personal-portfolio
+type: founder-researcher-portfolio
 url: https://shivanshfulper.com
+identity: Founder of Waldo and AI systems researcher
+
+# Research focus
+focus: Persistent agents, memory and state, long-horizon execution, monitoring, control, evaluation, and physical AI
+trajectory: Models -> Agents -> World
+evidence-policy: Distinguish observed work, built artifacts, derived conclusions, hypotheses, direction, and historical material
 
 # Description
-description: Personal portfolio of Shivansh Fulper — founder and AI systems engineer building Waldo and Kennel. Contains evidence-backed case studies, writing, prior work, and contact information.
+description: Evidence-led portfolio of Shivansh Fulper, founder of Waldo and an AI systems researcher studying what it takes to trust persistent agents over time.
 
 # Contact
 contact-email: piyushfulper3210@gmail.com
@@ -19,25 +24,32 @@ llms-txt: https://shivanshfulper.com/llms.txt
 llms-full-txt: https://shivanshfulper.com/llms-full.txt
 sitemap: https://shivanshfulper.com/sitemap.xml
 
-# Pages
-page: / # Homepage — hero, selected work, about, ventures, writing, skills, contact
-page: /writing # Blog archive with category filtering
-page: /work/waldo # Waldo case study — user-owned continuity, Kennel, personal agency, and bodies for AI
-page: /work/ecofresh # EcoFresh Greensync case study — waste-to-value infrastructure
-page: /writing/my-stack-2026 # Blog: My Stack in 2026
-page: /writing/mirai-setu-japan # Blog: MIRAI-Setu and Japan
-page: /writing/startup-lessons # Blog: Startup Lessons
+# Primary pages
+page: / # Founder-researcher trajectory, selected evidence, research agenda, writing, biography, chronology, and contact
+page: /work/waldo # Waldo thesis, working foundations, evidence boundaries, and falsifiers
+page: /writing # Research essays, field notes, founder notes, and clearly labeled historical writing
 
-# Experience artifacts
+# Research essays
+page: /writing/agent-done-outcome-truth # Separating sessions, artifacts, evidence, outcomes, and open loops
+page: /writing/memory-is-not-storage # Memory as governed state with provenance, correction, and forgetting
+page: /writing/harness-is-part-of-the-agent # Synthesis from studying more than 40 public agent harnesses
+
+# Evidence anchors
+artifact: https://www.heywaldo.in/ # Waldo product site; current portfolio claims remain foundation-level, not market validation
+artifact: https://waldo-technical-brief.pages.dev/ # Waldo technical and vision brief
 artifact: https://soket.ai/project-eka # Project EKA at Soket AI Labs
-artifact: https://www.hackbyte.in/ # HackByte, led with The Programming Club from 2023 to 2025
-artifact: https://issuu.com/afsindia/docs/mirai-setu_2025?fr=sNWZlZTgzNTM2NzQ # MIRAI-Setu 2025 Yearbook
+artifact: https://www.hackbyte.in/ # HackByte community work
+artifact: https://issuu.com/afsindia/docs/mirai-setu_2025?fr=sNWZlZTgzNTM2NzQ # MIRAI-Setu 2025 yearbook
 
-# Topics this site covers
-topics: Physical AI, Industry 4.0, Quantum + AI, personal agents, user-owned AI, Kennel, agent orchestration, human-agent systems, LLM infrastructure, outcome verification, native macOS development, waste-to-value infrastructure, startups, Swift, Python, TypeScript
+# Important claim boundaries
+claim: Helped build and operate more than 30 production agent instances at Atlan
+claim: Studied more than 40 public agent harnesses; this is a comparative research corpus, not 40 production systems personally operated
+claim: Built Eka Curator and worked on COOM within Project EKA; program scale belongs to Project EKA
+claim: Implemented Qwen3 MoE from first principles as an educational systems project, not original model research
+claim: Waldo has working internal foundations and bounded Kennel acceptance; external retention, revenue, willingness to pay, and product-market validation are not established
 
 # Social profiles
 social: https://www.linkedin.com/in/shivansh-fulper/
 social: https://github.com/Pin4sf
-social: https://twitter.com/FulperShivansh
+social: https://x.com/shivanshfulper
 social: https://instagram.com/pin4sf

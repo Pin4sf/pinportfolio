@@ -8,8 +8,6 @@ featured: true
 evidenceStatus: "derived"
 ---
 
-# When an Agent Says Done, What Is Actually True?
-
 > **Evidence note:** This essay is a research synthesis, not a claim that Waldo has solved reliable autonomy. It combines lessons from operating more than 30 production agent instances at Atlan, building Waldo, and studying current agent-evaluation and monitoring work. Product conclusions are hypotheses until they survive repeated use.
 
 An agent can finish a run without finishing the work.
@@ -97,12 +95,10 @@ A self-report from the same agent that performed an action is weaker than an ind
 
 I find it useful to evaluate evidence along four dimensions:
 
-| Dimension | Weak evidence | Stronger evidence |
-|---|---|---|
-| Independence | Agent summarizes its own action | Separate system or reviewer checks the result |
-| Proximity | Proxy metric | Direct observation of the intended state |
-| Coverage | Happy path | Relevant failure and recovery paths |
-| Freshness | Historical snapshot | Recent observation from the authoritative surface |
+- **Independence:** an agent summarizing its own action is weaker than a separate system or reviewer checking the result.
+- **Proximity:** a proxy metric is weaker than direct observation of the intended state.
+- **Coverage:** a happy-path check is weaker than evidence across relevant failure and recovery paths.
+- **Freshness:** a historical snapshot is weaker than a recent observation from the authoritative surface.
 
 This does not create certainty. It makes uncertainty visible.
 
@@ -183,4 +179,3 @@ The framework leaves hard questions open:
 The next step is not a larger promise. It is instrumented use: record what a person delegated, what the system claimed, what evidence they inspected, what they corrected, and what they eventually accepted. Then look for the points where confidence was misplaced.
 
 Agents will keep getting better at producing work. The harder design problem is making their work legible enough to trust—and modest enough to doubt.
-

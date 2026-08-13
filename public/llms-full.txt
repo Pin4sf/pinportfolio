@@ -1,147 +1,138 @@
-# Shivansh Fulper — Full Context
+# Shivansh Fulper — Full Portfolio Context
 
-> AI engineer and startup founder building production agent systems, Waldo, Kennel, and EcoFresh Greensync.
+> Founder of Waldo and AI systems researcher working on persistent agents, memory and state, long-horizon execution, monitoring, control, and evaluation.
 
 ## Identity
 
 Name: Shivansh Fulper
 Location: Nagpur, India
-Education: B.Tech, Smart Manufacturing, IIITDM Jabalpur (completed 2026)
-Current Roles: Co-Founder & CEO @ Waldo, Co-Founder @ EcoFresh Greensync
+Education: B.Tech, Smart Manufacturing, IIITDM Jabalpur, completed 2026 as branch topper with an 8.5 CPI
+Current work: Founder of Waldo
+Research trajectory: Models -> Agents -> World
+Longer horizon: Multimodal agents, physical AI, and robotics
 Email: piyushfulper3210@gmail.com
 
-## Professional Background
+## Research position
 
-Shivansh builds the infrastructure that makes AI agents useful once people rely on them: context, tools, authentication, permissions, memory, delivery, and evaluation.
+Shivansh studies what changes when a language model becomes an agent with context, tools, permissions, persistent state, recovery, and real consequences. His central question is how machine execution can expand without making the person carry more reconstruction, review, uncertainty, or unsafe authority.
 
-At Atlan, he helped build and operate more than 30 production agent instances through AtlanClaw. He worked across context, tools, authentication, integrations, deployment, and production failure modes.
+The portfolio uses explicit evidence states:
 
-That work shaped Waldo: a user-owned personal agent being designed to carry the context a person permits across models, tools, work, and life. Kennel is Waldo's first Mac home. It begins with agent-native users who need to see what finished, what needs their judgment, and what is still open.
+- Observed: directly seen in a source, system, or lived event.
+- Built: an implemented artifact or system contribution.
+- Demonstrated: bounded behavior shown by a test or acceptance record.
+- Derived: a conclusion drawn from observed work or sources.
+- Hypothesis: a claim that still needs product or research validation.
+- Direction: a longer-term interest, not a shipped capability.
+- Historical: earlier work retained with its original context.
 
-Shivansh also co-founded EcoFresh Greensync, contributed to Project EKA at Soket AI Labs, built an NLP-to-workflow system through Code for GovTech, and implemented Qwen3 MoE from scratch. In 2025, MIRAI-Setu took him across Japan and influenced how he thinks about craft, reliable systems, manufacturing, and long time horizons.
+## Trajectory
 
-## Ventures
+### Models
 
-### Waldo — User-Owned Personal Agent
+At Soket AI Labs, Shivansh worked within Project EKA on multilingual data and reproducible experimentation. His bounded contribution was building Eka Curator and working on COOM. The wider program's model scale and institutional scope belong to Project EKA and should not be presented as his individual output.
 
-- Role: Co-Founder & CEO
-- Timeline: May 2026 — Present
-- Website: https://www.heywaldo.in/
-- First surface: Kennel, a native macOS companion
-- Stack: Swift, SwiftUI, Codex App Server, SQLite/GRDB, Cloudflare Durable Objects, TypeScript, React Native
+He also implemented Qwen3 MoE from first principles as an educational systems project adapted from public educational material. It demonstrates architectural understanding; it is not a claim of original model research.
 
-Basic promise: Give Waldo a responsibility. Stop carrying it in your head.
+### Agents
 
-Waldo is being built to keep hold of the desired real-world result, coordinate the agents and tools working toward it, return when judgment or permission belongs to the person, and preserve what remains until the result is verified or consciously changed. It is intended to provide continuity across models, tools, work, and life while carrying only the human context the user permits. Health and body data are foundational life context, not Waldo's product category or an authority source.
+At Atlan, Shivansh helped build and operate more than 30 production agent instances across context, tools, authentication, integrations, deployment, and real failure modes. That figure refers to production instances, not 30 autonomous employees or 30 different harness architectures.
 
-Kennel is the current Mac wedge. It starts with Codex sessions and keeps three kinds of truth separate:
+Separately, he studied more than 40 public agent harnesses through documentation, repositories, product behavior, and architecture notes. He organized the corpus into eight paradigms and 13 recurring patterns. This was a comparative design study, not a controlled benchmark and not 40 production harnesses he personally operated.
 
-- Agent Session: what the provider reports.
-- Outcome Verification: what evidence exists about the intended result.
-- Open Loop: Waldo's durable record of what remains unresolved relative to the desired result, why it remains unresolved, and where the work should return. A failed task or agent run is evidence about one attempted path; it is not itself an Open Loop.
+### World
 
-Since May 2026, the team has built three working foundations used internally: Kennel on macOS, a durable agent harness, and an earlier Waldo iOS foundation. Recorded Codex acceptance covers bounded multi-session discovery, populated conversation history, real-time processing state, same-task continuation, first-message handling, and archive cleanup. Broader provider coverage, automatic artifact verification, cross-session continuity, and full Mac–mobile–harness integration remain next product proofs.
+Smart Manufacturing placed his technical foundation at the boundary between software, sensors, machines, industrial operations, and physical consequences. Co-inventorship on published patent applications and industrial exposure in Japan inform a longer-term interest in multimodal agents, physical AI, and robotics. This is a research direction, not a current Waldo hardware program.
 
-Core insight: An agent finishing a task and the task actually being done are two different things.
+## Waldo
 
-Waldo is being designed as the owner-side Agent Governance Layer between a person and every model, specialist agent, tool, connector, service, or future machine acting on their behalf. Its target mechanisms are purpose-bound context, exact authority, constrained execution outside the model, and governed truth that keeps provider completion, evidence, verification, acceptance, and remaining Open Loops separate. Kennel and the other working foundations test parts of this today; end-to-end cross-surface governance remains target architecture under online backend authority.
+Role: Founder
+Timeline: May 2026 to present
+Product site: https://www.heywaldo.in/
+Technical brief: https://waldo-technical-brief.pages.dev/
 
-Waldo is intended to preserve the user's context, workflow, trust, and permissions while routing work to replaceable models, tools, and specialist agents. The long-term direction is one continuous agent with many presences, followed by consumer "bodies for AI" such as a desk object, wearable, home device, or small robot operating under the same user-owned identity and permission system.
+Waldo is a user-owned personal-agent company. Its current thesis is:
 
-Team:
+Machine execution is scaling. Human understanding and responsibility are not.
 
-- Shivansh Fulper — Co-Founder & CEO; AI systems, agent architecture, infrastructure, and engineering
-- Suyash Pingale — Co-Founder; product, experience, brand, and design
-- Ashish Tembhekar — Founding Engineer; technical execution
+Responsibility continuity is the current product hypothesis: one user-owned relationship should preserve intent, evidence, corrections, authority, and what remains across changing agents, tools, surfaces, and time. Memory, orchestration, and interface are means rather than the permanent product definition.
 
-Artifacts:
+Working internal foundations include Kennel on macOS, Waldo on iOS, and a durable agent harness. Kennel has bounded live Codex acceptance for multi-session discovery, populated conversation history, real-time state, same-task continuation, first-message handling, and archive cleanup.
 
-- Product site: https://www.heywaldo.in/
-- Technical and vision brief: https://waldo-technical-brief.pages.dev/
-- Founder video: https://waldo-technical-brief.pages.dev/founder-video.mp4
-- Product video (earlier mobile foundation): https://waldo-technical-brief.pages.dev/product-video.mp4
-- Pitch deck: https://waldo-technical-brief.pages.dev/waldo-pitchdeck.pdf
+Claim boundary: these are foundation-level and bounded engineering demonstrations. Waldo has not yet established external retention, revenue, willingness to pay, or product-market validation. Broad provider coverage, automatic artifact verification, and the full integrated continuity experience remain product proofs to earn.
 
-### EcoFresh Greensync — Waste-to-Value Infrastructure
+Proposed falsifiers:
 
-- Role: Co-Founder
-- Timeline: Nov 2025 — Present
-- Website: https://www.ecofreshgreensync.com/
-- Stack: AI/ML, Polymer Modeling, Bio-processing, Catalytic Systems
+- Fewer sessions or raw artifacts opened per accepted outcome.
+- Fewer interruptions per accepted outcome.
+- Lower time from delegation to confident acceptance.
+- Fewer reopened outcomes caused by missing or stale evidence.
+- Reliable correction when Waldo's interpretation is wrong.
 
-EcoFresh is building decentralized waste-to-value infrastructure through modular Eco-Converter units designed for mixed municipal solid waste.
+Product constraints:
 
-Achievements:
+- User statements outrank behavioral inference.
+- Personal context can inform an action but cannot silently authorize it.
+- Memory must remain inspectable, correctable, scoped, revocable, exportable, and forgettable.
+- Activity, artifact, evidence, verification, human acceptance, and unresolved responsibility remain distinct.
+- Health is permissioned context and a possible first wedge, not Waldo's category or a prerequisite.
+- The user can consciously complete, defer, transfer, change, or release an open responsibility.
 
-- Registered as EcoFresh Greensync LLP and as an MSME Micro Enterprise
-- Incubated at IIITDM Jabalpur under the Institution's Innovation Council
-- Placed 16th among 2,500+ teams at Hult Prize, IIT Bombay
-- Received national recognition from India's Ministry of Education
-- Developed three IP discoveries with patent procedures documented
+## Other evidence
 
-## Work and Education
+### MIRAI-Setu
 
-### Atlan — FDE & AI Engineer Intern (Jan — Jun 2026)
+Selected among 40 students from India for the 2025 MIRAI-Setu India-Japan exchange. The month included a 15-day technology internship and visits focused on infrastructure, manufacturing, safety, and long-term craft.
 
-Helped build and operate more than 30 production agent instances through AtlanClaw, working across context, tools, authentication, integrations, deployment, and production reliability.
+Yearbook: https://issuu.com/afsindia/docs/mirai-setu_2025?fr=sNWZlZTgzNTM2NzQ
 
-### Soket AI Labs — MTS Intern, LLM Pre-training (Jul — Sep 2025)
+### OpenFn / Code for GovTech
 
-Contributed to Project EKA and built Eka Curator for its 120B-parameter Indic Mixture-of-Experts model, plus COOM infrastructure for reproducible LLM experiments under constrained GPU resources.
+Built an NLP-to-workflow contribution for government-technology data integrations through the national Code for GovTech open-source program in 2024.
 
-Project EKA: https://soket.ai/project-eka
+### HackByte
 
-### MIRAI-Setu — India–Japan Exchange (Oct 2025)
-
-Selected among 40 students from India by Japan's Ministry of Foreign Affairs for a month-long India–Japan exchange, including a 15-day technology internship and meetings with public and technology leaders in Fukuoka.
-
-MIRAI-Setu 2025 Yearbook: https://issuu.com/afsindia/docs/mirai-setu_2025?fr=sNWZlZTgzNTM2NzQ
-
-### Ionio AI — Developer Advocate Intern (Feb — May 2025)
-
-Built AI proof-of-concepts, developer demos, internal tools, sample applications, and technical resources for the platform.
-
-### OpenFn / Code for GovTech — AI Engineer Intern (Jun — Sep 2024)
-
-Built an NLP-to-workflow pipeline for government-technology data integrations through the national Code for GovTech open-source program.
-
-### HackByte — Lead Organiser (2023 — 2025)
-
-Helped grow IIITDM Jabalpur's student-run hackathon from an internal college event to 5,154 registrations across three years. Also started ML Summer School and Winter of ML as a Programming Club core member and mentor.
+Helped grow HackByte from an internal college event to 5,154 registrations across three years. Also started ML Summer School and Winter of ML through The Programming Club at IIITDM Jabalpur.
 
 Website: https://www.hackbyte.in/
 
-### IIITDM Jabalpur — B.Tech, Smart Manufacturing (2022 — 2026, completed)
+### Physical-systems work
 
-Studied AI/ML, mechatronics, manufacturing, and systems design.
+Smart Manufacturing education included AI and ML, mechatronics, industrial systems, sensing, automation, and systems design. Published patent applications are described as applications, not granted patents.
 
-## Technical Focus
+## Research agenda
 
-AI agents, agent orchestration, LLM systems, RAG and GraphRAG, memory and context systems, outcome verification, distributed systems, data pipelines, Swift, TypeScript, Python, React Native, Cloudflare Durable Objects, SQLite, and native macOS development.
+1. Persistence and memory: what should persist across sessions, tools, and models, and under whose authority?
+2. Outcome truth and open loops: how should an agent distinguish producing an artifact from changing the world?
+3. Monitoring and control: how can autonomy expand without allowing authority to drift?
+4. Long-horizon evaluation: how should agents be evaluated across trajectories and days rather than individual prompts?
+5. Physical AI: what changes when an agent perceives and acts in noisy, continuous, consequential environments?
 
-Currently exploring Physical AI, Industry 4.0, Quantum + AI, personal agents, human-agent orchestration, and outcome verification.
+## Research writing
 
-## Writing
+### When an Agent Says Done, What Is Actually True?
 
-### My Stack in 2026: AI-Native Development and the Tools That Ship
+Separates sessions, artifacts, evidence, outcomes, and open loops, then proposes an evidence-bearing verification contract.
 
-The coding agents, models, infrastructure, and development practices Shivansh uses to build production AI systems.
+URL: https://shivanshfulper.com/writing/agent-done-outcome-truth
 
-URL: https://shivanshfulper.com/writing/my-stack-2026
+### Memory Is Not Storage
 
-### What Japan Taught Me About Innovation, Discipline, and Building Things That Last
+Argues that persistent-agent memory is governed state with provenance, scope, correction, contradiction handling, and forgetting—not an ever-growing transcript archive.
 
-A month across Fukuoka, Nagasaki, and Tokyo and the lessons it produced about engineering, craft, and long time horizons.
+URL: https://shivanshfulper.com/writing/memory-is-not-storage
 
-URL: https://shivanshfulper.com/writing/mirai-setu-japan
+### The Harness Is Part of the Agent
 
-### What Starting Two Companies Taught Me About Building
+Synthesizes lessons from studying more than 40 public agent harnesses across loops, context, tools, permissions, state, recovery, memory, evidence, observability, scheduling, subagents, skills, and model routing.
 
-Lessons about systems, distribution, trust, and execution from building startups.
+URL: https://shivanshfulper.com/writing/harness-is-part-of-the-agent
 
-URL: https://shivanshfulper.com/writing/startup-lessons
+## Historical writing
 
-## Social Links
+Older essays about OneSync, the development stack, and startup lessons remain available as historical material. Their pages identify the earlier context and should not be used as the canonical description of Waldo today.
+
+## Social links
 
 - Website: https://shivanshfulper.com
 - LinkedIn: https://www.linkedin.com/in/shivansh-fulper/

@@ -8,8 +8,6 @@ featured: true
 evidenceStatus: "derived"
 ---
 
-# The Harness Is Part of the Agent
-
 > **Evidence note:** I studied more than 40 agent harnesses through public documentation, repositories, product behavior, and architecture notes, then organized them into eight paradigms and 13 recurring patterns. This was a comparative design study, not a controlled benchmark, and it should not be read as 40 production systems I personally operated.
 
 When two products use the same model, they can still behave like completely different agents.
@@ -70,16 +68,14 @@ Change any box and the effective agent changes. A more capable model with weak p
 
 The systems in the corpus clustered into eight broad paradigms. Many products combine more than one.
 
-| Paradigm | Primary unit | Strength | Characteristic risk |
-|---|---|---|---|
-| Conversational copilot | Turn or thread | Fluid collaboration | Intent and state remain implicit |
-| Coding loop | Repository task | Tight tool feedback | Local success mistaken for shipped outcome |
-| Computer-use agent | Screen action | Works across existing software | Fragile perception and high action risk |
-| Workflow runtime | Defined process | Repeatability and controls | Rigidity around novel situations |
-| Research agent | Question and evidence set | Source gathering and synthesis | Citation without real claim support |
-| Multi-agent orchestrator | Delegated subtask graph | Parallelism and specialization | Coordination cost and compounded error |
-| Persistent personal agent | Ongoing responsibility | Cross-session continuity | Surveillance and stale-memory influence |
-| Ambient or scheduled agent | Triggered background work | Proactive assistance | Interruptions, silent drift, unclear authority |
+- **Conversational copilot — turn or thread.** Fluid collaboration, with the risk that intent and state remain implicit.
+- **Coding loop — repository task.** Tight tool feedback, with the risk that local success is mistaken for a shipped outcome.
+- **Computer-use agent — screen action.** Works across existing software, with fragile perception and high action risk.
+- **Workflow runtime — defined process.** Repeatable and controllable, but rigid around novel situations.
+- **Research agent — question and evidence set.** Strong at gathering and synthesis, but vulnerable to citations that do not actually support the claim.
+- **Multi-agent orchestrator — delegated subtask graph.** Offers parallelism and specialization at the cost of coordination and compounded error.
+- **Persistent personal agent — ongoing responsibility.** Creates cross-session continuity while introducing surveillance and stale-memory risks.
+- **Ambient or scheduled agent — triggered background work.** Enables proactive assistance but can create interruptions, silent drift, and unclear authority.
 
 The important lesson was not which paradigm wins. It was that each makes a different promise about time, authority, and evidence. Calling all of them “agents” hides the most consequential design choices.
 
@@ -201,4 +197,3 @@ The comparison will need dated sources because this field moves quickly. It shou
 A model is a capability surface. An agent is the behavior that emerges when that model is placed inside a loop with context, tools, state, permissions, and consequences.
 
 That is why harness engineering deserves the same seriousness as model selection. It is where abstract intelligence meets the world—and where a convincing answer either becomes dependable work or falls apart.
-

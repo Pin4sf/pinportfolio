@@ -29,9 +29,9 @@
   --glass-bg: rgba(9, 10, 14, 0.8);
 
   /* Typography */
-  --font-display: var(--font-instrument-serif), 'Georgia', serif;
-  --font-body: var(--font-inter), 'system-ui', sans-serif;
-  --font-mono: var(--font-jetbrains-mono), 'Fira Code', monospace;
+  --font-display: var(--font-instrument-serif), "Georgia", serif;
+  --font-body: var(--font-inter), "system-ui", sans-serif;
+  --font-mono: var(--font-jetbrains-mono), "Fira Code", monospace;
 
   /* Type scale */
   --text-xs: 0.75rem;
@@ -68,7 +68,8 @@
   --bg-text-opacity: 0.03;
 
   /* Transition */
-  --theme-transition: background 0.5s ease, color 0.5s ease, border-color 0.5s ease;
+  --theme-transition:
+    background 0.5s ease, color 0.5s ease, border-color 0.5s ease;
 }
 
 /* ---- Reset ---- */
@@ -83,6 +84,10 @@
 html,
 body {
   overflow-x: hidden;
+}
+
+html {
+  scroll-padding-top: 5rem;
 }
 
 body {
@@ -178,7 +183,7 @@ ul {
   margin-bottom: var(--space-md);
 
   &::before {
-    content: '';
+    content: "";
     display: inline-block;
     width: 1.5rem;
     height: 1px;
@@ -259,8 +264,12 @@ ul {
 }
 
 @keyframes marquee {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
 }
 
 .marquee--reverse .marquee__inner {
@@ -356,17 +365,23 @@ ul {
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes rotate {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* ---- Film Grain Overlay ---- */
 body::after {
-  content: '';
+  content: "";
   position: fixed;
   top: -50%;
   left: -50%;
@@ -380,16 +395,37 @@ body::after {
 }
 
 @keyframes grain {
-  0%, 100% { transform: translate(0, 0); }
-  10% { transform: translate(-5%, -10%); }
-  20% { transform: translate(8%, 2%); }
-  30% { transform: translate(3%, -15%); }
-  40% { transform: translate(-3%, 12%); }
-  50% { transform: translate(12%, 9%); }
-  60% { transform: translate(-8%, -5%); }
-  70% { transform: translate(9%, 4%); }
-  80% { transform: translate(2%, -8%); }
-  90% { transform: translate(-1%, 7%); }
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  10% {
+    transform: translate(-5%, -10%);
+  }
+  20% {
+    transform: translate(8%, 2%);
+  }
+  30% {
+    transform: translate(3%, -15%);
+  }
+  40% {
+    transform: translate(-3%, 12%);
+  }
+  50% {
+    transform: translate(12%, 9%);
+  }
+  60% {
+    transform: translate(-8%, -5%);
+  }
+  70% {
+    transform: translate(9%, 4%);
+  }
+  80% {
+    transform: translate(2%, -8%);
+  }
+  90% {
+    transform: translate(-1%, 7%);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

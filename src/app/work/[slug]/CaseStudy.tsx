@@ -138,7 +138,14 @@ function RichCaseStudy({ caseStudy, narrative }: RichCaseStudyProps) {
             data-reveal
           >
             <div className={styles.storyHeading}>
-              <p className={styles.eyebrow}>{section.eyebrow}</p>
+              <div className={styles.storyMeta}>
+                <p className={styles.eyebrow}>{section.eyebrow}</p>
+                {section.status && (
+                  <span className={styles.evidenceStatus}>
+                    {section.status}
+                  </span>
+                )}
+              </div>
               <h2>{section.title}</h2>
             </div>
 
@@ -158,6 +165,9 @@ function RichCaseStudy({ caseStudy, narrative }: RichCaseStudyProps) {
                       )}
                       <h3>{card.title}</h3>
                       <p>{card.body}</p>
+                      {card.status && (
+                        <span className={styles.cardStatus}>{card.status}</span>
+                      )}
                     </article>
                   ))}
                 </div>
@@ -335,8 +345,12 @@ function RichCaseStudy({ caseStudy, narrative }: RichCaseStudyProps) {
             <a
               key={artifact.href}
               href={artifact.href}
-              target="_blank"
-              rel="noopener noreferrer"
+              target={artifact.href.startsWith("http") ? "_blank" : undefined}
+              rel={
+                artifact.href.startsWith("http")
+                  ? "noopener noreferrer"
+                  : undefined
+              }
               className={styles.resourceCard}
             >
               <div>
@@ -347,7 +361,11 @@ function RichCaseStudy({ caseStudy, narrative }: RichCaseStudyProps) {
               <span className={styles.resourceCta}>
                 <FileText size={15} aria-hidden="true" />
                 {artifact.cta}
-                <ExternalLink size={13} aria-hidden="true" />
+                {artifact.href.startsWith("http") ? (
+                  <ExternalLink size={13} aria-hidden="true" />
+                ) : (
+                  <ArrowRight size={13} aria-hidden="true" />
+                )}
               </span>
             </a>
           ))}

@@ -2,7 +2,8 @@ import dynamic from "next/dynamic";
 import {
   heroData,
   aboutData,
-  caseStudies,
+  evidenceRecords,
+  researchAreas,
   skillCategories,
   contactData,
   siteConfig,
@@ -10,61 +11,51 @@ import {
 import { getFeaturedPosts } from "@/lib/mdx";
 
 // Dynamic imports for client components — avoid SSR for GSAP/Three.js
-const LoadingScreen = dynamic(
-  () => import("./components/LoadingScreen"),
-  { ssr: false }
-);
-const SmoothScroll = dynamic(
-  () => import("./components/SmoothScroll"),
-  { ssr: false }
-);
-const Header = dynamic(
-  () => import("./components/layout/Header"),
-  { ssr: false }
-);
-const Hero = dynamic(
-  () => import("./components/sections/Hero"),
-  { ssr: false }
-);
-const Trajectory = dynamic(
-  () => import("./components/sections/Trajectory"),
-  { ssr: false }
-);
+const LoadingScreen = dynamic(() => import("./components/LoadingScreen"), {
+  ssr: false,
+});
+const SmoothScroll = dynamic(() => import("./components/SmoothScroll"), {
+  ssr: false,
+});
+const Header = dynamic(() => import("./components/layout/Header"), {
+  ssr: false,
+});
+const Hero = dynamic(() => import("./components/sections/Hero"), {
+  ssr: false,
+});
+const Trajectory = dynamic(() => import("./components/sections/Trajectory"), {
+  ssr: false,
+});
 const SelectedWork = dynamic(
   () => import("./components/sections/SelectedWork"),
-  { ssr: false }
+  { ssr: false },
 );
-const About = dynamic(
-  () => import("./components/sections/About"),
-  { ssr: false }
-);
+const About = dynamic(() => import("./components/sections/About"), {
+  ssr: false,
+});
 const ResearchAgenda = dynamic(
   () => import("./components/sections/ResearchAgenda"),
-  { ssr: false }
+  { ssr: false },
 );
-const Writing = dynamic(
-  () => import("./components/sections/Writing"),
-  { ssr: false }
-);
+const Writing = dynamic(() => import("./components/sections/Writing"), {
+  ssr: false,
+});
 const SkillsExperience = dynamic(
   () => import("./components/sections/SkillsExperience"),
-  { ssr: false }
+  { ssr: false },
 );
-const Timeline = dynamic(
-  () => import("./components/sections/Timeline"),
-  { ssr: false }
-);
-const Contact = dynamic(
-  () => import("./components/sections/Contact"),
-  { ssr: false }
-);
-const Footer = dynamic(
-  () => import("./components/sections/Footer"),
-  { ssr: false }
-);
+const Timeline = dynamic(() => import("./components/sections/Timeline"), {
+  ssr: false,
+});
+const Contact = dynamic(() => import("./components/sections/Contact"), {
+  ssr: false,
+});
+const Footer = dynamic(() => import("./components/sections/Footer"), {
+  ssr: false,
+});
 const SectionProgress = dynamic(
   () => import("./components/ui/SectionProgress"),
-  { ssr: false }
+  { ssr: false },
 );
 
 /**
@@ -75,8 +66,14 @@ const SectionProgress = dynamic(
  */
 function SeoContent() {
   return (
-    <div className="sr-only" aria-hidden="true">
-      <h1>{heroData.name} — {heroData.tagline}</h1>
+    <aside
+      className="sr-only"
+      aria-label="Portfolio summary for search indexing"
+      aria-hidden="true"
+    >
+      <h1>
+        {heroData.name} — {heroData.tagline}
+      </h1>
       <p>{heroData.subtitle}</p>
       <p>{siteConfig.description}</p>
 
@@ -92,17 +89,22 @@ function SeoContent() {
         ))}
       </ul>
 
-      <h2>Selected Work</h2>
-      {caseStudies.map((cs) => (
-        <article key={cs.slug}>
-          <h3>
-            <a href={`/work/${cs.slug}`}>{cs.name}</a>
-          </h3>
-          <p>
-            {cs.role} · {cs.timeline}
-          </p>
-          <p>{cs.tagline}</p>
-          <p>{cs.challenge}</p>
+      <h2>Selected Evidence</h2>
+      {evidenceRecords.map((record) => (
+        <article key={record.slug}>
+          <h3>{record.title}</h3>
+          <p>{record.role}</p>
+          <p>{record.summary}</p>
+          <p>Evidence status: {record.status.join(", ")}</p>
+        </article>
+      ))}
+
+      <h2>Research Agenda</h2>
+      {researchAreas.map((area) => (
+        <article key={area.title}>
+          <h3>{area.title}</h3>
+          <p>{area.summary}</p>
+          <p>Research maturity: {area.maturity}</p>
         </article>
       ))}
 
@@ -126,7 +128,7 @@ function SeoContent() {
           {s.name}
         </a>
       ))}
-    </div>
+    </aside>
   );
 }
 

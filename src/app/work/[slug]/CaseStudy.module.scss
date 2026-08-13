@@ -200,6 +200,32 @@
   }
 }
 
+.storyMeta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.evidenceStatus,
+.cardStatus {
+  width: fit-content;
+  border: 1px solid rgba(108, 255, 141, 0.32);
+  border-radius: var(--radius-full);
+  padding: 0.28rem 0.55rem;
+  color: var(--accent);
+  background: rgba(108, 255, 141, 0.06);
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.cardStatus {
+  margin-top: auto;
+}
+
 .heroFigure,
 .storyMedia {
   overflow: hidden;
@@ -473,6 +499,9 @@
 }
 
 .storyCard {
+  display: flex;
+  flex-direction: column;
+
   h3 {
     margin-top: 0.45rem;
     color: var(--text-heading);
@@ -482,7 +511,7 @@
     line-height: 1.2;
   }
 
-  > p:last-child {
+  > p:not(.cardLabel) {
     margin-top: 0.7rem;
     color: var(--text-secondary);
     font-size: 0.82rem;
