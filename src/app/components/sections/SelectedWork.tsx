@@ -1,262 +1,140 @@
 "use client";
 
-import { useRef, useEffect } from "react";
+import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import styles from "./SelectedWork.module.scss";
-import { getVentures } from "@/data/portfolio";
+import { ArrowUpRight } from "lucide-react";
+import { getFeaturedEvidence } from "@/data/portfolio";
 import { useReducedMotion } from "@/app/hooks/useReducedMotion";
-import { useGpuTier } from "@/app/hooks/useGpuTier";
-import { ArrowUpRight, ExternalLink } from "lucide-react";
-import TransitionLink from "../ui/TransitionLink";
+import styles from "./SelectedWork.module.scss";
 
 gsap.registerPlugin(ScrollTrigger);
+
+const statusLabels = {
+  observed: "Observed",
+  built: "Built",
+  demonstrated: "Demonstrated",
+  derived: "Derived",
+  hypothesis: "Hypothesis",
+  direction: "Long-term direction",
+  historical: "Historical",
+};
 
 export default function SelectedWork() {
   const sectionRef = useRef<HTMLElement>(null);
   const reducedMotion = useReducedMotion();
-  const gpuTier = useGpuTier();
-  const projects = getVentures();
-  const isLowTier = gpuTier === "low";
+  const records = getFeaturedEvidence();
 
   useEffect(() => {
-    if (reducedMotion) return;
+    if (reducedMotion || !sectionRef.current) return;
 
-    const section = sectionRef.current;
-    if (!section) return;
-
-    const ctx = gsap.context(() => {
-      const cards = section.querySelectorAll(`.${styles.card}`);
-
-      cards.forEach((card, i) => {
-        const image = card.querySelector(`.${styles.imageWrap}`);
-        const img = card.querySelector(`.${styles.image}`);
-        const text = card.querySelector(`.${styles.textContent}`);
-        const number = card.querySelector(`.${styles.number}`);
-        const isEven = i % 2 === 0;
-
-        const tl = gsap.timeline({
-          scrollTrigger: {
-            trigger: card,
-            start: "top 80%",
-            toggleActions: "play none none none",
+    const context = gsap.context(() => {
+      sectionRef.current?.querySelectorAll(`.${styles.card}`).forEach((card) => {
+        gsap.fromTo(
+          card,
+          { y: 48, opacity: 0 },
+          {
+            y: 0,
+            opacity: 1,
+            duration: 0.85,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: card,
+              start: "top 82%",
+              toggleActions: "play none none none",
+            },
           },
-        });
-
-        if (isLowTier) {
-          // Simple fade-up on low tier (no clip-path compositing)
-          tl.fromTo(
-            number,
-            { opacity: 0 },
-            { opacity: 0.08, duration: 0.6, ease: "power2.out" }
-          )
-            .fromTo(
-              image,
-              { opacity: 0, y: 20 },
-              { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" },
-              0
-            )
-            .fromTo(
-              text?.children ? Array.from(text.children) : [],
-              { y: 20, opacity: 0 },
-              { y: 0, opacity: 1, duration: 0.6, stagger: 0.05, ease: "power2.out" },
-              0.2
-            );
-        } else {
-          // Alternating L/R clip-path reveal
-          tl.fromTo(
-            number,
-            { opacity: 0, x: isEven ? -20 : 20 },
-            { opacity: 0.08, x: 0, duration: 0.8, ease: "expo.out" }
-          )
-            .fromTo(
-              image,
-              { clipPath: isEven ? "inset(0 100% 0 0)" : "inset(0 0 0 100%)" },
-              {
-                clipPath: "inset(0 0% 0 0%)",
-                duration: 1.2,
-                ease: "power4.inOut",
-              },
-              0
-            )
-            .fromTo(
-              text?.children ? Array.from(text.children) : [],
-              { x: isEven ? -30 : 30, opacity: 0 },
-              {
-                x: 0,
-                opacity: 1,
-                duration: 0.7,
-                stagger: 0.06,
-                ease: "expo.out",
-              },
-              0.4
-            );
-
-          // Scrub parallax on image (skip on low tier)
-          if (img) {
-            gsap.fromTo(
-              img,
-              { yPercent: -8 },
-              {
-                yPercent: 8,
-                ease: "none",
-                scrollTrigger: {
-                  trigger: card,
-                  start: "top bottom",
-                  end: "bottom top",
-                  scrub: 0.6,
-                },
-              }
-            );
-          }
-        }
+        );
       });
-    }, section);
+    }, sectionRef);
 
-    return () => ctx.revert();
-  }, [reducedMotion, isLowTier]);
-
-  // Magnetic card hover (skip on low tier)
-  useEffect(() => {
-    if (reducedMotion || isLowTier) return;
-    const section = sectionRef.current;
-    if (!section) return;
-
-    const cards = section.querySelectorAll(
-      `.${styles.card}`
-    ) as NodeListOf<HTMLElement>;
-
-    const handleMouseMove = (e: MouseEvent) => {
-      const card = e.currentTarget as HTMLElement;
-      const rect = card.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-      const centerX = rect.width / 2;
-      const centerY = rect.height / 2;
-
-      const moveX = ((x - centerX) / centerX) * 6;
-      const moveY = ((y - centerY) / centerY) * 4;
-
-      gsap.to(card, {
-        x: moveX,
-        y: moveY,
-        duration: 0.4,
-        ease: "power1.out",
-        overwrite: "auto",
-      });
-    };
-
-    const handleMouseLeave = (e: MouseEvent) => {
-      gsap.to(e.currentTarget as HTMLElement, {
-        x: 0,
-        y: 0,
-        duration: 0.8,
-        ease: "elastic.out(1, 0.5)",
-        overwrite: true,
-      });
-    };
-
-    cards.forEach((card) => {
-      card.addEventListener("mousemove", handleMouseMove);
-      card.addEventListener("mouseleave", handleMouseLeave);
-    });
-
-    return () => {
-      cards.forEach((card) => {
-        card.removeEventListener("mousemove", handleMouseMove);
-        card.removeEventListener("mouseleave", handleMouseLeave);
-      });
-    };
-  }, [reducedMotion, isLowTier]);
+    return () => context.revert();
+  }, [reducedMotion]);
 
   return (
-    <section ref={sectionRef} id="ventures" className={styles.section}>
-      <span className="section__label">Ventures</span>
-      <h2 className="sr-only">Selected Work</h2>
+    <section ref={sectionRef} id="evidence" className={styles.section}>
+      <header className={styles.header}>
+        <span className="section__label">Selected evidence</span>
+        <h2 className={styles.heading}>Work that changed the questions.</h2>
+        <p className={styles.intro}>
+          Not a list of everything I have touched. These are the systems,
+          artifacts, and communities that produced the research direction I am
+          pursuing now.
+        </p>
+      </header>
 
       <div className={styles.list}>
-        {projects.map((project, i) => (
-          <TransitionLink
-            key={project.slug}
-            href={`/work/${project.slug}`}
+        {records.map((record, index) => (
+          <article
+            key={record.slug}
+            id={`evidence-${record.slug}`}
             className={styles.card}
-            aria-label={`View ${project.name} case study`}
           >
-            {/* Per-card project name marquee */}
-            <div
-              className={`marquee ${i % 2 !== 0 ? "marquee--reverse" : ""}`}
-              style={{ top: "50%", transform: "translateY(-50%)" }}
-              aria-hidden="true"
-            >
-              <div className="marquee__inner">
-                {Array.from({ length: 4 }, (_, j) => (
-                  <span key={j} className="marquee__text marquee__text--giant">
-                    {project.name.split(" ")[0].toUpperCase()}
-                  </span>
-                ))}
-              </div>
+            <div className={styles.visual}>
+              <span className={styles.number} aria-hidden="true">
+                {String(index + 1).padStart(2, "0")}
+              </span>
+              {record.image ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={record.image} alt="" className={styles.image} />
+              ) : (
+                <div className={styles.phaseMark} aria-hidden="true">
+                  {record.phase.replace("-", " ")}
+                </div>
+              )}
             </div>
 
-            <span className={styles.number} aria-hidden="true">
-              {String(i + 1).padStart(2, "0")}
-            </span>
-
-            <div className={styles.imageWrap}>
-              <img
-                src={project.heroImage}
-                alt={project.name}
-                className={styles.image}
-                loading="lazy"
-              />
-            </div>
-
-            <div className={styles.textContent}>
-              <div className={styles.meta}>
-                <span className={styles.role}>{project.role}</span>
-                <span className={styles.divider}>·</span>
-                <span className={styles.timeline}>{project.timeline}</span>
-              </div>
-
-              <h3 className={styles.projectName}>{project.name}</h3>
-
-              <p className={styles.tagline}>{project.tagline}</p>
-
-              <div className={styles.tags}>
-                {project.techStack.slice(0, 4).map((tech) => (
-                  <span key={tech} className={styles.tag}>
-                    {tech}
+            <div className={styles.content}>
+              <div className={styles.statuses} aria-label="Evidence status">
+                {record.status.map((status) => (
+                  <span key={status} data-status={status}>
+                    {statusLabels[status]}
                   </span>
                 ))}
               </div>
 
-              <div className={styles.cardLinks}>
-                {project.liveUrl && (
-                  <span
-                    role="link"
-                    tabIndex={0}
-                    className={styles.visitLink}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      window.open(project.liveUrl, "_blank", "noopener,noreferrer");
-                    }}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter" || e.key === " ") {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        window.open(project.liveUrl, "_blank", "noopener,noreferrer");
-                      }
-                    }}
-                  >
-                    Visit Website <ExternalLink size={14} />
-                  </span>
-                )}
-                <span className={styles.viewLink} aria-hidden="true">
-                  View Case Study <ArrowUpRight size={14} />
-                </span>
+              <p className={styles.meta}>
+                {record.phase.replace("-", " ")} · {record.role}
+              </p>
+              <h3>{record.title}</h3>
+              <p className={styles.summary}>{record.summary}</p>
+
+              <dl className={styles.details}>
+                <div>
+                  <dt>Contribution</dt>
+                  <dd>{record.contribution}</dd>
+                </div>
+                <div>
+                  <dt>Observable result</dt>
+                  <dd>{record.observableResult}</dd>
+                </div>
+              </dl>
+
+              <div className={styles.question}>
+                <span>Question it produced</span>
+                <p>{record.questions[0]}</p>
               </div>
+
+              {record.links.length > 0 && (
+                <nav
+                  className={styles.links}
+                  aria-label={`${record.title} evidence links`}
+                >
+                  {record.links.map((link) => (
+                    <a
+                      key={link.href}
+                      href={link.href}
+                      target={link.external ? "_blank" : undefined}
+                      rel={link.external ? "noopener noreferrer" : undefined}
+                    >
+                      {link.label}
+                      <ArrowUpRight size={14} aria-hidden="true" />
+                    </a>
+                  ))}
+                </nav>
+              )}
             </div>
-          </TransitionLink>
+          </article>
         ))}
       </div>
     </section>
