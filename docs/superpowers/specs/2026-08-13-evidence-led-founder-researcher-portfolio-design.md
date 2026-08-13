@@ -2,7 +2,7 @@
 
 **Date:** 2026-08-13
 
-**Status:** Proposed for user review
+**Status:** Approved for implementation
 
 **Scope:** First public-facing portfolio rearchitecture, implemented locally only
 
@@ -454,8 +454,12 @@ Not every essay needs visible headings for all ten parts, but the editorial revi
 
 **Thesis:** A model's deployed behavior is co-produced by its runtime: context assembly, tools, permissions, memory, recovery, scheduling, and observability.
 
+**Empirical basis:** The essay should synthesize the cross-system lessons from Waldo Brain's source-backed breakdown of more than 40 agent harnesses. It must distinguish recurring patterns observed across the corpus from Waldo-specific architecture choices, and it must not imply that every referenced harness was benchmarked under controlled experimental conditions.
+
 **Technical content:**
 
+- comparison method and corpus boundary;
+- shared harness anatomy across the studied systems;
 - runtime loop;
 - context builder;
 - model adapter;
@@ -468,6 +472,29 @@ Not every essay needs visible headings for all ten parts, but the editorial revi
 - provider portability and trust-boundary ownership.
 
 **Boundary:** Do not claim the harness alone creates model capability or that every architecture choice has been empirically validated by Waldo.
+
+### 6.6 Deferred expansion: the Harness Atlas
+
+A future session may turn the 40+ harness corpus into a dedicated public comparison surface and an ongoing breakdown series. This is outside the core portfolio implementation.
+
+The editorial reference is Sebastian Raschka's *The Big LLM Architecture Comparison*: establish a bounded comparison question, use consistent dimensions, explain architectural differences with diagrams, summarize each system, and update the corpus as the field changes. The Harness Atlas must develop its own information architecture and visual identity rather than copying the reference.
+
+Candidate public dimensions include:
+
+- orchestration and runtime loop;
+- context construction and compaction;
+- tool registration, validation, and execution;
+- state, checkpointing, and recovery;
+- memory architecture and forgetting;
+- permissions, sandboxing, and trust boundaries;
+- model and provider routing;
+- scheduling, delivery, and background operation;
+- observability, evaluation, and verification;
+- subagent and multi-agent coordination;
+- deployment model and data ownership;
+- Adopt / Adapt / Reject implications for Waldo.
+
+The future surface may become a long-form canonical comparison page plus individual harness notes. Before publication it will require a fresh source audit, explicit corpus inclusion criteria, diagram provenance, update dates, and a clear distinction between documented behavior, code-observed behavior, inference, and unknowns.
 
 ## 7. Visual and interaction direction
 
@@ -590,6 +617,7 @@ Canonical short description:
 ### Excluded
 
 - Publishing every Waldo Brain note.
+- Building or publishing the full 40+ harness comparison atlas or individual harness-breakdown series.
 - Full standalone Atlan, EKA, or physical-AI case studies before claim and artifact review.
 - Private or confidential work details.
 - New CMS, database, analytics stack, or environment variables.
