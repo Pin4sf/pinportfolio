@@ -33,7 +33,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const posts = getAllPosts();
   const writingPages: MetadataRoute.Sitemap = posts.map((post) => ({
     url: `${baseUrl}/writing/${post.slug}`,
-    lastModified: new Date(post.date),
+    lastModified: new Date(post.revised ?? post.date),
     changeFrequency: "monthly" as const,
     priority: 0.7,
   }));

@@ -7,47 +7,29 @@ import styles from "./Writing.module.scss";
 import { useReducedMotion } from "@/app/hooks/useReducedMotion";
 import CoolLink from "../ui/CoolLink";
 import TransitionLink from "../ui/TransitionLink";
+import type { PostMeta } from "@/lib/mdx";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const featuredPosts = [
-  {
-    slug: "my-stack-2026",
-    title: "My Stack in 2026: AI-Native Development and the Tools That Ship",
-    category: "technical" as const,
-    date: "2026-03-22",
-    readingTime: 9,
-    description:
-      "The coding agents, models, infrastructure, and development practices I use to build production AI systems.",
-  },
-  {
-    slug: "mirai-setu-japan",
-    title: "What Japan Taught Me About Building Things That Last",
-    category: "personal" as const,
-    date: "2025-10-20",
-    readingTime: 14,
-    description:
-      "A month across Fukuoka, Nagasaki, and Tokyo changed how I think about engineering, craft, and long time horizons.",
-  },
-  {
-    slug: "startup-lessons",
-    title: "What Starting Two Companies Taught Me About Building",
-    category: "thinking" as const,
-    date: "2025-12-20",
-    readingTime: 6,
-    description:
-      "Waldo and EcoFresh Greensync changed how I think about systems, distribution, and execution. Here's what shipping real products teaches you.",
-  },
-];
-
 const categoryColors: Record<string, string> = {
-  building: "var(--accent)",
-  technical: "#6c9bff",
-  thinking: "var(--accent-warm)",
-  personal: "var(--accent)",
+  research: "var(--accent)",
+  "field-note": "#8aa9ff",
+  "founder-note": "var(--accent-warm)",
+  historical: "var(--text-tertiary)",
 };
 
-export default function Writing() {
+const categoryLabels: Record<string, string> = {
+  research: "Research",
+  "field-note": "Field note",
+  "founder-note": "Founder note",
+  historical: "Historical",
+};
+
+interface WritingProps {
+  featuredPosts: PostMeta[];
+}
+
+export default function Writing({ featuredPosts }: WritingProps) {
   const sectionRef = useRef<HTMLElement>(null);
   const reducedMotion = useReducedMotion();
 
@@ -174,8 +156,8 @@ export default function Writing() {
 
       <div className={styles.header}>
         <div>
-          <span className="section__label">Writing</span>
-          <h2 className={styles.heading}>Writing</h2>
+          <span className="section__label">Writing and field notes</span>
+          <h2 className={styles.heading}>Ideas with an evidence trail.</h2>
         </div>
         <CoolLink href="/writing" text="View all writing" />
       </div>
@@ -200,7 +182,7 @@ export default function Writing() {
                 color: categoryColors[post.category] || "var(--accent)",
               }}
             >
-              {post.category}
+              {categoryLabels[post.category] ?? post.category}
             </span>
 
             <h3 className={styles.cardTitle}>{post.title}</h3>
@@ -216,6 +198,17 @@ export default function Writing() {
               </span>
               <span className={styles.dot}>·</span>
               <span>{post.readingTime} min read</span>
+              {post.revised && (
+                <>
+                  <span className={styles.dot}>·</span>
+                  <span>
+                    Revised {new Date(post.revised).toLocaleDateString("en-US", {
+                      month: "short",
+                      year: "numeric",
+                    })}
+                  </span>
+                </>
+              )}
             </div>
           </TransitionLink>
         ))}

@@ -5,13 +5,28 @@ import readingTime from "reading-time";
 
 const contentDirectory = path.join(process.cwd(), "src/content/writing");
 
+export type PostCategory =
+  | "research"
+  | "field-note"
+  | "founder-note"
+  | "historical";
+
+const POST_CATEGORIES = new Set<PostCategory>([
+  "research",
+  "field-note",
+  "founder-note",
+  "historical",
+]);
+
 export interface PostMeta {
   slug: string;
   title: string;
   date: string;
-  category: "building" | "thinking" | "technical";
+  revised?: string;
+  category: PostCategory;
   description: string;
   featured: boolean;
+  evidenceStatus?: "observed" | "derived" | "hypothesis" | "historical";
   readingTime: number;
 }
 
@@ -24,7 +39,9 @@ export function getAllPosts(): PostMeta[] {
     return [];
   }
 
-  const files = fs.readdirSync(contentDirectory).filter((f) => f.endsWith(".mdx"));
+  const files = fs
+    .readdirSync(contentDirectory)
+    .filter((f) => f.endsWith(".mdx"));
 
   const posts = files.map((filename) => {
     const slug = filename.replace(/\.mdx$/, "");
@@ -33,13 +50,22 @@ export function getAllPosts(): PostMeta[] {
     const { data, content } = matter(fileContents);
     const stats = readingTime(content);
 
+    const category = data.category as PostCategory;
+    if (!POST_CATEGORIES.has(category)) {
+      throw new Error(
+        `Invalid writing category "${data.category}" in ${filename}`,
+      );
+    }
+
     return {
       slug,
       title: data.title || slug,
       date: data.date || new Date().toISOString(),
-      category: data.category || "thinking",
+      revised: data.revised,
+      category,
       description: data.description || "",
       featured: data.featured || false,
+      evidenceStatus: data.evidenceStatus,
       readingTime: Math.ceil(stats.minutes),
     } as PostMeta;
   });
@@ -59,14 +85,20 @@ export function getPostBySlug(slug: string): Post | null {
   const fileContents = fs.readFileSync(fullPath, "utf8");
   const { data, content } = matter(fileContents);
   const stats = readingTime(content);
+  const category = data.category as PostCategory;
+  if (!POST_CATEGORIES.has(category)) {
+    throw new Error(`Invalid writing category "${data.category}" in ${slug}.mdx`);
+  }
 
   return {
     slug,
     title: data.title || slug,
     date: data.date || new Date().toISOString(),
-    category: data.category || "thinking",
+    revised: data.revised,
+    category,
     description: data.description || "",
     featured: data.featured || false,
+    evidenceStatus: data.evidenceStatus,
     readingTime: Math.ceil(stats.minutes),
     content,
   };

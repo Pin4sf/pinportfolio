@@ -8,15 +8,24 @@ import TransitionLink from "@/app/components/ui/TransitionLink";
 
 const categories = [
   { key: "all", label: "All" },
-  { key: "building", label: "Building" },
-  { key: "thinking", label: "Thinking" },
-  { key: "technical", label: "Technical" },
+  { key: "research", label: "Research" },
+  { key: "field-note", label: "Field notes" },
+  { key: "founder-note", label: "Founder notes" },
+  { key: "historical", label: "Historical" },
 ];
 
 const categoryColors: Record<string, string> = {
-  building: "var(--accent)",
-  technical: "#6c9bff",
-  thinking: "var(--accent-warm)",
+  research: "var(--accent)",
+  "field-note": "#8aa9ff",
+  "founder-note": "var(--accent-warm)",
+  historical: "var(--text-tertiary)",
+};
+
+const categoryLabels: Record<string, string> = {
+  research: "Research",
+  "field-note": "Field note",
+  "founder-note": "Founder note",
+  historical: "Historical",
 };
 
 interface WritingArchiveProps {
@@ -40,7 +49,8 @@ export default function WritingArchive({ posts }: WritingArchiveProps) {
         </TransitionLink>
         <h1 className={styles.title}>Writing</h1>
         <p className={styles.subtitle}>
-          Notes on shipping products, building AI systems, and figuring it out along the way.
+          Research essays, field notes, founder lessons, and historical product
+          chapters—with the boundary between evidence and hypothesis kept visible.
         </p>
       </header>
 
@@ -70,7 +80,7 @@ export default function WritingArchive({ posts }: WritingArchiveProps) {
                   color: categoryColors[post.category] || "var(--accent)",
                 }}
               >
-                {post.category}
+                {categoryLabels[post.category] ?? post.category}
               </span>
               <span className={styles.dot}>·</span>
               <span>
@@ -82,6 +92,17 @@ export default function WritingArchive({ posts }: WritingArchiveProps) {
               </span>
               <span className={styles.dot}>·</span>
               <span>{post.readingTime} min read</span>
+              {post.revised && (
+                <>
+                  <span className={styles.dot}>·</span>
+                  <span>
+                    Revised {new Date(post.revised).toLocaleDateString("en-US", {
+                      month: "short",
+                      year: "numeric",
+                    })}
+                  </span>
+                </>
+              )}
             </div>
             <h2 className={styles.cardTitle}>{post.title}</h2>
             <p className={styles.cardDescription}>{post.description}</p>

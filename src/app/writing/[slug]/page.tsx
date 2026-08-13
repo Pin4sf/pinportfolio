@@ -29,6 +29,7 @@ export function generateMetadata({ params }: Props): Metadata {
       url: `${siteConfig.url}/writing/${post.slug}`,
       type: "article",
       publishedTime: post.date,
+      modifiedTime: post.revised,
       authors: ["Shivansh Fulper"],
     },
     twitter: {
@@ -52,6 +53,7 @@ export default function WritingPostPage({ params }: Props) {
     headline: post.title,
     description: post.description,
     datePublished: post.date,
+    dateModified: post.revised ?? post.date,
     url: `${siteConfig.url}/writing/${post.slug}`,
     author: {
       "@type": "Person",

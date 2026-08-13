@@ -7,9 +7,17 @@ import TransitionLink from "@/app/components/ui/TransitionLink";
 import { MDXRemote } from "next-mdx-remote/rsc";
 
 const categoryColors: Record<string, string> = {
-  building: "var(--accent)",
-  technical: "#6c9bff",
-  thinking: "var(--accent-warm)",
+  research: "var(--accent)",
+  "field-note": "#8aa9ff",
+  "founder-note": "var(--accent-warm)",
+  historical: "var(--text-tertiary)",
+};
+
+const categoryLabels: Record<string, string> = {
+  research: "Research",
+  "field-note": "Field note",
+  "founder-note": "Founder note",
+  historical: "Historical",
 };
 
 interface BlogPostProps {
@@ -33,7 +41,7 @@ export default function BlogPost({ post }: BlogPostProps) {
                 color: categoryColors[post.category] || "var(--accent)",
               }}
             >
-              {post.category}
+              {categoryLabels[post.category] ?? post.category}
             </span>
             <span className={styles.dot}>·</span>
             <span>
@@ -45,7 +53,24 @@ export default function BlogPost({ post }: BlogPostProps) {
             </span>
             <span className={styles.dot}>·</span>
             <span>{post.readingTime} min read</span>
+            {post.revised && (
+              <>
+                <span className={styles.dot}>·</span>
+                <span>
+                  Revised {new Date(post.revised).toLocaleDateString("en-US", {
+                    month: "long",
+                    day: "numeric",
+                    year: "numeric",
+                  })}
+                </span>
+              </>
+            )}
           </div>
+          {post.evidenceStatus && (
+            <p className={styles.evidenceStatus}>
+              Evidence posture · {post.evidenceStatus}
+            </p>
+          )}
           <h1 className={styles.title}>{post.title}</h1>
           <p className={styles.description}>{post.description}</p>
         </header>

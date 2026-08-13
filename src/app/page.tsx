@@ -7,6 +7,7 @@ import {
   contactData,
   siteConfig,
 } from "@/data/portfolio";
+import { getFeaturedPosts } from "@/lib/mdx";
 
 // Dynamic imports for client components — avoid SSR for GSAP/Three.js
 const LoadingScreen = dynamic(
@@ -130,6 +131,8 @@ function SeoContent() {
 }
 
 export default function Page() {
+  const featuredPosts = getFeaturedPosts(3);
+
   return (
     <>
       <SeoContent />
@@ -141,9 +144,9 @@ export default function Page() {
           <Hero />
           <Trajectory />
           <SelectedWork />
-          <About />
           <ResearchAgenda />
-          <Writing />
+          <Writing featuredPosts={featuredPosts} />
+          <About />
           <Timeline />
           <SkillsExperience />
           <Contact />
