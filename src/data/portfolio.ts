@@ -14,13 +14,22 @@ export interface NavItem {
 
 export interface HeroData {
   name: string;
+  eyebrow: string;
   tagline: string;
   subtitle: string;
+  trajectory: string;
+  actions: {
+    label: string;
+    href: string;
+    external?: boolean;
+    primary?: boolean;
+  }[];
   socials: Social[];
 }
 
 export interface AboutData {
   bio: string;
+  personalNote: string;
   photo: string;
   facts: { label: string; value: string }[];
   interestsLabel: string;
@@ -31,6 +40,7 @@ export interface CaseStudyCard {
   label?: string;
   title: string;
   body: string;
+  status?: EvidenceStatus;
 }
 
 export interface CaseStudyExternalLink {
@@ -73,6 +83,7 @@ export interface CaseStudyNarrativeSection {
   matrix?: CaseStudyMatrix;
   media?: CaseStudyMedia;
   link?: CaseStudyExternalLink;
+  status?: EvidenceStatus;
 }
 
 export interface CaseStudyPerson {
@@ -139,6 +150,8 @@ export interface CaseStudy {
 
 export interface SkillCategory {
   name: string;
+  description?: string;
+  evidenceSlugs?: string[];
   skills: { name: string; icon?: string }[];
 }
 
@@ -158,11 +171,61 @@ export interface TimelineEntry {
   type: "work" | "education" | "startup" | "achievement";
   tags?: string[];
   dateRange?: string;
+  evidence?: string;
+  nextQuestion?: string;
   links?: {
     label: string;
     url: string;
     external?: boolean;
   }[];
+}
+
+export type EvidenceStatus =
+  | "observed"
+  | "built"
+  | "demonstrated"
+  | "derived"
+  | "hypothesis"
+  | "direction"
+  | "historical";
+
+export interface EvidenceLink {
+  label: string;
+  href: string;
+  kind: "artifact" | "source" | "case-study" | "writing";
+  external?: boolean;
+}
+
+export interface EvidenceRecord {
+  slug: string;
+  title: string;
+  phase: "models" | "agents" | "world" | "field-building";
+  status: EvidenceStatus[];
+  role: string;
+  summary: string;
+  contribution: string;
+  observableResult: string;
+  questions: string[];
+  links: EvidenceLink[];
+  image?: string;
+  featured: boolean;
+}
+
+export interface TrajectoryPhase {
+  id: "models" | "agents" | "world";
+  number: string;
+  title: string;
+  summary: string;
+  evidence: string[];
+  insight: string;
+}
+
+export interface ResearchArea {
+  title: string;
+  maturity: "practice" | "investigating" | "long-term";
+  summary: string;
+  questions: string[];
+  evidenceSlugs: string[];
 }
 
 export interface SiteConfig {
@@ -177,12 +240,12 @@ export interface SiteConfig {
 // ==================== SITE CONFIG ====================
 
 export const siteConfig: SiteConfig = {
-  title: "Shivansh Fulper — AI Agents, Systems, Startups",
+  title: "Shivansh Fulper — Founder & AI Systems Researcher",
   description:
-    "Founder and AI systems engineer building Waldo and Kennel: a user-owned agent and its first Mac home. Previously built production agent systems at Atlan; B.Tech, IIITDM Jabalpur, 2026.",
+    "Shivansh Fulper is the founder of Waldo and an AI systems researcher working on persistent agents, memory and state, long-horizon execution, monitoring, control, and evaluation, with a longer-term interest in physical AI.",
   author: "Shivansh Fulper",
   keywords:
-    "Shivansh Fulper, AI Engineer, Waldo, Kennel, EcoFresh Greensync, Atlan, AI Agents, Agent Orchestration, Human-Agent Systems, LLM, RAG, Codex, Cloudflare Durable Objects, IIITDM Jabalpur",
+    "Shivansh Fulper, Founder, AI Systems Researcher, Waldo, Kennel, Atlan, Persistent Agents, Agent Harnesses, Agent Memory, Long-Horizon Agents, Agent Evaluation, Physical AI, Project EKA, IIITDM Jabalpur",
   url: "https://shivanshfulper.com",
   ogImage: "/images/og-image.png",
 };
@@ -190,9 +253,10 @@ export const siteConfig: SiteConfig = {
 // ==================== NAVIGATION ====================
 
 export const navItems: NavItem[] = [
-  { label: "Ventures", href: "#ventures" },
-  { label: "About", href: "#about" },
+  { label: "Evidence", href: "#evidence" },
+  { label: "Research", href: "#research" },
   { label: "Writing", href: "#writing" },
+  { label: "About", href: "#about" },
   { label: "Contact", href: "#contact" },
 ];
 
@@ -200,9 +264,22 @@ export const navItems: NavItem[] = [
 
 export const heroData: HeroData = {
   name: "Shivansh Fulper",
-  tagline: "I’m building the agent that stays on your side.",
+  eyebrow: "Founder + AI systems researcher",
+  tagline:
+    "I build persistent agents—and study what it takes to trust them over time.",
   subtitle:
-    "Waldo + Kennel · Co-founder, EcoFresh Greensync · B.Tech, IIITDM Jabalpur ’26",
+    "Founder of Waldo. Previously built and operated production agent systems at Atlan. My work moves from model and data systems to agent runtimes, memory, control, evaluation, and eventually physical AI.",
+  trajectory: "Models → Agents → World",
+  actions: [
+    { label: "Explore the evidence", href: "#evidence", primary: true },
+    { label: "Research agenda", href: "#research" },
+    { label: "Read the field notes", href: "/writing" },
+    {
+      label: "GitHub",
+      href: "https://github.com/Pin4sf",
+      external: true,
+    },
+  ],
   socials: [
     {
       name: "LinkedIn",
@@ -230,11 +307,13 @@ export const heroData: HeroData = {
 // ==================== ABOUT ====================
 
 export const aboutData: AboutData = {
-  bio: `I’m building Waldo and Kennel: a user-owned personal agent and its first home on the Mac. I care about what happens after an agent says “done” — whether the outcome is real, what still needs human judgment, and how one agent can remain on the person’s side across models, tools, work, life, and eventually physical devices.
+  bio: `I’m the founder of Waldo and an AI systems researcher focused on persistent agents, memory and state, long-horizon execution, monitoring, control, and evaluation.
 
-At Atlan, I helped build and operate more than 30 production agent instances through AtlanClaw. That work made one gap impossible to ignore: an agent finishing a task and the task actually being done are two different things. It shaped how I think about continuity, permission, evidence, and personal agency.
+My research direction grew out of building systems: model and data infrastructure through Project EKA, production agent systems at Atlan, and persistent personal-agent foundations through Waldo and Kennel.
 
-I started coding at 12 to build a Pokédex, then spent years jailbreaking phones and tracing systems past their intended limits. At IIITDM Jabalpur, I grew HackByte from an internal college event to 5,154 registrations as a lead organiser across three years, placed third at Qualcomm VisionX, co-invented a granted AI dental-inspection patent and a published EcoFresh waste-to-value patent application, and graduated branch topper with an 8.5 CPI. Project EKA, Code for GovTech, EcoFresh, and implementing Qwen3 MoE from scratch took that instinct into frontier models and real-world systems. MIRAI-Setu took me across Japan in 2025 and deepened my interest in craft, manufacturing, infrastructure, and long time horizons.`,
+I began in Smart Manufacturing, where software meets sensors, machines, operations, and physical consequences. That foundation continues to shape my longer-term interest in multimodal agents, physical AI, and robotics.`,
+  personalNote:
+    "I started coding at 12 because I wanted my own Pokédex, then spent years jailbreaking phones and tracing systems past their intended limits. That instinct still guides me: take the machinery apart, understand the boundary, and rebuild it around what should remain true for the person using it. Building technical communities through HackByte and studying craft and infrastructure in Japan taught me that serious systems are also cultural objects—they need clarity, trust, and time.",
   photo: "/Shivansh.jpg",
   facts: [
     { label: "Location", value: "Nagpur, India" },
@@ -244,16 +323,255 @@ I started coding at 12 to build a Pokédex, then spent years jailbreaking phones
     },
     {
       label: "Focus",
-      value: "Personal Agents · Orchestration · Infrastructure",
+      value: "Persistent Agents · Memory · Control · Evaluation",
     },
     {
       label: "Currently",
       value: "Building Waldo + Kennel full-time",
     },
   ],
-  interestsLabel: "Current interests",
-  interests: ["Physical AI", "Industry 4.0", "Quantum + AI"],
+  interestsLabel: "Longer horizon",
+  interests: ["Multimodal Agents", "Physical AI", "Robotics"],
 };
+
+// ==================== TRAJECTORY ====================
+
+export const trajectoryPhases: TrajectoryPhase[] = [
+  {
+    id: "models",
+    number: "01",
+    title: "Models",
+    summary:
+      "I learned how capability is shaped beneath the interface: through multilingual data, curation, experiments, routing, attention, and inference systems.",
+    evidence: ["Project EKA", "Eka Curator + COOM", "Qwen3 MoE"],
+    insight:
+      "Model capability is shaped by the data, evaluation, and infrastructure underneath the model—not only its architecture.",
+  },
+  {
+    id: "agents",
+    number: "02",
+    title: "Agents",
+    summary:
+      "At Atlan and through Waldo, the unit of work shifted from a model response to a system with context, tools, permissions, memory, failure, and a goal.",
+    evidence: ["30+ production agent instances", "40+ harnesses studied", "Waldo + Kennel"],
+    insight:
+      "Once a model receives tools, context, permissions, and a goal, the systems around it become part of its effective behavior.",
+  },
+  {
+    id: "world",
+    number: "03",
+    title: "World",
+    summary:
+      "Smart Manufacturing, sensing, invention, and industrial exposure keep pulling the research toward environments where software decisions acquire physical consequences.",
+    evidence: ["Smart Manufacturing", "Sensing + edge inference", "Published patent applications"],
+    insight:
+      "Physical systems make uncertainty, latency, state, control, and the cost of failure impossible to ignore.",
+  },
+];
+
+// ==================== SELECTED EVIDENCE ====================
+
+export const evidenceRecords: EvidenceRecord[] = [
+  {
+    slug: "waldo",
+    title: "Waldo — persistent personal agents",
+    phase: "agents",
+    status: ["built", "demonstrated", "hypothesis"],
+    role: "Founder & CEO",
+    summary:
+      "A user-owned personal agent investigating how intent, evidence, corrections, decisions, and unresolved consequences can remain coherent across agents and time.",
+    contribution:
+      "Co-founded the company and lead agent architecture, infrastructure, product boundaries, and the research program around responsibility continuity.",
+    observableResult:
+      "Three working internal foundations—Kennel, a durable harness, and Waldo mobile—with bounded Kennel acceptance for attributable sessions, history, live state, continuation, first-message handling, and archive cleanup.",
+    questions: [
+      "Can more machine execution leave the person with less to carry without weakening meaningful control?",
+    ],
+    links: [
+      { label: "Read the case study", href: "/work/waldo", kind: "case-study" },
+      {
+        label: "Visit Waldo",
+        href: "https://www.heywaldo.in/",
+        kind: "artifact",
+        external: true,
+      },
+    ],
+    image: "/images/projects/waldo/waldo-ecosystem.webp",
+    featured: true,
+  },
+  {
+    slug: "atlan",
+    title: "Atlan — production agent systems",
+    phase: "agents",
+    status: ["built", "observed"],
+    role: "FDE & AI Engineer Intern",
+    summary:
+      "Production experience with the runtime problems that appear after a model receives tools, enterprise context, authentication, and real users.",
+    contribution:
+      "Helped build and operate more than 30 production agent instances across context, tools, authentication, integrations, deployment, and reliability.",
+    observableResult:
+      "The work exposed a recurring gap between a run finishing and a person's intended outcome becoming true—without turning confidential company systems into a public case study.",
+    questions: [
+      "How should a person monitor, correct, and recover agent work that spans many tools and actions?",
+    ],
+    links: [],
+    featured: true,
+  },
+  {
+    slug: "project-eka",
+    title: "Project EKA — model and data infrastructure",
+    phase: "models",
+    status: ["built", "observed"],
+    role: "MTS Intern · LLM pre-training",
+    summary:
+      "Work beneath a national-scale multilingual sparse-MoE program: curation infrastructure and reproducible experimentation under constrained compute.",
+    contribution:
+      "Built Eka Curator and worked on the COOM framework for Project EKA at Soket AI Labs.",
+    observableResult:
+      "Public first-party attribution connects the work to Project EKA; the project's current scale belongs to the program, not to my individual contribution.",
+    questions: [
+      "How do data quality, language imbalance, contamination, and evaluation shape capability before training begins?",
+    ],
+    links: [
+      {
+        label: "Explore Project EKA",
+        href: "https://soket.ai/project-eka",
+        kind: "source",
+        external: true,
+      },
+    ],
+    featured: true,
+  },
+  {
+    slug: "physical-systems",
+    title: "Agents in the physical world",
+    phase: "world",
+    status: ["built", "historical", "direction"],
+    role: "Smart Manufacturing engineer",
+    summary:
+      "A foundation in cyber-physical systems, sensing, industrial automation, and invention where mistakes have latency, energy, material, and safety consequences.",
+    contribution:
+      "Studied Smart Manufacturing; built sensing and edge-inference projects; co-invented published dental-inspection and waste-to-value patent applications.",
+    observableResult:
+      "The work establishes a physical-systems foundation without claiming current robotics deployment or sole ownership of multi-inventor work.",
+    questions: [
+      "What changes when an agent must estimate uncertain world state before taking an irreversible action?",
+    ],
+    links: [],
+    featured: true,
+  },
+  {
+    slug: "qwen3-moe",
+    title: "Qwen3 MoE — understanding by rebuilding",
+    phase: "models",
+    status: ["built"],
+    role: "Independent implementation",
+    summary:
+      "A from-scratch PyTorch implementation used to understand sparse routing, grouped-query attention, RoPE, normalization, and KV caching at code level.",
+    contribution:
+      "Reimplemented the architecture for first-principles learning, adapting educational material rather than claiming original Qwen research.",
+    observableResult:
+      "The public repository makes the implementation and its provenance inspectable.",
+    questions: [
+      "Which model-level tradeoffs remain visible—or disappear—once the model is placed inside an agent runtime?",
+    ],
+    links: [
+      {
+        label: "View the repository",
+        href: "https://github.com/Pin4sf/Qwen3-MoE-Self-Implementation",
+        kind: "artifact",
+        external: true,
+      },
+    ],
+    featured: true,
+  },
+  {
+    slug: "field-building",
+    title: "Research community and field-building",
+    phase: "field-building",
+    status: ["demonstrated"],
+    role: "Lead organiser & mentor",
+    summary:
+      "Technical work becomes a field when people can enter it, learn together, build artifacts, and feel responsible for the quality of the community.",
+    contribution:
+      "Helped grow HackByte from an internal event to 5,154 registrations across three years and created structured peer-learning programs in machine learning.",
+    observableResult:
+      "A public event, registration record, recurring organizing responsibility, and programs that moved learning from talks into projects.",
+    questions: [
+      "How do you make technical depth legible and inviting without lowering its standard?",
+    ],
+    links: [
+      {
+        label: "Visit HackByte",
+        href: "https://www.hackbyte.in/",
+        kind: "artifact",
+        external: true,
+      },
+    ],
+    featured: true,
+  },
+];
+
+// ==================== RESEARCH AGENDA ====================
+
+export const researchAreas: ResearchArea[] = [
+  {
+    title: "Agent runtimes and harnesses",
+    maturity: "practice",
+    summary:
+      "Context composition, typed tools, permissions, durable execution, recovery, delivery, and observability shape deployed behavior alongside the model.",
+    questions: ["Which runtime boundaries must remain first-party because they encode trust?"],
+    evidenceSlugs: ["atlan", "waldo"],
+  },
+  {
+    title: "Production reliability and control",
+    maturity: "practice",
+    summary:
+      "Real agent systems fail across tools, credentials, providers, retries, and human handoffs—not only at the model response.",
+    questions: ["Where should intervention happen before recovery becomes expensive or unsafe?"],
+    evidenceSlugs: ["atlan", "waldo"],
+  },
+  {
+    title: "Persistent memory and current state",
+    maturity: "investigating",
+    summary:
+      "Memory changes future behavior. Provenance, freshness, correction, forgetting, and user ownership therefore become policy questions.",
+    questions: ["What should persist, expire, or be reopened when the world changes?"],
+    evidenceSlugs: ["waldo"],
+  },
+  {
+    title: "Long-horizon outcome evaluation",
+    maturity: "investigating",
+    summary:
+      "A trajectory can look productive while the intended outcome remains false, stale, rejected, or unresolved.",
+    questions: ["What evidence is sufficient to say an outcome became true?"],
+    evidenceSlugs: ["atlan", "waldo"],
+  },
+  {
+    title: "User-owned knowledge and authority",
+    maturity: "investigating",
+    summary:
+      "Accumulated context should remain inspectable, correctable, revocable, exportable, and separate from permission to act.",
+    questions: ["How can a system become more personal without silently becoming more powerful?"],
+    evidenceSlugs: ["waldo"],
+  },
+  {
+    title: "Agents in the world",
+    maturity: "long-term",
+    summary:
+      "Multimodal and embodied agents operate under noisy observation, continuous time, latency, physical constraints, and irreversible consequences.",
+    questions: ["How should agent state and control change when action crosses into the physical world?"],
+    evidenceSlugs: ["physical-systems"],
+  },
+];
+
+export const researchQuestions = [
+  "What should persist when an agent crosses sessions, tools, and models?",
+  "How can an agent distinguish producing an artifact from changing the world?",
+  "How can autonomy expand without allowing authority to drift?",
+  "How should we evaluate an agent across trajectories and days rather than individual prompts?",
+  "What changes when an agent begins perceiving and acting in physical environments?",
+];
 
 // ==================== CASE STUDIES ====================
 
@@ -862,91 +1180,103 @@ export const caseStudies: CaseStudy[] = [
 
 export const skillCategories: SkillCategory[] = [
   {
-    name: "AI & ML Systems",
+    name: "Agent systems",
+    description:
+      "The runtime around a model: context, tools, authority, durable execution, recovery, observability, and evaluation.",
+    evidenceSlugs: ["atlan", "waldo"],
     skills: [
-      { name: "Large Language Models" },
-      { name: "RAG & GraphRAG" },
-      { name: "Agentic Systems" },
-      { name: "Biosignal Processing" },
-      { name: "NER & NLP Pipelines" },
+      { name: "Harness Architecture" },
+      { name: "Context Composition" },
+      { name: "Tool & Permission Design" },
+      { name: "Durable Execution" },
+      { name: "Recovery & Observability" },
+      { name: "Outcome Evaluation" },
+    ],
+  },
+  {
+    name: "Models and data",
+    description:
+      "Work beneath model interfaces: multilingual data, curation, sparse-MoE architecture, experiments, and evaluation.",
+    evidenceSlugs: ["project-eka", "qwen3-moe"],
+    skills: [
+      { name: "Pretraining Data" },
       { name: "Dataset Curation" },
-      { name: "Memory-Augmented AI" },
-    ],
-  },
-  {
-    name: "Engineering",
-    skills: [
-      { name: "Python", icon: "devicon-python-plain" },
-      { name: "TypeScript", icon: "devicon-typescript-plain" },
-      { name: "Next.js", icon: "devicon-nextjs-original" },
-      { name: "React", icon: "devicon-react-original" },
-      { name: "Node.js", icon: "devicon-nodejs-plain" },
-      { name: "MongoDB", icon: "devicon-mongodb-plain" },
-      { name: "Redis" },
-    ],
-  },
-  {
-    name: "Infrastructure",
-    skills: [
-      { name: "Distributed Systems" },
-      { name: "Data Pipeline Design" },
-      { name: "Edge Computing" },
-      { name: "API Architecture" },
-      { name: "Docker", icon: "devicon-docker-plain" },
-    ],
-  },
-  {
-    name: "Tools",
-    skills: [
-      { name: "Git", icon: "devicon-git-plain" },
-      { name: "Linux", icon: "devicon-linux-plain" },
-      { name: "Figma", icon: "devicon-figma-plain" },
+      { name: "Multilingual Systems" },
+      { name: "Mixture-of-Experts" },
       { name: "PyTorch" },
-      { name: "TensorFlow", icon: "devicon-tensorflow-original" },
+      { name: "Model Evaluation" },
+    ],
+  },
+  {
+    name: "Physical and cyber-physical systems",
+    description:
+      "Intelligence meeting sensors, machines, industrial operations, and consequences outside software.",
+    evidenceSlugs: ["physical-systems"],
+    skills: [
+      { name: "Industrial IoT" },
+      { name: "Sensing" },
+      { name: "Edge Inference" },
+      { name: "Automation" },
+      { name: "Control Systems" },
+      { name: "Manufacturing Systems" },
     ],
   },
 ];
 
 export const currentlyExploring =
-  "Physical AI, Industry 4.0, Quantum + AI, and user-owned personal agents";
+  "Persistent agents, long-horizon evaluation, user-owned memory, and physical AI";
 
 // ==================== TIMELINE ====================
 
 export const timelineData: TimelineEntry[] = [
   {
     year: "2026",
-    title: "FDE & AI Engineer Intern",
-    organization: "Atlan",
-    description:
-      "Helped build and operate more than 30 production agent instances through AtlanClaw, working across context, tools, authentication, integrations, deployment, and the failures that appear once people rely on agents.",
-    type: "work",
-    tags: [
-      "Production Agents",
-      "Agent Infrastructure",
-      "TypeScript",
-      "LLM Systems",
-    ],
-    dateRange: "Jan — Jun 2026",
-  },
-  {
-    year: "2026",
     title: "Co-Founder & CEO",
     organization: "Waldo",
     description:
-      "Building a user-owned personal agent for continuity across models, tools, work, and life. Kennel is its first Mac home for agent activity, human judgment, outcome evidence, and open loops.",
+      "Building a user-owned personal agent and its first Mac home, while keeping product claims separate from the deeper research questions the work exposes.",
     type: "startup",
-    tags: ["AI Agents", "macOS", "Codex", "Cloudflare Durable Objects"],
+    tags: ["Persistent Agents", "Memory", "Control", "Evaluation"],
     dateRange: "May 2026 — Present",
+    evidence:
+      "Kennel, a durable harness, and Waldo mobile are working internal foundations; Kennel has bounded live Codex acceptance.",
+    nextQuestion:
+      "Can one personal relationship preserve intent and evidence across agents while reducing what the person must carry?",
+  },
+  {
+    year: "2026",
+    title: "FDE & AI Engineer Intern",
+    organization: "Atlan",
+    description:
+      "Worked where models became production systems with context, tools, credentials, integrations, deployment, and real failure modes.",
+    type: "work",
+    tags: ["Production Agents", "Agent Infrastructure", "Reliability"],
+    dateRange: "Jan — Jun 2026",
+    evidence:
+      "Helped build and operate more than 30 production agent instances across teams and workflows.",
+    nextQuestion:
+      "What does it take to know that an agent's finished run actually resolved the human outcome?",
   },
   {
     year: "2025",
-    title: "Co-Founder",
-    organization: "EcoFresh Greensync",
+    title: "MTS Intern · LLM Pre-training",
+    organization: "Soket AI Labs · Project EKA",
     description:
-      "Decentralized waste-to-value infrastructure. 3 IP discoveries, Hult Prize recognition (16th/2500+ at IIT Bombay), Ministry of Education national recognition.",
-    type: "startup",
-    tags: ["CleanTech", "IoT", "3 IP Discoveries"],
-    dateRange: "2025 — Present",
+      "Worked below the model interface on multilingual curation and reproducible experimentation for an IndiaAI Mission-backed sparse-MoE program.",
+    type: "work",
+    tags: ["Multilingual Data", "Sparse MoE", "Experiments"],
+    dateRange: "Jul — Sep 2025",
+    evidence:
+      "Built Eka Curator and worked on the COOM framework; the program's full scale remains attributed to Project EKA.",
+    nextQuestion:
+      "How much of model capability is decided by data and evaluation before architecture receives the credit?",
+    links: [
+      {
+        label: "Explore Project EKA",
+        url: "https://soket.ai/project-eka",
+        external: true,
+      },
+    ],
   },
   {
     year: "2025",
@@ -957,6 +1287,10 @@ export const timelineData: TimelineEntry[] = [
     type: "achievement",
     tags: ["Japan", "Technology Exchange", "Kaizen"],
     dateRange: "Oct 2025",
+    evidence:
+      "Selected for the month-long 2025 program and company-internship exchange; the published yearbook records the cohort.",
+    nextQuestion:
+      "What makes a technical system worthy of trust over decades rather than impressive for a launch?",
     links: [
       {
         label: "2025 Yearbook",
@@ -970,33 +1304,6 @@ export const timelineData: TimelineEntry[] = [
     ],
   },
   {
-    year: "2025",
-    title: "MTS Intern · LLM Pre-training",
-    organization: "Soket AI Labs",
-    description:
-      "Contributed to Project EKA and built Eka Curator for its 120B-parameter Indic Mixture-of-Experts model, plus COOM infrastructure for reproducible LLM experiments under constrained GPU resources.",
-    type: "work",
-    tags: ["LLM Pre-training", "Data Pipelines", "GPU Infrastructure"],
-    dateRange: "Jul — Sep 2025",
-    links: [
-      {
-        label: "Explore Project EKA",
-        url: "https://soket.ai/project-eka",
-        external: true,
-      },
-    ],
-  },
-  {
-    year: "2025",
-    title: "Developer Advocate Intern",
-    organization: "Ionio AI",
-    description:
-      "Built AI proof-of-concepts, developer demos, internal tools, sample applications, and technical resources that turned the platform’s capabilities into practical workflows for developers.",
-    type: "work",
-    tags: ["Developer Experience", "AI Prototypes", "Technical Writing"],
-    dateRange: "Feb — May 2025",
-  },
-  {
     year: "2024",
     title: "AI Engineer Intern",
     organization: "OpenFn (C4GT)",
@@ -1005,6 +1312,10 @@ export const timelineData: TimelineEntry[] = [
     type: "work",
     tags: ["NLP", "Open Source", "GovTech"],
     dateRange: "Jun — Sep 2024",
+    evidence:
+      "Built an NLP-to-workflow contribution through the national Code for GovTech open-source program.",
+    nextQuestion:
+      "How do language models become dependable components inside systems with explicit schemas and consequences?",
   },
   {
     year: "2023–25",
@@ -1015,6 +1326,10 @@ export const timelineData: TimelineEntry[] = [
     type: "achievement",
     tags: ["Community", "Hackathon", "Lead Organiser"],
     dateRange: "2023 — 2025",
+    evidence:
+      "Helped grow HackByte from an internal event to 5,154 registrations and started project-led ML learning programs.",
+    nextQuestion:
+      "How do you make technical depth inviting without lowering the standard?",
     links: [
       {
         label: "Visit HackByte",
@@ -1032,6 +1347,10 @@ export const timelineData: TimelineEntry[] = [
     type: "education",
     tags: ["AI/ML", "Mechatronics", "Systems Design"],
     dateRange: "Oct 2022 — Jun 2026",
+    evidence:
+      "Completed the degree as branch topper with an 8.5 CPI; co-invented published dental-inspection and waste-to-value patent applications.",
+    nextQuestion:
+      "What changes when intelligent software must perceive and act in a noisy physical world?",
   },
 ];
 
@@ -1071,6 +1390,16 @@ export function getFeaturedWork(): CaseStudy[] {
   return caseStudies
     .filter((cs) => cs.featured)
     .sort((a, b) => a.order - b.order);
+}
+
+export function getFeaturedEvidence(): EvidenceRecord[] {
+  return evidenceRecords.filter((record) => record.featured);
+}
+
+export function getEvidenceBySlug(
+  slug: string,
+): EvidenceRecord | undefined {
+  return evidenceRecords.find((record) => record.slug === slug);
 }
 
 export function getVentures(): CaseStudy[] {
