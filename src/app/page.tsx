@@ -37,8 +37,8 @@ const About = dynamic(
   () => import("./components/sections/About"),
   { ssr: false }
 );
-const TokenBurner = dynamic(
-  () => import("./components/sections/TokenBurner"),
+const ResearchAgenda = dynamic(
+  () => import("./components/sections/ResearchAgenda"),
   { ssr: false }
 );
 const Writing = dynamic(
@@ -142,7 +142,7 @@ export default function Page() {
           <Trajectory />
           <SelectedWork />
           <About />
-          <TokenBurner />
+          <ResearchAgenda />
           <Writing />
           <Timeline />
           <SkillsExperience />
