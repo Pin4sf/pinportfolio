@@ -14,14 +14,13 @@ export interface NavItem {
 
 export interface HeroData {
   name: string;
-  eyebrow: string;
   tagline: string;
+  subtitle: string;
   socials: Social[];
 }
 
 export interface AboutData {
   bio: string;
-  personalNote: string;
   photo: string;
   facts: { label: string; value: string }[];
   interestsLabel: string;
@@ -244,10 +243,9 @@ export const siteConfig: SiteConfig = {
 // ==================== NAVIGATION ====================
 
 export const navItems: NavItem[] = [
-  { label: "Work", href: "#evidence" },
-  { label: "Questions", href: "#research" },
-  { label: "Writing", href: "#writing" },
+  { label: "Ventures", href: "#ventures" },
   { label: "About", href: "#about" },
+  { label: "Writing", href: "#writing" },
   { label: "Contact", href: "#contact" },
 ];
 
@@ -255,9 +253,9 @@ export const navItems: NavItem[] = [
 
 export const heroData: HeroData = {
   name: "Shivansh Fulper",
-  eyebrow: "Founder of Waldo · AI systems researcher",
-  tagline:
-    "I build agents that can remember, act, and stay accountable over time.",
+  tagline: "I’m building the agent that stays on your side.",
+  subtitle:
+    "Waldo + Kennel · Co-founder, EcoFresh Greensync · B.Tech, IIITDM Jabalpur ’26",
   socials: [
     {
       name: "LinkedIn",
@@ -285,13 +283,11 @@ export const heroData: HeroData = {
 // ==================== ABOUT ====================
 
 export const aboutData: AboutData = {
-  bio: `I’m building Waldo, a personal agent that can hold context and carry work across time.
+  bio: `I’m building Waldo and Kennel: a user-owned personal agent and its first home on the Mac. I care about what happens after an agent says “done” — whether the outcome is real, what still needs human judgment, and how one agent can remain on the person’s side across models, tools, work, and life.
 
-Before this, I worked on production agents at Atlan and multilingual model infrastructure through Project EKA. I studied Smart Manufacturing, so I’ve always been drawn to systems that have to survive contact with the real world.
+At Atlan, I helped build and operate more than 30 production agent instances through AtlanClaw. That work made one gap impossible to ignore: an agent finishing a task and the task actually being done are two different things. It shaped how I think about continuity, permission, evidence, and personal agency.
 
-Today I spend most of my time thinking about memory, long-running agents, control, and how people know when delegated work is actually done.`,
-  personalNote:
-    "I started coding at 12 because I wanted my own Pokédex. Then came jailbroken phones, half-working experiments, and a habit of taking systems apart to understand where their boundaries really were. That curiosity still drives the way I build. HackByte taught me to make technical work inviting; Japan taught me to value patience, craft, and systems built to last.",
+I started coding at 12 to build a Pokédex, then spent years jailbreaking phones and tracing systems past their intended limits. At IIITDM Jabalpur, I grew HackByte from an internal college event to 5,154 registrations as a lead organiser across three years. Project EKA, Code for GovTech, EcoFresh, and rebuilding Qwen3 MoE took that instinct into models and real-world systems. MIRAI-Setu took me across Japan in 2025 and deepened my interest in craft, manufacturing, infrastructure, and long time horizons.`,
   photo: "/Shivansh.jpg",
   facts: [
     { label: "Location", value: "Nagpur, India" },
@@ -301,15 +297,15 @@ Today I spend most of my time thinking about memory, long-running agents, contro
     },
     {
       label: "Focus",
-      value: "Persistent Agents · Memory · Control · Evaluation",
+      value: "Personal Agents · Orchestration · Infrastructure",
     },
     {
       label: "Currently",
       value: "Building Waldo + Kennel full-time",
     },
   ],
-  interestsLabel: "Longer horizon",
-  interests: ["Multimodal Agents", "Physical AI", "Robotics"],
+  interestsLabel: "Current interests",
+  interests: ["Agent systems", "Physical AI", "Industry 4.0"],
 };
 
 // ==================== TRAJECTORY ====================

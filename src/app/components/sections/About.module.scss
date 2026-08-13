@@ -6,26 +6,6 @@
   transition: var(--theme-transition);
 }
 
-.shapes {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 0;
-}
-
-.floatingShape {
-  position: absolute;
-  background: rgba(255, 255, 255, 0.4);
-  opacity: 0;
-  border-radius: 50%;
-  box-shadow: 0 0 10px rgba(255, 255, 255, 0.15);
-}
-
-.square {
-  border-radius: 2px;
-  transform: rotate(45deg);
-}
-
 .grid {
   position: relative;
   z-index: 1;
@@ -55,27 +35,6 @@
   line-height: 1.75;
   color: var(--text-primary);
   text-wrap: pretty;
-}
-
-.personalNote {
-  padding: 1.25rem 0 0 1.25rem;
-  border-left: 1px solid var(--accent);
-
-  span {
-    font-family: var(--font-mono);
-    font-size: 0.65rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--accent);
-  }
-
-  p {
-    max-width: 64ch;
-    margin: 0.6rem 0 0;
-    color: var(--text-secondary);
-    line-height: 1.7;
-    text-wrap: pretty;
-  }
 }
 
 .facts {

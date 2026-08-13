@@ -34,8 +34,8 @@ const iconMap: Record<string, LucideIcon> = {
 export default function Hero() {
   const sectionRef = useRef<HTMLElement>(null);
   const nameRef = useRef<HTMLHeadingElement>(null);
-  const eyebrowRef = useRef<HTMLParagraphElement>(null);
   const taglineRef = useRef<HTMLParagraphElement>(null);
+  const subtitleRef = useRef<HTMLParagraphElement>(null);
   const socialsRef = useRef<HTMLDivElement>(null);
   const glowRef = useRef<HTMLDivElement>(null);
   const particlesRef = useRef<HTMLDivElement>(null);
@@ -95,32 +95,31 @@ export default function Hero() {
     if (chars.length === 0) return;
 
     gsap.set(chars, { y: "110%", opacity: 0 });
-    gsap.set(eyebrowRef.current, { y: 12, opacity: 0 });
     gsap.set(taglineRef.current, { y: 20, opacity: 0 });
+    gsap.set(subtitleRef.current, { y: 12, opacity: 0 });
 
-    const tl = gsap.timeline({ delay: 1.8 });
+    const tl = gsap.timeline({ delay: 0.2 });
 
-    tl.to(eyebrowRef.current, {
-      y: 0,
-      opacity: 1,
-      duration: 0.45,
-      ease: "power3.out",
-    })
-      .to(
-        chars,
-        {
-          y: "0%",
-          opacity: 1,
-          duration: 0.8,
-          stagger: 0.025,
-          ease: "power4.out",
-        },
-        "-=0.2",
-      )
+    tl.to(
+      chars,
+      {
+        y: "0%",
+        opacity: 1,
+        duration: 0.8,
+        stagger: 0.025,
+        ease: "power4.out",
+      },
+      "-=0.2",
+    )
       .to(
         taglineRef.current,
         { y: 0, opacity: 1, duration: 0.6, ease: "power3.out" },
         "-=0.3",
+      )
+      .to(
+        subtitleRef.current,
+        { y: 0, opacity: 1, duration: 0.45, ease: "power3.out" },
+        "-=0.35",
       )
       .fromTo(
         socialsRef.current?.children
@@ -318,9 +317,6 @@ export default function Hero() {
       )}
 
       <div className={styles.content}>
-        <p ref={eyebrowRef} className={styles.eyebrow}>
-          {heroData.eyebrow}
-        </p>
         <h1 ref={nameRef} className={styles.name}>
           {nameChars.map((c, i) =>
             c.isSpace ? (
@@ -338,6 +334,9 @@ export default function Hero() {
         </h1>
         <p ref={taglineRef} className={styles.tagline}>
           {heroData.tagline}
+        </p>
+        <p ref={subtitleRef} className={styles.subtitle}>
+          {heroData.subtitle}
         </p>
       </div>
 

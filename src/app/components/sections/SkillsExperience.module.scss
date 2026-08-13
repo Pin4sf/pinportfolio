@@ -6,16 +6,8 @@
 }
 
 .header {
-  display: grid;
-  grid-template-columns: minmax(0, 1.4fr) minmax(18rem, 0.6fr);
-  gap: var(--space-xl);
   max-width: 88rem;
   margin: 0 auto var(--space-2xl);
-  align-items: end;
-
-  > :first-child {
-    grid-column: 1 / -1;
-  }
 
   h2 {
     margin: 0;
@@ -25,16 +17,6 @@
     line-height: 0.94;
     letter-spacing: -0.04em;
     color: var(--text-heading);
-  }
-
-  p {
-    margin: 0;
-    color: var(--text-secondary);
-    line-height: 1.7;
-  }
-
-  @media (max-width: 767px) {
-    grid-template-columns: 1fr;
   }
 }
 
@@ -73,13 +55,6 @@
   font-variant-numeric: tabular-nums;
 }
 
-.description {
-  max-width: 56rem;
-  margin: 0 0 1.25rem;
-  color: var(--text-secondary);
-  line-height: 1.7;
-}
-
 .skills {
   display: flex;
   flex-wrap: wrap;
@@ -97,30 +72,6 @@
       content: "—";
       margin-right: 0.45rem;
       color: var(--text-tertiary);
-    }
-  }
-}
-
-.evidenceLinks {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.7rem 1.2rem;
-
-  a {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.35rem;
-    padding-bottom: 0.25rem;
-    font-family: var(--font-mono);
-    font-size: 0.66rem;
-    color: var(--text-tertiary);
-    text-decoration: none;
-    border-bottom: 1px solid var(--border-subtle);
-    transition: color 0.25s ease, border-color 0.25s ease;
-
-    &:hover {
-      color: var(--accent);
-      border-color: var(--accent);
     }
   }
 }

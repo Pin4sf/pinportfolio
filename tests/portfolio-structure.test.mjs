@@ -11,29 +11,48 @@ const read = (relativePath) =>
 const portfolio = read("src/data/portfolio.ts");
 const page = read("src/app/page.tsx");
 const hero = read("src/app/components/sections/Hero.tsx");
-const trajectory = read("src/app/components/sections/Trajectory.tsx");
+const selectedWork = read("src/app/components/sections/SelectedWork.tsx");
 const homepageSources = [portfolio, page, hero].join("\n");
 
-test("homepage leads with a quiet founder researcher identity", () => {
-  assert.match(portfolio, /Founder of Waldo · AI systems researcher/i);
-  assert.match(portfolio, /remember, act, and stay accountable over time/i);
+test("homepage restores the personal founder introduction", () => {
+  assert.match(portfolio, /agent that stays on your side/i);
+  assert.match(portfolio, /Waldo \+ Kennel/i);
   assert.doesNotMatch(homepageSources, /Explore the evidence/i);
   assert.doesNotMatch(hero, /heroData\.actions|actionPrimary/i);
 });
 
-test("homepage story is a direct visual thread", () => {
-  for (const step of ["Project EKA", "Atlan", "Waldo", "Longer term"]) {
-    assert.match(portfolio, new RegExp(step, "i"));
-  }
-  assert.match(trajectory, /One question led to the next/i);
-  assert.match(
-    trajectory,
-    /More capability should leave people with more agency/i,
-  );
+test("homepage uses the lighter personal flow", () => {
+  assert.doesNotMatch(page, /Trajectory|ResearchAgenda|LoadingScreen/);
+  assert.doesNotMatch(hero, /delay:\s*1\.8/);
+  assert.match(selectedWork, /getVentures/);
   assert.doesNotMatch(
-    [portfolio, trajectory].join("\n"),
-    /not a master plan written in hindsight/i,
+    selectedWork,
+    /Evidence status|observableResult|questions\[0\]/,
   );
+
+  const heroIndex = page.indexOf("<Hero />");
+  const workIndex = page.indexOf("<SelectedWork />");
+  const aboutIndex = page.indexOf("<About />");
+  const writingIndex = page.indexOf(
+    "<Writing featuredPosts={featuredPosts} />",
+  );
+  assert.ok(
+    heroIndex < workIndex &&
+      workIndex < aboutIndex &&
+      aboutIndex < writingIndex,
+  );
+});
+
+test("about keeps the lived personal story on the homepage", () => {
+  for (const detail of [
+    "Pokédex",
+    "jailbreaking",
+    "HackByte",
+    "Atlan",
+    "Japan",
+  ]) {
+    assert.match(portfolio, new RegExp(detail, "i"));
+  }
 });
 
 test("homepage removes consumption spectacle and unsupported quantum framing", () => {

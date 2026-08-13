@@ -2,8 +2,7 @@ import dynamic from "next/dynamic";
 import {
   heroData,
   aboutData,
-  evidenceRecords,
-  researchAreas,
+  caseStudies,
   skillCategories,
   contactData,
   siteConfig,
@@ -11,9 +10,6 @@ import {
 import { getFeaturedPosts } from "@/lib/mdx";
 
 // Dynamic imports for client components — avoid SSR for GSAP/Three.js
-const LoadingScreen = dynamic(() => import("./components/LoadingScreen"), {
-  ssr: false,
-});
 const SmoothScroll = dynamic(() => import("./components/SmoothScroll"), {
   ssr: false,
 });
@@ -23,9 +19,6 @@ const Header = dynamic(() => import("./components/layout/Header"), {
 const Hero = dynamic(() => import("./components/sections/Hero"), {
   ssr: false,
 });
-const Trajectory = dynamic(() => import("./components/sections/Trajectory"), {
-  ssr: false,
-});
 const SelectedWork = dynamic(
   () => import("./components/sections/SelectedWork"),
   { ssr: false },
@@ -33,10 +26,6 @@ const SelectedWork = dynamic(
 const About = dynamic(() => import("./components/sections/About"), {
   ssr: false,
 });
-const ResearchAgenda = dynamic(
-  () => import("./components/sections/ResearchAgenda"),
-  { ssr: false },
-);
 const Writing = dynamic(() => import("./components/sections/Writing"), {
   ssr: false,
 });
@@ -88,24 +77,16 @@ function SeoContent() {
         ))}
       </ul>
 
-      <h2>Selected Evidence</h2>
-      {evidenceRecords.map((record) => (
-        <article key={record.slug}>
-          <h3>{record.title}</h3>
-          <p>{record.role}</p>
-          <p>{record.summary}</p>
-          <p>Evidence status: {record.status.join(", ")}</p>
-        </article>
-      ))}
-
-      <h2>Research Agenda</h2>
-      {researchAreas.map((area) => (
-        <article key={area.title}>
-          <h3>{area.title}</h3>
-          <p>{area.summary}</p>
-          <p>Research maturity: {area.maturity}</p>
-        </article>
-      ))}
+      <h2>Selected Work</h2>
+      {caseStudies
+        .filter((project) => project.category === "venture")
+        .map((project) => (
+          <article key={project.slug}>
+            <h3>{project.name}</h3>
+            <p>{project.role}</p>
+            <p>{project.tagline}</p>
+          </article>
+        ))}
 
       <h2>Skills</h2>
       {skillCategories.map((cat) => (
@@ -137,17 +118,14 @@ export default function Page() {
   return (
     <>
       <SeoContent />
-      <LoadingScreen />
       <Header />
       <SectionProgress />
       <SmoothScroll>
         <main id="main-content">
           <Hero />
-          <Trajectory />
           <SelectedWork />
-          <ResearchAgenda />
-          <Writing featuredPosts={featuredPosts} />
           <About />
+          <Writing featuredPosts={featuredPosts} />
           <Timeline />
           <SkillsExperience />
           <Contact />

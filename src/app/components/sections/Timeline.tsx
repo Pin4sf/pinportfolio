@@ -437,8 +437,8 @@ export default function Timeline() {
 
       {/* Section header */}
       <div className={styles.header}>
-        <span className="section__label">Evidence chronology</span>
-        <h2 className={styles.heading}>How one question led to the next.</h2>
+        <span className="section__label">Experience</span>
+        <h2 className={styles.heading}>Timeline</h2>
       </div>
 
       {/* Two-column scrollytelling container */}
@@ -525,20 +525,6 @@ export default function Timeline() {
                   <span className={styles.org}>{entry.organization}</span>
 
                   <p className={styles.description}>{entry.description}</p>
-
-                  {entry.evidence && (
-                    <div className={styles.evidenceNote}>
-                      <span>Evidence</span>
-                      <p>{entry.evidence}</p>
-                    </div>
-                  )}
-
-                  {entry.nextQuestion && (
-                    <div className={styles.nextQuestion}>
-                      <span>Question it led to</span>
-                      <p>{entry.nextQuestion}</p>
-                    </div>
-                  )}
 
                   {entry.tags && entry.tags.length > 0 && (
                     <div className={styles.tags}>

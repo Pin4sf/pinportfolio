@@ -3,7 +3,6 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { ArrowDownRight } from "lucide-react";
 import { skillCategories, currentlyExploring } from "@/data/portfolio";
 import { useReducedMotion } from "@/app/hooks/useReducedMotion";
 import styles from "./SkillsExperience.module.scss";
@@ -38,14 +37,10 @@ export default function SkillsExperience() {
   }, [reducedMotion]);
 
   return (
-    <section ref={sectionRef} id="capabilities" className={styles.section}>
+    <section ref={sectionRef} id="skills" className={styles.section}>
       <header className={styles.header}>
-        <span className="section__label">Capabilities with provenance</span>
-        <h2>What the work required.</h2>
-        <p>
-          Technologies matter here only when an artifact, system, or observed
-          constraint gives them context.
-        </p>
+        <span className="section__label">Skills &amp; tools</span>
+        <h2>Things I build with.</h2>
       </header>
 
       <div className={styles.categories}>
@@ -56,26 +51,19 @@ export default function SkillsExperience() {
             </span>
             <div>
               <h3>{category.name}</h3>
-              <p className={styles.description}>{category.description}</p>
               <ul className={styles.skills}>
                 {category.skills.map((skill) => (
                   <li key={skill.name}>{skill.name}</li>
                 ))}
               </ul>
-              <div className={styles.evidenceLinks}>
-                {(category.evidenceSlugs ?? []).map((slug) => (
-                  <a key={slug} href={`#evidence-${slug}`}>
-                    Evidence: {slug.replace("-", " ")}
-                    <ArrowDownRight size={13} aria-hidden="true" />
-                  </a>
-                ))}
-              </div>
             </div>
           </article>
         ))}
       </div>
 
-      <p className={styles.exploring}>Currently investigating: {currentlyExploring}</p>
+      <p className={styles.exploring}>
+        Currently exploring: {currentlyExploring}
+      </p>
     </section>
   );
 }

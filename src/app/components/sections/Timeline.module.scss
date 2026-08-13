@@ -286,42 +286,6 @@
   margin-top: var(--space-sm);
 }
 
-.evidenceNote,
-.nextQuestion {
-  margin-top: 1rem;
-  padding-top: 1rem;
-  border-top: 1px solid var(--border-subtle);
-
-  span {
-    font-family: var(--font-mono);
-    font-size: 0.62rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--text-tertiary);
-  }
-
-  p {
-    margin: 0.45rem 0 0;
-    color: var(--text-secondary);
-    line-height: 1.6;
-  }
-}
-
-.nextQuestion {
-  border-top-color: rgba(108, 255, 141, 0.24);
-
-  span {
-    color: var(--accent);
-  }
-
-  p {
-    font-family: var(--font-display);
-    font-size: clamp(1.3rem, 2vw, 1.9rem);
-    line-height: 1.2;
-    color: var(--text-heading);
-  }
-}
-
 // ── Tags ──
 .tags {
   display: flex;

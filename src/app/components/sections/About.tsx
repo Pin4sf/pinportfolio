@@ -1,39 +1,19 @@
 "use client";
 
-import { useRef, useEffect, useMemo } from "react";
+import { useRef, useEffect } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import styles from "./About.module.scss";
 import { aboutData } from "@/data/portfolio";
 import { useReducedMotion } from "@/app/hooks/useReducedMotion";
-import { useGpuTier } from "@/app/hooks/useGpuTier";
 
 gsap.registerPlugin(ScrollTrigger);
-
-const ALL_SHAPES = [
-  { id: 0, type: "circle", left: "88%", top: "12%", size: 14 },
-  { id: 1, type: "circle", left: "92%", top: "50%", size: 10 },
-  { id: 2, type: "square", left: "85%", top: "75%", size: 12 },
-  { id: 3, type: "circle", left: "3%", top: "85%", size: 8 },
-  { id: 4, type: "square", left: "8%", top: "25%", size: 11 },
-  { id: 5, type: "circle", left: "45%", top: "8%", size: 6 },
-  { id: 6, type: "square", left: "60%", top: "90%", size: 9 },
-  { id: 7, type: "circle", left: "35%", top: "65%", size: 7 },
-];
 
 export default function About() {
   const sectionRef = useRef<HTMLElement>(null);
   const imageRef = useRef<HTMLDivElement>(null);
   const textRef = useRef<HTMLDivElement>(null);
-  const shapesRef = useRef<HTMLDivElement>(null);
   const reducedMotion = useReducedMotion();
-  const gpuTier = useGpuTier();
-
-  // Reduce from 8 shapes to 4 on low tier
-  const shapes = useMemo(
-    () => (gpuTier === "low" ? ALL_SHAPES.slice(0, 4) : ALL_SHAPES),
-    [gpuTier],
-  );
 
   useEffect(() => {
     if (reducedMotion) return;
@@ -83,87 +63,12 @@ export default function About() {
     return () => ctx.revert();
   }, [reducedMotion]);
 
-  // Floating geometric shapes — pause when offscreen
-  useEffect(() => {
-    if (reducedMotion) return;
-    const section = sectionRef.current;
-    const container = shapesRef.current;
-    if (!container || !section) return;
-
-    const els = container.querySelectorAll(`.${styles.floatingShape}`);
-
-    // Staggered entrance
-    gsap.fromTo(
-      els,
-      { opacity: 0, scale: 0 },
-      {
-        opacity: 0.3,
-        scale: 1,
-        duration: 1.5,
-        stagger: 0.15,
-        ease: "expo.out",
-      },
-    );
-
-    // Continuous gentle float — collected for pausing
-    const floatTweens: gsap.core.Tween[] = [];
-    Array.from(els).forEach((el) => {
-      floatTweens.push(
-        gsap.to(el, {
-          y: gsap.utils.random(-30, 30),
-          x: gsap.utils.random(-20, 20),
-          rotation: gsap.utils.random(-25, 25),
-          duration: gsap.utils.random(3, 5),
-          delay: gsap.utils.random(0, 2),
-          yoyo: true,
-          repeat: -1,
-          ease: "power1.inOut",
-        }),
-      );
-    });
-
-    // Pause when about section is offscreen
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        floatTweens.forEach((t) =>
-          entry.isIntersecting ? t.resume() : t.pause(),
-        );
-      },
-      { threshold: 0.05 },
-    );
-    observer.observe(section);
-
-    return () => {
-      observer.disconnect();
-      floatTweens.forEach((t) => t.kill());
-    };
-  }, [reducedMotion]);
-
   return (
     <section ref={sectionRef} id="about" className={styles.section}>
       <span className="bg-text bg-text--top" aria-hidden="true">
         自己紹介
       </span>
 
-      {/* Floating geometric accents */}
-      {!reducedMotion && (
-        <div ref={shapesRef} className={styles.shapes} aria-hidden="true">
-          {shapes.map((s) => (
-            <span
-              key={s.id}
-              className={`${styles.floatingShape} ${
-                s.type === "square" ? styles.square : ""
-              }`}
-              style={{
-                left: s.left,
-                top: s.top,
-                width: s.size,
-                height: s.size,
-              }}
-            />
-          ))}
-        </div>
-      )}
       <span className="section__label">About</span>
       <h2 className="sr-only">About Me</h2>
 
@@ -174,11 +79,6 @@ export default function About() {
               {paragraph}
             </p>
           ))}
-
-          <aside className={styles.personalNote}>
-            <span>How I tend to work</span>
-            <p>{aboutData.personalNote}</p>
-          </aside>
 
           <div className={styles.facts}>
             {aboutData.facts.map((fact) => (
