@@ -1,10 +1,10 @@
 # Shivansh Fulper — Portfolio
 
-> Founder of Waldo and AI systems researcher studying persistent agents, memory, long-horizon execution, monitoring, control, and evaluation.
+> Founder of Waldo and AI systems researcher building agents that can remember, act, and stay accountable over time.
 
-## Research trajectory
+## The thread
 
-Shivansh's work moves from models to agents to the world: multilingual data and model systems through Project EKA; production agent infrastructure at Atlan; persistent-agent research through Waldo and Kennel; and a longer-term interest in multimodal agents, physical AI, and robotics.
+Shivansh started with multilingual data and model systems through Project EKA, then worked on production agents at Atlan. He is now building Waldo and has a longer-term interest in multimodal agents, physical AI, and robotics.
 
 ## Selected evidence
 

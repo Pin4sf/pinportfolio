@@ -3,179 +3,141 @@ title: "When an Agent Says Done, What Is Actually True?"
 date: "2026-08-13"
 revised: "2026-08-13"
 category: "research"
-description: "A field-derived framework for separating agent activity, artifacts, verified evidence, and outcomes a person can safely accept."
+description: "A practical way to separate an agent’s activity from an outcome a person can safely accept."
 featured: true
 evidenceStatus: "derived"
 ---
 
-> **Evidence note:** This essay is a research synthesis, not a claim that Waldo has solved reliable autonomy. It combines lessons from operating more than 30 production agent instances at Atlan, building Waldo, and studying current agent-evaluation and monitoring work. Product conclusions are hypotheses until they survive repeated use.
+> **Note:** This comes from operating more than 30 production agent instances at Atlan, building Waldo, and reading current work on agent evaluation. It is a working model, not a solved one.
 
 An agent can finish a run without finishing the work.
 
-It can produce a file that nobody opened, merge code that did not survive production, send a message that did not resolve the decision, or create ten artifacts while leaving the original responsibility untouched. The transcript looks busy. The workflow reports success. The human still has to reconstruct what happened.
+It can write the file but never publish it. It can open a pull request that never reaches production. It can send a message without resolving the decision behind it.
 
-This is the gap I keep returning to: machine execution is scaling faster than outcome truth.
+The transcript looks complete. The original responsibility is still sitting with the person.
 
-The important question is no longer only, “Can the model perform the task?” It is also, “What is now true in the world, who verified it, and what still needs attention?”
+That gap is the problem I keep returning to.
 
-## Five states that should not be collapsed
+## A run is not an outcome
 
-I use five words deliberately:
+I use five words to keep the layers separate:
 
-1. **Session** — a bounded period of model and tool activity.
-2. **Artifact** — something the session produced: code, a document, a message, a plan, a deployment record.
-3. **Evidence** — an inspectable signal that supports or weakens a claim about the artifact.
-4. **Outcome** — a change that matters to the person who delegated the work.
-5. **Open loop** — an unresolved responsibility, decision, dependency, or promised follow-up.
+- A **session** is a period of model and tool activity.
+- An **artifact** is what the session produced: code, a document, a message, or a plan.
+- **Evidence** is what lets us inspect a claim about that artifact.
+- An **outcome** is the change the person actually wanted.
+- An **open loop** is whatever still needs attention, judgment, or follow-through.
 
-These are related, but they are not interchangeable.
+Take a small release. An agent edits the code, runs the tests, and opens a pull request.
 
-Consider a release task. A coding agent edits a checkout, the tests pass, and it opens a pull request. The session is complete and the artifact exists. But the intended outcome might be “customers can safely use the corrected flow.” That outcome also depends on review, merge state, deployment state, live behavior, and the absence of a regression. Until those conditions are checked, “done” is only a local claim.
-
-The most dangerous interface is one that turns local completion into global confidence.
-
-## The completion gap
-
-The gap appears because agent systems usually know more about execution than intent.
-
-They can observe commands, tool responses, file diffs, and exit codes. They often cannot directly observe whether the human’s real obligation disappeared. A green build is evidence about a build. It is not automatically evidence about usability, deployment, adoption, or trust.
-
-This suggests a hierarchy:
+The session is finished. The artifact exists. But “customers can use the fix” depends on review, merge, deployment, and live behavior. A green build supports one part of that chain. It does not prove the whole thing.
 
 ```text
-intent
-  ↓
-delegated task
-  ↓
-machine activity
-  ↓
-artifact
-  ↓
-verification evidence
-  ↓
-human acceptance
-  ↓
-outcome retained over time
+intent → work → artifact → evidence → acceptance
 ```
 
-Each transition can fail. An agent may misunderstand the intent. A tool may report partial success. Evidence can be stale. Acceptance can be premature. A once-correct outcome can later decay.
+Every arrow can break.
 
-Modern evaluation work is moving beyond short, isolated task success toward longer-horizon behavior, user friction, monitoring, and control. The UK AI Security Institute’s [research agenda](https://www.aisi.gov.uk/research-agenda) explicitly treats agent evaluations and human interaction as broader problems than a single benchmark score. OpenAI’s account of [monitoring internal coding agents](https://openai.com/index/how-we-monitor-internal-coding-agents-misalignment/) similarly shows why tool-rich workflows have to be understood across actions and reasoning, not only through a final response.
+## What should “done” include?
 
-The product consequence is simple: a serious agent interface needs an evidence model, not only a chat history.
+For important work, a completion claim should answer a few simple questions:
 
-## A verification contract
+1. **What changed?**
+2. **Where did it change?** A local checkout, production, an inbox, a calendar?
+3. **What did we observe?**
+4. **How recent is that observation?**
+5. **What is still uncertain or waiting on someone?**
 
-For consequential work, an agent’s completion claim should be accompanied by a compact verification contract:
+The strength of the evidence should match the consequence.
 
-- **Claim:** What does the agent believe changed?
-- **Scope:** Where does that claim hold—local checkout, shared branch, production, inbox, calendar, physical world?
-- **Evidence:** What observation supports it?
-- **Authority:** Which system or person is authoritative for that observation?
-- **Freshness:** When was the evidence collected, and can it have changed?
-- **Acceptance:** Who is allowed to declare the outcome complete?
-- **Residuals:** What remains uncertain, blocked, or reversible?
+Renaming a private note needs little ceremony. Publishing a claim, moving money, deleting data, or changing production needs much more.
 
-This is not bureaucracy for every tiny action. It is a way to scale rigor with consequence. Renaming a private note needs little ceremony. Deleting records, publishing a claim, spending money, or changing production requires much stronger evidence and clearer authority.
+This is also why verification and acceptance are different. A system can verify that a deployment is live. The founder may still reject it because the experience is wrong.
 
-A useful status vocabulary is therefore not just “running / done / failed.” It looks more like:
+## Evidence is not one thing
 
-```text
-proposed → authorized → executed → verified → accepted → monitored
-                         ↘ needs attention
-```
+Different checks answer different questions.
 
-“Verified” and “accepted” remain separate. The machine may verify that a deployment is live; the founder may still reject the outcome because it violates the intended experience.
+- A unit test checks a contract under known conditions.
+- A screenshot checks appearance at one moment and viewport.
+- A delivery receipt checks that a message left the system.
+- A production check sees whether something is live now.
+- A person decides whether the result was actually useful or acceptable.
 
-## Evidence has a shape
+Evidence gets stronger when it is direct, recent, and independent of the agent making the claim. It also gets stronger when it covers failure and recovery, not only the happy path.
 
-Not all evidence deserves equal weight.
+None of this creates certainty. It simply makes uncertainty easier to see.
 
-A self-report from the same agent that performed an action is weaker than an independent observation. A screenshot can prove appearance at one viewport but not interaction correctness. A unit test can prove a contract under its fixtures but not live integration. A live production check is strong for current availability but still says little about whether the feature helps anyone.
+The UK AI Security Institute’s [research agenda](https://www.aisi.gov.uk/research-agenda) treats agent evaluation as a wider problem than short task success. OpenAI’s account of [monitoring internal coding agents](https://openai.com/index/how-we-monitor-internal-coding-agents-misalignment/) makes a similar point from operations: understanding agent behavior requires looking across actions and reasoning, not only at the final answer.
 
-I find it useful to evaluate evidence along four dimensions:
+## The interface should follow the responsibility
 
-- **Independence:** an agent summarizing its own action is weaker than a separate system or reviewer checking the result.
-- **Proximity:** a proxy metric is weaker than direct observation of the intended state.
-- **Coverage:** a happy-path check is weaker than evidence across relevant failure and recovery paths.
-- **Freshness:** a historical snapshot is weaker than a recent observation from the authoritative surface.
+Most agent products are organized around chats and runs because those are easy to record.
 
-This does not create certainty. It makes uncertainty visible.
+People think in responsibilities:
 
-## From histories to responsibilities
+- ship the release;
+- submit the application;
+- prepare for the meeting;
+- follow up with the person;
+- decide what to do next.
 
-Most agent products organize around conversations or runs because those are easy for the system to record. People, however, organize life around responsibilities: send the application, fix the release, prepare the meeting, follow up with the person, decide what to do next.
+A session-first interface asks, “What did the agent do?”
 
-A session-first product asks, “What did the agent do?”
-
-An outcome-first product asks:
+An outcome-first interface asks:
 
 - What was I trying to make true?
-- What evidence says it is true now?
-- What changed since I last looked?
+- What changed?
+- What evidence supports that?
 - What still needs me?
-- What can be consciously closed or released?
 
-That distinction matters for Waldo. I do not want the product to become another dashboard of machine activity. Its value should come from preserving continuity between intent, work, evidence, and acceptance—without hiding uncertainty behind a polished summary.
+That is the direction I am exploring with Waldo. The point is not to create a prettier dashboard of agent activity. It is to preserve the thread between intention, work, evidence, and what remains.
 
-## Open loops are not failed tasks
+## Open loops need an ending
 
-An open loop is often treated as an error state. That is too crude.
+An open loop is not always a failure.
 
-Some loops are waiting for another person. Some are blocked by a future date. Some need a judgment the agent should not make. Some should be abandoned deliberately because the underlying goal changed. A trustworthy system must preserve these differences.
+It may be waiting for another person. It may depend on a date. It may need a decision the agent should not make. Or the goal may no longer matter.
 
-The closure operation matters as much as creation. A user should be able to say:
+So closure needs more than a checkmark. A person should be able to say:
 
 - this is complete;
-- this is no longer worth doing;
-- this responsibility belongs elsewhere;
-- remind me when the evidence changes;
-- keep the history, but stop carrying the obligation.
+- remind me when something changes;
+- move this responsibility elsewhere;
+- I no longer want to carry this.
 
-Without conscious closure, memory becomes an accumulating guilt machine.
+That last option matters. A memory system that keeps every unfinished thought alive becomes a guilt machine.
 
-## What I learned from production agent work
+## What production taught me
 
-At Atlan, I operated more than 30 production agent instances. That statement is intentionally narrow: it does not mean 30 autonomous employees, and it does not mean every workflow had equal complexity. It means repeated exposure to the operational gap between a capable model and a dependable system.
+At Atlan, I helped build and operate more than 30 production agent instances. The number is less interesting than the pattern.
 
-The recurring work was rarely “make the model smarter.” It was context assembly, tool boundaries, failure recovery, permissions, observability, and deciding what counted as enough evidence to proceed. The surrounding runtime determined whether a model capability became useful behavior.
+The hard work was often outside the model: assembling context, setting tool boundaries, handling permissions, recovering from failure, and deciding what evidence was enough to continue.
 
-It also changed my view of monitoring. Monitoring is not merely a safety layer applied after the product. It is part of how a user understands delegated work. OpenAI’s description of [running Codex safely](https://openai.com/index/running-codex-safely/) makes the same broader point from a different angle: autonomy depends on sandboxing, network controls, permissions, and review surfaces around the model.
+The harness changed whether model capability became dependable behavior.
 
-## A falsifiable Waldo thesis
+OpenAI’s discussion of [running Codex safely](https://openai.com/index/running-codex-safely/) shows the same principle from a security angle. Sandboxing, network controls, permissions, and review are not decorative layers around an agent. They shape what the agent actually is.
 
-Waldo’s current thesis is not “people want an AI that remembers everything.” It is narrower:
+## The Waldo test
 
-> If a personal agent preserves intent, exposes evidence, and carries unresolved responsibilities across time, a person should need less reconstruction work to accept an outcome safely.
+My current hypothesis is simple:
 
-That thesis should be rejected or substantially revised if repeated use does not improve measures such as:
+> If a personal agent preserves intent, shows its evidence, and carries unresolved work across time, people should spend less effort reconstructing what happened.
+
+That should be measurable.
+
+I would expect to see:
 
 - fewer sessions or raw artifacts opened per accepted outcome;
 - fewer interruptions per accepted outcome;
-- lower time from delegation to confident acceptance;
-- fewer reopened outcomes caused by missing or stale evidence;
-- higher correction success when the agent’s interpretation is wrong.
+- less time between delegation and confident acceptance;
+- fewer outcomes reopened because key evidence was missing;
+- successful correction when the agent misunderstood the person.
 
-These metrics are not currently validated product results. They are proposed falsifiers. That boundary is important: a research agenda should state what would prove it wrong.
+These are proposed tests, not product results.
 
-## The moral constraint
+The thesis fails if Waldo becomes another surface to supervise. It also fails if the product decides what matters, silently turns every observation into a task, or makes its own interpretation harder to challenge.
 
-An outcome-oriented agent can easily become paternalistic. If it decides what matters, silently ranks obligations, or turns every unfinished thought into a task, it will create pressure rather than relief.
+The person has to remain the authority over meaning. The agent can propose, gather evidence, and remember. The person must still be able to correct, defer, transfer, or let go.
 
-My constraint is that the user remains the authority over meaning. The system may infer a candidate open loop, but the person should be able to confirm, correct, defer, reassign, or release it. The agent can assemble evidence; it should not manufacture certainty. It can recommend; it should not convert behavioral traces into a hidden score of the person.
-
-This is why privacy and inspectability are not separate from intelligence. An agent that works across a life must make its memory, permissions, and claims understandable enough to contest.
-
-## What still needs to be tested
-
-The framework leaves hard questions open:
-
-- How much verification detail is useful before it becomes another burden?
-- Which outcomes deserve independent checks, and which can rely on lightweight evidence?
-- How should evidence decay be represented without creating constant alarms?
-- Can open loops be inferred accurately enough to help without overreaching?
-- Does a stable outcome view actually reduce reconstruction, or do people still return to transcripts?
-
-The next step is not a larger promise. It is instrumented use: record what a person delegated, what the system claimed, what evidence they inspected, what they corrected, and what they eventually accepted. Then look for the points where confidence was misplaced.
-
-Agents will keep getting better at producing work. The harder design problem is making their work legible enough to trust—and modest enough to doubt.
+Agents will keep getting better at producing work. The harder question is whether they can help us know what the work actually changed.

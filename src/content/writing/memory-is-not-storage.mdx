@@ -3,202 +3,167 @@ title: "Memory Is Not Storage"
 date: "2026-08-12"
 revised: "2026-08-13"
 category: "research"
-description: "Why a persistent personal agent needs governed state, provenance, correction, and forgetting—not an ever-growing transcript archive."
+description: "Why a personal agent needs provenance, correction, and forgetting—not an endless archive."
 featured: true
 evidenceStatus: "derived"
 ---
 
-> **Evidence note:** This is a design and research position derived from building Waldo and reviewing current work on long-term agent memory. Waldo has not yet established that this model improves retention or willingness to pay.
+> **Note:** This is a design position shaped by building Waldo and reading current work on long-term agent memory. It has not yet been validated as a product result.
 
 Imagine telling an agent, “I prefer calls after lunch.”
 
-That sentence could be a permanent preference, a temporary constraint, a polite excuse for one week, or a rule that applies only to a particular collaborator. Saving the sentence is easy. Knowing how it should influence a future action is the memory problem.
+That could be a permanent preference. It could be true for one week. It could apply only to work calls. It could even be a polite excuse you do not want turned into a rule.
 
-This is why I no longer think of agent memory as storage.
+Saving the sentence is easy.
 
-Storage asks whether information can be retrieved. Memory asks whether prior experience should influence the present—and under what authority, scope, confidence, and expiry.
+Knowing when it should affect a future action is the memory problem.
 
-For a persistent personal agent, the distinction is foundational. The system may encounter plans, health context, relationships, unfinished work, and moments of uncertainty. If it treats all of that as timeless fact, more memory will make it less trustworthy, not more personal.
+## Retrieval is only one step
 
-## Retrieval is only the middle of the lifecycle
-
-The familiar memory pipeline is capture, embed, retrieve. That is useful but incomplete.
-
-A governed lifecycle looks more like this:
+Most descriptions of agent memory sound like this:
 
 ```text
-observe → propose → confirm → retain → retrieve → apply → inspect
-             ↑          ↓          ↓         ↓
-          correct     expire     contest   revoke
+capture → store → retrieve
 ```
 
-Every transition carries a policy question.
+A personal agent needs a longer loop:
 
-- **Observe:** Was the information intentionally shared, or merely inferred?
-- **Propose:** Is this a candidate memory or a confirmed user statement?
-- **Confirm:** Does the user need to approve it before reuse?
-- **Retain:** For how long and in what scope?
-- **Retrieve:** Why is it relevant now?
-- **Apply:** Is it allowed to influence this decision?
-- **Inspect:** Can the user see the source and effect?
-- **Correct or revoke:** Will the change propagate to derived beliefs and future behavior?
+```text
+observe → propose → confirm → use → inspect
+             ↑         ↓        ↓
+          correct    expire   revoke
+```
 
-A vector database can support retrieval. It cannot answer these questions by itself.
+Each step raises a different question.
 
-## Memory is state with consequences
+- Did the user say this, or did the agent infer it?
+- Is it a fact, a preference, or an interpretation?
+- How long should it remain current?
+- Is it allowed to influence this decision?
+- Can the person see and change it later?
 
-Recent research increasingly treats agent memory as an evolving system rather than a passive archive. Work on [governed evolving memory](https://arxiv.org/abs/2605.26252) frames memory updates as controlled state transitions. Other surveys distinguish forms such as semantic, episodic, procedural, and working memory, while emphasizing that agent memory has to be evaluated as part of a system, not simply by recall quality ([agent memory systems characterization](https://arxiv.org/abs/2606.06448), [memory survey](https://arxiv.org/abs/2603.07670)).
+A vector database can help retrieve information. It cannot answer these questions on its own.
 
-That framing matches what a personal agent actually needs.
+Recent work on [governed evolving memory](https://arxiv.org/abs/2605.26252) treats memory as changing state rather than passive storage. Broader surveys of [agent memory systems](https://arxiv.org/abs/2606.06448) and [memory for language agents](https://arxiv.org/abs/2603.07670) make a similar shift: memory has to be understood as part of the agent’s behavior.
 
-Memory changes future behavior. A remembered preference can alter a schedule. A remembered relationship can change tone. A remembered medical context can affect a recommendation. A remembered commitment can become an open loop. The moment stored information influences action, it becomes governed state.
+That framing makes sense to me. A remembered preference can change a schedule. A remembered relationship can change the tone of a message. A remembered commitment can become an open loop.
 
-## Four separations I want Waldo to preserve
+Once memory changes action, it needs rules.
 
-### 1. What the user said versus what the agent inferred
+## Four distinctions matter
 
-“I do not want to work late this week” is an explicit statement.
+### What I said and what the agent inferred
 
-“The user is most productive in the morning” may be an inference from behavior.
+“I do not want to work late this week” is a direct statement.
 
-Those should not look identical in memory. Explicit statements deserve priority over behavioral inference, and inferences should carry their evidence and uncertainty. Otherwise a system slowly replaces the person’s account of themselves with its own profile.
+“Shivansh is most productive in the morning” may be an inference from behavior.
 
-### 2. Event versus interpretation
+They should not look the same. What a person says about themselves should outrank the profile an agent builds around them.
+
+### An event and its interpretation
 
 “The meeting moved to Friday” is an event.
 
 “This relationship is deteriorating” is an interpretation.
 
-The interpretation may be useful, but it is more contestable. If the agent cannot show the observations behind it, the user cannot correct the conclusion without fighting an invisible model of their life.
+The interpretation may be useful, but the person should be able to see what it came from and disagree with it.
 
-### 3. Recall versus authority
+### Recall and authority
 
-Remembering a preference does not mean the agent is authorized to act on it.
+An agent may remember that I usually choose an aisle seat. It can use that when comparing options.
 
-An agent might recall that I usually book aisle seats. It may use that as a default when comparing options. Purchasing a ticket still depends on current permission, budget, and itinerary. Memory can inform an action without authorizing it.
+That does not give it permission to buy a ticket.
 
-### 4. History versus current truth
+Memory can inform an action without authorizing it.
 
-A past fact can be accurately remembered and currently wrong.
+### History and current truth
 
-Projects end. Relationships change. Health conditions resolve. Goals are abandoned. A useful memory system must represent freshness, supersession, and contradiction—not merely similarity to the current prompt.
+A memory can be accurate and still be out of date.
 
-## A practical memory record
+Projects end. Goals change. Relationships shift. Temporary constraints expire. The system needs a way to represent time and supersession, not only similarity to the current prompt.
 
-A durable memory need not expose database complexity to the user, but the system should preserve enough structure to answer questions later.
+## What a useful memory should carry
+
+A memory does not need to expose a database schema to the user. But it should preserve enough context to explain itself.
 
 ```text
-content:        “Prefer calls after lunch”
-source:         explicit user statement
-captured_at:    2026-08-13
-scope:          scheduling / work calls
-confidence:     confirmed
-validity:       until corrected
-authority:      advisory, not booking permission
-derived_from:   conversation reference
-supersedes:     previous morning preference
-last_used:      next scheduling decision
+memory:       Prefer calls after lunch
+source:       User said it directly
+scope:        Work calls
+captured:     13 August 2026
+status:       Current until corrected
+authority:    A scheduling preference, not permission to book
 ```
 
-The exact schema will change. The principle should not: a memory must retain enough provenance to explain why it exists and how it affected an action.
+The exact fields will change. The important part is that the system can answer: why do I remember this, and how did it affect what I did?
 
 ## Contradiction is normal
 
-Many memory designs behave as if inconsistency is a database error. In human life, contradiction is expected.
+People are inconsistent because context changes.
 
-A person can want to protect deep-work mornings and still accept an urgent morning call. They can care about health without wanting health data connected. They can prefer concise updates for work and expansive discussion for research. The system needs scopes and exceptions, not a single global persona.
+Someone can protect deep-work mornings and still take an urgent morning call. They can care about health without wanting health data connected. They can prefer short work updates and long research conversations.
 
-When two memories disagree, the agent should not silently average them. It should consider:
+The agent should not silently average these into one personality profile.
 
-- Which source is more authoritative?
-- Which statement is newer?
-- Do the statements apply to different contexts?
-- Was one a temporary exception?
-- Is the consequence important enough to ask?
+When memories disagree, it should consider which source is newer, which is more direct, whether the context changed, and whether the consequence is important enough to ask.
 
-In low-consequence situations, the agent can choose a reversible default and disclose it. In high-consequence situations, ambiguity should slow the action down.
+For a small, reversible choice, it can make a sensible default and say what it assumed. For a consequential choice, ambiguity should slow it down.
 
-## Correction must reach downstream behavior
+## Correction has to change behavior
 
-An editable memory list is not sufficient if corrections do not change the system.
+An editable memory list is not enough.
 
-Suppose the agent inferred that a paused startup is still active. I correct it. A trustworthy correction process should:
+Suppose the agent thinks an old startup is still active. I correct it. The correction should also update plans, recommendations, and open loops that depended on the old belief.
 
-1. preserve the original source as history;
-2. record the correction and its authority;
-3. mark conflicting derived memories as stale;
-4. stop future retrieval from treating the old state as current;
-5. revisit active plans or open loops that depended on it;
-6. make the resulting changes inspectable.
+That gives us a useful test:
 
-This is closer to belief revision than deleting a row.
+> After a correction, can the user find every important place where the old belief still has influence?
 
-It also creates a useful test: after a correction, can the user identify every consequential place where the old belief still has influence?
+If not, the system remembers the correction but does not actually learn from it.
 
-## Forgetting is a feature
+## Forgetting is part of the product
 
-Total recall sounds powerful until it is applied to a life.
+Total recall sounds useful until it is applied to a life.
 
-Some information should expire because it was temporary. Some should be compressed because the raw detail is no longer useful. Some should be retained only as an outcome, not as a transcript. Some should be deleted because the user withdrew consent. And some should remain available as history while losing permission to influence current behavior.
+Some details should expire. Some should be compressed into a conclusion. Some should remain as history but stop influencing current behavior. Some should disappear because the user withdrew consent.
 
-These are different operations:
+These are different actions:
 
-- **Expire:** stop treating time-bounded context as current.
-- **Supersede:** keep history but prefer a newer statement.
-- **Compress:** retain the useful conclusion with links to evidence.
-- **Revoke:** remove permission for a memory to influence behavior.
-- **Delete:** remove the retained data where the system can genuinely do so.
-- **Release:** stop carrying an obligation while preserving its record if desired.
+- **Expire:** this was temporary and is no longer current.
+- **Supersede:** keep the history, but prefer the newer statement.
+- **Compress:** keep the conclusion without carrying every raw detail forward.
+- **Revoke:** stop letting this memory influence behavior.
+- **Delete:** remove the retained data where the system genuinely can.
 
-Forgetting is therefore not only a storage policy. It is part of agency and psychological safety.
+Forgetting is not a failure of memory. It is part of agency.
 
 ## Memory is also a security boundary
 
-Long-lived memory creates a durable attack surface. Incorrect or malicious information can outlive the session that introduced it and influence unrelated future actions. A recent review of [long-term memory security](https://arxiv.org/abs/2604.16548) describes risks across the lifecycle, including poisoning and unsafe retention.
+Long-lived memory lets mistakes travel across time.
 
-The personal-agent version is especially sensitive because the sources are heterogeneous: messages, documents, browser activity, health data, calendars, tool output, and agent inference. “The model saw it” cannot be equivalent to “the user approved it as memory.”
+Incorrect or malicious information can outlive the session that introduced it and influence unrelated actions weeks later. A review of [long-term memory security](https://arxiv.org/abs/2604.16548) describes risks across that lifecycle, including poisoning and unsafe retention.
 
-Useful defenses include source labeling, trust tiers, scoped retrieval, confirmation for sensitive inferences, influence logs, and the ability to quarantine suspicious updates. The system should also avoid turning memory into a hidden channel through which one tool can steer another.
+For a personal agent, the sources are especially mixed: messages, files, tool output, calendars, health data, and the agent’s own inference.
 
-## Memory should reduce reconstruction, not create surveillance
+“The model saw it” cannot mean “the user approved it as memory.”
 
-The product promise of memory is continuity. The failure mode is surveillance.
+## What this means for Waldo
 
-Continuity means I do not have to repeatedly explain the same context, reconstruct why a decision was made, or rediscover an unfinished responsibility. Surveillance means the system captures broadly because the data might be useful someday, then creates conclusions I did not ask for.
+I want Waldo’s memory to reduce reconstruction without becoming surveillance.
 
-The difference is not only local versus cloud storage. A private database can still be invasive. The stronger test is whether capture, interpretation, influence, and deletion remain legible and controllable.
+That leads to a few simple rules:
 
-For Waldo, this leads to several design constraints:
+- what the user says outranks what the agent infers;
+- sensitive context is permissioned, never assumed;
+- memory and permission remain separate;
+- important recommendations can be traced to current evidence;
+- corrections reach future behavior;
+- the user can release things they no longer want to carry.
 
-- user statements outrank behavioral inference;
-- sensitive context is permissioned, not assumed;
-- health can be a valuable first wedge without defining the entire product;
-- raw history should not be the primary interface;
-- every important recommendation should be traceable to current evidence;
-- the user can correct not only a fact, but the meaning the system derived from it;
-- closure and release are first-class operations.
+The approach may still be too heavy. People may not want to manage provenance and scope every day. The right interface probably keeps most of this quiet and brings it forward only when the consequence matters.
 
-## What would falsify this approach?
+The real test is not whether the agent can recall more. It is whether the person repeats themselves less, corrects the agent successfully, and understands why it acted.
 
-It is possible that this governance is too heavy. People may prefer an imperfect but fluid memory over constant decisions about provenance and scope. The system may be able to infer sensible defaults without presenting a control panel. The right interface may expose governance only at moments of consequence.
+The question is not: how can an agent store more of me?
 
-I would revise the approach if repeated use showed that:
-
-- people rarely inspect provenance even after consequential errors;
-- confirmations create more friction than corrections prevent;
-- scoped memory does not improve the relevance of retrieval;
-- correction does not measurably reduce repeated misunderstandings;
-- users prefer fresh task context over persistent cross-session continuity;
-- the system cannot explain memory influence in language people understand.
-
-The evaluation should therefore measure more than retrieval accuracy. It should include correction latency, recurrence of corrected errors, inappropriate memory influence, time spent rebuilding context, and the user’s confidence in why the system acted.
-
-## The design position
-
-The memory problem is not “How can an agent store more of me?”
-
-It is “How can prior experience help without quietly becoming authority?”
-
-That requires storage, but it also requires provenance, temporal scope, consent, contradiction handling, correction, and forgetting. It requires a system that can say, “I remember this because you told me; it applied then; I used it here; you can change it now.”
-
-That sentence is less magical than infinite context. It is also much closer to trust.
+It is: how can past experience help without quietly becoming authority?

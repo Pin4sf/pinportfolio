@@ -10,9 +10,9 @@ import styles from "./ResearchAgenda.module.scss";
 gsap.registerPlugin(ScrollTrigger);
 
 const maturityLabels = {
-  practice: "Built and encountered in practice",
-  investigating: "Actively investigating",
-  "long-term": "Long-term direction",
+  practice: "In practice",
+  investigating: "Working on now",
+  "long-term": "Longer term",
 };
 
 const maturities = ["practice", "investigating", "long-term"] as const;
@@ -49,12 +49,8 @@ export default function ResearchAgenda() {
   return (
     <section ref={sectionRef} id="research" className={styles.section}>
       <header className={styles.header}>
-        <span className="section__label">Research agenda</span>
-        <h2 className={styles.heading}>Questions earned through building.</h2>
-        <p className={styles.intro}>
-          I separate problems I have met in production from questions I am
-          investigating and horizons I am deliberately moving toward.
-        </p>
+        <span className="section__label">Research</span>
+        <h2 className={styles.heading}>What I’m thinking about.</h2>
       </header>
 
       <div className={styles.bands}>
@@ -84,7 +80,7 @@ export default function ResearchAgenda() {
       <div className={styles.questionsBlock}>
         <div className={styles.questionsIntro}>
           <p>Current questions</p>
-          <h3>The five I keep returning to.</h3>
+          <h3>Five I keep returning to.</h3>
         </div>
         <ol className={styles.questions}>
           {researchQuestions.map((question, index) => (
@@ -98,4 +94,3 @@ export default function ResearchAgenda() {
     </section>
   );
 }
-

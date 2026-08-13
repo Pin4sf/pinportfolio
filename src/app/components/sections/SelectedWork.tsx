@@ -29,23 +29,25 @@ export default function SelectedWork() {
     if (reducedMotion || !sectionRef.current) return;
 
     const context = gsap.context(() => {
-      sectionRef.current?.querySelectorAll(`.${styles.card}`).forEach((card) => {
-        gsap.fromTo(
-          card,
-          { y: 48, opacity: 0 },
-          {
-            y: 0,
-            opacity: 1,
-            duration: 0.85,
-            ease: "power3.out",
-            scrollTrigger: {
-              trigger: card,
-              start: "top 82%",
-              toggleActions: "play none none none",
+      sectionRef.current
+        ?.querySelectorAll(`.${styles.card}`)
+        .forEach((card) => {
+          gsap.fromTo(
+            card,
+            { y: 48, opacity: 0 },
+            {
+              y: 0,
+              opacity: 1,
+              duration: 0.85,
+              ease: "power3.out",
+              scrollTrigger: {
+                trigger: card,
+                start: "top 82%",
+                toggleActions: "play none none none",
+              },
             },
-          },
-        );
-      });
+          );
+        });
     }, sectionRef);
 
     return () => context.revert();
@@ -54,12 +56,10 @@ export default function SelectedWork() {
   return (
     <section ref={sectionRef} id="evidence" className={styles.section}>
       <header className={styles.header}>
-        <span className="section__label">Selected evidence</span>
-        <h2 className={styles.heading}>Work that changed the questions.</h2>
+        <span className="section__label">Selected work</span>
+        <h2 className={styles.heading}>What I’ve built.</h2>
         <p className={styles.intro}>
-          Not a list of everything I have touched. These are the systems,
-          artifacts, and communities that produced the research direction I am
-          pursuing now.
+          A few pieces of work that shaped what I care about now.
         </p>
       </header>
 
@@ -101,17 +101,17 @@ export default function SelectedWork() {
 
               <dl className={styles.details}>
                 <div>
-                  <dt>Contribution</dt>
+                  <dt>My part</dt>
                   <dd>{record.contribution}</dd>
                 </div>
                 <div>
-                  <dt>Observable result</dt>
+                  <dt>What exists</dt>
                   <dd>{record.observableResult}</dd>
                 </div>
               </dl>
 
               <div className={styles.question}>
-                <span>Question it produced</span>
+                <span>What it made me ask</span>
                 <p>{record.questions[0]}</p>
               </div>
 

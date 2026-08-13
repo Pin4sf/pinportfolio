@@ -9,11 +9,11 @@ identity: Founder of Waldo and AI systems researcher
 
 # Research focus
 focus: Persistent agents, memory and state, long-horizon execution, monitoring, control, evaluation, and physical AI
-trajectory: Models -> Agents -> World
+story: Project EKA -> Atlan -> Waldo -> physical world
 evidence-policy: Distinguish observed work, built artifacts, derived conclusions, hypotheses, direction, and historical material
 
 # Description
-description: Evidence-led portfolio of Shivansh Fulper, founder of Waldo and an AI systems researcher studying what it takes to trust persistent agents over time.
+description: Portfolio of Shivansh Fulper, founder of Waldo and an AI systems researcher building agents that can remember, act, and stay accountable over time.
 
 # Contact
 contact-email: piyushfulper3210@gmail.com
@@ -25,7 +25,7 @@ llms-full-txt: https://shivanshfulper.com/llms-full.txt
 sitemap: https://shivanshfulper.com/sitemap.xml
 
 # Primary pages
-page: / # Founder-researcher trajectory, selected evidence, research agenda, writing, biography, chronology, and contact
+page: / # Founder-researcher story, selected work, current questions, writing, biography, chronology, and contact
 page: /work/waldo # Waldo thesis, working foundations, evidence boundaries, and falsifiers
 page: /writing # Research essays, field notes, founder notes, and clearly labeled historical writing
 

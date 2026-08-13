@@ -8,7 +8,6 @@ import { heroData } from "@/data/portfolio";
 import { useReducedMotion } from "@/app/hooks/useReducedMotion";
 import { useGpuTier } from "@/app/hooks/useGpuTier";
 import {
-  ArrowUpRight,
   Github,
   Linkedin,
   Twitter,
@@ -37,9 +36,6 @@ export default function Hero() {
   const nameRef = useRef<HTMLHeadingElement>(null);
   const eyebrowRef = useRef<HTMLParagraphElement>(null);
   const taglineRef = useRef<HTMLParagraphElement>(null);
-  const subtitleRef = useRef<HTMLParagraphElement>(null);
-  const trajectoryRef = useRef<HTMLParagraphElement>(null);
-  const actionsRef = useRef<HTMLElement>(null);
   const socialsRef = useRef<HTMLDivElement>(null);
   const glowRef = useRef<HTMLDivElement>(null);
   const particlesRef = useRef<HTMLDivElement>(null);
@@ -101,10 +97,6 @@ export default function Hero() {
     gsap.set(chars, { y: "110%", opacity: 0 });
     gsap.set(eyebrowRef.current, { y: 12, opacity: 0 });
     gsap.set(taglineRef.current, { y: 20, opacity: 0 });
-    gsap.set(subtitleRef.current, { y: 15, opacity: 0 });
-    gsap.set(trajectoryRef.current, { y: 8, opacity: 0 });
-    if (actionsRef.current)
-      gsap.set(Array.from(actionsRef.current.children), { y: 8, opacity: 0 });
 
     const tl = gsap.timeline({ delay: 1.8 });
 
@@ -117,11 +109,11 @@ export default function Hero() {
       .to(
         chars,
         {
-      y: "0%",
-      opacity: 1,
-      duration: 0.8,
-      stagger: 0.025,
-      ease: "power4.out",
+          y: "0%",
+          opacity: 1,
+          duration: 0.8,
+          stagger: 0.025,
+          ease: "power4.out",
         },
         "-=0.2",
       )
@@ -129,21 +121,6 @@ export default function Hero() {
         taglineRef.current,
         { y: 0, opacity: 1, duration: 0.6, ease: "power3.out" },
         "-=0.3",
-      )
-      .to(
-        subtitleRef.current,
-        { y: 0, opacity: 1, duration: 0.5, ease: "power3.out" },
-        "-=0.3",
-      )
-      .to(
-        trajectoryRef.current,
-        { y: 0, opacity: 1, duration: 0.4, ease: "power2.out" },
-        "-=0.2",
-      )
-      .to(
-        actionsRef.current ? Array.from(actionsRef.current.children) : [],
-        { y: 0, opacity: 1, duration: 0.4, stagger: 0.06, ease: "power2.out" },
-        "-=0.2",
       )
       .fromTo(
         socialsRef.current?.children
@@ -362,30 +339,6 @@ export default function Hero() {
         <p ref={taglineRef} className={styles.tagline}>
           {heroData.tagline}
         </p>
-        <p ref={subtitleRef} className={styles.subtitle}>
-          {heroData.subtitle}
-        </p>
-        <p ref={trajectoryRef} className={styles.trajectory}>
-          {heroData.trajectory}
-        </p>
-        <nav
-          ref={actionsRef}
-          className={styles.actions}
-          aria-label="Portfolio shortcuts"
-        >
-          {heroData.actions.map((action) => (
-            <a
-              key={action.label}
-              href={action.href}
-              className={`${styles.action} ${action.primary ? styles.actionPrimary : ""}`}
-              target={action.external ? "_blank" : undefined}
-              rel={action.external ? "noopener noreferrer" : undefined}
-            >
-              {action.label}
-              <ArrowUpRight size={14} aria-hidden="true" />
-            </a>
-          ))}
-        </nav>
       </div>
 
       <div ref={socialsRef} className={styles.socials}>

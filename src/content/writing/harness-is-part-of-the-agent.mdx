@@ -3,197 +3,178 @@ title: "The Harness Is Part of the Agent"
 date: "2026-08-11"
 revised: "2026-08-13"
 category: "research"
-description: "What studying more than 40 agent harnesses taught me about loops, context, tools, memory, permissions, recovery, and trust."
+description: "What studying more than 40 agent harnesses taught me about the systems around the model."
 featured: true
 evidenceStatus: "derived"
 ---
 
-> **Evidence note:** I studied more than 40 agent harnesses through public documentation, repositories, product behavior, and architecture notes, then organized them into eight paradigms and 13 recurring patterns. This was a comparative design study, not a controlled benchmark, and it should not be read as 40 production systems I personally operated.
+> **Note:** I studied more than 40 public agent harnesses through documentation, repositories, product behavior, and architecture notes. This was a design comparison, not a controlled benchmark or 40 production systems I personally operated.
 
-When two products use the same model, they can still behave like completely different agents.
+I began the comparison expecting to find a dominant architecture.
 
-One edits a repository carefully, asks before crossing a boundary, and recovers after a failed command. Another loses the task after compaction, repeats a destructive tool call, or produces a persuasive summary of work it never verified. The difference is often attributed to prompting. In practice, much of it lives in the harness.
+I did not.
 
-The harness is the system wrapped around a model: the loop that calls it, the context it receives, the tools it can use, the state it preserves, the permissions it obeys, and the evidence it returns. It turns model capability into operational behavior.
+Coding agents, personal agents, research agents, and workflow systems make very different choices. But the same parts kept appearing: a loop, context, tools, state, permissions, recovery, and some way to decide whether the work was complete.
 
-After comparing more than 40 public agent systems and harnesses, I no longer treat that layer as implementation detail. The harness is part of the agent.
+Those parts often mattered as much as the model.
 
-## Method and limits
+## What I mean by a harness
 
-The corpus included coding agents, local personal agents, browser and computer-use systems, workflow runtimes, multi-agent orchestrators, research agents, and memory-oriented projects. I reviewed public sources such as official documentation, repositories, architecture explanations, and observable product behavior.
+The harness is the system around the model.
 
-The study was designed to answer architectural questions:
-
-- Where does the control loop live?
-- How is context assembled and compressed?
-- What can the agent do, and who grants permission?
-- Which state survives a session?
-- How does the system recover from partial failure?
-- What makes completion inspectable?
-- How do multiple agents or workers coordinate?
-
-It was not a universal availability audit or a head-to-head performance benchmark. Public implementations change quickly; some internal behavior is invisible; and a documented capability is not proof of reliability. The taxonomy is therefore a working map, not a leaderboard.
-
-## A model sits inside a system
-
-The simplest useful picture is:
+It decides what the model can see, which tools it can use, what survives between steps, when it should stop, and what happens after failure.
 
 ```text
-                         ┌──────────────────────┐
-human intent ───────────▶│ policy + permissions │
-                         └──────────┬───────────┘
-                                    │
-                         ┌──────────▼───────────┐
-world state ────────────▶│ context composition  │◀── memory
-                         └──────────┬───────────┘
-                                    │
-                         ┌──────────▼───────────┐
-                         │        model         │
-                         └──────────┬───────────┘
-                                    │
-                         ┌──────────▼───────────┐
-                         │ tools + execution    │
-                         └──────────┬───────────┘
-                                    │
-                         ┌──────────▼───────────┐
-                         │ evidence + recovery  │
-                         └──────────┬───────────┘
-                                    │
-accepted outcome ◀──────────────────┘
+                 context
+                    ↓
+permission → model → tools
+                    ↓
+          state, evidence, recovery
 ```
 
-Change any box and the effective agent changes. A more capable model with weak permissions and recovery can be less useful than a smaller model inside a disciplined runtime. A large context window can still fail if the harness includes the wrong evidence. Persistent memory can reduce repetition or quietly spread a bad inference across weeks.
+Change one of these pieces and the effective agent changes.
 
-## Eight paradigms
+The same model can feel careful in one product and reckless in another. It can recover cleanly from a failed command or repeat the same side effect. It can remember why the work exists or lose the goal after a long session.
 
-The systems in the corpus clustered into eight broad paradigms. Many products combine more than one.
+We often call these differences “prompting.” Many of them are systems design.
 
-- **Conversational copilot — turn or thread.** Fluid collaboration, with the risk that intent and state remain implicit.
-- **Coding loop — repository task.** Tight tool feedback, with the risk that local success is mistaken for a shipped outcome.
-- **Computer-use agent — screen action.** Works across existing software, with fragile perception and high action risk.
-- **Workflow runtime — defined process.** Repeatable and controllable, but rigid around novel situations.
-- **Research agent — question and evidence set.** Strong at gathering and synthesis, but vulnerable to citations that do not actually support the claim.
-- **Multi-agent orchestrator — delegated subtask graph.** Offers parallelism and specialization at the cost of coordination and compounded error.
-- **Persistent personal agent — ongoing responsibility.** Creates cross-session continuity while introducing surveillance and stale-memory risks.
-- **Ambient or scheduled agent — triggered background work.** Enables proactive assistance but can create interruptions, silent drift, and unclear authority.
+## How I compared the systems
 
-The important lesson was not which paradigm wins. It was that each makes a different promise about time, authority, and evidence. Calling all of them “agents” hides the most consequential design choices.
+The corpus included coding agents, browser and computer-use agents, workflow runtimes, research agents, multi-agent orchestrators, and persistent personal agents.
 
-## Thirteen recurring patterns
+I looked for a few practical things:
 
-Across the corpus, 13 patterns repeatedly determined the quality of the system.
+- Where does the control loop live?
+- How is context assembled?
+- Who grants permission?
+- What survives a session?
+- How does the system recover?
+- What supports a claim that the work is done?
 
-### 1. An explicit run loop
+Public systems change quickly, and some internal behavior is invisible. So this is a map of recurring design choices, not a leaderboard.
 
-The harness decides when the model observes, reasons, invokes a tool, inspects the result, retries, or stops. A vague loop encourages premature completion and unbounded retries. A strong loop makes budgets, terminal conditions, and escalation visible.
+## Eight kinds of agent
 
-### 2. Context composition
+The systems roughly fell into eight groups:
 
-Context is selected, not merely loaded. Good systems distinguish instructions, task state, retrieved knowledge, tool results, and untrusted external content. Ordering and provenance matter because the model cannot reliably infer which text deserves authority.
+1. **Conversational copilots** organize around a turn or thread.
+2. **Coding agents** organize around a repository task.
+3. **Computer-use agents** organize around actions on a screen.
+4. **Workflow runtimes** organize around a defined process.
+5. **Research agents** organize around a question and source set.
+6. **Multi-agent systems** organize around delegated subtasks.
+7. **Persistent personal agents** organize around an ongoing relationship.
+8. **Ambient agents** wake in response to time or events.
 
-### 3. Tool contracts
+No group is universally better. Each makes a different promise about time, authority, and evidence.
 
-A tool name and JSON schema are only the beginning. The harness also needs to represent side effects, reversibility, idempotency, likely failure modes, and what counts as authoritative success.
+A coding agent may be excellent at closing a local task and poor at knowing whether customers received the result. A persistent agent can reduce repetition, but a bad memory can influence unrelated work for weeks. An ambient agent can be useful without being asked, but it can also become an interruption machine.
 
-### 4. Permission boundaries
+## The recurring parts
 
-Useful autonomy is scoped autonomy. Sandboxes, network policies, protected paths, approval gates, and credential boundaries turn “can call a tool” into “may perform this action here.” OpenAI’s discussion of [running Codex safely](https://openai.com/index/running-codex-safely/) is one public example of the harness doing security work the model cannot do alone.
+Across those groups, 13 patterns kept returning. They fit into five layers.
 
-### 5. Durable run state
+### 1. The loop
 
-Long tasks need more than a transcript. They need a representation of the objective, current phase, completed work, pending decisions, and evidence. That state must survive interruption without pretending the world stood still.
+The run loop decides when the model observes, acts, inspects a result, retries, or stops.
 
-### 6. Checkpoint and recovery
+A weak loop ends too early or retries forever. A useful one has budgets, clear stopping conditions, and a way to ask for help.
 
-Failures are normal: commands time out, APIs return partial results, sessions compact, machines restart. A dependable harness can resume from an inspected checkpoint and distinguish safe replay from duplicate side effects.
+### 2. What the agent knows
 
-### 7. Memory lifecycle
+This layer includes context composition, working state, long-term memory, and model routing.
 
-Persistent systems need rules for what becomes memory, how it is retrieved, and how it is corrected or forgotten. Storing everything is not a memory architecture; it is deferred governance.
+More context is not always better. The harness has to choose what matters now, distinguish trusted instructions from untrusted content, and preserve enough state to resume without pretending the world stood still.
 
-### 8. Evidence-bearing completion
+Persistent memory adds another question: should this information still influence the agent tomorrow?
 
-“Done” should point to observations: tests, diffs, live checks, delivery receipts, accepted decisions. The evidence must match the scope of the claim. A local file is not proof of deployment; a sent email is not proof that a relationship issue is resolved.
+### 3. What the agent can do
 
-### 9. Observability for humans
+Tools, permissions, skills, and background triggers live here.
 
-Logs help operators. Users need a different view: what changed, why the agent acted, what evidence it relied on, and what still needs them. Exposing raw traces alone transfers reconstruction work back to the person.
+A tool schema tells the model how to call something. It does not fully describe the side effect, whether the action can be reversed, or what counts as real success.
 
-### 10. Background triggers and delivery
+Permissions turn “the model can call this tool” into “the agent may take this action, on this resource, for this purpose.” OpenAI’s account of [running Codex safely](https://openai.com/index/running-codex-safely/) shows why sandboxing, network controls, and review belong to the agent system rather than the prompt alone.
 
-Scheduled or event-driven agents require an explicit contract for when they wake, what changed enough to matter, where results are delivered, and how duplicate or stale notifications are suppressed.
+Reusable skills help too, but they are also code entering the system. Their source and permission scope matter.
 
-### 11. Subagent coordination
+### 4. What happens when things break
 
-Delegation can increase breadth, but only when subtasks are bounded and results can be reconciled. Parallel agents sharing mutable state can overwrite work or amplify an early misunderstanding. Coordination is a correctness problem, not just a speed feature.
+Long tasks fail in ordinary ways: a command times out, an API returns half a result, a session restarts, or two workers change the same state.
 
-### 12. Skills and reusable procedures
+Recovery therefore needs checkpoints, safe replay, cancellation, and a way to separate completed work from work that only looked complete.
 
-Skills encode domain procedures outside the base model. They can improve consistency and teach the harness how to use local tools. They are also executable supply-chain inputs: versioning, source review, and permission scope matter.
+This is where multi-agent systems become difficult. Parallelism is useful only when the subtasks are clear and the results can be reconciled.
 
-### 13. Model and provider routing
+### 5. How anyone knows what happened
 
-Different models have different strengths, costs, context behavior, and tool semantics. A portable harness isolates provider-specific details while preserving a stable contract for permissions, state, and evidence. “Supports many models” is not meaningful if changing a model changes the safety boundary invisibly.
+Logs help operators. People need a simpler view:
 
-## Five lessons that survived the comparison
+- what changed;
+- why the agent acted;
+- what evidence it used;
+- what still needs judgment.
 
-### Model intelligence and system reliability are separate variables
+Raw traces are inspectable, but they are not automatically understandable. A good harness turns activity into a small, honest account of the current state.
 
-The model proposes actions. The harness determines what the model can see, which actions are possible, how failures are handled, and whether completion is accepted. Improving the model can reduce some errors while leaving the operational system fundamentally unsafe.
+## What survived the comparison
 
-### Persistence changes the category of the product
+Five lessons felt durable.
 
-A session agent can forget a mistake when the session ends. A persistent agent may carry that mistake into future planning, communication, or recommendation. Once state crosses time, correction, expiry, and authority become core product behavior.
+### A better model does not fix a weak system
 
-### Trust is built at boundaries
+The model proposes actions. The harness decides what it sees, what it may do, and whether failure remains local. Model capability and system reliability are related, but they are not the same variable.
 
-The decisive moments are usually handoffs: human to agent, model to tool, one agent to another, local environment to production, memory to action, artifact to accepted outcome. Each handoff needs an inspectable contract. Trust does not come from a general personality layer painted over those boundaries.
+### Persistence changes the product
 
-### Recovery deserves first-class design
+A session agent can forget a mistake when the chat ends. A persistent agent can carry it into future planning and action.
 
-Agent demos optimize the happy path. Real systems spend their lives in partial states. A harness that can pause safely, show what is known, and resume without repeating side effects will often feel more intelligent than one with a more impressive demo.
+Once state crosses time, correction and forgetting become part of the product.
 
-### The user should not have to become the orchestrator
+### Trust lives in the handoffs
 
-Power-user harnesses expose threads, contexts, agents, tools, branches, and queues. These primitives are useful to builders. A personal agent should translate them into responsibilities, outcomes, evidence, and moments that need judgment. Inspectability matters, but the user should not have to manually operate the machinery to receive value.
+The important moments are often between things: person and agent, model and tool, memory and action, local work and production, artifact and accepted outcome.
 
-## Adopt, adapt, reject
+Each handoff needs a clear boundary.
 
-For Waldo, the comparison produced a clearer set of choices.
+### Recovery is a feature
 
-**Adopt:** durable state, explicit permissions, evidence-bearing completion, checkpoint recovery, source-aware memory, and clear separation between user authority and agent inference.
+Demos optimize the happy path. Real systems spend much of their time in partial states.
 
-**Adapt:** coding-agent concepts such as workspaces, plans, diffs, and approvals into language that makes sense across a person’s life. A repository has a branch and test suite; a personal responsibility may have messages, calendar changes, physical-world evidence, and a human decision.
+An agent that can pause, show what it knows, and resume safely often feels more capable than one that simply produces a more impressive first answer.
 
-**Reject:** transcript-first navigation as the primary product, invisible personality scoring, unbounded capture, activity dashboards that reward machine output, and autonomy claims that do not state their trust boundary.
+### The person should not become the orchestrator
 
-These are design directions, not shipped proof. Waldo still has to demonstrate that translating harness rigor into a personal interface creates less work rather than more process.
+Builders may enjoy agents, tools, branches, queues, and traces. Most people do not want a second job operating that machinery.
 
-## An illustrative reliability problem
+A personal agent should translate the system into responsibilities, outcomes, and the few moments that genuinely need a person.
 
-Long-horizon behavior compounds small weaknesses. If a ten-step process had a 95% independent success probability at each step, the probability of every step succeeding would be about 60%. Real tasks are not independent and the numbers vary, but the illustration explains why “usually works” can degrade sharply across a long run.
+## What this means for Waldo
 
-Harnesses respond with checkpoints, verification, retries, alternative tools, and human escalation. The goal is not to eliminate failure. It is to keep failure local, visible, and recoverable.
+The comparison gave me a clearer set of choices.
 
-## The next research artifact
+I want to keep durable state, explicit permissions, recovery, source-aware memory, and completion backed by evidence.
 
-This essay compresses the recurring lessons. It does not publish the full comparison.
+I want to adapt the useful ideas from coding agents—plans, diffs, approvals, workspaces—to responsibilities that also involve messages, calendars, other people, and the physical world.
 
-The next artifact should be a living Harness Atlas: one inspectable page for each system, a shared comparison rubric, original diagrams, source dates, observed-versus-inferred labels, and explicit Adopt / Adapt / Reject notes. The editorial model can borrow from Sebastian Raschka’s clear, comparative approach in [The Big LLM Architecture Comparison](https://magazine.sebastianraschka.com/p/the-big-llm-architecture-comparison), while the substance remains focused on harnesses and uses original analysis and figures.
+I want to avoid transcript-first navigation, hidden personality scores, unlimited capture, and dashboards that reward machine activity rather than useful outcomes.
 
-That atlas should answer practical questions rather than crown a winner:
+These are directions, not proof that Waldo has solved the problem. The product still has to show that it creates less work for the person.
 
-- Which systems preserve state beyond a session?
+## The next artifact
+
+This essay is the short version.
+
+The full comparison should become a living Harness Atlas: one page per system, a shared rubric, dated sources, original diagrams, and clear notes on what Waldo should adopt, adapt, or reject.
+
+The editorial inspiration is Sebastian Raschka’s [Big LLM Architecture Comparison](https://magazine.sebastianraschka.com/p/the-big-llm-architecture-comparison): repeat the same comparison structure, show the architecture clearly, and let readers see where systems genuinely differ.
+
+The atlas should not try to crown a winner. It should make a few questions easier to answer:
+
+- What survives after a session?
 - Where does authority live?
-- What can be corrected after the fact?
-- How is partial failure recovered?
-- Which evidence supports a completion claim?
-- What must a user understand, and what can remain hidden by default?
+- How does the system recover?
+- What can the user correct?
+- What evidence supports “done”?
 
-The comparison will need dated sources because this field moves quickly. It should also publish its uncertainties. Architecture inferred from product behavior is not the same as architecture confirmed in code.
-
-## The design position
-
-A model is a capability surface. An agent is the behavior that emerges when that model is placed inside a loop with context, tools, state, permissions, and consequences.
-
-That is why harness engineering deserves the same seriousness as model selection. It is where abstract intelligence meets the world—and where a convincing answer either becomes dependable work or falls apart.
+A model provides capability. The harness decides how that capability meets the world.

@@ -49,8 +49,8 @@ export default function WritingArchive({ posts }: WritingArchiveProps) {
         </TransitionLink>
         <h1 className={styles.title}>Writing</h1>
         <p className={styles.subtitle}>
-          Research essays, field notes, founder lessons, and historical product
-          chapters—with the boundary between evidence and hypothesis kept visible.
+          Research notes, field notes, and older chapters from things I’ve
+          built.
         </p>
       </header>
 
@@ -96,7 +96,8 @@ export default function WritingArchive({ posts }: WritingArchiveProps) {
                 <>
                   <span className={styles.dot}>·</span>
                   <span>
-                    Revised {new Date(post.revised).toLocaleDateString("en-US", {
+                    Revised{" "}
+                    {new Date(post.revised).toLocaleDateString("en-US", {
                       month: "short",
                       year: "numeric",
                     })}

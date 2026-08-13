@@ -11,15 +11,36 @@ const read = (relativePath) =>
 const portfolio = read("src/data/portfolio.ts");
 const page = read("src/app/page.tsx");
 const hero = read("src/app/components/sections/Hero.tsx");
+const trajectory = read("src/app/components/sections/Trajectory.tsx");
 const homepageSources = [portfolio, page, hero].join("\n");
 
-test("homepage leads with founder researcher identity and trajectory", () => {
-  assert.match(portfolio, /Founder \+ AI systems researcher/i);
-  assert.match(portfolio, /Models\s*(?:→|->)\s*Agents\s*(?:→|->)\s*World/i);
+test("homepage leads with a quiet founder researcher identity", () => {
+  assert.match(portfolio, /Founder of Waldo · AI systems researcher/i);
+  assert.match(portfolio, /remember, act, and stay accountable over time/i);
+  assert.doesNotMatch(homepageSources, /Explore the evidence/i);
+  assert.doesNotMatch(hero, /heroData\.actions|actionPrimary/i);
+});
+
+test("homepage story is a direct visual thread", () => {
+  for (const step of ["Project EKA", "Atlan", "Waldo", "Longer term"]) {
+    assert.match(portfolio, new RegExp(step, "i"));
+  }
+  assert.match(trajectory, /One question led to the next/i);
+  assert.match(
+    trajectory,
+    /More capability should leave people with more agency/i,
+  );
+  assert.doesNotMatch(
+    [portfolio, trajectory].join("\n"),
+    /not a master plan written in hindsight/i,
+  );
 });
 
 test("homepage removes consumption spectacle and unsupported quantum framing", () => {
-  assert.doesNotMatch(homepageSources, /Token Burner|AI runs in my veins|Quantum \+ AI|Wispr/);
+  assert.doesNotMatch(
+    homepageSources,
+    /Token Burner|AI runs in my veins|Quantum \+ AI|Wispr/,
+  );
 });
 
 test("evidence vocabulary is explicit", () => {
@@ -65,7 +86,7 @@ test("three research essays exist with required metadata", () => {
   for (const slug of slugs) {
     const file = path.join(root, `src/content/writing/${slug}.mdx`);
     assert.ok(fs.existsSync(file), `Missing essay ${slug}`);
-    const { data } = matter(fs.readFileSync(file, "utf8"));
+    const { data, content } = matter(fs.readFileSync(file, "utf8"));
     for (const field of [
       "title",
       "date",
@@ -78,6 +99,11 @@ test("three research essays exist with required metadata", () => {
       assert.ok(data[field] !== undefined, `${slug} missing ${field}`);
     }
     assert.equal(data.category, "research");
+    const wordCount = content.trim().split(/\s+/).length;
+    assert.ok(
+      wordCount >= 800 && wordCount <= 1500,
+      `${slug} should stay on a concise 800–1500 word path; found ${wordCount}`,
+    );
   }
 });
 
@@ -105,4 +131,3 @@ test("machine-readable surfaces share the canonical identity", () => {
     );
   }
 });
-

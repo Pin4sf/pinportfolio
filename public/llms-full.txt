@@ -1,6 +1,6 @@
 # Shivansh Fulper — Full Portfolio Context
 
-> Founder of Waldo and AI systems researcher working on persistent agents, memory and state, long-horizon execution, monitoring, control, and evaluation.
+> Founder of Waldo and AI systems researcher building agents that can remember, act, and stay accountable over time.
 
 ## Identity
 
@@ -8,7 +8,7 @@ Name: Shivansh Fulper
 Location: Nagpur, India
 Education: B.Tech, Smart Manufacturing, IIITDM Jabalpur, completed 2026 as branch topper with an 8.5 CPI
 Current work: Founder of Waldo
-Research trajectory: Models -> Agents -> World
+Story: Project EKA -> Atlan -> Waldo -> physical world
 Longer horizon: Multimodal agents, physical AI, and robotics
 Email: piyushfulper3210@gmail.com
 
@@ -26,7 +26,7 @@ The portfolio uses explicit evidence states:
 - Direction: a longer-term interest, not a shipped capability.
 - Historical: earlier work retained with its original context.
 
-## Trajectory
+## The thread
 
 ### Models
 

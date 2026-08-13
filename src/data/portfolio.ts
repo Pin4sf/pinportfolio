@@ -16,14 +16,6 @@ export interface HeroData {
   name: string;
   eyebrow: string;
   tagline: string;
-  subtitle: string;
-  trajectory: string;
-  actions: {
-    label: string;
-    href: string;
-    external?: boolean;
-    primary?: boolean;
-  }[];
   socials: Social[];
 }
 
@@ -212,12 +204,11 @@ export interface EvidenceRecord {
 }
 
 export interface TrajectoryPhase {
-  id: "models" | "agents" | "world";
+  id: "models" | "agents" | "waldo" | "world";
   number: string;
   title: string;
+  context: string;
   summary: string;
-  evidence: string[];
-  insight: string;
 }
 
 export interface ResearchArea {
@@ -242,7 +233,7 @@ export interface SiteConfig {
 export const siteConfig: SiteConfig = {
   title: "Shivansh Fulper — Founder & AI Systems Researcher",
   description:
-    "Shivansh Fulper is the founder of Waldo and an AI systems researcher working on persistent agents, memory and state, long-horizon execution, monitoring, control, and evaluation, with a longer-term interest in physical AI.",
+    "Shivansh Fulper is the founder of Waldo and an AI systems researcher working on persistent agents, memory, control, and long-running work.",
   author: "Shivansh Fulper",
   keywords:
     "Shivansh Fulper, Founder, AI Systems Researcher, Waldo, Kennel, Atlan, Persistent Agents, Agent Harnesses, Agent Memory, Long-Horizon Agents, Agent Evaluation, Physical AI, Project EKA, IIITDM Jabalpur",
@@ -253,8 +244,8 @@ export const siteConfig: SiteConfig = {
 // ==================== NAVIGATION ====================
 
 export const navItems: NavItem[] = [
-  { label: "Evidence", href: "#evidence" },
-  { label: "Research", href: "#research" },
+  { label: "Work", href: "#evidence" },
+  { label: "Questions", href: "#research" },
   { label: "Writing", href: "#writing" },
   { label: "About", href: "#about" },
   { label: "Contact", href: "#contact" },
@@ -264,22 +255,9 @@ export const navItems: NavItem[] = [
 
 export const heroData: HeroData = {
   name: "Shivansh Fulper",
-  eyebrow: "Founder + AI systems researcher",
+  eyebrow: "Founder of Waldo · AI systems researcher",
   tagline:
-    "I build persistent agents—and study what it takes to trust them over time.",
-  subtitle:
-    "Founder of Waldo. Previously built and operated production agent systems at Atlan. My work moves from model and data systems to agent runtimes, memory, control, evaluation, and eventually physical AI.",
-  trajectory: "Models → Agents → World",
-  actions: [
-    { label: "Explore the evidence", href: "#evidence", primary: true },
-    { label: "Research agenda", href: "#research" },
-    { label: "Read the field notes", href: "/writing" },
-    {
-      label: "GitHub",
-      href: "https://github.com/Pin4sf",
-      external: true,
-    },
-  ],
+    "I build agents that can remember, act, and stay accountable over time.",
   socials: [
     {
       name: "LinkedIn",
@@ -307,13 +285,13 @@ export const heroData: HeroData = {
 // ==================== ABOUT ====================
 
 export const aboutData: AboutData = {
-  bio: `I’m the founder of Waldo and an AI systems researcher focused on persistent agents, memory and state, long-horizon execution, monitoring, control, and evaluation.
+  bio: `I’m building Waldo, a personal agent that can hold context and carry work across time.
 
-My research direction grew out of building systems: model and data infrastructure through Project EKA, production agent systems at Atlan, and persistent personal-agent foundations through Waldo and Kennel.
+Before this, I worked on production agents at Atlan and multilingual model infrastructure through Project EKA. I studied Smart Manufacturing, so I’ve always been drawn to systems that have to survive contact with the real world.
 
-I began in Smart Manufacturing, where software meets sensors, machines, operations, and physical consequences. That foundation continues to shape my longer-term interest in multimodal agents, physical AI, and robotics.`,
+Today I spend most of my time thinking about memory, long-running agents, control, and how people know when delegated work is actually done.`,
   personalNote:
-    "I started coding at 12 because I wanted my own Pokédex, then spent years jailbreaking phones and tracing systems past their intended limits. That instinct still guides me: take the machinery apart, understand the boundary, and rebuild it around what should remain true for the person using it. Building technical communities through HackByte and studying craft and infrastructure in Japan taught me that serious systems are also cultural objects—they need clarity, trust, and time.",
+    "I started coding at 12 because I wanted my own Pokédex. Then came jailbroken phones, half-working experiments, and a habit of taking systems apart to understand where their boundaries really were. That curiosity still drives the way I build. HackByte taught me to make technical work inviting; Japan taught me to value patience, craft, and systems built to last.",
   photo: "/Shivansh.jpg",
   facts: [
     { label: "Location", value: "Nagpur, India" },
@@ -341,39 +319,33 @@ export const trajectoryPhases: TrajectoryPhase[] = [
     id: "models",
     number: "01",
     title: "Models",
+    context: "Project EKA",
     summary:
-      "I learned how capability is shaped beneath the interface: through multilingual data, curation, experiments, routing, attention, and inference systems.",
-    evidence: ["Project EKA", "Eka Curator + COOM", "Qwen3 MoE"],
-    insight:
-      "Model capability is shaped by the data, evaluation, and infrastructure underneath the model—not only its architecture.",
+      "I started below the interface, working on multilingual data and model infrastructure.",
   },
   {
     id: "agents",
     number: "02",
     title: "Agents",
+    context: "Atlan",
     summary:
-      "At Atlan and through Waldo, the unit of work shifted from a model response to a system with context, tools, permissions, memory, failure, and a goal.",
-    evidence: [
-      "30+ production agent instances",
-      "40+ harnesses studied",
-      "Waldo + Kennel",
-    ],
-    insight:
-      "Once a model receives tools, context, permissions, and a goal, the systems around it become part of its effective behavior.",
+      "Then I watched models become systems with tools, permissions, failures, and real users.",
+  },
+  {
+    id: "waldo",
+    number: "03",
+    title: "Waldo",
+    context: "Now",
+    summary:
+      "Now I’m building a personal agent that can carry context and unfinished work without taking control away from the person.",
   },
   {
     id: "world",
-    number: "03",
+    number: "04",
     title: "World",
+    context: "Longer term",
     summary:
-      "Smart Manufacturing, sensing, invention, and industrial exposure keep pulling the research toward environments where software decisions acquire physical consequences.",
-    evidence: [
-      "Smart Manufacturing",
-      "Sensing + edge inference",
-      "Published patent applications",
-    ],
-    insight:
-      "Physical systems make uncertainty, latency, state, control, and the cost of failure impossible to ignore.",
+      "I want to understand what changes when agents begin to see, move, and act in the physical world.",
   },
 ];
 
@@ -527,7 +499,7 @@ export const researchAreas: ResearchArea[] = [
     title: "Agent runtimes and harnesses",
     maturity: "practice",
     summary:
-      "Context composition, typed tools, permissions, durable execution, recovery, delivery, and observability shape deployed behavior alongside the model.",
+      "A model is only one part of an agent. I study the loops, tools, permissions, and recovery systems around it.",
     questions: [
       "Which runtime boundaries must remain first-party because they encode trust?",
     ],
@@ -537,7 +509,7 @@ export const researchAreas: ResearchArea[] = [
     title: "Production reliability and control",
     maturity: "practice",
     summary:
-      "Real agent systems fail across tools, credentials, providers, retries, and human handoffs—not only at the model response.",
+      "Agents often fail in the handoffs: between tools, credentials, providers, retries, and people.",
     questions: [
       "Where should intervention happen before recovery becomes expensive or unsafe?",
     ],
@@ -547,7 +519,7 @@ export const researchAreas: ResearchArea[] = [
     title: "Persistent memory and current state",
     maturity: "investigating",
     summary:
-      "Memory changes future behavior. Provenance, freshness, correction, forgetting, and user ownership therefore become policy questions.",
+      "Remembering is easy. Knowing what to keep, trust, correct, or forget is the harder problem.",
     questions: [
       "What should persist, expire, or be reopened when the world changes?",
     ],
@@ -557,7 +529,7 @@ export const researchAreas: ResearchArea[] = [
     title: "Long-horizon outcome evaluation",
     maturity: "investigating",
     summary:
-      "A trajectory can look productive while the intended outcome remains false, stale, rejected, or unresolved.",
+      "A run can finish while the actual job remains undone. I want better ways to tell the difference.",
     questions: ["What evidence is sufficient to say an outcome became true?"],
     evidenceSlugs: ["atlan", "waldo"],
   },
@@ -565,7 +537,7 @@ export const researchAreas: ResearchArea[] = [
     title: "User-owned knowledge and authority",
     maturity: "investigating",
     summary:
-      "Accumulated context should remain inspectable, correctable, revocable, exportable, and separate from permission to act.",
+      "Personal context should make an agent more helpful without quietly giving it more authority.",
     questions: [
       "How can a system become more personal without silently becoming more powerful?",
     ],
@@ -575,7 +547,7 @@ export const researchAreas: ResearchArea[] = [
     title: "Agents in the world",
     maturity: "long-term",
     summary:
-      "Multimodal and embodied agents operate under noisy observation, continuous time, latency, physical constraints, and irreversible consequences.",
+      "Physical action makes uncertainty, timing, and mistakes impossible to hide behind a polished answer.",
     questions: [
       "How should agent state and control change when action crosses into the physical world?",
     ],

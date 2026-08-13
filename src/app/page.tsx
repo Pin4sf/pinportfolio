@@ -74,7 +74,6 @@ function SeoContent() {
       <h1>
         {heroData.name} — {heroData.tagline}
       </h1>
-      <p>{heroData.subtitle}</p>
       <p>{siteConfig.description}</p>
 
       <h2>About</h2>

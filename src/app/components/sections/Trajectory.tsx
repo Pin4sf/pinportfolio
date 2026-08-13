@@ -18,13 +18,13 @@ export default function Trajectory() {
 
     const context = gsap.context(() => {
       gsap.fromTo(
-        `.${styles.phase}`,
-        { y: 40, opacity: 0 },
+        `.${styles.step}`,
+        { y: 24, opacity: 0 },
         {
           y: 0,
           opacity: 1,
-          duration: 0.8,
-          stagger: 0.14,
+          duration: 0.7,
+          stagger: 0.12,
           ease: "power3.out",
           scrollTrigger: {
             trigger: sectionRef.current,
@@ -41,32 +41,27 @@ export default function Trajectory() {
   return (
     <section ref={sectionRef} id="trajectory" className={styles.section}>
       <header className={styles.header}>
-        <span className="section__label">Trajectory</span>
-        <h2 className={styles.heading}>Models → Agents → World</h2>
-        <p className={styles.intro}>
-          This was not a master plan written in hindsight. Each system changed
-          the unit of work—and left a harder question behind.
-        </p>
+        <span className="section__label">The thread</span>
+        <h2 className={styles.heading}>One question led to the next.</h2>
       </header>
 
-      <div className={styles.phases}>
+      <div className={styles.flow}>
+        <div className={styles.line} aria-hidden="true" />
         {trajectoryPhases.map((phase) => (
-          <article key={phase.id} className={styles.phase}>
-            <div className={styles.phaseHeader}>
-              <span className={styles.number}>{phase.number}</span>
-              <h3>{phase.title}</h3>
+          <article key={phase.id} className={styles.step}>
+            <div className={styles.marker} aria-hidden="true">
+              <span>{phase.number}</span>
             </div>
+            <p className={styles.context}>{phase.context}</p>
+            <h3>{phase.title}</h3>
             <p className={styles.summary}>{phase.summary}</p>
-            <ul className={styles.evidence} aria-label={`${phase.title} evidence`}>
-              {phase.evidence.map((item) => (
-                <li key={item}>{item}</li>
-              ))}
-            </ul>
-            <p className={styles.insight}>{phase.insight}</p>
           </article>
         ))}
       </div>
+
+      <p className={styles.compass}>
+        More capability should leave people with more agency—not more to manage.
+      </p>
     </section>
   );
 }
-

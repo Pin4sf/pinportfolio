@@ -156,8 +156,8 @@ export default function Writing({ featuredPosts }: WritingProps) {
 
       <div className={styles.header}>
         <div>
-          <span className="section__label">Writing and field notes</span>
-          <h2 className={styles.heading}>Ideas with an evidence trail.</h2>
+          <span className="section__label">Writing</span>
+          <h2 className={styles.heading}>Notes from the work.</h2>
         </div>
         <CoolLink href="/writing" text="View all writing" />
       </div>
@@ -202,7 +202,8 @@ export default function Writing({ featuredPosts }: WritingProps) {
                 <>
                   <span className={styles.dot}>·</span>
                   <span>
-                    Revised {new Date(post.revised).toLocaleDateString("en-US", {
+                    Revised{" "}
+                    {new Date(post.revised).toLocaleDateString("en-US", {
                       month: "short",
                       year: "numeric",
                     })}

@@ -57,7 +57,8 @@ export default function BlogPost({ post }: BlogPostProps) {
               <>
                 <span className={styles.dot}>·</span>
                 <span>
-                  Revised {new Date(post.revised).toLocaleDateString("en-US", {
+                  Revised{" "}
+                  {new Date(post.revised).toLocaleDateString("en-US", {
                     month: "long",
                     day: "numeric",
                     year: "numeric",
@@ -66,11 +67,6 @@ export default function BlogPost({ post }: BlogPostProps) {
               </>
             )}
           </div>
-          {post.evidenceStatus && (
-            <p className={styles.evidenceStatus}>
-              Evidence posture · {post.evidenceStatus}
-            </p>
-          )}
           <h1 className={styles.title}>{post.title}</h1>
           <p className={styles.description}>{post.description}</p>
         </header>
