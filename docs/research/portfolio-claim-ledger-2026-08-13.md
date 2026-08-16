@@ -32,4 +32,3 @@ This ledger governs the evidence-led portfolio rewrite. Public copy may be narro
 - Atlan is used as bounded founder experience, not as an endorsement or confidential case study.
 - Waldo architecture statements identify what is built, demonstrated, proposed, or unknown.
 - The full Harness Atlas requires a fresh corpus audit, diagram provenance, and per-system source dates in a future session.
-

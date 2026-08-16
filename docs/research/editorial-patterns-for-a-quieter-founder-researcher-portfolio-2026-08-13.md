@@ -1,6 +1,6 @@
 # Editorial patterns for a quieter founder-researcher portfolio
 
-**Research date:** 2026-08-13  
+**Research date:** 2026-08-13
 **Scope:** First-party sources only. This note studies editorial form, not the authors' substantive AI forecasts or positions. Observations are separated from recommendations.
 
 ## Short answer
@@ -310,4 +310,3 @@ Before publishing a homepage section or essay, ask:
 - **High confidence:** AI 2040: Plan A is the intended companion reference to AI 2027, given the direct pairing and official cross-linking.
 - **Moderate confidence:** the recommended target length will fit every portfolio essay. Harness comparisons may need a shorter essay plus a separate living atlas.
 - **Not evaluated here:** visual styling, motion, accessibility, or the factual accuracy of the authors' AI forecasts. This is an editorial-pattern review only.
-
