@@ -231,6 +231,17 @@ test("Waldo thesis contains the self-falsifier", () => {
   assert.match(portfolio, /interruptions per accepted outcome/i);
 });
 
+test("Waldo remains current, bounded, and free of stale deck promotion", () => {
+  assert.match(portfolio, /Founder of Waldo/i);
+  assert.match(portfolio, /working internal foundations/i);
+  assert.match(portfolio, /external product and market validation remain open/i);
+  assert.doesNotMatch(portfolio, /Open the pitch deck/);
+  assert.doesNotMatch(
+    portfolio,
+    /AI agent that reads your body and runs your day/i,
+  );
+});
+
 test("machine-readable surfaces share the canonical identity", () => {
   for (const relativePath of [
     "src/app/layout.tsx",

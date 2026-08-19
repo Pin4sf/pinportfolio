@@ -31,7 +31,6 @@ export interface CaseStudyCard {
   label?: string;
   title: string;
   body: string;
-  status?: EvidenceStatus;
 }
 
 export interface CaseStudyExternalLink {
@@ -101,7 +100,6 @@ export interface CaseStudyNarrative {
   heroStatement: string;
   heroQuote?: string;
   heroBody: string;
-  status: string[];
   heroImageAlt: string;
   heroImageCaption: string;
   sections: CaseStudyNarrativeSection[];
@@ -474,11 +472,11 @@ export const evidenceRecords: EvidenceRecord[] = [
     title: "Waldo — persistent personal agents",
     phase: "agents",
     status: ["built", "demonstrated", "hypothesis"],
-    role: "Founder & CEO",
+    role: "Founder",
     summary:
       "A user-owned personal agent investigating how intent, evidence, corrections, decisions, and unresolved consequences can remain coherent across agents and time.",
     contribution:
-      "Co-founded the company and lead agent architecture, infrastructure, product boundaries, and the research program around responsibility continuity.",
+      "Leads agent architecture, infrastructure, product boundaries, and the research program around responsibility continuity.",
     observableResult:
       "Three working internal foundations—Kennel, a durable harness, and Waldo mobile—with bounded Kennel acceptance for attributable sessions, history, live state, continuation, first-message handling, and archive cleanup.",
     questions: [
@@ -688,7 +686,7 @@ export const caseStudies: CaseStudy[] = [
     name: "Waldo",
     tagline: "A user-owned agent that stays on your side.",
     heroImage: "/images/projects/waldo/waldo-ecosystem.webp",
-    role: "Founder & CEO",
+    role: "Founder",
     timeline: "May 2026 — Present",
     techStack: [
       "Swift",
@@ -715,7 +713,7 @@ export const caseStudies: CaseStudy[] = [
       "/images/projects/waldo/iphone-2.png",
     ],
     impact:
-      "The current evidence is foundation-level, not market validation. Kennel has recorded live Codex acceptance for bounded multi-session discovery, populated conversation history, real-time state, same-task continuation, first-message handling, and archive cleanup. Waldo has not yet established external retention, revenue, willingness to pay, or product-market validation. The research test is whether it lowers sessions or raw artifacts opened per accepted outcome and interruptions per accepted outcome.",
+      "The current record is foundation-level. Kennel has recorded live Codex acceptance for multi-session discovery, populated conversation history, real-time state, same-task continuation, first-message handling, and archive cleanup. External product and market validation remain open. The research test is whether Waldo lowers sessions or raw artifacts opened per accepted outcome and interruptions per accepted outcome.",
     reflection:
       "Waldo's center of gravity is epistemic: helping a person know what is true, what changed, what remains, and what machine work actually bought. Orchestration, memory, and interface are means. If Waldo merely adds another surface to manage, it becomes the third loop rather than the break.",
     pullQuote:
@@ -732,11 +730,6 @@ export const caseStudies: CaseStudy[] = [
         "Machine execution can scale. Consequences do not automatically transfer with it.",
       heroBody:
         "I’m building Waldo from an emerging pool of interlinked human constraints—not from one fixed workflow. As personal agents reach more people and specialist execution multiplies, Waldo is testing how one user-owned relationship can preserve understanding, authority, continuity, and responsibility across whatever agents and interfaces come next.",
-      status: [
-        "Problem pool first",
-        "Evidence before category",
-        "Product surface stays fluid",
-      ],
       heroImageAlt:
         "Waldo product system map connecting a person with agents, accounts, and work tools",
       heroImageCaption:
@@ -746,7 +739,6 @@ export const caseStudies: CaseStudy[] = [
           id: "what-changed",
           eyebrow: "01 · The world change",
           title: "Producing got cheap. Understanding did not.",
-          status: "derived",
           body: [
             "For many bounded tasks, machines can now produce plausible code, documents, plans, and analyses in minutes. The cost has not disappeared. It has moved into understanding assumptions, reconciling contradictions, reviewing consequences, and knowing whether the work changed anything that mattered.",
             "I first felt this while building and operating more than 30 production agent instances at Atlan. Starting another run was easy. Remembering why it existed, moving context between tools, detecting a waiting decision, and checking whether the original problem was actually resolved remained human work.",
@@ -758,19 +750,16 @@ export const caseStudies: CaseStudy[] = [
               label: "Observed",
               title: "The old bottleneck was production",
               body: "Writing the code, document, analysis, plan, or message often constrained how much work could be attempted.",
-              status: "observed",
             },
             {
               label: "Derived",
               title: "The new bottleneck is outcome truth",
               body: "Understanding, verification, acceptance, consequence, and the causal story behind machine-produced work remain scarce.",
-              status: "derived",
             },
             {
               label: "Failure mode",
               title: "Activity mistaken for progress",
               body: "More tokens, sessions, commits, and artifacts can increase visible activity while leaving the person with more uncertainty and review.",
-              status: "hypothesis",
             },
           ],
         },
@@ -778,7 +767,6 @@ export const caseStudies: CaseStudy[] = [
           id: "responsibility",
           eyebrow: "02 · The problem pool",
           title: "Three centers. One accountability floor.",
-          status: "derived",
           body: [
             "AI is not creating one neatly bounded problem. It is producing a reinforcing pool: more output raises evaluation load; more agents raise management work; fragmented memory raises reconstruction; easier action raises governance and consequence; cheaper intelligence raises the need to decide what the spend actually bought.",
             "The center of gravity is epistemic. Waldo should help a person know what is true, what changed, what remains, and why—not orchestrate for its own sake. Coordination, memory, and interfaces are candidate means.",
@@ -788,25 +776,21 @@ export const caseStudies: CaseStudy[] = [
               label: "Epistemic",
               title: "I cannot cheaply know what is true.",
               body: "Abundance without comprehension. Activity without outcome truth. Memory without coherent continuity. Cheap intelligence without allocation discipline.",
-              status: "derived",
             },
             {
               label: "Attentional",
               title: "I cannot allocate myself.",
               body: "Delegation without management capacity. Adoption without the agent-management literacy most people never asked to acquire.",
-              status: "derived",
             },
             {
               label: "Custodial",
               title: "I cannot keep what I have built.",
               body: "Personalization without durable user agency: context, corrections, permissions, and history become provider-bound or opaque.",
-              status: "derived",
             },
             {
               label: "Accountability floor",
               title: "Consequence stays with me regardless.",
               body: "Agents can act, but legal, social, professional, and moral accountability does not automatically transfer with execution.",
-              status: "observed",
             },
           ],
           afterword: [
@@ -818,7 +802,6 @@ export const caseStudies: CaseStudy[] = [
           id: "governance",
           eyebrow: "03 · Current connective hypothesis",
           title: "Responsibility continuity—not another agent-management job.",
-          status: "hypothesis",
           body: [
             "One human intention can span many sessions, specialist agents, tools, people, and days. Provider memory can preserve a transcript; it does not necessarily preserve why the work exists, what evidence changed the plan, what was accepted, or which consequence still remains.",
             "Responsibility continuity is our current hypothesis for that connective tissue. Waldo should retain the desired result, current constraints, authoritative evidence, corrections, decisions, unresolved consequences, and the smallest truthful re-entry point—even as the executor changes.",
@@ -830,30 +813,29 @@ export const caseStudies: CaseStudy[] = [
               label: "Preserve",
               title: "Intent, evidence, and what remains",
               body: "Carry the causal story across sessions rather than storing an undifferentiated transcript archive.",
-              status: "hypothesis",
             },
             {
               label: "Compress",
               title: "Routine management",
               body: "Absorb coordination work without hiding uncertainty or silently taking authority from the person.",
-              status: "hypothesis",
             },
             {
               label: "Return",
               title: "The smallest decision-complete intervention",
               body: "Bring back the evidence, consequence, and exact judgment required—not another feed of machine activity.",
-              status: "hypothesis",
             },
           ],
         },
         {
           id: "kennel",
-          eyebrow: "04 · Current product and target",
+          eyebrow: "04 · Current system",
           title: "Kennel is the first home. Waldo is the relationship.",
+          status: "built",
           body: [
-            "Today we have three working foundations that we use internally: Kennel on macOS, Waldo on mobile, and the durable backend and agent harness underneath them. Kennel has the strongest bounded acceptance evidence: attributable Codex sessions, conversation history, live processing state, same-task continuation, first-message handling, and archive cleanup.",
-            "Kennel is the first home, not the whole vision. It is Waldo’s initial wedge for people already coordinating several agents, giving that work one calm place to land—showing what the agent reports, what evidence supports, what needs judgment, and what remains unresolved without making the transcript the primary unit of value.",
-            "The target product is one Waldo carrying responsibilities across work and life. Production integrations, broad provider coverage, automatic artifact verification, and a complete cross-surface responsibility and governance experience are still being built. Today, the evidence is internal and foundation-level rather than proof of the complete integrated experience.",
+            "Kennel, a durable harness, and Waldo mobile are working internal foundations. Their integration, external product behavior, and market validation remain open work.",
+            "Kennel has the strongest internal acceptance record: attributable Codex sessions, conversation history, live processing state, same-task continuation, first-message handling, and archive cleanup.",
+            "Kennel is the first home, not the whole vision. It is Waldo’s initial wedge for work already spread across several agents, giving that work one calm place to land—showing what the agent reports, what supports it, what needs judgment, and what remains unresolved without making the transcript the primary unit of value.",
+            "The current hypothesis is responsibility continuity. The longer direction is one user-owned Waldo carrying responsibilities across work and life. Production integrations, broad provider coverage, automatic artifact verification, and the complete cross-surface experience remain open work.",
           ],
           cards: [
             {
@@ -1080,7 +1062,7 @@ export const caseStudies: CaseStudy[] = [
           body: [
             "I keep returning to bodies for AI: physical forms people would actually welcome into daily life—a desk object, wearable, home device, vehicle, or small robot. The same Waldo should inhabit each of them, carrying one identity and permission system instead of making every object another disconnected assistant.",
             "The physical-AI tailwind is strong, but this is not a current Waldo hardware program and we have low current customer validation for it. Software comes first because identity, correction, permission, evidence, interruption, revocation, and recovery must work before a personal agent is trusted with sensors, movement, or physical authority.",
-            "Health and body data matter to me as foundational, permissioned life context; they are not Waldo’s product category. The form may change. The person it works for should not.",
+            "Health and body context is optional and permissioned: a person may choose to share it, but it is neither Waldo’s product category nor a prerequisite. The form may change. The person it works for should not.",
           ],
           cards: [
             {
@@ -1115,24 +1097,24 @@ export const caseStudies: CaseStudy[] = [
       team: [
         {
           name: "Shivansh Fulper",
-          role: "Co-Founder & CEO · AI systems & engineering",
+          role: "Founder · AI systems & engineering",
           body: "Leads agent architecture, infrastructure, and engineering. Previously built and operated 30+ production agents at Atlan; also worked on Indic language-model data, open-source GovTech, and a from-scratch Qwen3 MoE implementation.",
         },
         {
           name: "Suyash Pingale",
-          role: "Co-Founder · Product, experience & brand",
+          role: "Founder · Product, experience & brand",
           body: "Leads product, experience, brand, and design. His experience running a design studio while training for an Ironman helped expose how much work and life context still had to be coordinated in a person’s head.",
         },
         {
           name: "Ashish Tembhekar",
           role: "Founding Engineer",
-          body: "Spent nine months working as an AI engineer before joining Waldo. He built much of the first app and health-data pipeline and now works across native iOS, Supabase, and agent infrastructure.",
+          body: "Spent nine months working as an AI engineer before joining Waldo. He built much of the first app, including its permissioned health-context pipeline, and now works across native iOS, Supabase, and agent infrastructure.",
         },
       ],
-      artifactsEyebrow: "13 · Artifacts",
+      artifactsEyebrow: "13 · Public artifacts",
       artifactsTitle: "Inspect the thesis, research, and working foundations.",
       artifactsIntro:
-        "The essays state the research position and its falsifiers. The technical brief and product artifacts show the current foundations. External sources support the direction, not Waldo product-market fit.",
+        "The founder video, technical brief, website, product imagery, and essays are demonstrated public artifacts. They make the thesis and current foundations inspectable; they are not proof of integrated external product behavior or market validation. External sources support the direction, not Waldo product-market fit.",
       artifacts: [
         {
           kind: "link",
@@ -1172,10 +1154,10 @@ export const caseStudies: CaseStudy[] = [
         },
         {
           kind: "video",
-          eyebrow: "Product video · Earlier foundation",
-          title: "The path from body context to action",
+          eyebrow: "Product video · Earlier chapter",
+          title: "An earlier Waldo mobile chapter",
           description:
-            "An earlier mobile product chapter. It shows where Waldo began; Kennel and the user-owned continuity layer are the current wedge.",
+            "An earlier mobile product chapter preserved as product history. Kennel and user-owned continuity are the current wedge.",
           href: "https://waldo-technical-brief.pages.dev/product-video.mp4",
           cta: "Open product video",
         },
@@ -1187,15 +1169,6 @@ export const caseStudies: CaseStudy[] = [
             "The system model, current foundations, permission boundaries, architecture, and longer physical-AI direction.",
           href: "https://waldo-technical-brief.pages.dev/",
           cta: "Read the technical brief",
-        },
-        {
-          kind: "link",
-          eyebrow: "Pitch deck",
-          title: "The company in twelve slides",
-          description:
-            "The problem, wedge, platform, team, and path from personal agents to consumer bodies for AI.",
-          href: "https://waldo-technical-brief.pages.dev/waldo-pitchdeck.pdf",
-          cta: "Open the pitch deck",
         },
         {
           kind: "link",
@@ -1390,7 +1363,7 @@ export const experiencePageData: ExperiencePageData = {
 export const timelineData: TimelineEntry[] = [
   {
     year: "2026",
-    title: "Founder & CEO",
+    title: "Founder",
     organization: "Waldo",
     description:
       "Building a user-owned personal agent and its first Mac home, while keeping product claims separate from the deeper research questions the work exposes.",

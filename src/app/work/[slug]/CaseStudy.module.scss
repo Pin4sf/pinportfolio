@@ -182,24 +182,6 @@
   text-wrap: pretty;
 }
 
-.statusList {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  margin-top: 2rem;
-
-  li {
-    border: 1px solid var(--border-visible);
-    border-radius: var(--radius-full);
-    padding: 0.4rem 0.7rem;
-    color: var(--text-secondary);
-    background: rgba(255, 255, 255, 0.025);
-    font-family: var(--font-mono);
-    font-size: 0.65rem;
-    letter-spacing: 0.02em;
-  }
-}
-
 .storyMeta {
   display: flex;
   flex-wrap: wrap;
@@ -207,8 +189,7 @@
   gap: 0.65rem;
 }
 
-.evidenceStatus,
-.cardStatus {
+.sectionStatus {
   width: fit-content;
   border: 1px solid rgba(108, 255, 141, 0.32);
   border-radius: var(--radius-full);
@@ -220,10 +201,6 @@
   letter-spacing: 0.08em;
   line-height: 1;
   text-transform: uppercase;
-}
-
-.cardStatus {
-  margin-top: auto;
 }
 
 .heroFigure,

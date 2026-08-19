@@ -77,11 +77,6 @@ function RichCaseStudy({ caseStudy, narrative }: RichCaseStudyProps) {
             </blockquote>
           )}
           <p className={styles.heroBody}>{narrative.heroBody}</p>
-          <ul className={styles.statusList} aria-label="Waldo project status">
-            {narrative.status.map((status) => (
-              <li key={status}>{status}</li>
-            ))}
-          </ul>
         </div>
 
         <figure className={styles.heroFigure}>
@@ -141,7 +136,7 @@ function RichCaseStudy({ caseStudy, narrative }: RichCaseStudyProps) {
               <div className={styles.storyMeta}>
                 <p className={styles.eyebrow}>{section.eyebrow}</p>
                 {section.status && (
-                  <span className={styles.evidenceStatus}>
+                  <span className={styles.sectionStatus}>
                     {section.status}
                   </span>
                 )}
@@ -165,9 +160,6 @@ function RichCaseStudy({ caseStudy, narrative }: RichCaseStudyProps) {
                       )}
                       <h3>{card.title}</h3>
                       <p>{card.body}</p>
-                      {card.status && (
-                        <span className={styles.cardStatus}>{card.status}</span>
-                      )}
                     </article>
                   ))}
                 </div>
