@@ -53,6 +53,11 @@
   &:hover {
     color: var(--accent);
   }
+
+  &:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 4px;
+  }
 }
 
 .nav {
@@ -75,6 +80,11 @@
 
   &:hover {
     color: var(--text-heading);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 4px;
   }
 
   &.active {
@@ -120,6 +130,11 @@
 
   &:active {
     transform: scale(0.96);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--text-heading);
+    outline-offset: 4px;
   }
 
   @media (min-width: 1024px) {

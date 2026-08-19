@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { usePathname } from "next/navigation";
 import styles from "./Header.module.scss";
 import CoolLink from "../ui/CoolLink";
 import { navItems } from "@/data/portfolio";
@@ -14,31 +15,14 @@ export default function Header() {
   const headerRef = useRef<HTMLElement>(null);
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [activeSection, setActiveSection] = useState("");
   const lastScrollY = useRef(0);
   const progressRef = useRef<HTMLDivElement>(null);
   const [hidden, setHidden] = useState(false);
-
-  // Scroll-spy: track active section
-  useEffect(() => {
-    const sections = navItems
-      .map((item) => document.querySelector(item.href))
-      .filter(Boolean) as Element[];
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setActiveSection(`#${entry.target.id}`);
-          }
-        });
-      },
-      { threshold: 0.3, rootMargin: "-80px 0px 0px 0px" },
-    );
-
-    sections.forEach((section) => observer.observe(section));
-    return () => observer.disconnect();
-  }, []);
+  const pathname = usePathname();
+  const isActive = (href: string) => {
+    const target = href.split("#")[0] || "/";
+    return target === "/" ? pathname === "/" : pathname.startsWith(target);
+  };
 
   // Hide on scroll-down, show on scroll-up + glass effect
   useEffect(() => {
@@ -128,7 +112,7 @@ export default function Header() {
         )}
       >
         <div className={styles.inner}>
-          <a href="#" className={styles.logo}>
+          <a href="/" className={styles.logo}>
             SF
           </a>
 
@@ -140,14 +124,14 @@ export default function Header() {
                 text={item.label}
                 className={cn(
                   styles.navLink,
-                  activeSection === item.href && styles.active,
+                  isActive(item.href) && styles.active,
                 )}
               />
             ))}
           </nav>
 
           <div className={styles.actions}>
-            <a href="#contact" className={styles.cta}>
+            <a href="/#contact" className={styles.cta}>
               Let&apos;s Talk
             </a>
           </div>
@@ -180,12 +164,13 @@ export default function Header() {
               style={{ transitionDelay: `${0.1 + i * 0.05}s` }}
               onClick={() => setMenuOpen(false)}
               tabIndex={menuOpen ? 0 : -1}
+              aria-current={isActive(item.href) ? "page" : undefined}
             >
               {item.label}
             </a>
           ))}
           <a
-            href="#contact"
+            href="/#contact"
             className={styles.overlayLink}
             style={{ transitionDelay: `${0.1 + navItems.length * 0.05}s` }}
             onClick={() => setMenuOpen(false)}
