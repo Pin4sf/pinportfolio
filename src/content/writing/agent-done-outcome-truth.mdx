@@ -8,15 +8,11 @@ featured: true
 evidenceStatus: "derived"
 ---
 
+A production agent finished a run and marked its work complete. The artifact existed, and every internal step looked successful. A person still had to determine whether the result reached its intended destination and whether it resolved the original job. Until that check, “done” described the run, not the responsibility.
+
+I kept seeing versions of this handoff while operating agent systems: files written but not published, pull requests opened but not deployed, and messages sent while decisions stayed unresolved. The governing question became: **when an agent says done, what is actually true?**
+
 > **Note:** This comes from operating more than 30 production agent instances at Atlan, building Waldo, and reading current work on agent evaluation. It is a working model, not a solved one.
-
-An agent can finish a run without finishing the work.
-
-It can write the file but never publish it. It can open a pull request that never reaches production. It can send a message without resolving the decision behind it.
-
-The transcript looks complete. The original responsibility is still sitting with the person.
-
-That gap is the problem I keep returning to.
 
 ## A run is not an outcome
 

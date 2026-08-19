@@ -50,3 +50,12 @@ test("about route is candid, server-rendered, and source bounded", () => {
   assert.match(source, /personalInfluences/);
   assert.doesNotMatch(source, /gsap|ScrollTrigger|TransitionLink/);
 });
+
+test("research route exposes questions, artifacts, and uncertainty", () => {
+  const source = read("src/app/research/page.tsx");
+  assert.doesNotMatch(source, /^"use client"/);
+  assert.match(source, /researchClusters/);
+  assert.match(source, /getAllPosts/);
+  assert.match(source, /cluster\.uncertainty/);
+  assert.doesNotMatch(source, /gsap|ScrollTrigger|backdrop-filter/);
+});

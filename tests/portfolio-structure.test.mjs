@@ -173,6 +173,30 @@ test("three research essays exist with required metadata", () => {
   }
 });
 
+test("flagship research essays open from bounded lived events", () => {
+  const first120Words = (slug) => {
+    const file = path.join(root, `src/content/writing/${slug}.mdx`);
+    const { content } = matter(fs.readFileSync(file, "utf8"));
+    return content.trim().split(/\s+/).slice(0, 120).join(" ");
+  };
+
+  const outcomeOpening = first120Words("agent-done-outcome-truth");
+  assert.match(outcomeOpening, /production agent/i);
+  assert.match(outcomeOpening, /intended destination/i);
+  assert.match(outcomeOpening, /original job/i);
+
+  const memoryOpening = first120Words("memory-is-not-storage");
+  assert.match(memoryOpening, /remembered fact/i);
+  assert.match(memoryOpening, /world .* changed/i);
+  assert.match(memoryOpening, /recall worked.*current truth did not/i);
+
+  const harnessOpening = first120Words("harness-is-part-of-the-agent");
+  assert.match(harnessOpening, /more than 40 public agent harnesses/i);
+  assert.match(harnessOpening, /dominant architecture/i);
+  assert.match(harnessOpening, /recurring control surfaces/i);
+  assert.match(harnessOpening, /different tradeoffs/i);
+});
+
 test("Waldo thesis contains the self-falsifier", () => {
   assert.match(portfolio, /Machine execution is scaling/i);
   assert.match(

@@ -218,6 +218,24 @@ export interface ResearchCluster {
   artifactSlugs: string[];
 }
 
+export interface ResearchPageData {
+  eyebrow: string;
+  title: string;
+  introduction: string;
+  metadata: {
+    description: string;
+    openGraphDescription: string;
+  };
+  threadLabel: string;
+  thread: Array<{ label: string; href: string }>;
+  questionLabel: string;
+  positionLabel: string;
+  uncertaintyLabel: string;
+  writingLabel: string;
+  artifactsLabel: string;
+  emptyWriting: string;
+}
+
 export interface CompassPrinciple {
   title: string;
   body: string;
@@ -1603,6 +1621,32 @@ export const publicArtifacts: PublicArtifact[] = [
     evidenceStatus: "historical",
   },
 ];
+
+export const researchPageData: ResearchPageData = {
+  eyebrow: "Research + Writing",
+  title: "A living notebook for models, agents, and the world.",
+  introduction:
+    "I study what happens after a model becomes a system: what it remembers, what it may change, and how we know its work became real.",
+  metadata: {
+    description:
+      "Research questions, working positions, public artifacts, and open uncertainty across models, agents, and physical systems.",
+    openGraphDescription:
+      "A living research notebook about models, agent systems, outcome truth, and the longer path into the physical world.",
+  },
+  threadLabel: "Follow the research thread",
+  thread: [
+    { label: "Models", href: "#models" },
+    { label: "Agents", href: "#agents" },
+    { label: "World", href: "#world" },
+  ],
+  questionLabel: "Governing question",
+  positionLabel: "Current position",
+  uncertaintyLabel: "Still uncertain",
+  writingLabel: "Related writing",
+  artifactsLabel: "Public artifacts",
+  emptyWriting:
+    "No published essay yet; the public work below holds the question open.",
+};
 
 export const researchClusters: ResearchCluster[] = [
   {
