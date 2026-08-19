@@ -180,6 +180,74 @@ export type EvidenceStatus =
   | "direction"
   | "historical";
 
+export type PublicationState = "public" | "historical" | "draft" | "excluded";
+export type ArtifactKind =
+  | "venture"
+  | "research"
+  | "writing"
+  | "code"
+  | "video"
+  | "field-note"
+  | "life"
+  | "source";
+export type ArtifactTheme = "models" | "agents" | "world" | "design" | "life";
+
+export interface PublicArtifact {
+  slug: string;
+  title: string;
+  kind: ArtifactKind;
+  theme: ArtifactTheme;
+  date: string;
+  summary: string;
+  href: string;
+  external?: boolean;
+  featured: boolean;
+  publicationState: PublicationState;
+  evidenceStatus?: EvidenceStatus;
+  image?: string;
+  caption?: string;
+  annotation?: string;
+}
+
+export interface ResearchCluster {
+  slug: string;
+  title: string;
+  question: string;
+  position: string;
+  uncertainty: string;
+  artifactSlugs: string[];
+}
+
+export interface CompassPrinciple {
+  title: string;
+  body: string;
+  artifactSlugs: string[];
+}
+
+export interface PersonalInfluence {
+  slug: string;
+  title: string;
+  kind: "origin" | "place" | "community" | "book" | "film" | "anime" | "design";
+  summary: string;
+  href?: string;
+  image?: string;
+  publicationState: PublicationState;
+}
+
+export interface AboutPageData {
+  eyebrow: string;
+  title: string;
+  introduction: string[];
+  longerHorizon: string[];
+  now: { date: string; body: string };
+}
+
+export interface PublicArtifactFilter {
+  theme?: ArtifactTheme;
+  kind?: ArtifactKind;
+  featured?: boolean;
+}
+
 export interface EvidenceLink {
   label: string;
   href: string;
@@ -243,11 +311,11 @@ export const siteConfig: SiteConfig = {
 // ==================== NAVIGATION ====================
 
 export const navItems: NavItem[] = [
-  { label: "Venture", href: "#ventures" },
-  { label: "About", href: "#about" },
-  { label: "Research + Writing", href: "#research" },
-  { label: "Experience", href: "#experience" },
-  { label: "Contact", href: "#contact" },
+  { label: "Venture", href: "/work/waldo" },
+  { label: "Research + Writing", href: "/research" },
+  { label: "Experience", href: "/experience" },
+  { label: "About", href: "/about" },
+  { label: "Contact", href: "/#contact" },
 ];
 
 // ==================== HERO ====================
@@ -1376,6 +1444,314 @@ export const timelineData: TimelineEntry[] = [
   },
 ];
 
+// ==================== LIVING NOTEBOOK ====================
+
+export const publicArtifacts: PublicArtifact[] = [
+  {
+    slug: "waldo",
+    title: "Waldo",
+    kind: "venture",
+    theme: "agents",
+    date: "2026-05",
+    summary:
+      "A user-owned personal agent exploring how intent, evidence, correction, and unfinished work can remain coherent across agents and time.",
+    href: "/work/waldo",
+    featured: true,
+    publicationState: "public",
+    evidenceStatus: "built",
+    image: "/images/projects/waldo/waldo-ecosystem.webp",
+    caption: "A current venture and an active research question.",
+  },
+  {
+    slug: "atlan",
+    title: "Atlan — production agent systems",
+    kind: "research",
+    theme: "agents",
+    date: "2026-01",
+    summary:
+      "Production work across context, tools, authentication, integrations, deployment, and reliability made the gap between a finished run and a completed outcome impossible to ignore.",
+    href: "/experience",
+    featured: true,
+    publicationState: "public",
+    evidenceStatus: "observed",
+  },
+  {
+    slug: "project-eka",
+    title: "Project EKA — model and data infrastructure",
+    kind: "research",
+    theme: "models",
+    date: "2025-07",
+    summary:
+      "Multilingual curation infrastructure and reproducible experimentation for a sparse-MoE program, with the program's scale kept distinct from an individual contribution.",
+    href: "https://soket.ai/project-eka",
+    external: true,
+    featured: true,
+    publicationState: "public",
+    evidenceStatus: "built",
+  },
+  {
+    slug: "qwen3-moe",
+    title: "Qwen3 MoE — understanding by rebuilding",
+    kind: "code",
+    theme: "models",
+    date: "2025",
+    summary:
+      "A from-scratch PyTorch implementation for understanding sparse routing, grouped-query attention, RoPE, normalization, and KV caching at code level.",
+    href: "https://github.com/Pin4sf/Qwen3-MoE-Self-Implementation",
+    external: true,
+    featured: true,
+    publicationState: "public",
+    evidenceStatus: "built",
+  },
+  {
+    slug: "agent-done-outcome-truth",
+    title: "When an Agent Says Done, What Is Actually True?",
+    kind: "writing",
+    theme: "agents",
+    date: "2026-08-13",
+    summary:
+      "A practical distinction between a run, an artifact, evidence, an accepted outcome, and the open loop that remains.",
+    href: "/writing/agent-done-outcome-truth",
+    featured: true,
+    publicationState: "public",
+    evidenceStatus: "derived",
+  },
+  {
+    slug: "memory-is-not-storage",
+    title: "Memory Is Not Storage",
+    kind: "writing",
+    theme: "agents",
+    date: "2026-08-12",
+    summary:
+      "Why useful personal memory needs source, time, scope, correction, expiry, revocation, and deletion rather than an endless archive.",
+    href: "/writing/memory-is-not-storage",
+    featured: true,
+    publicationState: "public",
+    evidenceStatus: "derived",
+  },
+  {
+    slug: "harness-is-part-of-the-agent",
+    title: "The Harness Is Part of the Agent",
+    kind: "writing",
+    theme: "agents",
+    date: "2026-08-11",
+    summary:
+      "What a comparison of more than 40 public agent harnesses reveals about the systems around a model.",
+    href: "/writing/harness-is-part-of-the-agent",
+    featured: true,
+    publicationState: "public",
+    evidenceStatus: "derived",
+  },
+  {
+    slug: "hackbyte",
+    title: "HackByte",
+    kind: "life",
+    theme: "design",
+    date: "2023-2025",
+    summary:
+      "A team effort to grow an internal college event into a public community with 5,154 registrations and project-led machine-learning learning programs.",
+    href: "https://www.hackbyte.in/",
+    external: true,
+    featured: true,
+    publicationState: "public",
+    evidenceStatus: "demonstrated",
+  },
+  {
+    slug: "mirai-setu",
+    title: "MIRAI-Setu — Japan field note",
+    kind: "field-note",
+    theme: "life",
+    date: "2025-10",
+    summary:
+      "A month across Fukuoka, Nagasaki, and Tokyo that sharpened an interest in infrastructure, safety, craft, and long time horizons.",
+    href: "/writing/mirai-setu-japan",
+    featured: false,
+    publicationState: "public",
+    evidenceStatus: "observed",
+  },
+  {
+    slug: "smart-manufacturing",
+    title: "Smart Manufacturing",
+    kind: "field-note",
+    theme: "world",
+    date: "2022-2026",
+    summary:
+      "A physical-systems foundation in sensing, industrial automation, and design, where uncertainty, latency, energy, safety, and irreversibility remain visible.",
+    href: "/experience",
+    featured: true,
+    publicationState: "public",
+    evidenceStatus: "historical",
+  },
+];
+
+export const researchClusters: ResearchCluster[] = [
+  {
+    slug: "models",
+    title: "Models and data",
+    question:
+      "How much of a model's capability is decided by data and evaluation before architecture receives the credit?",
+    position:
+      "Model behavior starts below the interface: curation, language coverage, contamination, evaluation, and implementation choices shape what a system can become.",
+    uncertainty:
+      "The relationship between model-level tradeoffs and the behavior of a long-running agent remains an active question.",
+    artifactSlugs: ["project-eka", "qwen3-moe"],
+  },
+  {
+    slug: "agents",
+    title: "Agents, memory, and authority",
+    question:
+      "What should persist when an agent crosses sessions, tools, and models—and what authority should never move with it?",
+    position:
+      "Useful continuity needs correctable context, bounded permission, inspectable action, and a person who can intervene.",
+    uncertainty:
+      "These are design positions shaped by current work, not a claim that every mechanism is shipped or validated.",
+    artifactSlugs: [
+      "waldo",
+      "atlan",
+      "memory-is-not-storage",
+      "harness-is-part-of-the-agent",
+    ],
+  },
+  {
+    slug: "outcome-truth",
+    title: "Outcome truth and evaluation",
+    question:
+      "When an agent says done, what became true—and what still belongs to the person?",
+    position:
+      "A completed run, an artifact, evidence, an accepted outcome, and an open loop are different kinds of truth.",
+    uncertainty:
+      "The proposed measures for accepted outcomes still need repeated testing beyond bounded internal acceptance.",
+    artifactSlugs: ["agent-done-outcome-truth", "atlan", "waldo"],
+  },
+  {
+    slug: "world",
+    title: "Agents in the world",
+    question:
+      "How should agent state and control change when action crosses into physical environments?",
+    position:
+      "Physical systems keep uncertainty, timing, material cost, safety, and irreversible consequences in view.",
+    uncertainty:
+      "Physical AI is a longer-term research direction, not a current deployment or claim of robotics expertise.",
+    artifactSlugs: ["smart-manufacturing", "mirai-setu"],
+  },
+];
+
+export const compassPrinciples: CompassPrinciple[] = [
+  {
+    title: "Keep meaningful authority with the person.",
+    body: "An agent can prepare, recommend, and act within permission. Remembering more never silently grants it more authority.",
+    artifactSlugs: ["waldo", "memory-is-not-storage"],
+  },
+  {
+    title: "Do not confuse a finished run with a completed outcome.",
+    body: "An artifact, evidence, acceptance, and the remaining open loop are different kinds of truth.",
+    artifactSlugs: ["agent-done-outcome-truth"],
+  },
+  {
+    title: "Make personal context correctable and user-owned.",
+    body: "Useful memory needs source, time, scope, correction, expiry, revocation, and deletion.",
+    artifactSlugs: ["memory-is-not-storage", "waldo"],
+  },
+  {
+    title: "Make powerful systems inspectable.",
+    body: "The more a system can do, the easier it should be to understand what happened and intervene.",
+    artifactSlugs: ["harness-is-part-of-the-agent"],
+  },
+  {
+    title: "Let design make complexity quieter.",
+    body: "Good defaults, calm feedback, and deliberate motion should reduce the amount a person has to decode.",
+    artifactSlugs: ["waldo"],
+  },
+  {
+    title: "Change the system when reality contradicts the story.",
+    body: "A neat narrative is not evidence. What the system actually did should be allowed to change the product and the belief behind it.",
+    artifactSlugs: ["agent-done-outcome-truth"],
+  },
+];
+
+export const personalInfluences: PersonalInfluence[] = [
+  {
+    slug: "pokedex-origin",
+    title: "The kid who wanted a Pokédex.",
+    kind: "origin",
+    summary:
+      "I started coding at 12 to build a Pokédex: a first attempt to make a system personal, useful, and worth understanding.",
+    publicationState: "public",
+  },
+  {
+    slug: "systems-tinkering",
+    title: "Learning the defaults by breaking them",
+    kind: "origin",
+    summary:
+      "Jailbreaking phones, rooting devices, and customizing PCs taught me to trace a system past its intended surface without mistaking tinkering for expertise.",
+    publicationState: "public",
+  },
+  {
+    slug: "hackbyte-community",
+    title: "Making technical depth inviting",
+    kind: "community",
+    summary:
+      "HackByte made community-building concrete: invite people into serious technical work without lowering the standard.",
+    href: "https://www.hackbyte.in/",
+    publicationState: "public",
+  },
+  {
+    slug: "mirai-setu-craft",
+    title: "Japan, craft, and long horizons",
+    kind: "place",
+    summary:
+      "MIRAI-Setu made infrastructure, safety, patience, and everyday attention to craft feel like engineering values rather than abstractions.",
+    href: "/writing/mirai-setu-japan",
+    publicationState: "public",
+  },
+  {
+    slug: "design-engineering",
+    title: "Design as quieter engineering",
+    kind: "design",
+    summary:
+      "I care about what deserves motion, what should remain quiet, and how defaults can make powerful systems easier to trust.",
+    publicationState: "public",
+  },
+  {
+    slug: "unconfirmed-book",
+    title: "",
+    kind: "book",
+    summary: "Title and personal annotation await confirmation.",
+    publicationState: "draft",
+  },
+  {
+    slug: "unconfirmed-film",
+    title: "",
+    kind: "film",
+    summary: "Title and personal annotation await confirmation.",
+    publicationState: "draft",
+  },
+  {
+    slug: "unconfirmed-anime",
+    title: "",
+    kind: "anime",
+    summary: "Title and personal annotation await confirmation.",
+    publicationState: "draft",
+  },
+];
+
+export const aboutPageData: AboutPageData = {
+  eyebrow: "About",
+  title: "A life spent following systems past their defaults.",
+  introduction: [
+    "The kid who wanted a Pokédex. I started coding at 12 to build one, then spent years jailbreaking phones, rooting devices, and customizing PCs. I was drawn less to novelty than to the question underneath: how does this system work, and how could it become more personal and useful?",
+    "Learning by building. Smart Manufacturing gave me a physical-systems foundation; HackByte made technical community a responsibility; Project EKA and Qwen3 MoE took the questions into models; Atlan exposed the reality of agents in production; and Waldo is where I am testing what durable, user-owned agency can mean.",
+  ],
+  longerHorizon: [
+    "The world I keep moving toward is one where agents meet physical environments. Smart Manufacturing left me attentive to uncertainty, latency, energy, safety, and irreversibility—the things software can make easy to forget.",
+    "MIRAI-Setu deepened that interest through infrastructure, craft, and long time horizons across Japan. Physical AI is a direction I am studying, not a claim of current deployment or robotics expertise.",
+  ],
+  now: {
+    date: "August 2026",
+    body: "I am building Waldo, studying persistent agents and long-horizon evaluation, and looking to meet thoughtful builders and researchers working on how powerful systems can remain useful, legible, and on a person's side.",
+  },
+};
+
 // ==================== CONTACT ====================
 
 export const contactData: ContactData = {
@@ -1424,6 +1800,21 @@ export function getFeaturedEvidence(): EvidenceRecord[] {
 
 export function getEvidenceBySlug(slug: string): EvidenceRecord | undefined {
   return evidenceRecords.find((record) => record.slug === slug);
+}
+
+export function getPublicArtifacts(
+  filter: PublicArtifactFilter = {},
+): PublicArtifact[] {
+  // Public collections include entries only when artifact.publicationState === "public".
+  return publicArtifacts.filter((artifact) => {
+    if (artifact.publicationState !== "public") return false;
+    if (filter.theme && artifact.theme !== filter.theme) return false;
+    if (filter.kind && artifact.kind !== filter.kind) return false;
+    if (filter.featured !== undefined && artifact.featured !== filter.featured) {
+      return false;
+    }
+    return true;
+  });
 }
 
 export function getVentures(): CaseStudy[] {

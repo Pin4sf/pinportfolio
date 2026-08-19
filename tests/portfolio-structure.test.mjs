@@ -98,6 +98,33 @@ test("evidence vocabulary is explicit", () => {
   }
 });
 
+test("public editorial content has explicit publication boundaries", () => {
+  for (const typeName of [
+    "PublicationState",
+    "PublicArtifact",
+    "ResearchCluster",
+    "CompassPrinciple",
+    "PersonalInfluence",
+    "AboutPageData",
+  ]) {
+    assert.match(portfolio, new RegExp(`(?:type|interface) ${typeName}`));
+  }
+  assert.match(portfolio, /getPublicArtifacts/);
+  assert.match(portfolio, /artifact\.publicationState === "public"/);
+  assert.doesNotMatch(
+    portfolio,
+    /\/Users\/shivanshfulper\/Developer\/Pin4sf\/waldo-brain/,
+  );
+  assert.doesNotMatch(portfolio, /06-Applications-and-Outreach/);
+});
+
+test("personal depth is supported by confirmed content rather than labels", () => {
+  assert.match(portfolio, /The kid who wanted a Pokédex/i);
+  assert.match(portfolio, /Keep meaningful authority with the person/i);
+  assert.match(portfolio, /Let design make complexity quieter/i);
+  assert.doesNotMatch(portfolio, /Polymath in Action/i);
+});
+
 test("all local writing references resolve to MDX files", () => {
   const sources = [
     portfolio,
