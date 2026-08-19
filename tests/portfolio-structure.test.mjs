@@ -39,6 +39,7 @@ test("homepage is a short cinematic overview", () => {
     page,
     /<About \/>|<Timeline \/>|<SkillsExperience \/>|<SelectedWork \/>/,
   );
+  assert.doesNotMatch(page, /SectionProgress/);
 });
 
 test("homepage keeps a compact research-writing section", () => {

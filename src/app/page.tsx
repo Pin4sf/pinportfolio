@@ -42,10 +42,6 @@ const Contact = dynamic(() => import("./components/sections/Contact"), {
 const Footer = dynamic(() => import("./components/sections/Footer"), {
   ssr: false,
 });
-const SectionProgress = dynamic(
-  () => import("./components/ui/SectionProgress"),
-  { ssr: false },
-);
 
 const chapterOrganizations = [
   "Atlan",
@@ -132,7 +128,6 @@ export default function Page() {
     <>
       <SeoContent featuredPosts={featuredPosts} />
       <Header />
-      <SectionProgress />
       <SmoothScroll>
         <main id="main-content">
           <Hero />
