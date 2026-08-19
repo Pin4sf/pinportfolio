@@ -11,6 +11,7 @@ const read = (relativePath) =>
 const portfolio = read("src/data/portfolio.ts");
 const page = read("src/app/page.tsx");
 const hero = read("src/app/components/sections/Hero.tsx");
+const customCursor = read("src/app/components/ui/CustomCursor.tsx");
 const clientShell = read("src/app/components/ClientShell.tsx");
 const reducedMotionHook = read("src/app/hooks/useReducedMotion.ts");
 const gpuTierContext = read("src/lib/GpuTierContext.tsx");
@@ -78,6 +79,17 @@ test("hero effects honor mobile, reduced-motion, and GPU-tier gates", () => {
     reducedMotionHook,
     /useState\(\s*\(\) =>[\s\S]*matchMedia\("\(prefers-reduced-motion: reduce\)"\)/,
   );
+});
+
+test("cursor work waits for a resolved capable GPU tier", () => {
+  assert.match(hero, /Magnetic text[\s\S]*if \(!enableHeroEffects\) return/);
+  assert.match(
+    customCursor,
+    /const cursorEffectsEnabled =\s*gpuTier === "mid" \|\| gpuTier === "high"/,
+  );
+  assert.match(customCursor, /if \(!cursorEffectsEnabled\) return/);
+  assert.match(customCursor, /if \(!cursorEffectsEnabled\) return null/);
+  assert.doesNotMatch(customCursor, /gpuTier !== "low"/);
 });
 
 test("tertiary text meets AA contrast on every dark surface", () => {

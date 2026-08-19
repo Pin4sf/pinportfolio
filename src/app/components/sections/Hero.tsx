@@ -146,9 +146,9 @@ export default function Hero() {
       );
   }, [reducedMotion]);
 
-  // Magnetic text — characters repel from cursor (skip on low tier + mobile)
+  // Magnetic text — characters repel from cursor on resolved capable desktops.
   useEffect(() => {
-    if (reducedMotion || gpuTier === "low") return;
+    if (!enableHeroEffects) return;
 
     const section = sectionRef.current;
     const chars = charsRef.current.filter(Boolean);
@@ -202,11 +202,11 @@ export default function Hero() {
       section.removeEventListener("mousemove", handleMouseMove);
       section.removeEventListener("mouseleave", handleMouseLeave);
     };
-  }, [reducedMotion, gpuTier]);
+  }, [enableHeroEffects]);
 
-  // Cursor-responsive glow (skip on low tier)
+  // Cursor-responsive glow follows the same resolved capability gate.
   useEffect(() => {
-    if (reducedMotion || gpuTier === "low") return;
+    if (!enableHeroEffects) return;
 
     const section = sectionRef.current;
     const glow = glowRef.current;
@@ -229,7 +229,7 @@ export default function Hero() {
 
     section.addEventListener("mousemove", handleMouseMove);
     return () => section.removeEventListener("mousemove", handleMouseMove);
-  }, [reducedMotion, gpuTier]);
+  }, [enableHeroEffects]);
 
   // Floating particles — pause when offscreen
   useEffect(() => {

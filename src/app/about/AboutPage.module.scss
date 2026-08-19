@@ -14,7 +14,13 @@
       linear-gradient(90deg, var(--border-subtle) 1px, transparent 1px);
     background-size: 4rem 4rem;
     content: "";
-    mask-image: linear-gradient(to bottom, transparent, black 10%, black 90%, transparent);
+    mask-image: linear-gradient(
+      to bottom,
+      transparent,
+      black 10%,
+      black 90%,
+      transparent
+    );
     -webkit-mask-image: linear-gradient(
       to bottom,
       transparent,
@@ -71,7 +77,9 @@
     font-family: var(--font-mono);
     font-size: var(--text-xs);
     letter-spacing: 0.02em;
-    transition: border-color 180ms ease, color 180ms ease;
+    transition:
+      border-color 180ms ease,
+      color 180ms ease;
 
     &:hover {
       border-color: var(--accent);
@@ -119,7 +127,9 @@
   padding: 1.5rem;
   background: var(--bg-secondary);
   color: inherit;
-  transition: background 180ms ease, color 180ms ease;
+  transition:
+    background 180ms ease,
+    color 180ms ease;
 
   h3 {
     margin-top: auto;
@@ -241,7 +251,10 @@
     color: var(--text-secondary);
     font-family: var(--font-mono);
     font-size: var(--text-sm);
-    transition: background 180ms ease, border-color 180ms ease, color 180ms ease;
+    transition:
+      background 180ms ease,
+      border-color 180ms ease,
+      color 180ms ease;
 
     &:hover {
       border-color: var(--accent);
@@ -249,6 +262,13 @@
       color: var(--accent);
     }
   }
+}
+
+.externalMarker {
+  display: inline-block;
+  margin-left: 0.35em;
+  color: var(--accent);
+  font-family: var(--font-mono);
 }
 
 @media (max-width: 700px) {

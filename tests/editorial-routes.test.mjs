@@ -33,6 +33,49 @@ test("editorial primitives stay server-rendered", () => {
   }
 });
 
+test("editorial header renders the canonical primary navigation from portfolio data", () => {
+  const header = read("src/app/components/editorial/EditorialHeader.tsx");
+  const portfolio = read("src/data/portfolio.ts");
+
+  assert.match(header, /import \{ navItems \} from "@\/data\/portfolio"/);
+  assert.match(header, /aria-label="Primary navigation"/);
+  assert.match(header, /navItems\.map\(\(item\) =>/);
+  for (const [label, href] of [
+    ["Venture", "/work/waldo"],
+    ["Research + Writing", "/research"],
+    ["Experience", "/experience"],
+    ["About", "/about"],
+    ["Contact", "/#contact"],
+  ]) {
+    assert.match(
+      portfolio,
+      new RegExp(`label: "${label.replace("+", "\\+")}"`),
+    );
+    assert.match(portfolio, new RegExp(`href: "${href.replace("/", "\\/")}"`));
+  }
+});
+
+test("skip link becomes fully visible when focused", () => {
+  const globals = read("src/app/globals.scss");
+  const focusedRule = globals.match(
+    /\.sr-only\s*\{[\s\S]*?&:focus-visible\s*\{([\s\S]*?)\n\s*\}/,
+  );
+
+  assert.ok(focusedRule, "Missing .sr-only focus-visible reset");
+  for (const declaration of [
+    /position:\s*fixed/,
+    /width:\s*auto/,
+    /height:\s*auto/,
+    /margin:\s*0/,
+    /overflow:\s*visible/,
+    /clip:\s*auto/,
+    /white-space:\s*normal/,
+    /z-index:\s*\d+/,
+  ]) {
+    assert.match(focusedRule[1], declaration);
+  }
+});
+
 test("primary navigation uses canonical routes", () => {
   const header = read("src/app/components/layout/Header.tsx");
   assert.match(header, /usePathname/);
@@ -82,6 +125,19 @@ test("artifact date ranges omit invalid machine-readable dates", () => {
     artifactList,
     /dateTime=\{isDateRange \? undefined : artifact\.date\}/,
   );
+});
+
+test("external artifacts and About links expose a visible external affordance", () => {
+  const artifactList = read("src/app/components/editorial/ArtifactList.tsx");
+  const about = read("src/app/about/page.tsx");
+
+  assert.match(artifactList, /external \? "↗" : "→"/);
+  assert.match(artifactList, /Opens in a new tab/);
+  assert.match(artifactList, /target="_blank"/);
+  assert.match(artifactList, /rel="noopener noreferrer"/);
+  assert.match(about, /function ExternalMarker/);
+  assert.match(about, /<ExternalMarker \/>/);
+  assert.match(about, /Opens in a new tab/);
 });
 
 test("about route is candid, server-rendered, and source bounded", () => {

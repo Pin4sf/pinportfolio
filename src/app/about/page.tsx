@@ -38,6 +38,17 @@ function selectPublicArtifacts(slugs: string[], artifacts: PublicArtifact[]) {
     .filter(isPublicArtifact);
 }
 
+function ExternalMarker() {
+  return (
+    <>
+      <span className={styles.externalMarker} aria-hidden="true">
+        ↗
+      </span>
+      <span className="sr-only">Opens in a new tab</span>
+    </>
+  );
+}
+
 export default function AboutPage() {
   const influences = personalInfluences.filter(
     (influence) =>
@@ -78,10 +89,11 @@ export default function AboutPage() {
                 href={artifact.href}
                 key={artifact.slug}
                 {...(artifact.external
-                  ? { target: "_blank", rel: "noreferrer" }
+                  ? { target: "_blank", rel: "noopener noreferrer" }
                   : {})}
               >
                 {artifact.title}
+                {artifact.external && <ExternalMarker />}
               </Link>
             ))}
           </nav>
@@ -109,10 +121,11 @@ export default function AboutPage() {
                   href={influence.href}
                   key={influence.slug}
                   {...(influence.href.startsWith("http")
-                    ? { target: "_blank", rel: "noreferrer" }
+                    ? { target: "_blank", rel: "noopener noreferrer" }
                     : {})}
                 >
                   {content}
+                  {influence.href.startsWith("http") && <ExternalMarker />}
                 </Link>
               ) : (
                 <article className={styles.influenceCard} key={influence.slug}>
@@ -193,6 +206,7 @@ export default function AboutPage() {
                 target="_blank"
               >
                 {social.name}
+                <ExternalMarker />
               </a>
             ))}
           </div>

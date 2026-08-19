@@ -11,8 +11,11 @@ export default function CustomCursor() {
   const spotlightRef = useRef<HTMLDivElement>(null);
   const [isTouchDevice, setIsTouchDevice] = useState(false);
   const gpuTier = useGpuTier();
+  const cursorEffectsEnabled = gpuTier === "mid" || gpuTier === "high";
 
   useEffect(() => {
+    if (!cursorEffectsEnabled) return;
+
     // Skip on touch devices — don't render at all
     if (window.matchMedia("(pointer: coarse)").matches) {
       setIsTouchDevice(true);
@@ -24,8 +27,6 @@ export default function CustomCursor() {
     const spotlight = spotlightRef.current;
     if (!cursor || !label) return;
 
-    const isLowTier = gpuTier === "low";
-
     // GSAP quickTo for smooth cursor following (0.2s lag)
     const moveCursorX = gsap.quickTo(cursor, "x", {
       duration: 0.2,
@@ -36,16 +37,18 @@ export default function CustomCursor() {
       ease: "power3",
     });
 
-    // Velocity deformation — skip on low tier (saves 3 quickTo per frame)
-    const setScaleX = !isLowTier
-      ? gsap.quickTo(cursor, "scaleX", { duration: 0.3, ease: "power3" })
-      : null;
-    const setScaleY = !isLowTier
-      ? gsap.quickTo(cursor, "scaleY", { duration: 0.3, ease: "power3" })
-      : null;
-    const setRotation = !isLowTier
-      ? gsap.quickTo(cursor, "rotation", { duration: 0.3, ease: "power3" })
-      : null;
+    const setScaleX = gsap.quickTo(cursor, "scaleX", {
+      duration: 0.3,
+      ease: "power3",
+    });
+    const setScaleY = gsap.quickTo(cursor, "scaleY", {
+      duration: 0.3,
+      ease: "power3",
+    });
+    const setRotation = gsap.quickTo(cursor, "rotation", {
+      duration: 0.3,
+      ease: "power3",
+    });
 
     let prevX = 0;
     let prevY = 0;
@@ -55,8 +58,7 @@ export default function CustomCursor() {
       moveCursorX(e.clientX);
       moveCursorY(e.clientY);
 
-      // Update spotlight CSS custom properties (skip on low tier)
-      if (spotlight && !isLowTier) {
+      if (spotlight) {
         spotlight.style.setProperty("--cursor-x", `${e.clientX}px`);
         spotlight.style.setProperty("--cursor-y", `${e.clientY}px`);
       }
@@ -171,7 +173,7 @@ export default function CustomCursor() {
     // Track interactive elements
     const addHoverListeners = () => {
       const interactives = document.querySelectorAll(
-        'a, button, [data-hover], [data-cursor], input, textarea, [role="button"]'
+        'a, button, [data-hover], [data-cursor], input, textarea, [role="button"]',
       );
       interactives.forEach((el) => {
         el.addEventListener("mouseenter", onMouseEnterInteractive);
@@ -215,13 +217,14 @@ export default function CustomCursor() {
       });
       document.documentElement.classList.remove("custom-cursor-active");
     };
-  }, [gpuTier]);
+  }, [cursorEffectsEnabled]);
 
+  if (!cursorEffectsEnabled) return null;
   if (isTouchDevice) return null;
 
   return (
     <>
-      {gpuTier !== "low" && <div ref={spotlightRef} className={styles.spotlight} />}
+      <div ref={spotlightRef} className={styles.spotlight} />
       <div ref={cursorRef} className={styles.cursor}>
         <span ref={labelRef} className={styles.label} />
       </div>

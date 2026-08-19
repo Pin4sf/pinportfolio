@@ -10,9 +10,11 @@ interface ArtifactListProps {
 function ArtifactContents({
   artifact,
   headingLevel,
+  external,
 }: {
   artifact: PublicArtifact;
   headingLevel: "h2" | "h3";
+  external: boolean;
 }) {
   const isDateRange = /^\d{4}-\d{4}$/.test(artifact.date);
   const Heading = headingLevel;
@@ -33,8 +35,9 @@ function ArtifactContents({
         )}
       </div>
       <span className={styles.arrow} aria-hidden="true">
-        →
+        {external ? "↗" : "→"}
       </span>
+      {external && <span className="sr-only">Opens in a new tab</span>}
     </>
   );
 }
@@ -57,6 +60,7 @@ export default function ArtifactList({
               <ArtifactContents
                 artifact={artifact}
                 headingLevel={headingLevel}
+                external
               />
             </a>
           ) : (
@@ -64,6 +68,7 @@ export default function ArtifactList({
               <ArtifactContents
                 artifact={artifact}
                 headingLevel={headingLevel}
+                external={false}
               />
             </Link>
           )}
