@@ -14,7 +14,16 @@ const hero = read("src/app/components/sections/Hero.tsx");
 const writing = read("src/app/components/sections/Writing.tsx");
 const writingStyles = read("src/app/components/sections/Writing.module.scss");
 const blogPost = read("src/app/writing/[slug]/BlogPost.tsx");
+const caseStudyComponent = read("src/app/work/[slug]/CaseStudy.tsx");
 const homepageSources = [portfolio, page, hero].join("\n");
+const caseStudiesSource = portfolio.slice(
+  portfolio.indexOf("export const caseStudies"),
+  portfolio.indexOf("// ==================== SKILLS"),
+);
+const waldoCaseStudySource = caseStudiesSource.slice(
+  caseStudiesSource.indexOf('slug: "waldo"'),
+  caseStudiesSource.indexOf('slug: "ecofresh"'),
+);
 
 test("homepage restores the personal founder introduction", () => {
   assert.match(portfolio, /agent that stays on your side/i);
@@ -231,14 +240,68 @@ test("Waldo thesis contains the self-falsifier", () => {
   assert.match(portfolio, /interruptions per accepted outcome/i);
 });
 
-test("Waldo remains current, bounded, and free of stale deck promotion", () => {
-  assert.match(portfolio, /Founder of Waldo/i);
-  assert.match(portfolio, /working internal foundations/i);
-  assert.match(portfolio, /external product and market validation remain open/i);
-  assert.doesNotMatch(portfolio, /Open the pitch deck/);
+test("Waldo pins current system truth to its actual public data", () => {
+  assert.match(
+    waldoCaseStudySource,
+    /Kennel, a durable harness, and Waldo mobile are working internal foundations\. Their integration, external product behavior, and market validation remain open work\./,
+  );
+  assert.match(
+    waldoCaseStudySource,
+    /slug: "waldo"[\s\S]*?role: "Founder"/,
+  );
+  assert.match(
+    waldoCaseStudySource,
+    /name: "Shivansh Fulper",\s*role: "Founder · AI systems & engineering"/,
+  );
+  assert.match(
+    waldoCaseStudySource,
+    /name: "Suyash Pingale",\s*role: "Founder · Product, experience & brand"/,
+  );
+  assert.doesNotMatch(waldoCaseStudySource, /Founder & CEO|Co-Founder/);
   assert.doesNotMatch(
-    portfolio,
+    waldoCaseStudySource,
+    /waldo-pitchdeck\.pdf|Open the pitch deck/,
+  );
+  assert.doesNotMatch(
+    waldoCaseStudySource,
     /AI agent that reads your body and runs your day/i,
+  );
+
+  assert.match(waldoCaseStudySource, /founder-video\.mp4/);
+  assert.match(waldoCaseStudySource, /waldo-technical-brief\.pages\.dev\//);
+  assert.match(waldoCaseStudySource, /https:\/\/www\.heywaldo\.in\//);
+});
+
+test("Waldo renders one section-boundary status path and no card status path", () => {
+  assert.equal(
+    [...caseStudyComponent.matchAll(/styles\.sectionStatus/g)].length,
+    1,
+  );
+  assert.match(caseStudyComponent, /section\.status/);
+  assert.doesNotMatch(
+    caseStudyComponent,
+    /card\.status|narrative\.status|styles\.(?:cardStatus|evidenceStatus)/,
+  );
+  assert.deepEqual(
+    [...waldoCaseStudySource.matchAll(/^\s+status: "([^"]+)",/gm)].map(
+      (match) => match[1],
+    ),
+    ["built"],
+  );
+});
+
+test("Waldo cards avoid evidence-status labels", () => {
+  assert.doesNotMatch(waldoCaseStudySource, /label: "(?:Observed|Derived)"/);
+});
+
+test("Waldo keeps rigor jargon exceptional in ordinary prose", () => {
+  const repeatedRigorTerms =
+    waldoCaseStudySource.match(
+      /\b(?:evidence|bounded|verification|verified|verify)\b/gi,
+    ) ?? [];
+  assert.ok(
+    repeatedRigorTerms.length <= 3,
+    `Waldo repeats rigor jargon ${repeatedRigorTerms.length} times`,
   );
 });
 

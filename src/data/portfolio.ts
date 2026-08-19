@@ -701,11 +701,11 @@ export const caseStudies: CaseStudy[] = [
     category: "venture",
     featured: true,
     challenge:
-      "Machine execution is scaling faster than human understanding, verification, and responsibility. Producing plausible artifacts and initiating machine work are becoming cheaper, while the person still has to understand assumptions, reconcile contradictions, judge consequences, and know whether the work changed anything that mattered.",
+      "Machine execution is scaling faster than human understanding and responsibility. Producing plausible artifacts and initiating machine work are becoming cheaper, while the person still has to understand assumptions, reconcile contradictions, judge consequences, and know whether the work changed anything that mattered.",
     approach:
-      "Start with the human constraint system, not a fixed interface. Responsibility continuity is our current connective hypothesis: one user-owned relationship should preserve intent, evidence, corrections, authority, and what remains across changing agents and surfaces—while compressing routine management rather than creating another agent-management job.",
+      "Start with the human constraint system, not a fixed interface. Responsibility continuity is our current connective hypothesis: one user-owned relationship should preserve intent, source material, corrections, authority, and what remains across changing agents and surfaces—while compressing routine management rather than creating another agent-management job.",
     solution:
-      "Kennel on macOS, Waldo on iOS, and a durable agent harness are working internal foundations for testing continuity, governance, evidence, and low-friction presence—not the permanent definition of the company. A surface earns its place only if it reduces reconstruction, review, unsafe action, forgotten follow-through, or attention per accepted outcome without silently expanding authority.",
+      "Kennel on macOS, Waldo on iOS, and a durable agent harness are working internal foundations for testing continuity, governance, and low-friction presence—not the permanent definition of the company. A surface earns its place only if it reduces reconstruction, review, unsafe action, forgotten follow-through, or attention per accepted outcome without silently expanding authority.",
     solutionImages: [
       "/images/projects/waldo/hero.png",
       "/images/projects/waldo/app-screens.png",
@@ -740,21 +740,19 @@ export const caseStudies: CaseStudy[] = [
           eyebrow: "01 · The world change",
           title: "Producing got cheap. Understanding did not.",
           body: [
-            "For many bounded tasks, machines can now produce plausible code, documents, plans, and analyses in minutes. The cost has not disappeared. It has moved into understanding assumptions, reconciling contradictions, reviewing consequences, and knowing whether the work changed anything that mattered.",
+            "For many well-scoped tasks, machines can now produce plausible code, documents, plans, and analyses in minutes. The cost has not disappeared. It has moved into understanding assumptions, reconciling contradictions, reviewing consequences, and knowing whether the work changed anything that mattered.",
             "I first felt this while building and operating more than 30 production agent instances at Atlan. Starting another run was easy. Remembering why it existed, moving context between tools, detecting a waiting decision, and checking whether the original problem was actually resolved remained human work.",
             "Suyash encountered the same structure while running a design studio and training for an Ironman: more tools could produce more information, but no system could reliably decide what mattered now, what could wait, or what no longer deserved to be carried.",
             "The transition is larger than coordination. Capability is becoming abundant while comprehension, attention, legitimate authority, and accountability remain finite. That is the constraint system Waldo is investigating.",
           ],
           cards: [
             {
-              label: "Observed",
               title: "The old bottleneck was production",
               body: "Writing the code, document, analysis, plan, or message often constrained how much work could be attempted.",
             },
             {
-              label: "Derived",
               title: "The new bottleneck is outcome truth",
-              body: "Understanding, verification, acceptance, consequence, and the causal story behind machine-produced work remain scarce.",
+              body: "Understanding what changed, checking the result, accepting it, and tracing its consequences remain scarce.",
             },
             {
               label: "Failure mode",
@@ -768,7 +766,7 @@ export const caseStudies: CaseStudy[] = [
           eyebrow: "02 · The problem pool",
           title: "Three centers. One accountability floor.",
           body: [
-            "AI is not creating one neatly bounded problem. It is producing a reinforcing pool: more output raises evaluation load; more agents raise management work; fragmented memory raises reconstruction; easier action raises governance and consequence; cheaper intelligence raises the need to decide what the spend actually bought.",
+            "AI is not creating one neatly contained problem. It is producing a reinforcing pool: more output raises evaluation load; more agents raise management work; fragmented memory raises reconstruction; easier action raises governance and consequence; cheaper intelligence raises the need to decide what the spend actually bought.",
             "The center of gravity is epistemic. Waldo should help a person know what is true, what changed, what remains, and why—not orchestrate for its own sake. Coordination, memory, and interfaces are candidate means.",
           ],
           cards: [
@@ -803,15 +801,15 @@ export const caseStudies: CaseStudy[] = [
           eyebrow: "03 · Current connective hypothesis",
           title: "Responsibility continuity—not another agent-management job.",
           body: [
-            "One human intention can span many sessions, specialist agents, tools, people, and days. Provider memory can preserve a transcript; it does not necessarily preserve why the work exists, what evidence changed the plan, what was accepted, or which consequence still remains.",
-            "Responsibility continuity is our current hypothesis for that connective tissue. Waldo should retain the desired result, current constraints, authoritative evidence, corrections, decisions, unresolved consequences, and the smallest truthful re-entry point—even as the executor changes.",
+            "One human intention can span many sessions, specialist agents, tools, people, and days. Provider memory can preserve a transcript; it does not necessarily preserve why the work exists, what changed the plan, what was accepted, or which consequence still remains.",
+            "Responsibility continuity is our current hypothesis for that connective tissue. Waldo should retain the desired result, current constraints, authoritative sources, corrections, decisions, unresolved consequences, and the smallest truthful re-entry point—even as the executor changes.",
             "This does not mean giving everyone an operator console. The person should not inherit the skill of managing an agent fleet. Waldo should compress routine discovery, briefing, monitoring, reconciliation, recovery, and re-entry, then surface uncertainty, changed scope, irreversible effects, cost, or permission only when human judgment is truly required.",
             "The hypothesis remains replaceable. If native providers absorb this burden, if people prefer direct control, or if the representation creates more cognitive load than it removes, Waldo must change rather than defend the label.",
           ],
           cards: [
             {
               label: "Preserve",
-              title: "Intent, evidence, and what remains",
+              title: "Intent, source material, and what remains",
               body: "Carry the causal story across sessions rather than storing an undifferentiated transcript archive.",
             },
             {
@@ -822,7 +820,7 @@ export const caseStudies: CaseStudy[] = [
             {
               label: "Return",
               title: "The smallest decision-complete intervention",
-              body: "Bring back the evidence, consequence, and exact judgment required—not another feed of machine activity.",
+              body: "Bring back the relevant artifact, its consequence, and the exact judgment required—not another feed of machine activity.",
             },
           ],
         },
@@ -835,7 +833,7 @@ export const caseStudies: CaseStudy[] = [
             "Kennel, a durable harness, and Waldo mobile are working internal foundations. Their integration, external product behavior, and market validation remain open work.",
             "Kennel has the strongest internal acceptance record: attributable Codex sessions, conversation history, live processing state, same-task continuation, first-message handling, and archive cleanup.",
             "Kennel is the first home, not the whole vision. It is Waldo’s initial wedge for work already spread across several agents, giving that work one calm place to land—showing what the agent reports, what supports it, what needs judgment, and what remains unresolved without making the transcript the primary unit of value.",
-            "The current hypothesis is responsibility continuity. The longer direction is one user-owned Waldo carrying responsibilities across work and life. Production integrations, broad provider coverage, automatic artifact verification, and the complete cross-surface experience remain open work.",
+            "The current hypothesis is responsibility continuity. The longer direction is one user-owned Waldo carrying responsibilities across work and life. Production integrations, broad provider coverage, automatic artifact checks, and the complete cross-surface experience remain open work.",
           ],
           cards: [
             {
@@ -872,7 +870,7 @@ export const caseStudies: CaseStudy[] = [
             "Many agents may work for you. One should always remain on your side.",
           body: [
             "Your life and your agents should not belong to two different systems. Personal assistants and work orchestrators have evolved as separate products, even though the user is the same person. Calendars, messages, reminders, commitments, and daily administration should not belong to a different identity from the sessions, runtimes, tools, budgets, and policies involved in getting work done.",
-            "I don’t believe one model or interface will own our entire digital life. People will use many models, specialist agents, tools, services, and devices. Waldo is being designed to join personal assistance and work orchestration through the same Outcome, authority, evidence, and continuity contracts.",
+            "I don’t believe one model or interface will own our entire digital life. People will use many models, specialist agents, tools, services, and devices. Waldo is being designed to join personal assistance and work orchestration around the same Outcome, authority boundaries, source material, and continuity.",
             "An organization may own some infrastructure. The individual should own the continuing relationship. Models, tools, employers, and surfaces can change; the context a person chooses to share, their permissions, corrections, responsibility history, and unresolved work should remain with them.",
             "The models may be rented and replaceable. What should compound for the person is their context, corrections, permissions, procedures, responsibility history, and accepted outcomes. Waldo is being built to keep that intelligence on the person’s side even as the machinery underneath changes.",
             "Waldo may appear as mobile, a judgment in Kennel, messaging, voice, or eventually a physical form. Those are presences of one user-owned personal agent—not disconnected assistants that make the person rebuild context every time. One agent. Many presences. Still yours.",
@@ -901,7 +899,7 @@ export const caseStudies: CaseStudy[] = [
           title:
             "More capable agents should mean less life held together in your head.",
           body: [
-            "An agent waiting five minutes is inexpensive. A person reconstructing context across five agents, reviewing unverified changes, and finding the correct terminal is expensive. Infinite machine capacity does not create infinite human attention.",
+            "An agent waiting five minutes is inexpensive. A person reconstructing context across five agents, reviewing unchecked changes, and finding the correct terminal is expensive. Infinite machine capacity does not create infinite human attention.",
             "Burnout is not a feature category. It is a product constraint: Waldo should not make people supervise more software, monitor more feeds, or remain permanently available. It should carry routine responsibility quietly and return only when timing, consequence, or authority belongs to the person.",
             "Success means less mental reassembly, fewer silently decaying commitments, a realistic next action when capacity changes, and permission to decide that enough is enough.",
           ],
@@ -909,7 +907,7 @@ export const caseStudies: CaseStudy[] = [
             {
               label: "After interruption",
               title: "Less mental reassembly.",
-              body: "Restore the goal, last verified state, unresolved decision, artifacts, and smallest next action.",
+              body: "Restore the goal, last confirmed state, unresolved decision, artifacts, and smallest next action.",
             },
             {
               label: "Before it decays",
@@ -935,7 +933,7 @@ export const caseStudies: CaseStudy[] = [
           body: [
             "ChatGPT or Claude can answer what you ask. I want Waldo to understand why you need it, when it matters, what it affects, and whether it was actually resolved. The current prompt is only one fragment of a person’s priorities, relationships, boundaries, capacity, corrections, and commitments.",
             "Life is already distributed across calendars, messages, files, health systems, models, tools, and other people. Waldo should help carry it forward without making the person rebuild themselves—or become the integration layer—every time the interface changes.",
-            "The chatbox made intelligence available. It cannot be the whole interface for asynchronous work, and ordinary people should not have to become natural-language programmers or agent managers to benefit. The next layer is continuity, timing, permission, evidence, and closure: proactive enough to prepare what matters, but never presumptive about consequential action.",
+            "The chatbox made intelligence available. It cannot be the whole interface for asynchronous work, and ordinary people should not have to become natural-language programmers or agent managers to benefit. The next layer is continuity, timing, permission, and closure: proactive enough to prepare what matters, but never presumptive about consequential action.",
           ],
           cards: [
             {
@@ -967,7 +965,7 @@ export const caseStudies: CaseStudy[] = [
           title: "A personal agent is a relationship with clear boundaries.",
           body: [
             "More execution should never mean less agency. We are building Waldo’s working foundations and target architecture around a human rule: continuity must be inspectable, correction easy, and authority fail closed.",
-            "Waldo should learn from what a person says, the corrections they make, and outcomes they verify. Explicit self-knowledge should outrank behavioral inference; activity should never become a hidden personality score.",
+            "Waldo should learn from what a person says, the corrections they make, and outcomes they confirm. Explicit self-knowledge should outrank behavioral inference; activity should never become a hidden personality score.",
           ],
           cards: [
             {
@@ -978,12 +976,12 @@ export const caseStudies: CaseStudy[] = [
             {
               label: "Proactivity",
               title: "Suggest before execute",
-              body: "Low-risk assistance may be proactive; consequential action must stay bounded by visible permission.",
+              body: "Low-risk assistance may be proactive; consequential action must stay within visible permission.",
             },
             {
               label: "Durable responsibility",
               title: "Interfaces may disappear. Responsibility cannot.",
-              body: "Replaceable models and temporary screens still need an inspectable record of intent, action, evidence, and consequence.",
+              body: "Replaceable models and temporary screens still need an inspectable record of intent, action, result, and consequence.",
             },
             {
               label: "Personal memory",
@@ -998,9 +996,9 @@ export const caseStudies: CaseStudy[] = [
           title:
             "Judgment now. Sustainable agency throughout. Physical authority later.",
           body: [
-            "I see three connected pressures, but I do not treat them as three equal markets. AI-output overload is the customer problem we can attack now through Kennel. Burnout and finite human capacity are the constitution for how Waldo should behave. Physical AI is the expansion horizon where the same questions of permission, evidence, interruption, and recovery become more consequential.",
+            "I see three connected pressures, but I do not treat them as three equal markets. AI-output overload is the customer problem we can attack now through Kennel. Burnout and finite human capacity are the constitution for how Waldo should behave. Physical AI is the expansion horizon where the same questions of permission, interruption, and recovery become more consequential.",
             "The confidence is different too: the overload and burnout problems are already visible; the physical-world tailwind is strong, but Waldo has not yet validated a hardware product or customer wedge there. The wider curve is consumer: capable intelligence is becoming cheap enough to move agents from specialist tools into everyday products.",
-            "Notion’s 2026 workplace survey offers a useful directional signal: 88% of respondents placed themselves or their organizations in its thought-partner or assistant stages, while 71% of AI Users said they would use AI more if they trusted it not to make mistakes on important work. Among more advanced users, automation and cross-tool routing rose—but so did tool sprawl, difficulty seeing real impact, and inconsistent model performance. For surveyed decision-makers, the largest implementation gaps between early and advanced groups were integration, governance, and defined measurement. That is the opportunity Waldo is building toward: not more access to AI, but a person-owned layer that makes distributed AI work coherent, governable, and verifiable.",
+            "Notion’s 2026 workplace survey offers a useful directional signal: 88% of respondents placed themselves or their organizations in its thought-partner or assistant stages, while 71% of AI Users said they would use AI more if they trusted it not to make mistakes on important work. Among more advanced users, automation and cross-tool routing rose—but so did tool sprawl, difficulty seeing real impact, and inconsistent model performance. For surveyed decision-makers, the largest implementation gaps between early and advanced groups were integration, governance, and defined measurement. That is the opportunity Waldo is building toward: not more access to AI, but a person-owned layer that makes distributed AI work coherent, governable, and easier to inspect.",
           ],
           matrix: {
             caption:
@@ -1061,7 +1059,7 @@ export const caseStudies: CaseStudy[] = [
           title: "Software earns the right to become physical.",
           body: [
             "I keep returning to bodies for AI: physical forms people would actually welcome into daily life—a desk object, wearable, home device, vehicle, or small robot. The same Waldo should inhabit each of them, carrying one identity and permission system instead of making every object another disconnected assistant.",
-            "The physical-AI tailwind is strong, but this is not a current Waldo hardware program and we have low current customer validation for it. Software comes first because identity, correction, permission, evidence, interruption, revocation, and recovery must work before a personal agent is trusted with sensors, movement, or physical authority.",
+            "The physical-AI tailwind is strong, but this is not a current Waldo hardware program and we have low current customer validation for it. Software comes first because identity, correction, permission, interruption, revocation, and recovery must work before a personal agent is trusted with sensors, movement, or physical authority.",
             "Health and body context is optional and permissioned: a person may choose to share it, but it is neither Waldo’s product category nor a prerequisite. The form may change. The person it works for should not.",
           ],
           cards: [
@@ -1211,7 +1209,7 @@ export const caseStudies: CaseStudy[] = [
           eyebrow: "External signal · Andrew Chen",
           title: "More outcomes, fewer copilots",
           description:
-            "Andrew Chen describes the shift from AI that assists to agents that act—and the frustration of receiving more work to review. Waldo’s answer is not action alone: it is evidence-backed acceptance, visible human judgment, and continuity the user owns.",
+            "Andrew Chen describes the shift from AI that assists to agents that act—and the frustration of receiving more work to review. Waldo’s answer is not action alone: acceptance tied to visible artifacts, human judgment, and continuity the user owns.",
           href: "https://www.linkedin.com/posts/andrewchen_last-years-startup-trend-copilot-for-x-share-7488472791541985280-2t0X",
           cta: "Read Andrew Chen’s post",
         },
@@ -1230,7 +1228,7 @@ export const caseStudies: CaseStudy[] = [
           title:
             "The model is replaceable. The intelligence that compounds should be yours.",
           description:
-            "At Startup School 2026, Garry Tan described personal AGI as a person-controlled combination of context, memory, reusable skills, and a replaceable agent harness. It is a strong external articulation of Waldo’s ownership curve. Waldo is being designed to extend that thesis through purpose-bound context, exact authority, evidence-backed Outcomes, and an interface that does not require people to operate the underlying agent stack.",
+            "At Startup School 2026, Garry Tan described personal AGI as a person-controlled combination of context, memory, reusable skills, and a replaceable agent harness. It is a strong external articulation of Waldo’s ownership curve. Waldo is being designed to extend that thesis through purpose-bound context, exact authority, Outcomes tied to visible artifacts, and an interface that does not require people to operate the underlying agent stack.",
           href: "https://www.youtube.com/watch?v=eRrc1pUY5oU",
           cta: "Watch Own Your Intelligence",
         },
