@@ -40,3 +40,6 @@ next-env.d.ts
 
 # agent skills (installed per-machine)
 .agents/
+
+# isolated feature worktrees
+.worktrees/
