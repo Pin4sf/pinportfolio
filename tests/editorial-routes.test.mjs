@@ -23,3 +23,21 @@ test("primary navigation uses canonical routes", () => {
   assert.match(header, /usePathname/);
   assert.doesNotMatch(header, /document\.querySelector\(item\.href\)/);
 });
+
+test("hash routes bypass the page-transition curtain", () => {
+  const coolLink = read("src/app/components/ui/CoolLink.tsx");
+  assert.match(coolLink, /href\.startsWith\("\/"\) && !href\.includes\("#"\)/);
+});
+
+test("artifact date ranges omit invalid machine-readable dates", () => {
+  const artifactList = read("src/app/components/editorial/ArtifactList.tsx");
+  assert.doesNotMatch(artifactList, /<time dateTime=\{artifact\.date\}>/);
+  assert.match(
+    artifactList,
+    /const isDateRange = \/\^\\d\{4\}-\\d\{4\}\$\/\.test\(artifact\.date\)/,
+  );
+  assert.match(
+    artifactList,
+    /dateTime=\{isDateRange \? undefined : artifact\.date\}/,
+  );
+});

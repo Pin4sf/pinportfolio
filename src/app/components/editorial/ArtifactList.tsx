@@ -7,11 +7,15 @@ interface ArtifactListProps {
 }
 
 function ArtifactContents({ artifact }: { artifact: PublicArtifact }) {
+  const isDateRange = /^\d{4}-\d{4}$/.test(artifact.date);
+
   return (
     <>
       <div className={styles.meta}>
         <span className={styles.kind}>{artifact.kind.replace("-", " ")}</span>
-        <time dateTime={artifact.date}>{artifact.date}</time>
+        <time dateTime={isDateRange ? undefined : artifact.date}>
+          {artifact.date}
+        </time>
       </div>
       <div className={styles.copy}>
         <h2>{artifact.title}</h2>

@@ -14,7 +14,7 @@ interface CoolLinkProps {
 }
 
 export default function CoolLink({ href, text, className }: CoolLinkProps) {
-  const isPageLink = href.startsWith("/") && !href.startsWith("#");
+  const isPageLink = href.startsWith("/") && !href.includes("#");
   const Tag = isPageLink ? TransitionLink : "a";
   const spanRef = useRef<HTMLSpanElement>(null);
   const rafRef = useRef<number>(0);
