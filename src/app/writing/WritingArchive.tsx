@@ -3,7 +3,6 @@
 import { useState } from "react";
 import styles from "./WritingArchive.module.scss";
 import type { PostMeta } from "@/lib/mdx";
-import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 
 const categories = [
@@ -41,19 +40,7 @@ export default function WritingArchive({ posts }: WritingArchiveProps) {
       : posts.filter((p) => p.category === activeCategory);
 
   return (
-    <main className={styles.page}>
-      <header className={styles.header}>
-        <Link href="/" className={styles.back}>
-          <ArrowLeft size={16} />
-          Home
-        </Link>
-        <h1 className={styles.title}>Writing</h1>
-        <p className={styles.subtitle}>
-          Research notes, field notes, and older chapters from things I’ve
-          built.
-        </p>
-      </header>
-
+    <section aria-label="Writing archive">
       <div className={styles.filters}>
         {categories.map((cat) => (
           <button
@@ -114,6 +101,6 @@ export default function WritingArchive({ posts }: WritingArchiveProps) {
           <p className={styles.empty}>No posts in this category yet.</p>
         )}
       </div>
-    </main>
+    </section>
   );
 }

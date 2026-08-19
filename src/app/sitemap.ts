@@ -1,11 +1,11 @@
 import type { MetadataRoute } from "next";
-import { getPublicCaseStudies, siteConfig } from "@/data/portfolio";
+import { siteConfig } from "@/data/portfolio";
 import { getAllPosts } from "@/lib/mdx";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = siteConfig.url;
 
-  // Static pages
+  // Canonical public pages
   const staticPages: MetadataRoute.Sitemap = [
     {
       url: baseUrl,
@@ -14,20 +14,36 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 1,
     },
     {
+      url: `${baseUrl}/about`,
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.7,
+    },
+    {
+      url: `${baseUrl}/research`,
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/experience`,
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.7,
+    },
+    {
       url: `${baseUrl}/writing`,
       lastModified: new Date(),
       changeFrequency: "weekly",
       priority: 0.8,
     },
+    {
+      url: `${baseUrl}/work/waldo`,
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.8,
+    },
   ];
-
-  // Case study pages
-  const workPages: MetadataRoute.Sitemap = getPublicCaseStudies().map((cs) => ({
-    url: `${baseUrl}/work/${cs.slug}`,
-    lastModified: new Date(),
-    changeFrequency: "monthly" as const,
-    priority: 0.9,
-  }));
 
   // Blog post pages
   const posts = getAllPosts();
@@ -38,5 +54,5 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.7,
   }));
 
-  return [...staticPages, ...workPages, ...writingPages];
+  return [...staticPages, ...writingPages];
 }

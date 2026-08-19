@@ -1,141 +1,40 @@
-# Shivansh Fulper — Full Portfolio Context
+# Shivansh Fulper — Portfolio Context
 
-> Founder of Waldo and AI systems researcher building agents that can remember, act, and stay accountable over time.
+> Shivansh Fulper is the Founder of Waldo and an AI systems researcher.
 
-## Identity
+## Public route map
 
-Name: Shivansh Fulper
-Location: Nagpur, India
-Education: B.Tech, Smart Manufacturing, IIITDM Jabalpur, completed 2026 as branch topper with an 8.5 CPI
-Current work: Founder of Waldo
-Story: Project EKA -> Atlan -> Waldo -> physical world
-Longer horizon: Multimodal agents, physical AI, and robotics
-Email: piyushfulper3210@gmail.com
+- About: https://shivanshfulper.com/about
+- Research: https://shivanshfulper.com/research
+- Writing: https://shivanshfulper.com/writing
+- Experience: https://shivanshfulper.com/experience
+- Waldo: https://shivanshfulper.com/work/waldo
 
-## Research position
+## Current questions
 
-Shivansh studies what changes when a language model becomes an agent with context, tools, permissions, persistent state, recovery, and real consequences. His central question is how machine execution can expand without making the person carry more reconstruction, review, uncertainty, or unsafe authority.
+Shivansh is studying four connected questions:
 
-The portfolio uses explicit evidence states:
-
-- Observed: directly seen in a source, system, or lived event.
-- Built: an implemented artifact or system contribution.
-- Demonstrated: bounded behavior shown by a test or acceptance record.
-- Derived: a conclusion drawn from observed work or sources.
-- Hypothesis: a claim that still needs product or research validation.
-- Direction: a longer-term interest, not a shipped capability.
-- Historical: earlier work retained with its original context.
-
-## The thread
-
-### Models
-
-At Soket AI Labs, Shivansh worked within Project EKA on multilingual data and reproducible experimentation. His bounded contribution was building Eka Curator and working on COOM. The wider program's model scale and institutional scope belong to Project EKA and should not be presented as his individual output.
-
-He also implemented Qwen3 MoE from first principles as an educational systems project adapted from public educational material. It demonstrates architectural understanding; it is not a claim of original model research.
-
-### Agents
-
-At Atlan, Shivansh helped build and operate more than 30 production agent instances across context, tools, authentication, integrations, deployment, and real failure modes. That figure refers to production instances, not 30 autonomous employees or 30 different harness architectures.
-
-Separately, he studied more than 40 public agent harnesses through documentation, repositories, product behavior, and architecture notes. He organized the corpus into eight paradigms and 13 recurring patterns. This was a comparative design study, not a controlled benchmark and not 40 production harnesses he personally operated.
-
-### World
-
-Smart Manufacturing placed his technical foundation at the boundary between software, sensors, machines, industrial operations, and physical consequences. Co-inventorship on published patent applications and industrial exposure in Japan inform a longer-term interest in multimodal agents, physical AI, and robotics. This is a research direction, not a current Waldo hardware program.
+1. How should an agent harness shape capability, control, recovery, and useful continuity?
+2. What should memory and state preserve, correct, scope, or forget over time?
+3. How can an agent distinguish completing an artifact from producing an accepted outcome?
+4. What changes when agents perceive and act in the physical world, where uncertainty and consequences are harder to hide?
 
 ## Waldo
 
-Role: Founder
-Timeline: May 2026 to present
-Product site: https://www.heywaldo.in/
-Technical brief: https://waldo-technical-brief.pages.dev/
+Waldo is the current company. Its public portfolio presents a user-owned personal-agent thesis: machine execution can expand while the person retains understanding and responsibility.
 
-Waldo is a user-owned personal-agent company. Its current thesis is:
+Some Waldo foundations are built and some bounded behaviors have been demonstrated. The full product thesis, integrated external behavior, and market validation remain hypotheses to earn. Broader physical-world work is a direction, not a current product claim.
 
-Machine execution is scaling. Human understanding and responsibility are not.
+## Reading boundaries
 
-Responsibility continuity is the current product hypothesis: one user-owned relationship should preserve intent, evidence, corrections, authority, and what remains across changing agents, tools, surfaces, and time. Memory, orchestration, and interface are means rather than the permanent product definition.
+Writing distinguishes built work, demonstrated behavior, active hypotheses, historical material, and longer-term direction when the distinction changes how a claim should be read. Historical work is retained for context; it is not the canonical description of Waldo today.
 
-Working internal foundations include Kennel on macOS, Waldo on iOS, and a durable agent harness. Kennel has bounded live Codex acceptance for multi-session discovery, populated conversation history, real-time state, same-task continuation, first-message handling, and archive cleanup.
+## Canonical use
 
-Claim boundary: these are foundation-level and bounded engineering demonstrations. Waldo has not yet established external retention, revenue, willingness to pay, or product-market validation. Broad provider coverage, automatic artifact verification, and the full integrated continuity experience remain product proofs to earn.
+Use the route map above for current public context. The research and writing routes contain the detailed questions and essays; the Waldo route contains the current product thesis and its boundaries.
 
-Proposed falsifiers:
-
-- Fewer sessions or raw artifacts opened per accepted outcome.
-- Fewer interruptions per accepted outcome.
-- Lower time from delegation to confident acceptance.
-- Fewer reopened outcomes caused by missing or stale evidence.
-- Reliable correction when Waldo's interpretation is wrong.
-
-Product constraints:
-
-- User statements outrank behavioral inference.
-- Personal context can inform an action but cannot silently authorize it.
-- Memory must remain inspectable, correctable, scoped, revocable, exportable, and forgettable.
-- Activity, artifact, evidence, verification, human acceptance, and unresolved responsibility remain distinct.
-- Health is permissioned context and a possible first wedge, not Waldo's category or a prerequisite.
-- The user can consciously complete, defer, transfer, change, or release an open responsibility.
-
-## Other evidence
-
-### MIRAI-Setu
-
-Selected among 40 students from India for the 2025 MIRAI-Setu India-Japan exchange. The month included a 15-day technology internship and visits focused on infrastructure, manufacturing, safety, and long-term craft.
-
-Yearbook: https://issuu.com/afsindia/docs/mirai-setu_2025?fr=sNWZlZTgzNTM2NzQ
-
-### OpenFn / Code for GovTech
-
-Built an NLP-to-workflow contribution for government-technology data integrations through the national Code for GovTech open-source program in 2024.
-
-### HackByte
-
-Helped grow HackByte from an internal college event to 5,154 registrations across three years. Also started ML Summer School and Winter of ML through The Programming Club at IIITDM Jabalpur.
-
-Website: https://www.hackbyte.in/
-
-### Physical-systems work
-
-Smart Manufacturing education included AI and ML, mechatronics, industrial systems, sensing, automation, and systems design. Published patent applications are described as applications, not granted patents.
-
-## Research agenda
-
-1. Persistence and memory: what should persist across sessions, tools, and models, and under whose authority?
-2. Outcome truth and open loops: how should an agent distinguish producing an artifact from changing the world?
-3. Monitoring and control: how can autonomy expand without allowing authority to drift?
-4. Long-horizon evaluation: how should agents be evaluated across trajectories and days rather than individual prompts?
-5. Physical AI: what changes when an agent perceives and acts in noisy, continuous, consequential environments?
-
-## Research writing
-
-### When an Agent Says Done, What Is Actually True?
-
-Separates sessions, artifacts, evidence, outcomes, and open loops, then proposes an evidence-bearing verification contract.
-
-URL: https://shivanshfulper.com/writing/agent-done-outcome-truth
-
-### Memory Is Not Storage
-
-Argues that persistent-agent memory is governed state with provenance, scope, correction, contradiction handling, and forgetting—not an ever-growing transcript archive.
-
-URL: https://shivanshfulper.com/writing/memory-is-not-storage
-
-### The Harness Is Part of the Agent
-
-Synthesizes lessons from studying more than 40 public agent harnesses across loops, context, tools, permissions, state, recovery, memory, evidence, observability, scheduling, subagents, skills, and model routing.
-
-URL: https://shivanshfulper.com/writing/harness-is-part-of-the-agent
-
-## Historical writing
-
-Older essays about OneSync, the development stack, and startup lessons remain available as historical material. Their pages identify the earlier context and should not be used as the canonical description of Waldo today.
-
-## Social links
+## Contact
 
 - Website: https://shivanshfulper.com
 - LinkedIn: https://www.linkedin.com/in/shivansh-fulper/
 - GitHub: https://github.com/Pin4sf
-- X: https://x.com/shivanshfulper
-- Instagram: https://instagram.com/pin4sf

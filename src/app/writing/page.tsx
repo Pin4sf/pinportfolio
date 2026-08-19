@@ -1,19 +1,20 @@
 import { getAllPosts } from "@/lib/mdx";
-import { siteConfig } from "@/data/portfolio";
+import { siteConfig, writingPageData } from "@/data/portfolio";
 import type { Metadata } from "next";
+import Link from "next/link";
+import EditorialHeader from "@/app/components/editorial/EditorialHeader";
 import WritingArchive from "./WritingArchive";
+import styles from "./WritingArchive.module.scss";
 
 export const metadata: Metadata = {
-  title: "Writing",
-  description:
-    "Research essays and field notes by Shivansh Fulper on persistent agents, memory, harnesses, outcome evaluation, founder judgment, and physical AI.",
+  title: writingPageData.eyebrow,
+  description: writingPageData.metadata.description,
   alternates: {
     canonical: "/writing",
   },
   openGraph: {
-    title: "Writing — Shivansh Fulper",
-    description:
-      "Research essays and field notes on persistent agents, memory, harnesses, outcome evaluation, and founder judgment.",
+    title: `${writingPageData.eyebrow} — Shivansh Fulper`,
+    description: writingPageData.metadata.openGraphDescription,
     url: `${siteConfig.url}/writing`,
     type: "website",
   },
@@ -22,5 +23,20 @@ export const metadata: Metadata = {
 export default function WritingPage() {
   const posts = getAllPosts();
 
-  return <WritingArchive posts={posts} />;
+  return (
+    <>
+      <EditorialHeader
+        eyebrow={writingPageData.eyebrow}
+        title={writingPageData.title}
+        introduction={writingPageData.introduction}
+      />
+
+      <main id="main-content" className={styles.page}>
+        <Link className={styles.researchLink} href="/research">
+          Explore the research questions →
+        </Link>
+        <WritingArchive posts={posts} />
+      </main>
+    </>
+  );
 }

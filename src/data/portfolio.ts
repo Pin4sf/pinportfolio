@@ -1650,6 +1650,19 @@ export const researchPageData: ResearchPageData = {
     "No published essay yet; the public work below holds the question open.",
 };
 
+export const writingPageData = {
+  eyebrow: "Writing",
+  title: "Notes from the work.",
+  introduction:
+    "Research essays, field notes, and historical chapters from building and studying agent systems.",
+  metadata: {
+    description:
+      "Research essays and field notes by Shivansh Fulper on agent harnesses, memory and state, outcome evaluation, and agents in the physical world.",
+    openGraphDescription:
+      "Research essays and field notes on agent harnesses, memory and state, and outcome evaluation.",
+  },
+} as const;
+
 export const researchClusters: ResearchCluster[] = [
   {
     slug: "models",
@@ -1886,7 +1899,7 @@ export function getFeaturedWork(): CaseStudy[] {
 }
 
 export function getPublicCaseStudies(): CaseStudy[] {
-  return caseStudies.filter((cs) => cs.slug !== "ecofresh");
+  return caseStudies.filter((cs) => cs.slug === "waldo");
 }
 
 export function getFeaturedEvidence(): EvidenceRecord[] {

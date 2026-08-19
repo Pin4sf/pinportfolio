@@ -111,3 +111,15 @@ test("experience route uses an editorial chronology", () => {
   assert.match(source, /entry\.nextQuestion/);
   assert.doesNotMatch(source, /gsap|ScrollTrigger|IntersectionObserver/);
 });
+
+test("sitemap and machine surfaces expose only canonical public routes", () => {
+  const sitemap = read("src/app/sitemap.ts");
+  for (const route of ["/about", "/research", "/experience", "/writing", "/work/waldo"]) {
+    assert.match(sitemap, new RegExp(route.replace("/", "\\/")));
+  }
+  for (const file of ["public/agents.txt", "public/llms-full.txt"]) {
+    const source = read(file);
+    assert.doesNotMatch(source, /06-Applications-and-Outreach|waldo-brain|\/Users\//);
+    assert.doesNotMatch(source, /EcoFresh|OneSync|Quantum \+ AI/);
+  }
+});

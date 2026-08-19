@@ -1,55 +1,28 @@
 # agents.txt — Shivansh Fulper Portfolio
-# Machine-readable guide to the site's evidence and writing.
 
-# Identity
 name: Shivansh Fulper
 type: founder-researcher-portfolio
 url: https://shivanshfulper.com
 identity: Founder of Waldo and AI systems researcher
 
-# Research focus
-focus: Persistent agents, memory and state, long-horizon execution, monitoring, control, evaluation, and physical AI
-story: Project EKA -> Atlan -> Waldo -> physical world
-evidence-policy: Distinguish observed work, built artifacts, derived conclusions, hypotheses, direction, and historical material
+description: A public notebook about building Waldo and studying how agents can carry context, state, and responsibility over time.
 
-# Description
-description: Portfolio of Shivansh Fulper, founder of Waldo and an AI systems researcher building agents that can remember, act, and stay accountable over time.
+current-questions: Agent harnesses; memory and state; outcome evaluation; agents in the physical world.
 
-# Contact
-contact-email: piyushfulper3210@gmail.com
-contact-form: https://shivanshfulper.com/#contact
+evidence-boundaries: Built describes an implemented contribution. Demonstrated describes bounded public behavior. Hypothesis describes a claim still being tested. Historical material retains its original context. Direction describes longer-term work, not a current capability.
 
-# Machine-readable content
-llms-txt: https://shivanshfulper.com/llms.txt
-llms-full-txt: https://shivanshfulper.com/llms-full.txt
+primary-page: https://shivanshfulper.com/about
+primary-page: https://shivanshfulper.com/research
+primary-page: https://shivanshfulper.com/writing
+primary-page: https://shivanshfulper.com/experience
+primary-page: https://shivanshfulper.com/work/waldo
+
+work: Waldo is the current company. Its public record distinguishes working foundations and demonstrations from product hypotheses and future direction.
+
+machine-readable-content: https://shivanshfulper.com/llms.txt
+machine-readable-content: https://shivanshfulper.com/llms-full.txt
 sitemap: https://shivanshfulper.com/sitemap.xml
 
-# Primary pages
-page: / # Founder-researcher story, selected work, current questions, writing, biography, chronology, and contact
-page: /work/waldo # Waldo thesis, working foundations, evidence boundaries, and falsifiers
-page: /writing # Research essays, field notes, founder notes, and clearly labeled historical writing
-
-# Research essays
-page: /writing/agent-done-outcome-truth # Separating sessions, artifacts, evidence, outcomes, and open loops
-page: /writing/memory-is-not-storage # Memory as governed state with provenance, correction, and forgetting
-page: /writing/harness-is-part-of-the-agent # Synthesis from studying more than 40 public agent harnesses
-
-# Evidence anchors
-artifact: https://www.heywaldo.in/ # Waldo product site; current portfolio claims remain foundation-level, not market validation
-artifact: https://waldo-technical-brief.pages.dev/ # Waldo technical and vision brief
-artifact: https://soket.ai/project-eka # Project EKA at Soket AI Labs
-artifact: https://www.hackbyte.in/ # HackByte community work
-artifact: https://issuu.com/afsindia/docs/mirai-setu_2025?fr=sNWZlZTgzNTM2NzQ # MIRAI-Setu 2025 yearbook
-
-# Important claim boundaries
-claim: Helped build and operate more than 30 production agent instances at Atlan
-claim: Studied more than 40 public agent harnesses; this is a comparative research corpus, not 40 production systems personally operated
-claim: Built Eka Curator and worked on COOM within Project EKA; program scale belongs to Project EKA
-claim: Implemented Qwen3 MoE from first principles as an educational systems project, not original model research
-claim: Waldo has working internal foundations and bounded Kennel acceptance; external retention, revenue, willingness to pay, and product-market validation are not established
-
-# Social profiles
+contact-email: piyushfulper3210@gmail.com
 social: https://www.linkedin.com/in/shivansh-fulper/
 social: https://github.com/Pin4sf
-social: https://x.com/shivanshfulper
-social: https://instagram.com/pin4sf
