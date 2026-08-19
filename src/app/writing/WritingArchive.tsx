@@ -45,6 +45,7 @@ export default function WritingArchive({ posts }: WritingArchiveProps) {
         {categories.map((cat) => (
           <button
             key={cat.key}
+            aria-pressed={activeCategory === cat.key}
             className={`${styles.filterBtn} ${activeCategory === cat.key ? styles.active : ""}`}
             onClick={() => setActiveCategory(cat.key)}
           >

@@ -123,3 +123,8 @@ test("sitemap and machine surfaces expose only canonical public routes", () => {
     assert.doesNotMatch(source, /EcoFresh|OneSync|Quantum \+ AI/);
   }
 });
+
+test("writing category filters expose their selected state", () => {
+  const source = read("src/app/writing/WritingArchive.tsx");
+  assert.match(source, /aria-pressed=\{activeCategory === cat\.key\}/);
+});
