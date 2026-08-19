@@ -13,6 +13,7 @@ const page = read("src/app/page.tsx");
 const hero = read("src/app/components/sections/Hero.tsx");
 const clientShell = read("src/app/components/ClientShell.tsx");
 const reducedMotionHook = read("src/app/hooks/useReducedMotion.ts");
+const gpuTierContext = read("src/lib/GpuTierContext.tsx");
 const globals = read("src/app/globals.scss");
 const writing = read("src/app/components/sections/Writing.tsx");
 const writingStyles = read("src/app/components/sections/Writing.module.scss");
@@ -65,17 +66,21 @@ test("global visual utilities stay homepage-only", () => {
 });
 
 test("hero effects honor mobile, reduced-motion, and GPU-tier gates", () => {
+  assert.match(hero, /shouldEnableHeroEffects/);
   assert.match(
-    hero,
-    /const enableHeroEffects =\s*!reducedMotion && !isMobile && gpuTier !== "low"/,
+    gpuTierContext,
+    /GpuTier = "pending" \| "low" \| "mid" \| "high"/,
   );
+  assert.match(gpuTierContext, /createContext<GpuTier>\("pending"\)/);
+  assert.match(gpuTierContext, /useState<GpuTier>\("pending"\)/);
+  assert.match(gpuTierContext, /\.catch\(\(\) => \{[\s\S]*setTier\("low"\)/);
   assert.match(
     reducedMotionHook,
     /useState\(\s*\(\) =>[\s\S]*matchMedia\("\(prefers-reduced-motion: reduce\)"\)/,
   );
 });
 
-test("tertiary text meets AA contrast on the primary background", () => {
+test("tertiary text meets AA contrast on every dark surface", () => {
   const parseToken = (name) => {
     const match = globals.match(new RegExp(`${name}:\\s*(#[0-9a-f]{6})`, "i"));
     assert.ok(match, `Missing ${name}`);
@@ -93,12 +98,21 @@ test("tertiary text meets AA contrast on the primary background", () => {
     return 0.2126 * channels[0] + 0.7152 * channels[1] + 0.0722 * channels[2];
   };
   const foreground = luminance(parseToken("--text-tertiary"));
-  const background = luminance(parseToken("--bg-primary"));
-  const ratio =
-    (Math.max(foreground, background) + 0.05) /
-    (Math.min(foreground, background) + 0.05);
+  for (const backgroundToken of [
+    "--bg-primary",
+    "--bg-secondary",
+    "--bg-tertiary",
+  ]) {
+    const background = luminance(parseToken(backgroundToken));
+    const ratio =
+      (Math.max(foreground, background) + 0.05) /
+      (Math.min(foreground, background) + 0.05);
 
-  assert.ok(ratio >= 4.5, `Tertiary text contrast is ${ratio.toFixed(2)}:1`);
+    assert.ok(
+      ratio >= 4.5,
+      `Tertiary text on ${backgroundToken} is ${ratio.toFixed(2)}:1`,
+    );
+  }
 });
 
 test("homepage keeps a compact research-writing section", () => {

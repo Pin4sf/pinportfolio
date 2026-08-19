@@ -15,6 +15,7 @@ export default function Header() {
   const headerRef = useRef<HTMLElement>(null);
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
   const lastScrollY = useRef(0);
   const progressRef = useRef<HTMLDivElement>(null);
   const [hidden, setHidden] = useState(false);
@@ -54,6 +55,9 @@ export default function Header() {
     ) as HTMLElement | null;
     if (!overlay) return;
 
+    const previousBodyOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
     const focusable = overlay.querySelectorAll<HTMLElement>(
       'a[href], button, [tabindex]:not([tabindex="-1"])',
     );
@@ -83,7 +87,11 @@ export default function Header() {
     document.addEventListener("keydown", handleKeyDown);
     first?.focus();
 
-    return () => document.removeEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+      document.body.style.overflow = previousBodyOverflow;
+      menuButtonRef.current?.focus();
+    };
   }, [menuOpen]);
 
   // Reveal header after loading screen
@@ -137,6 +145,7 @@ export default function Header() {
           </div>
 
           <button
+            ref={menuButtonRef}
             className={cn(styles.menuBtn, menuOpen && styles.menuOpen)}
             onClick={() => setMenuOpen(!menuOpen)}
             aria-label={menuOpen ? "Close menu" : "Open menu"}

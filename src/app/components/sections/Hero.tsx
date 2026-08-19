@@ -7,6 +7,7 @@ import styles from "./Hero.module.scss";
 import { heroData } from "@/data/portfolio";
 import { useReducedMotion } from "@/app/hooks/useReducedMotion";
 import { useGpuTier } from "@/app/hooks/useGpuTier";
+import { shouldEnableHeroEffects } from "@/lib/heroEffects";
 import {
   Github,
   Linkedin,
@@ -63,7 +64,11 @@ export default function Hero() {
     setBgCanvas(canvas);
   }, []);
 
-  const enableHeroEffects = !reducedMotion && !isMobile && gpuTier !== "low";
+  const enableHeroEffects = shouldEnableHeroEffects({
+    reducedMotion,
+    isMobile,
+    gpuTier,
+  });
   const particleCount = enableHeroEffects ? (gpuTier === "mid" ? 25 : 30) : 0;
 
   const particles = useMemo(

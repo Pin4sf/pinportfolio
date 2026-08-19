@@ -44,6 +44,28 @@ test("mobile navigation exposes its disclosure state", () => {
   assert.match(header, /aria-expanded=\{menuOpen\}/);
 });
 
+test("mobile navigation owns focus and scroll for the full dialog lifecycle", () => {
+  const header = read("src/app/components/layout/Header.tsx");
+  assert.match(
+    header,
+    /const menuButtonRef = useRef<HTMLButtonElement>\(null\)/,
+  );
+  assert.match(
+    header,
+    /const previousBodyOverflow = document\.body\.style\.overflow/,
+  );
+  assert.match(header, /document\.body\.style\.overflow = "hidden"/);
+  assert.match(
+    header,
+    /document\.body\.style\.overflow = previousBodyOverflow/,
+  );
+  assert.match(header, /menuButtonRef\.current\?\.focus\(\)/);
+  assert.match(header, /if \(e\.key === "Escape"\)/);
+  assert.match(header, /document\.activeElement === first/);
+  assert.match(header, /document\.activeElement === last/);
+  assert.match(header, /ref=\{menuButtonRef\}/);
+});
+
 test("hash routes bypass the page-transition curtain", () => {
   const coolLink = read("src/app/components/ui/CoolLink.tsx");
   assert.match(coolLink, /href\.startsWith\("\/"\) && !href\.includes\("#"\)/);
@@ -80,9 +102,22 @@ test("research route exposes questions, artifacts, and uncertainty", () => {
   assert.doesNotMatch(source, /gsap|ScrollTrigger|backdrop-filter/);
 });
 
-test("research route exposes the global skip-link target", () => {
-  const source = read("src/app/research/page.tsx");
-  assert.match(source, /<main id="main-content" className=\{styles\.page\}>/);
+test("every canonical page exposes the global skip-link target", () => {
+  for (const file of [
+    "src/app/page.tsx",
+    "src/app/about/page.tsx",
+    "src/app/research/page.tsx",
+    "src/app/experience/page.tsx",
+    "src/app/writing/page.tsx",
+    "src/app/writing/[slug]/BlogPost.tsx",
+    "src/app/work/[slug]/CaseStudy.tsx",
+  ]) {
+    assert.match(
+      read(file),
+      /<main(?=[^>]*\bid="main-content")[^>]*>/,
+      `${file} is missing #main-content`,
+    );
+  }
 });
 
 test("research restores experience evidence links after the route is available", () => {

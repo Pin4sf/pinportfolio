@@ -2,12 +2,12 @@
 
 import { createContext, useState, useEffect, type ReactNode } from "react";
 
-export type GpuTier = "low" | "mid" | "high";
+export type GpuTier = "pending" | "low" | "mid" | "high";
 
-export const GpuTierContext = createContext<GpuTier>("mid");
+export const GpuTierContext = createContext<GpuTier>("pending");
 
 export function GpuTierProvider({ children }: { children: ReactNode }) {
-  const [tier, setTier] = useState<GpuTier>("mid");
+  const [tier, setTier] = useState<GpuTier>("pending");
 
   useEffect(() => {
     import("detect-gpu")
@@ -18,7 +18,7 @@ export function GpuTierProvider({ children }: { children: ReactNode }) {
         else setTier("high");
       })
       .catch(() => {
-        // Default to mid on failure
+        setTier("low");
       });
   }, []);
 

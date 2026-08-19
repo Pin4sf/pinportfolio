@@ -24,7 +24,7 @@ interface BlogPostProps {
 
 export default function BlogPost({ post }: BlogPostProps) {
   return (
-    <main className={styles.page}>
+    <main id="main-content" className={styles.page}>
       <Link href="/writing" className={styles.back}>
         <ArrowLeft size={16} />
         Back to Writing

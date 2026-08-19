@@ -61,7 +61,7 @@ export default function AboutPage() {
         introduction={aboutPageData.headerIntroduction}
       />
 
-      <main className={styles.page}>
+      <main id="main-content" className={styles.page}>
         <section
           className={styles.introduction}
           aria-label={aboutPageData.introductionLabel}
@@ -87,7 +87,10 @@ export default function AboutPage() {
           </nav>
         </section>
 
-        <section className={styles.section} aria-labelledby="influences-heading">
+        <section
+          className={styles.section}
+          aria-labelledby="influences-heading"
+        >
           <p className={styles.kicker}>{aboutPageData.influencesKicker}</p>
           <h2 id="influences-heading">{aboutPageData.influencesHeading}</h2>
           <div className={styles.influenceGrid}>
@@ -120,13 +123,18 @@ export default function AboutPage() {
           </div>
         </section>
 
-        <section className={styles.section} aria-labelledby="principles-heading">
+        <section
+          className={styles.section}
+          aria-labelledby="principles-heading"
+        >
           <p className={styles.kicker}>{aboutPageData.principlesKicker}</p>
           <h2 id="principles-heading">{aboutPageData.principlesHeading}</h2>
           <ol className={styles.principles}>
             {compassPrinciples.map((principle, index) => (
               <li key={principle.title}>
-                <span aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
+                <span aria-hidden="true">
+                  {String(index + 1).padStart(2, "0")}
+                </span>
                 <div>
                   <h3>{principle.title}</h3>
                   <p>{principle.body}</p>
@@ -151,7 +159,11 @@ export default function AboutPage() {
             aria-label={aboutPageData.relatedArtifactsLabel}
           >
             {longerHorizonArtifacts.map((artifact) => (
-              <Link className={styles.artifact} href={artifact.href} key={artifact.slug}>
+              <Link
+                className={styles.artifact}
+                href={artifact.href}
+                key={artifact.slug}
+              >
                 <span>{artifact.kind.replace("-", " ")}</span>
                 <strong>{artifact.title}</strong>
                 <p>{artifact.summary}</p>
@@ -174,7 +186,12 @@ export default function AboutPage() {
           <div className={styles.contactLinks}>
             <a href={`mailto:${contactData.email}`}>{contactData.email}</a>
             {contactData.socials.map((social) => (
-              <a href={social.url} key={social.name} rel="noreferrer" target="_blank">
+              <a
+                href={social.url}
+                key={social.name}
+                rel="noreferrer"
+                target="_blank"
+              >
                 {social.name}
               </a>
             ))}
