@@ -32,11 +32,6 @@ function isPublicArtifact(
   return artifact !== undefined;
 }
 
-// Task 6 staged guard: remove this when /experience becomes available.
-function isAvailableOnResearchRoute(artifact: PublicArtifact) {
-  return artifact.href !== "/experience";
-}
-
 export default function ResearchPage() {
   const posts = getAllPosts();
   const artifacts = getPublicArtifacts();
@@ -67,8 +62,7 @@ export default function ResearchPage() {
         {researchClusters.map((cluster, index) => {
           const clusterArtifacts = cluster.artifactSlugs
             .map((slug) => artifacts.find((artifact) => artifact.slug === slug))
-            .filter(isPublicArtifact)
-            .filter(isAvailableOnResearchRoute);
+            .filter(isPublicArtifact);
           const relatedPosts = clusterArtifacts
             .filter((artifact) => artifact.href.startsWith("/writing/"))
             .map((artifact) =>

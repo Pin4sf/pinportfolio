@@ -65,13 +65,21 @@ test("research route exposes the global skip-link target", () => {
   assert.match(source, /<main id="main-content" className=\{styles\.page\}>/);
 });
 
-test("research stages artifacts for routes that are currently available", () => {
-  const source = read("src/app/research/page.tsx");
-  assert.match(source, /Task 6 staged guard/);
-  assert.match(source, /isAvailableOnResearchRoute/);
-  assert.match(source, /artifact\.href !== "\/experience"/);
-  assert.match(source, /\.filter\(isAvailableOnResearchRoute\)/);
-  assert.doesNotMatch(source, /href=["']\/experience["']/);
+test("research restores experience evidence links after the route is available", () => {
+  const research = read("src/app/research/page.tsx");
+  const portfolio = read("src/data/portfolio.ts");
+
+  assert.doesNotMatch(research, /Task 6 staged guard/);
+  assert.doesNotMatch(research, /isAvailableOnResearchRoute/);
+  assert.match(research, /\.filter\(isPublicArtifact\);/);
+  assert.match(
+    portfolio,
+    /slug: "atlan"[\s\S]*?href: "\/experience"/,
+  );
+  assert.match(
+    portfolio,
+    /slug: "smart-manufacturing"[\s\S]*?href: "\/experience"/,
+  );
 });
 
 test("artifact lists can render subordinate headings on research clusters", () => {
@@ -93,4 +101,13 @@ test("research does not repeat related writing as a supporting artifact", () => 
   );
   assert.match(source, /!relatedWritingHrefs\.has\(artifact\.href\)/);
   assert.doesNotMatch(source, /artifact\.kind !== "writing"/);
+});
+
+test("experience route uses an editorial chronology", () => {
+  const source = read("src/app/experience/page.tsx");
+  assert.doesNotMatch(source, /^"use client"/);
+  assert.match(source, /timelineData/);
+  assert.match(source, /entry\.evidence/);
+  assert.match(source, /entry\.nextQuestion/);
+  assert.doesNotMatch(source, /gsap|ScrollTrigger|IntersectionObserver/);
 });

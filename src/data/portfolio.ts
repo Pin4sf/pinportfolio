@@ -236,6 +236,20 @@ export interface ResearchPageData {
   emptyWriting: string;
 }
 
+export interface ExperiencePageData {
+  eyebrow: string;
+  title: string;
+  introduction: string;
+  metadata: {
+    description: string;
+    openGraphDescription: string;
+  };
+  chronologyLabel: string;
+  evidenceLabel: string;
+  nextQuestionLabel: string;
+  linksLabel: string;
+}
+
 export interface CompassPrinciple {
   title: string;
   body: string;
@@ -1355,6 +1369,23 @@ export const currentlyExploring =
   "Persistent agents, long-horizon evaluation, user-owned memory, and physical AI";
 
 // ==================== TIMELINE ====================
+
+export const experiencePageData: ExperiencePageData = {
+  eyebrow: "Experience",
+  title: "A chronology of work, questions, and returns.",
+  introduction:
+    "The work makes more sense to me as a sequence of encounters—not a master plan.",
+  metadata: {
+    description:
+      "A public chronology of Shivansh Fulper's work across agent systems, model infrastructure, physical systems, and technical community.",
+    openGraphDescription:
+      "A public chronology of work, evidence, and questions carried forward across models, agents, and the physical world.",
+  },
+  chronologyLabel: "Chronology",
+  evidenceLabel: "Bounded evidence",
+  nextQuestionLabel: "Question carried forward",
+  linksLabel: "Public links",
+};
 
 export const timelineData: TimelineEntry[] = [
   {
