@@ -59,3 +59,27 @@ test("research route exposes questions, artifacts, and uncertainty", () => {
   assert.match(source, /cluster\.uncertainty/);
   assert.doesNotMatch(source, /gsap|ScrollTrigger|backdrop-filter/);
 });
+
+test("research route exposes the global skip-link target", () => {
+  const source = read("src/app/research/page.tsx");
+  assert.match(source, /<main id="main-content" className=\{styles\.page\}>/);
+});
+
+test("research stages artifacts for routes that are currently available", () => {
+  const source = read("src/app/research/page.tsx");
+  assert.match(source, /Task 6 staged guard/);
+  assert.match(source, /isAvailableOnResearchRoute/);
+  assert.match(source, /artifact\.href !== "\/experience"/);
+  assert.match(source, /\.filter\(isAvailableOnResearchRoute\)/);
+  assert.doesNotMatch(source, /href=["']\/experience["']/);
+});
+
+test("artifact lists can render subordinate headings on research clusters", () => {
+  const artifactList = read("src/app/components/editorial/ArtifactList.tsx");
+  const research = read("src/app/research/page.tsx");
+  assert.match(artifactList, /headingLevel\?: "h2" \| "h3"/);
+  assert.match(artifactList, /headingLevel = "h2"/);
+  assert.match(artifactList, /const Heading = headingLevel/);
+  assert.match(artifactList, /<Heading>\{artifact\.title\}<\/Heading>/);
+  assert.match(research, /headingLevel="h3"/);
+});

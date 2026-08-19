@@ -4,10 +4,18 @@ import styles from "./ArtifactList.module.scss";
 
 interface ArtifactListProps {
   artifacts: PublicArtifact[];
+  headingLevel?: "h2" | "h3";
 }
 
-function ArtifactContents({ artifact }: { artifact: PublicArtifact }) {
+function ArtifactContents({
+  artifact,
+  headingLevel,
+}: {
+  artifact: PublicArtifact;
+  headingLevel: "h2" | "h3";
+}) {
   const isDateRange = /^\d{4}-\d{4}$/.test(artifact.date);
+  const Heading = headingLevel;
 
   return (
     <>
@@ -18,7 +26,7 @@ function ArtifactContents({ artifact }: { artifact: PublicArtifact }) {
         </time>
       </div>
       <div className={styles.copy}>
-        <h2>{artifact.title}</h2>
+        <Heading>{artifact.title}</Heading>
         <p>{artifact.summary}</p>
         {artifact.annotation && (
           <p className={styles.annotation}>{artifact.annotation}</p>
@@ -31,7 +39,10 @@ function ArtifactContents({ artifact }: { artifact: PublicArtifact }) {
   );
 }
 
-export default function ArtifactList({ artifacts }: ArtifactListProps) {
+export default function ArtifactList({
+  artifacts,
+  headingLevel = "h2",
+}: ArtifactListProps) {
   return (
     <ol className={styles.list}>
       {artifacts.map((artifact) => (
@@ -43,11 +54,17 @@ export default function ArtifactList({ artifacts }: ArtifactListProps) {
               target="_blank"
               rel="noopener noreferrer"
             >
-              <ArtifactContents artifact={artifact} />
+              <ArtifactContents
+                artifact={artifact}
+                headingLevel={headingLevel}
+              />
             </a>
           ) : (
             <Link href={artifact.href} className={styles.link}>
-              <ArtifactContents artifact={artifact} />
+              <ArtifactContents
+                artifact={artifact}
+                headingLevel={headingLevel}
+              />
             </Link>
           )}
         </li>

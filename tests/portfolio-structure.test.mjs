@@ -197,6 +197,31 @@ test("flagship research essays open from bounded lived events", () => {
   assert.match(harnessOpening, /different tradeoffs/i);
 });
 
+test("flagship research essay revisions match the published opening update", () => {
+  for (const slug of [
+    "agent-done-outcome-truth",
+    "memory-is-not-storage",
+    "harness-is-part-of-the-agent",
+  ]) {
+    const file = path.join(root, `src/content/writing/${slug}.mdx`);
+    const { data } = matter(fs.readFileSync(file, "utf8"));
+    assert.equal(data.revised, "2026-08-19", `${slug} has a stale revision`);
+  }
+});
+
+test("harness essay leaves its governing thesis open", () => {
+  const file = path.join(
+    root,
+    "src/content/writing/harness-is-part-of-the-agent.mdx",
+  );
+  const { content } = matter(fs.readFileSync(file, "utf8"));
+  assert.match(
+    content.trim(),
+    /A model provides capability\.[^\n]*\?$/,
+    "harness essay should end by reopening how capability meets the world",
+  );
+});
+
 test("Waldo thesis contains the self-falsifier", () => {
   assert.match(portfolio, /Machine execution is scaling/i);
   assert.match(
