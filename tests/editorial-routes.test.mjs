@@ -33,13 +33,34 @@ test("editorial primitives stay server-rendered", () => {
   }
 });
 
-test("editorial header renders the canonical primary navigation from portfolio data", () => {
+test("every dedicated route reuses the canonical primary navigation", () => {
+  const primaryNav = read(
+    "src/app/components/editorial/EditorialPrimaryNav.tsx",
+  );
   const header = read("src/app/components/editorial/EditorialHeader.tsx");
+  const blogPost = read("src/app/writing/[slug]/BlogPost.tsx");
+  const caseStudy = read("src/app/work/[slug]/CaseStudy.tsx");
   const portfolio = read("src/data/portfolio.ts");
 
-  assert.match(header, /import \{ navItems \} from "@\/data\/portfolio"/);
-  assert.match(header, /aria-label="Primary navigation"/);
-  assert.match(header, /navItems\.map\(\(item\) =>/);
+  assert.match(primaryNav, /import \{ navItems \} from "@\/data\/portfolio"/);
+  assert.match(primaryNav, /aria-label="Primary navigation"/);
+  assert.match(primaryNav, /navItems\.map\(\(item\) =>/);
+  assert.match(primaryNav, /<a href=\{item\.href\}/);
+  assert.doesNotMatch(
+    primaryNav,
+    /^"use client"|useState|useEffect|gsap|next\/link/,
+  );
+
+  for (const source of [header, blogPost, caseStudy]) {
+    assert.match(source, /EditorialPrimaryNav/);
+    assert.match(source, /<EditorialPrimaryNav \/>/);
+  }
+
+  assert.match(header, /> Home/);
+  assert.match(blogPost, /Back to Writing/);
+  assert.match(caseStudy, />\s*Home\s*</);
+  assert.match(caseStudy, /aria-label="Case studies"/);
+
   for (const [label, href] of [
     ["Venture", "/work/waldo"],
     ["Research + Writing", "/research"],

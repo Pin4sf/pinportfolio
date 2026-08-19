@@ -41,31 +41,6 @@
   justify-content: space-between;
 }
 
-.primaryNav {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.6rem 1.25rem;
-  justify-content: flex-end;
-
-  a {
-    color: var(--text-secondary);
-    font-family: var(--font-mono);
-    font-size: var(--text-xs);
-    text-decoration: none;
-    transition: color 180ms ease;
-
-    &:hover {
-      color: var(--accent);
-    }
-
-    &:focus-visible {
-      border-radius: 0.1rem;
-      outline: 2px solid var(--accent);
-      outline-offset: 4px;
-    }
-  }
-}
-
 .eyebrow {
   margin-top: 3rem;
   color: var(--accent);
@@ -88,9 +63,5 @@
   .navigation {
     align-items: flex-start;
     flex-direction: column;
-  }
-
-  .primaryNav {
-    justify-content: flex-start;
   }
 }

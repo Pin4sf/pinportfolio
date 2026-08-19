@@ -18,6 +18,7 @@ import type {
 } from "@/data/portfolio";
 import { useReducedMotion } from "@/app/hooks/useReducedMotion";
 import TransitionLink from "@/app/components/ui/TransitionLink";
+import EditorialPrimaryNav from "@/app/components/editorial/EditorialPrimaryNav";
 import styles from "./CaseStudy.module.scss";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -136,9 +137,7 @@ function RichCaseStudy({ caseStudy, narrative }: RichCaseStudyProps) {
               <div className={styles.storyMeta}>
                 <p className={styles.eyebrow}>{section.eyebrow}</p>
                 {section.status && (
-                  <span className={styles.sectionStatus}>
-                    {section.status}
-                  </span>
+                  <span className={styles.sectionStatus}>{section.status}</span>
                 )}
               </div>
               <h2>{section.title}</h2>
@@ -524,10 +523,13 @@ export default function CaseStudy({ caseStudy, prev, next }: CaseStudyProps) {
       ref={pageRef}
       className={clsx(styles.page, caseStudy.narrative && styles.richPage)}
     >
-      <TransitionLink href="/" className={styles.back}>
-        <ArrowLeft size={16} aria-hidden="true" />
-        Home
-      </TransitionLink>
+      <div className={styles.primaryNavigation}>
+        <TransitionLink href="/" className={styles.back}>
+          <ArrowLeft size={16} aria-hidden="true" />
+          Home
+        </TransitionLink>
+        <EditorialPrimaryNav />
+      </div>
 
       {caseStudy.narrative ? (
         <RichCaseStudy caseStudy={caseStudy} narrative={caseStudy.narrative} />

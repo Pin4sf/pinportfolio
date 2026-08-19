@@ -16,11 +16,23 @@
   padding-inline: clamp(1.25rem, 4vw, 4rem);
 }
 
+.primaryNavigation {
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: clamp(3rem, 7vw, 6rem);
+
+  @media (max-width: 700px) {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+
 .back {
   display: inline-flex;
   align-items: center;
   gap: 0.375rem;
-  margin-bottom: clamp(3rem, 7vw, 6rem);
   color: var(--text-secondary);
   font-size: 0.8125rem;
   transition:

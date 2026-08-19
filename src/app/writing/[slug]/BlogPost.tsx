@@ -3,6 +3,7 @@ import type { Post } from "@/lib/mdx";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { MDXRemote } from "next-mdx-remote/rsc";
+import EditorialPrimaryNav from "@/app/components/editorial/EditorialPrimaryNav";
 
 const categoryColors: Record<string, string> = {
   research: "var(--accent)",
@@ -25,10 +26,13 @@ interface BlogPostProps {
 export default function BlogPost({ post }: BlogPostProps) {
   return (
     <main id="main-content" className={styles.page}>
-      <Link href="/writing" className={styles.back}>
-        <ArrowLeft size={16} />
-        Back to Writing
-      </Link>
+      <div className={styles.navigation}>
+        <Link href="/writing" className={styles.back}>
+          <ArrowLeft size={16} aria-hidden="true" />
+          Back to Writing
+        </Link>
+        <EditorialPrimaryNav />
+      </div>
 
       <article className={styles.article}>
         <header className={styles.header}>
