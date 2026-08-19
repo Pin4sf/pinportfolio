@@ -140,6 +140,7 @@ export default function Header() {
             className={cn(styles.menuBtn, menuOpen && styles.menuOpen)}
             onClick={() => setMenuOpen(!menuOpen)}
             aria-label={menuOpen ? "Close menu" : "Open menu"}
+            aria-expanded={menuOpen}
           >
             <span />
             <span />

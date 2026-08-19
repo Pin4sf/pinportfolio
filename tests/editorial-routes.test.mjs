@@ -6,6 +6,21 @@ import test from "node:test";
 const root = process.cwd();
 const read = (file) => fs.readFileSync(path.join(root, file), "utf8");
 
+test("editorial routes avoid heavy client-only dependencies", () => {
+  for (const file of [
+    "src/app/about/page.tsx",
+    "src/app/research/page.tsx",
+    "src/app/experience/page.tsx",
+  ]) {
+    const source = read(file);
+    assert.doesNotMatch(source, /^"use client"/);
+    assert.doesNotMatch(
+      source,
+      /gsap|three|ScrollTrigger|Lenis|TransitionLink/,
+    );
+  }
+});
+
 test("editorial primitives stay server-rendered", () => {
   for (const file of [
     "src/app/components/editorial/EditorialHeader.tsx",
@@ -22,6 +37,11 @@ test("primary navigation uses canonical routes", () => {
   const header = read("src/app/components/layout/Header.tsx");
   assert.match(header, /usePathname/);
   assert.doesNotMatch(header, /document\.querySelector\(item\.href\)/);
+});
+
+test("mobile navigation exposes its disclosure state", () => {
+  const header = read("src/app/components/layout/Header.tsx");
+  assert.match(header, /aria-expanded=\{menuOpen\}/);
 });
 
 test("hash routes bypass the page-transition curtain", () => {
@@ -72,10 +92,7 @@ test("research restores experience evidence links after the route is available",
   assert.doesNotMatch(research, /Task 6 staged guard/);
   assert.doesNotMatch(research, /isAvailableOnResearchRoute/);
   assert.match(research, /\.filter\(isPublicArtifact\);/);
-  assert.match(
-    portfolio,
-    /slug: "atlan"[\s\S]*?href: "\/experience"/,
-  );
+  assert.match(portfolio, /slug: "atlan"[\s\S]*?href: "\/experience"/);
   assert.match(
     portfolio,
     /slug: "smart-manufacturing"[\s\S]*?href: "\/experience"/,
@@ -114,12 +131,21 @@ test("experience route uses an editorial chronology", () => {
 
 test("sitemap and machine surfaces expose only canonical public routes", () => {
   const sitemap = read("src/app/sitemap.ts");
-  for (const route of ["/about", "/research", "/experience", "/writing", "/work/waldo"]) {
+  for (const route of [
+    "/about",
+    "/research",
+    "/experience",
+    "/writing",
+    "/work/waldo",
+  ]) {
     assert.match(sitemap, new RegExp(route.replace("/", "\\/")));
   }
   for (const file of ["public/agents.txt", "public/llms-full.txt"]) {
     const source = read(file);
-    assert.doesNotMatch(source, /06-Applications-and-Outreach|waldo-brain|\/Users\//);
+    assert.doesNotMatch(
+      source,
+      /06-Applications-and-Outreach|waldo-brain|\/Users\//,
+    );
     assert.doesNotMatch(source, /EcoFresh|OneSync|Quantum \+ AI/);
   }
 });

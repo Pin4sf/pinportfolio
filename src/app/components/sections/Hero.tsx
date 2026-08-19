@@ -43,24 +43,28 @@ export default function Hero() {
   const reducedMotion = useReducedMotion();
   const gpuTier = useGpuTier();
   const [bgCanvas, setBgCanvas] = useState<HTMLCanvasElement | null>(null);
-  const [isMobile, setIsMobile] = useState(false);
+  const [isMobile, setIsMobile] = useState(
+    () =>
+      typeof window !== "undefined" &&
+      window.matchMedia("(max-width: 767px)").matches,
+  );
 
   useEffect(() => {
-    setIsMobile(window.matchMedia("(max-width: 767px)").matches);
+    const mediaQuery = window.matchMedia("(max-width: 767px)");
+    const handleChange = (event: MediaQueryListEvent) =>
+      setIsMobile(event.matches);
+
+    setIsMobile(mediaQuery.matches);
+    mediaQuery.addEventListener("change", handleChange);
+    return () => mediaQuery.removeEventListener("change", handleChange);
   }, []);
 
   const handleBgCanvasReady = useCallback((canvas: HTMLCanvasElement) => {
     setBgCanvas(canvas);
   }, []);
 
-  // Particle count: mobile=8, low=15, mid=25, high=30
-  const particleCount = isMobile
-    ? 8
-    : gpuTier === "low"
-      ? 15
-      : gpuTier === "mid"
-        ? 25
-        : 30;
+  const enableHeroEffects = !reducedMotion && !isMobile && gpuTier !== "low";
+  const particleCount = enableHeroEffects ? (gpuTier === "mid" ? 25 : 30) : 0;
 
   const particles = useMemo(
     () =>
@@ -224,7 +228,7 @@ export default function Hero() {
 
   // Floating particles — pause when offscreen
   useEffect(() => {
-    if (reducedMotion) return;
+    if (!enableHeroEffects) return;
     const section = sectionRef.current;
     const container = particlesRef.current;
     if (!container || !section) return;
@@ -272,24 +276,24 @@ export default function Hero() {
       observer.disconnect();
       floatTweens.forEach((t) => t.kill());
     };
-  }, [reducedMotion]);
+  }, [enableHeroEffects]);
 
   return (
     <section ref={sectionRef} id="home" className={styles.hero}>
       {/* Three.js backgrounds — disabled on mobile for GPU savings */}
-      {!reducedMotion && !isMobile && (
+      {enableHeroEffects && (
         <ErrorBoundary>
           <HeroBackground onCanvasReady={handleBgCanvasReady} />
         </ErrorBoundary>
       )}
-      {!reducedMotion && !isMobile && (
+      {enableHeroEffects && (
         <ErrorBoundary>
           <FluidBackground backgroundCanvas={bgCanvas} />
         </ErrorBoundary>
       )}
 
       {/* Floating particles */}
-      {!reducedMotion && (
+      {enableHeroEffects && (
         <div
           ref={particlesRef}
           className={styles.particles}
@@ -312,7 +316,7 @@ export default function Hero() {
       )}
 
       {/* Cursor-responsive glow (hidden on low tier) */}
-      {gpuTier !== "low" && (
+      {enableHeroEffects && (
         <div ref={glowRef} className={styles.glow} aria-hidden="true" />
       )}
 

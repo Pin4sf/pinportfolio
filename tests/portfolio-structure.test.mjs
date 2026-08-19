@@ -11,6 +11,9 @@ const read = (relativePath) =>
 const portfolio = read("src/data/portfolio.ts");
 const page = read("src/app/page.tsx");
 const hero = read("src/app/components/sections/Hero.tsx");
+const clientShell = read("src/app/components/ClientShell.tsx");
+const reducedMotionHook = read("src/app/hooks/useReducedMotion.ts");
+const globals = read("src/app/globals.scss");
 const writing = read("src/app/components/sections/Writing.tsx");
 const writingStyles = read("src/app/components/sections/Writing.module.scss");
 const blogPost = read("src/app/writing/[slug]/BlogPost.tsx");
@@ -49,6 +52,53 @@ test("homepage is a short cinematic overview", () => {
     /<About \/>|<Timeline \/>|<SkillsExperience \/>|<SelectedWork \/>/,
   );
   assert.doesNotMatch(page, /SectionProgress/);
+});
+
+test("global visual utilities stay homepage-only", () => {
+  assert.match(clientShell, /usePathname/);
+  assert.match(clientShell, /const isHomepage = pathname === "\/"/);
+  assert.ok(
+    clientShell.indexOf("if (!isHomepage)") <
+      clientShell.indexOf("<GpuTierProvider>"),
+    "editorial routes should return before mounting GPU-tier visual utilities",
+  );
+});
+
+test("hero effects honor mobile, reduced-motion, and GPU-tier gates", () => {
+  assert.match(
+    hero,
+    /const enableHeroEffects =\s*!reducedMotion && !isMobile && gpuTier !== "low"/,
+  );
+  assert.match(
+    reducedMotionHook,
+    /useState\(\s*\(\) =>[\s\S]*matchMedia\("\(prefers-reduced-motion: reduce\)"\)/,
+  );
+});
+
+test("tertiary text meets AA contrast on the primary background", () => {
+  const parseToken = (name) => {
+    const match = globals.match(new RegExp(`${name}:\\s*(#[0-9a-f]{6})`, "i"));
+    assert.ok(match, `Missing ${name}`);
+    return [1, 3, 5].map((index) =>
+      Number.parseInt(match[1].slice(index, index + 2), 16),
+    );
+  };
+  const luminance = (rgb) => {
+    const channels = rgb.map((value) => {
+      const channel = value / 255;
+      return channel <= 0.04045
+        ? channel / 12.92
+        : ((channel + 0.055) / 1.055) ** 2.4;
+    });
+    return 0.2126 * channels[0] + 0.7152 * channels[1] + 0.0722 * channels[2];
+  };
+  const foreground = luminance(parseToken("--text-tertiary"));
+  const background = luminance(parseToken("--bg-primary"));
+  const ratio =
+    (Math.max(foreground, background) + 0.05) /
+    (Math.min(foreground, background) + 0.05);
+
+  assert.ok(ratio >= 4.5, `Tertiary text contrast is ${ratio.toFixed(2)}:1`);
 });
 
 test("homepage keeps a compact research-writing section", () => {
@@ -245,10 +295,7 @@ test("Waldo pins current system truth to its actual public data", () => {
     waldoCaseStudySource,
     /Kennel, a durable harness, and Waldo mobile are working internal foundations\. Their integration, external product behavior, and market validation remain open work\./,
   );
-  assert.match(
-    waldoCaseStudySource,
-    /slug: "waldo"[\s\S]*?role: "Founder"/,
-  );
+  assert.match(waldoCaseStudySource, /slug: "waldo"[\s\S]*?role: "Founder"/);
   assert.match(
     waldoCaseStudySource,
     /name: "Shivansh Fulper",\s*role: "Founder · AI systems & engineering"/,
