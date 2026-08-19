@@ -41,3 +41,12 @@ test("artifact date ranges omit invalid machine-readable dates", () => {
     /dateTime=\{isDateRange \? undefined : artifact\.date\}/,
   );
 });
+
+test("about route is candid, server-rendered, and source bounded", () => {
+  const source = read("src/app/about/page.tsx");
+  assert.doesNotMatch(source, /^"use client"/);
+  assert.match(source, /aboutPageData/);
+  assert.match(source, /compassPrinciples/);
+  assert.match(source, /personalInfluences/);
+  assert.doesNotMatch(source, /gsap|ScrollTrigger|TransitionLink/);
+});

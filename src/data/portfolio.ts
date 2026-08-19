@@ -237,8 +237,28 @@ export interface PersonalInfluence {
 export interface AboutPageData {
   eyebrow: string;
   title: string;
+  metadata: {
+    description: string;
+    openGraphDescription: string;
+  };
+  headerIntroduction: string;
   introduction: string[];
+  introductionLabel: string;
+  learningArtifactSlugs: string[];
+  learningArtifactsLabel: string;
+  influencesHeading: string;
+  influencesKicker: string;
+  principlesHeading: string;
+  principlesKicker: string;
+  longerHorizonHeading: string;
+  longerHorizonKicker: string;
   longerHorizon: string[];
+  longerHorizonArtifactSlugs: string[];
+  nowHeading: string;
+  nowKicker: string;
+  connectHeading: string;
+  connectKicker: string;
+  relatedArtifactsLabel: string;
   now: { date: string; body: string };
 }
 
@@ -1738,14 +1758,43 @@ export const personalInfluences: PersonalInfluence[] = [
 export const aboutPageData: AboutPageData = {
   eyebrow: "About",
   title: "A life spent following systems past their defaults.",
+  metadata: {
+    description:
+      "A candid account of Shivansh Fulper's path from early systems curiosity to persistent agents and a longer-term interest in physical AI.",
+    openGraphDescription:
+      "A candid account of systems curiosity, learning by building, and the longer horizon ahead.",
+  },
+  headerIntroduction:
+    "A candid account of the systems that first caught my attention, the work that keeps reshaping the questions, and the direction I am still learning toward.",
   introduction: [
     "The kid who wanted a Pokédex. I started coding at 12 to build one, then spent years jailbreaking phones, rooting devices, and customizing PCs. I was drawn less to novelty than to the question underneath: how does this system work, and how could it become more personal and useful?",
     "Learning by building. Smart Manufacturing gave me a physical-systems foundation; HackByte made technical community a responsibility; Project EKA and Qwen3 MoE took the questions into models; Atlan exposed the reality of agents in production; and Waldo is where I am testing what durable, user-owned agency can mean.",
   ],
+  introductionLabel: "Introduction",
+  learningArtifactSlugs: [
+    "smart-manufacturing",
+    "hackbyte",
+    "project-eka",
+    "atlan",
+    "waldo",
+  ],
+  learningArtifactsLabel: "The public record behind this chapter",
+  influencesHeading: "What keeps shaping the work",
+  influencesKicker: "01 / Influences",
+  principlesHeading: "A working compass",
+  principlesKicker: "02 / Principles",
+  longerHorizonHeading: "The world I keep moving toward",
+  longerHorizonKicker: "03 / Longer horizon",
   longerHorizon: [
     "The world I keep moving toward is one where agents meet physical environments. Smart Manufacturing left me attentive to uncertainty, latency, energy, safety, and irreversibility—the things software can make easy to forget.",
     "MIRAI-Setu deepened that interest through infrastructure, craft, and long time horizons across Japan. Physical AI is a direction I am studying, not a claim of current deployment or robotics expertise.",
   ],
+  longerHorizonArtifactSlugs: ["smart-manufacturing", "mirai-setu"],
+  nowHeading: "Now",
+  nowKicker: "04 /",
+  connectHeading: "Find me in public",
+  connectKicker: "05 / Contact",
+  relatedArtifactsLabel: "Related public artifacts",
   now: {
     date: "August 2026",
     body: "I am building Waldo, studying persistent agents and long-horizon evaluation, and looking to meet thoughtful builders and researchers working on how powerful systems can remain useful, legible, and on a person's side.",
