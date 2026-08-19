@@ -1,6 +1,10 @@
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
-import { caseStudies, getPublicArtifacts } from "@/data/portfolio";
+import {
+  caseStudies,
+  getPublicArtifacts,
+  nowSectionData,
+} from "@/data/portfolio";
 import styles from "./Now.module.scss";
 
 export default function Now() {
@@ -19,8 +23,8 @@ export default function Now() {
     <section id="now" className={styles.section}>
       <div className={styles.grid}>
         <div className={styles.copy}>
-          <span className="section__label">Now</span>
-          <h2>Waldo is where the questions became a company.</h2>
+          <span className="section__label">{nowSectionData.eyebrow}</span>
+          <h2>{nowSectionData.title}</h2>
           <p>{waldo.summary}</p>
           <p>{waldo.caption}</p>
           <p className={styles.status}>
@@ -45,8 +49,7 @@ export default function Now() {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                {founderVideo.cta}{" "}
-                <ArrowUpRight size={15} aria-hidden="true" />
+                {founderVideo.cta} <ArrowUpRight size={15} aria-hidden="true" />
               </a>
             )}
           </div>

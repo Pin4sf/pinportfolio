@@ -399,6 +399,11 @@ export const heroData: HeroData = {
   ],
 };
 
+export const nowSectionData = {
+  eyebrow: "Now",
+  title: "Waldo",
+};
+
 // ==================== ABOUT ====================
 
 export const aboutData: AboutData = {
@@ -1918,7 +1923,10 @@ export function getPublicArtifacts(
     if (artifact.publicationState !== "public") return false;
     if (filter.theme && artifact.theme !== filter.theme) return false;
     if (filter.kind && artifact.kind !== filter.kind) return false;
-    if (filter.featured !== undefined && artifact.featured !== filter.featured) {
+    if (
+      filter.featured !== undefined &&
+      artifact.featured !== filter.featured
+    ) {
       return false;
     }
     return true;
