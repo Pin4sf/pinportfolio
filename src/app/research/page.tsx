@@ -75,8 +75,11 @@ export default function ResearchPage() {
               posts.find((post) => `/writing/${post.slug}` === artifact.href),
             )
             .filter((post) => post !== undefined);
+          const relatedWritingHrefs = new Set(
+            relatedPosts.map((post) => `/writing/${post.slug}`),
+          );
           const supportingArtifacts = clusterArtifacts.filter(
-            (artifact) => artifact.kind !== "writing",
+            (artifact) => !relatedWritingHrefs.has(artifact.href),
           );
 
           return (

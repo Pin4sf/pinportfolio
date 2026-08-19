@@ -83,3 +83,14 @@ test("artifact lists can render subordinate headings on research clusters", () =
   assert.match(artifactList, /<Heading>\{artifact\.title\}<\/Heading>/);
   assert.match(research, /headingLevel="h3"/);
 });
+
+test("research does not repeat related writing as a supporting artifact", () => {
+  const source = read("src/app/research/page.tsx");
+  assert.match(source, /const relatedWritingHrefs = new Set/);
+  assert.match(
+    source,
+    /relatedPosts\.map\(\(post\) => `\/writing\/\$\{post\.slug\}`\)/,
+  );
+  assert.match(source, /!relatedWritingHrefs\.has\(artifact\.href\)/);
+  assert.doesNotMatch(source, /artifact\.kind !== "writing"/);
+});
