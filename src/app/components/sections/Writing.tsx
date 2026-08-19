@@ -1,17 +1,7 @@
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import type { PostMeta } from "@/lib/mdx";
-import { researchAreas } from "@/data/portfolio";
 import styles from "./Writing.module.scss";
-
-const featuredResearch = researchAreas.filter((area) =>
-  [
-    "Agent runtimes and harnesses",
-    "Persistent memory and current state",
-    "Long-horizon outcome evaluation",
-    "Agents in the world",
-  ].includes(area.title),
-);
 
 const categoryLabels: Record<string, string> = {
   research: "Research",
@@ -27,34 +17,14 @@ interface WritingProps {
 export default function Writing({ featuredPosts }: WritingProps) {
   return (
     <section id="research" className={styles.section}>
-      <div className={styles.researchGrid}>
-        <header className={styles.intro}>
-          <span className="section__label">Research + Writing</span>
-          <h2>What I’m trying to understand.</h2>
-          <p>
-            I’m interested in what happens after a model becomes a system: what
-            it remembers, how it acts, where authority lives, and how we know
-            its work changed anything real.
-          </p>
-        </header>
-
-        <ol className={styles.areas}>
-          {featuredResearch.map((area, index) => (
-            <li key={area.title}>
-              <span>{String(index + 1).padStart(2, "0")}</span>
-              <div>
-                <h3>{area.title}</h3>
-                <p>{area.summary}</p>
-              </div>
-            </li>
-          ))}
-        </ol>
-      </div>
-
       <div className={styles.notesHeader}>
         <div>
-          <span>Research notes</span>
-          <h3>Ideas worked out in public.</h3>
+          <span className="section__label">Research + Writing</span>
+          <h2>Notes from the work.</h2>
+          <p>
+            Research questions usually arrive after something breaks, surprises
+            me, or refuses to fit the model I had in my head.
+          </p>
         </div>
         <Link href="/writing" className={styles.allWriting}>
           View all writing <ArrowUpRight size={14} aria-hidden="true" />
@@ -73,7 +43,7 @@ export default function Writing({ featuredPosts }: WritingProps) {
               <span>{categoryLabels[post.category] ?? post.category}</span>
               <span>{post.readingTime} min</span>
             </div>
-            <h4>{post.title}</h4>
+            <h3>{post.title}</h3>
             <p>{post.description}</p>
             <span className={styles.readLink}>
               Read essay <ArrowUpRight size={14} aria-hidden="true" />

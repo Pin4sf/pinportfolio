@@ -1,0 +1,107 @@
+.section {
+  padding: var(--section-py) var(--section-px);
+  background: var(--bg-primary);
+}
+
+.header,
+.list {
+  max-width: 88rem;
+  margin-inline: auto;
+}
+
+.header {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 1.5rem;
+  margin-bottom: clamp(2.5rem, 5vw, 5rem);
+
+  h2 {
+    max-width: 52rem;
+    margin: 1rem 0 0;
+    grid-column: 1 / -1;
+    font-family: var(--font-display);
+    font-size: clamp(3.3rem, 7vw, 7rem);
+    font-weight: 400;
+    line-height: 0.92;
+    letter-spacing: -0.05em;
+    color: var(--text-heading);
+  }
+
+  @media (max-width: 600px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.allLink {
+  display: inline-flex;
+  grid-column: 2;
+  align-items: center;
+  gap: 0.35rem;
+  align-self: end;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--text-primary);
+  text-decoration: none;
+  transition: color 0.2s ease, transform 0.2s ease;
+
+  &:hover,
+  &:focus-visible {
+    color: var(--accent);
+    transform: translateX(3px);
+  }
+
+  @media (max-width: 600px) {
+    grid-column: 1;
+  }
+}
+
+.list { border-top: 1px solid var(--border-subtle); }
+
+.chapter {
+  display: grid;
+  grid-template-columns: minmax(4rem, 0.15fr) minmax(0, 1fr);
+  gap: clamp(1.5rem, 5vw, 5rem);
+  padding: clamp(1.5rem, 3vw, 2.5rem) 0;
+  border-bottom: 1px solid var(--border-subtle);
+
+  @media (max-width: 600px) {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+
+  h3 {
+    margin: 0.35rem 0 0.75rem;
+    font-family: var(--font-display);
+    font-size: clamp(1.8rem, 3.4vw, 3.25rem);
+    font-weight: 400;
+    line-height: 1;
+    color: var(--text-heading);
+  }
+}
+
+.year,
+.organization {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  line-height: 1.5;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.year { color: var(--accent); }
+.organization { color: var(--text-tertiary); }
+
+.description,
+.question {
+  max-width: 46rem;
+  margin: 0;
+  line-height: 1.65;
+  color: var(--text-secondary);
+}
+
+.question {
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  color: var(--text-tertiary);
+}

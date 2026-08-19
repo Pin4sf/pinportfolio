@@ -1,15 +1,14 @@
 import dynamic from "next/dynamic";
 import {
-  heroData,
-  aboutData,
-  getPublicCaseStudies,
-  skillCategories,
   contactData,
+  getPublicArtifacts,
+  heroData,
   siteConfig,
+  timelineData,
 } from "@/data/portfolio";
 import { getFeaturedPosts } from "@/lib/mdx";
 
-// Dynamic imports for client components — avoid SSR for GSAP/Three.js
+// Dynamic imports keep the cinematic client surfaces out of initial SSR.
 const SmoothScroll = dynamic(() => import("./components/SmoothScroll"), {
   ssr: false,
 });
@@ -19,23 +18,24 @@ const Header = dynamic(() => import("./components/layout/Header"), {
 const Hero = dynamic(() => import("./components/sections/Hero"), {
   ssr: false,
 });
-const SelectedWork = dynamic(
-  () => import("./components/sections/SelectedWork"),
-  { ssr: false },
-);
-const About = dynamic(() => import("./components/sections/About"), {
+const Now = dynamic(() => import("./components/sections/Now"), {
   ssr: false,
 });
+const CuriosityThread = dynamic(
+  () => import("./components/sections/CuriosityThread"),
+  { ssr: false },
+);
 const Writing = dynamic(() => import("./components/sections/Writing"), {
   ssr: false,
 });
-const SkillsExperience = dynamic(
-  () => import("./components/sections/SkillsExperience"),
+const SelectedChapters = dynamic(
+  () => import("./components/sections/SelectedChapters"),
   { ssr: false },
 );
-const Timeline = dynamic(() => import("./components/sections/Timeline"), {
-  ssr: false,
-});
+const PersonalPreview = dynamic(
+  () => import("./components/sections/PersonalPreview"),
+  { ssr: false },
+);
 const Contact = dynamic(() => import("./components/sections/Contact"), {
   ssr: false,
 });
@@ -47,13 +47,30 @@ const SectionProgress = dynamic(
   { ssr: false },
 );
 
+const chapterOrganizations = [
+  "Atlan",
+  "Soket AI Labs",
+  "MIRAI-Setu",
+  "HackByte",
+  "IIITDM Jabalpur",
+];
+
 /**
  * SSR content block for search engine crawlers.
- * All interactive sections use ssr:false (required for Three.js/GSAP),
- * so this provides indexable content in the initial HTML response.
- * Visually hidden — replaced by dynamic components once JS loads.
+ * The visual sections use ssr:false, so this preserves meaningful initial HTML.
  */
-function SeoContent() {
+function SeoContent({
+  featuredPosts,
+}: {
+  featuredPosts: ReturnType<typeof getFeaturedPosts>;
+}) {
+  const artifacts = getPublicArtifacts({ featured: true });
+  const chapters = timelineData.filter((entry) =>
+    chapterOrganizations.some((organization) =>
+      entry.organization.includes(organization),
+    ),
+  );
+
   return (
     <aside
       className="sr-only"
@@ -65,47 +82,43 @@ function SeoContent() {
       </h1>
       <p>{siteConfig.description}</p>
 
-      <h2>About</h2>
-      {aboutData.bio.split("\n\n").map((p, i) => (
-        <p key={i}>{p}</p>
+      <h2>Public work</h2>
+      {artifacts.map((artifact) => (
+        <article key={artifact.slug}>
+          <h3>{artifact.title}</h3>
+          <p>{artifact.summary}</p>
+          <a href={artifact.href}>{artifact.title}</a>
+        </article>
       ))}
-      <ul>
-        {aboutData.facts.map((f) => (
-          <li key={f.label}>
-            {f.label}: {f.value}
-          </li>
-        ))}
-      </ul>
 
-      <h2>Selected Work</h2>
-      {getPublicCaseStudies()
-        .filter((project) => project.slug === "waldo")
-        .map((project) => (
-          <article key={project.slug}>
-            <h3>{project.name}</h3>
-            <p>{project.role}</p>
-            <p>{project.tagline}</p>
-          </article>
-        ))}
-
-      <h2>Skills</h2>
-      {skillCategories.map((cat) => (
-        <div key={cat.name}>
-          <h3>{cat.name}</h3>
-          <ul>
-            {cat.skills.map((s) => (
-              <li key={s.name}>{s.name}</li>
-            ))}
-          </ul>
-        </div>
+      <h2>Selected chapters</h2>
+      {chapters.map((chapter) => (
+        <article key={`${chapter.year}-${chapter.organization}`}>
+          <h3>{chapter.organization}</h3>
+          <p>{chapter.description}</p>
+          {chapter.nextQuestion && <p>{chapter.nextQuestion}</p>}
+        </article>
       ))}
+
+      <h2>Writing</h2>
+      {featuredPosts.map((post) => (
+        <article key={post.slug}>
+          <h3>{post.title}</h3>
+          <p>{post.description}</p>
+          <a href={`/writing/${post.slug}`}>Read {post.title}</a>
+        </article>
+      ))}
+
+      <p>
+        <a href="/about">More about Shivansh Fulper</a>
+      </p>
 
       <h2>Contact</h2>
       <p>Email: {contactData.email}</p>
       <p>Location: {contactData.location}</p>
-      {contactData.socials.map((s) => (
-        <a key={s.name} href={s.url}>
-          {s.name}
+      {contactData.socials.map((social) => (
+        <a key={social.name} href={social.url}>
+          {social.name}
         </a>
       ))}
     </aside>
@@ -117,17 +130,17 @@ export default function Page() {
 
   return (
     <>
-      <SeoContent />
+      <SeoContent featuredPosts={featuredPosts} />
       <Header />
       <SectionProgress />
       <SmoothScroll>
         <main id="main-content">
           <Hero />
-          <SelectedWork />
-          <About />
+          <Now />
+          <CuriosityThread />
           <Writing featuredPosts={featuredPosts} />
-          <Timeline />
-          <SkillsExperience />
+          <SelectedChapters />
+          <PersonalPreview />
           <Contact />
         </main>
         <Footer />

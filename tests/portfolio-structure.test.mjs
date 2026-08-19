@@ -11,7 +11,6 @@ const read = (relativePath) =>
 const portfolio = read("src/data/portfolio.ts");
 const page = read("src/app/page.tsx");
 const hero = read("src/app/components/sections/Hero.tsx");
-const selectedWork = read("src/app/components/sections/SelectedWork.tsx");
 const writing = read("src/app/components/sections/Writing.tsx");
 const writingStyles = read("src/app/components/sections/Writing.module.scss");
 const blogPost = read("src/app/writing/[slug]/BlogPost.tsx");
@@ -24,35 +23,33 @@ test("homepage restores the personal founder introduction", () => {
   assert.doesNotMatch(hero, /heroData\.actions|actionPrimary/i);
 });
 
-test("homepage uses the lighter personal flow", () => {
-  assert.doesNotMatch(page, /Trajectory|ResearchAgenda|LoadingScreen/);
-  assert.doesNotMatch(hero, /delay:\s*1\.8/);
-  assert.match(selectedWork, /getVentures/);
-  assert.doesNotMatch(
-    selectedWork,
-    /Evidence status|observableResult|questions\[0\]/,
-  );
-
-  const heroIndex = page.indexOf("<Hero />");
-  const workIndex = page.indexOf("<SelectedWork />");
-  const aboutIndex = page.indexOf("<About />");
-  const writingIndex = page.indexOf(
+test("homepage is a short cinematic overview", () => {
+  for (const component of [
+    "<Hero />",
+    "<Now />",
+    "<CuriosityThread />",
     "<Writing featuredPosts={featuredPosts} />",
-  );
-  assert.ok(
-    heroIndex < workIndex &&
-      workIndex < aboutIndex &&
-      aboutIndex < writingIndex,
+    "<SelectedChapters />",
+    "<PersonalPreview />",
+    "<Contact />",
+  ]) {
+    assert.match(page, new RegExp(component.replace(/[<>/]/g, "\\$&")));
+  }
+  assert.doesNotMatch(
+    page,
+    /<About \/>|<Timeline \/>|<SkillsExperience \/>|<SelectedWork \/>/,
   );
 });
 
-test("homepage keeps one venture and a compact research-writing section", () => {
+test("homepage keeps a compact research-writing section", () => {
   assert.match(portfolio, /Research \+ Writing/);
-  assert.match(selectedWork, /getVentures/);
-  assert.match(portfolio, /getVentures[\s\S]*slug === "waldo"/);
   assert.doesNotMatch(hero, /EcoFresh|Co-founder/i);
-  assert.match(writing, /What I’m trying to understand/i);
-  assert.match(writing, /Research notes/i);
+  assert.match(writing, /Notes from the work/i);
+  assert.match(
+    writing,
+    /Research questions usually arrive after something breaks/i,
+  );
+  assert.doesNotMatch(writing, /researchAreas/);
 });
 
 test("article reading stays server-rendered and avoids heavy card effects", () => {
