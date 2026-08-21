@@ -6,25 +6,41 @@ import ts from "typescript";
 
 const root = process.cwd();
 const read = (file) => fs.readFileSync(path.join(root, file), "utf8");
+const editorialRouteEntries = [
+  "src/app/about/page.tsx",
+  "src/app/research/page.tsx",
+  "src/app/experience/page.tsx",
+  "src/app/reading/page.tsx",
+  "src/app/writing/page.tsx",
+  "src/app/writing/[slug]/page.tsx",
+  "src/app/work/[slug]/page.tsx",
+];
 
-function sourceFile(file) {
+function parseSource(source, file = "fixture.tsx") {
   return ts.createSourceFile(
     file,
-    read(file),
+    source,
     ts.ScriptTarget.Latest,
     true,
     file.endsWith(".tsx") ? ts.ScriptKind.TSX : ts.ScriptKind.TS,
   );
 }
 
+function sourceFile(file) {
+  return parseSource(read(file), file);
+}
+
 function hasClientDirective(file) {
-  const [first] = sourceFile(file).statements;
-  return Boolean(
-    first &&
-    ts.isExpressionStatement(first) &&
-    ts.isStringLiteral(first.expression) &&
-    first.expression.text === "use client",
-  );
+  for (const statement of sourceFile(file).statements) {
+    if (
+      !ts.isExpressionStatement(statement) ||
+      !ts.isStringLiteral(statement.expression)
+    ) {
+      return false;
+    }
+    if (statement.expression.text === "use client") return true;
+  }
+  return false;
 }
 
 function localDependencies(file) {
@@ -67,6 +83,14 @@ function dependencyClosure(entry) {
   }
 
   return [...visited];
+}
+
+function editorialDependencyClosure() {
+  return [
+    ...new Set(
+      editorialRouteEntries.flatMap((entry) => dependencyClosure(entry)),
+    ),
+  ];
 }
 
 function runtimeViolations(file) {
@@ -138,8 +162,15 @@ function scssBlocks(source, selector) {
   while (cursor < clean.length) {
     const start = clean.indexOf(selector, cursor);
     if (start === -1) break;
-    const open = clean.indexOf("{", start + selector.length);
-    if (open === -1) break;
+    const before = clean[start - 1];
+    let open = start + selector.length;
+    while (/\s/.test(clean[open] ?? "")) open += 1;
+    const exactStart =
+      start === 0 || /[\s{},]/.test(before) || before === undefined;
+    if (!exactStart || clean[open] !== "{") {
+      cursor = start + selector.length;
+      continue;
+    }
 
     let depth = 1;
     let end = open + 1;
@@ -154,6 +185,49 @@ function scssBlocks(source, selector) {
   }
 
   return blocks;
+}
+
+function archiveUsesFormatHelpers(source) {
+  const expectedCalls = new Map([
+    ["availableFormats", ["getAvailableFormats", ["posts"]]],
+    ["filteredPosts", ["filterPostsByFormat", ["posts", "activeFormat"]]],
+  ]);
+  const matches = new Set();
+
+  function visit(node) {
+    if (
+      ts.isVariableDeclaration(node) &&
+      ts.isIdentifier(node.name) &&
+      node.initializer &&
+      ts.isCallExpression(node.initializer) &&
+      ts.isIdentifier(node.initializer.expression)
+    ) {
+      const expected = expectedCalls.get(node.name.text);
+      const argumentsList = node.initializer.arguments;
+      if (
+        expected &&
+        node.initializer.expression.text === expected[0] &&
+        argumentsList.length === expected[1].length &&
+        argumentsList.every(
+          (argument, index) =>
+            ts.isIdentifier(argument) && argument.text === expected[1][index],
+        )
+      ) {
+        matches.add(node.name.text);
+      }
+    }
+    ts.forEachChild(node, visit);
+  }
+
+  visit(parseSource(source));
+  return matches.size === expectedCalls.size;
+}
+
+function animationDeclarations(source) {
+  const clean = source.replace(/\/\*[\s\S]*?\*\//g, "");
+  return [
+    ...clean.matchAll(/(?:^|[;{\n])\s*(animation(?:-[a-z-]+)?)\s*:/gim),
+  ].map((match) => match[1].toLowerCase());
 }
 
 async function importTypeScriptModule(file) {
@@ -189,8 +263,9 @@ test("case study navigation stays direct without a transition provider", () => {
 
 test("the case-study dependency graph stays server-rendered and static", () => {
   const files = dependencyClosure("src/app/work/[slug]/page.tsx");
-  const clientFiles = files.filter(hasClientDirective);
-  const violations = files.flatMap(runtimeViolations);
+  const sourceFiles = files.filter((file) => /\.(?:ts|tsx)$/.test(file));
+  const clientFiles = sourceFiles.filter(hasClientDirective);
+  const violations = sourceFiles.flatMap(runtimeViolations);
 
   assert.deepEqual(clientFiles, []);
   assert.deepEqual(violations, []);
@@ -198,24 +273,19 @@ test("the case-study dependency graph stays server-rendered and static", () => {
   assert.ok(files.includes("src/app/components/editorial/EditorialFooter.tsx"));
 });
 
+test("directive prologues expose transitive client dependencies", () => {
+  const files = dependencyClosure("tests/fixtures/editorial-route/page.tsx");
+  assert.deepEqual(files.filter(hasClientDirective), [
+    "tests/fixtures/outside/HiddenClient.tsx",
+  ]);
+});
+
 test("archive filtering is the only client island in editorial routes", () => {
-  const directories = [
-    "src/app/about",
-    "src/app/research",
-    "src/app/experience",
-    "src/app/reading",
-    "src/app/writing",
-    "src/app/work",
-    "src/app/components/editorial",
-  ];
-  const files = directories.flatMap((directory) =>
-    fs
-      .readdirSync(path.join(root, directory), { recursive: true })
-      .filter((name) => /\.(?:ts|tsx)$/.test(name))
-      .map((name) => path.join(directory, name)),
+  const files = editorialDependencyClosure().filter((file) =>
+    /\.(?:ts|tsx)$/.test(file),
   );
 
-  assert.deepEqual(files.filter(hasClientDirective), [
+  assert.deepEqual(files.filter(hasClientDirective).sort(), [
     "src/app/writing/WritingArchive.tsx",
   ]);
 });
@@ -497,6 +567,41 @@ test("editorial shell and routes apply the real static texture without theatre",
   assert.match(article, /max-width:\s*68ch/);
 });
 
+test("SCSS root matching rejects selector prefixes", () => {
+  assert.deepEqual(
+    scssBlocks('.pageShell { background: url("/noisetexture.jpg"); }', ".page"),
+    [],
+  );
+});
+
+test("animation scanning rejects renamed shorthand and name declarations", () => {
+  const mutation = `
+    .page { animation: shimmer 1s linear infinite; }
+    .article { animation-name: drift; }
+    /* .ignored { animation: commented 1s; } */
+  `;
+  assert.deepEqual(animationDeclarations(mutation), [
+    "animation",
+    "animation-name",
+  ]);
+});
+
+test("editorial route dependency styles do not declare animations", () => {
+  const styles = editorialDependencyClosure().filter((file) =>
+    file.endsWith(".scss"),
+  );
+  const allowlist = new Map();
+  const violations = styles.flatMap((file) => {
+    const allowed = allowlist.get(file) ?? new Set();
+    return animationDeclarations(read(file))
+      .filter((property) => !allowed.has(property))
+      .map((property) => `${file}: ${property}`);
+  });
+
+  assert.ok(styles.length > 0, "editorial route styles were not traversed");
+  assert.deepEqual(violations, []);
+});
+
 test("writing derives only available formats and filters real post fixtures", async () => {
   const modulePath = path.join(root, "src/lib/postFormats.ts");
   assert.ok(fs.existsSync(modulePath), "missing shared post-format module");
@@ -524,9 +629,18 @@ test("writing derives only available formats and filters real post fixtures", as
   });
 
   const archive = read("src/app/writing/WritingArchive.tsx");
-  assert.match(archive, /getAvailableFormats\(posts\)/);
-  assert.match(archive, /filterPostsByFormat\(posts, activeFormat\)/);
+  assert.equal(archiveUsesFormatHelpers(archive), true);
   assert.doesNotMatch(archive, /No posts in this category yet/);
+});
+
+test("archive helper checks reject dead comment mutations", () => {
+  const mutation = `
+    const availableFormats = [];
+    const filteredPosts = posts;
+    // getAvailableFormats(posts)
+    // filterPostsByFormat(posts, activeFormat)
+  `;
+  assert.equal(archiveUsesFormatHelpers(mutation), false);
 });
 
 test("article and archive share one server-safe format vocabulary", () => {
