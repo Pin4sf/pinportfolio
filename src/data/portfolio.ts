@@ -264,6 +264,38 @@ export interface PersonalInfluence {
   publicationState: PublicationState;
 }
 
+export type ReadingKind =
+  | "book"
+  | "paper"
+  | "essay"
+  | "blog"
+  | "film"
+  | "anime"
+  | "design"
+  | "place";
+
+export interface ReadingEntry {
+  slug: string;
+  title: string;
+  creator: string;
+  kind: ReadingKind;
+  annotation: string;
+  lastingQuestion: string;
+  connection?: string;
+  externalUrl?: string;
+  date?: string;
+  publicationState: PublicationState;
+  image?: string;
+  imageAlt?: string;
+}
+
+export interface ReadingPageData {
+  eyebrow: "Reading";
+  title: string;
+  introduction: string;
+  metadata: { description: string; openGraphDescription: string };
+}
+
 export interface AboutPageData {
   eyebrow: string;
   title: string;
@@ -1796,28 +1828,60 @@ export const personalInfluences: PersonalInfluence[] = [
       "I care about what deserves motion, what should remain quiet, and how defaults can make powerful systems easier to trust.",
     publicationState: "public",
   },
+];
+
+export const readingEntries: ReadingEntry[] = [
   {
-    slug: "unconfirmed-book",
-    title: "",
-    kind: "book",
-    summary: "Title and personal annotation await confirmation.",
-    publicationState: "draft",
+    slug: "mirai-setu-craft",
+    title: "Japan, craft, and long horizons",
+    creator: "MIRAI-Setu",
+    kind: "place",
+    annotation:
+      "MIRAI-Setu made infrastructure, safety, patience, and everyday attention to craft feel like engineering values rather than abstractions.",
+    lastingQuestion:
+      "What makes a technical system worthy of trust over decades rather than impressive for a launch?",
+    externalUrl: "/writing/mirai-setu-japan",
+    date: "2025-10",
+    publicationState: "public",
   },
   {
-    slug: "unconfirmed-film",
-    title: "",
-    kind: "film",
-    summary: "Title and personal annotation await confirmation.",
-    publicationState: "draft",
+    slug: "design-engineering",
+    title: "Design as quieter engineering",
+    creator: "Shivansh Fulper",
+    kind: "design",
+    annotation:
+      "I care about what deserves motion, what should remain quiet, and how defaults can make powerful systems easier to trust.",
+    lastingQuestion:
+      "How can design make powerful systems easier to trust without hiding their complexity?",
+    publicationState: "public",
   },
   {
-    slug: "unconfirmed-anime",
-    title: "",
-    kind: "anime",
-    summary: "Title and personal annotation await confirmation.",
-    publicationState: "draft",
+    slug: "hackbyte-community",
+    title: "Making technical depth inviting",
+    creator: "HackByte community",
+    kind: "design",
+    annotation:
+      "HackByte made community-building concrete: invite people into serious technical work without lowering the standard.",
+    lastingQuestion:
+      "How do you make technical depth inviting without lowering the standard?",
+    externalUrl: "https://www.hackbyte.in/",
+    date: "2023-2025",
+    publicationState: "public",
   },
 ];
+
+export const readingPageData: ReadingPageData = {
+  eyebrow: "Reading",
+  title: "Notes that keep changing the work.",
+  introduction:
+    "A small, public record of places, communities, and design questions that continue to shape how I build.",
+  metadata: {
+    description:
+      "A public reading record of the places, communities, and design questions shaping Shivansh Fulper's work.",
+    openGraphDescription:
+      "Places, communities, and design questions that continue to shape the work.",
+  },
+};
 
 export const aboutPageData: AboutPageData = {
   eyebrow: "About",
@@ -1931,6 +1995,16 @@ export function getPublicArtifacts(
     }
     return true;
   });
+}
+
+export function getPublicReadingEntries(limit?: number): ReadingEntry[] {
+  const entries = readingEntries.filter(
+    (entry) =>
+      entry.publicationState === "public" &&
+      entry.title.trim().length > 0 &&
+      entry.annotation.trim().length > 0,
+  );
+  return limit === undefined ? entries : entries.slice(0, limit);
 }
 
 export function getVentures(): CaseStudy[] {

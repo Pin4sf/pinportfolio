@@ -11,11 +11,41 @@ export type PostCategory =
   | "founder-note"
   | "historical";
 
+export type PostFormat =
+  | "essay"
+  | "research-note"
+  | "field-note"
+  | "explainer"
+  | "book-chapter"
+  | "course-lesson";
+
+export type PostPublicationState =
+  | "public"
+  | "draft"
+  | "historical"
+  | "excluded";
+
 const POST_CATEGORIES = new Set<PostCategory>([
   "research",
   "field-note",
   "founder-note",
   "historical",
+]);
+
+const POST_FORMATS = new Set<PostFormat>([
+  "essay",
+  "research-note",
+  "field-note",
+  "explainer",
+  "book-chapter",
+  "course-lesson",
+]);
+
+const POST_PUBLICATION_STATES = new Set<PostPublicationState>([
+  "public",
+  "draft",
+  "historical",
+  "excluded",
 ]);
 
 export interface PostMeta {
@@ -24,6 +54,8 @@ export interface PostMeta {
   date: string;
   revised?: string;
   category: PostCategory;
+  format: PostFormat;
+  publicationState: PostPublicationState;
   description: string;
   featured: boolean;
   evidenceStatus?: "observed" | "derived" | "hypothesis" | "historical";
@@ -32,6 +64,45 @@ export interface PostMeta {
 
 export interface Post extends PostMeta {
   content: string;
+}
+
+function parsePostMeta(
+  slug: string,
+  filename: string,
+  data: Record<string, unknown>,
+  content: string,
+): PostMeta {
+  const category = data.category as PostCategory;
+  if (!POST_CATEGORIES.has(category)) {
+    throw new Error(`Invalid writing category "${data.category}" in ${filename}`);
+  }
+
+  const format = data.format as PostFormat;
+  if (!POST_FORMATS.has(format)) {
+    throw new Error(`Invalid writing format "${data.format}" in ${filename}`);
+  }
+
+  const publicationState = data.publicationState as PostPublicationState;
+  if (!POST_PUBLICATION_STATES.has(publicationState)) {
+    throw new Error(
+      `Invalid writing publication state "${data.publicationState}" in ${filename}`,
+    );
+  }
+
+  const stats = readingTime(content);
+  return {
+    slug,
+    title: (data.title as string) || slug,
+    date: (data.date as string) || new Date().toISOString(),
+    revised: data.revised as string | undefined,
+    category,
+    format,
+    publicationState,
+    description: (data.description as string) || "",
+    featured: (data.featured as boolean) || false,
+    evidenceStatus: data.evidenceStatus as PostMeta["evidenceStatus"],
+    readingTime: Math.ceil(stats.minutes),
+  };
 }
 
 export function getAllPosts(): PostMeta[] {
@@ -48,29 +119,10 @@ export function getAllPosts(): PostMeta[] {
     const fullPath = path.join(contentDirectory, filename);
     const fileContents = fs.readFileSync(fullPath, "utf8");
     const { data, content } = matter(fileContents);
-    const stats = readingTime(content);
-
-    const category = data.category as PostCategory;
-    if (!POST_CATEGORIES.has(category)) {
-      throw new Error(
-        `Invalid writing category "${data.category}" in ${filename}`,
-      );
-    }
-
-    return {
-      slug,
-      title: data.title || slug,
-      date: data.date || new Date().toISOString(),
-      revised: data.revised,
-      category,
-      description: data.description || "",
-      featured: data.featured || false,
-      evidenceStatus: data.evidenceStatus,
-      readingTime: Math.ceil(stats.minutes),
-    } as PostMeta;
+    return parsePostMeta(slug, filename, data, content);
   });
 
-  return posts.sort(
+  return posts.filter((post) => post.publicationState === "public").sort(
     (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
   );
 }
@@ -84,22 +136,14 @@ export function getPostBySlug(slug: string): Post | null {
 
   const fileContents = fs.readFileSync(fullPath, "utf8");
   const { data, content } = matter(fileContents);
-  const stats = readingTime(content);
-  const category = data.category as PostCategory;
-  if (!POST_CATEGORIES.has(category)) {
-    throw new Error(`Invalid writing category "${data.category}" in ${slug}.mdx`);
+  const meta = parsePostMeta(slug, `${slug}.mdx`, data, content);
+
+  if (meta.publicationState !== "public") {
+    return null;
   }
 
   return {
-    slug,
-    title: data.title || slug,
-    date: data.date || new Date().toISOString(),
-    revised: data.revised,
-    category,
-    description: data.description || "",
-    featured: data.featured || false,
-    evidenceStatus: data.evidenceStatus,
-    readingTime: Math.ceil(stats.minutes),
+    ...meta,
     content,
   };
 }
