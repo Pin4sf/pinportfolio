@@ -13,6 +13,7 @@ export interface NavItem {
 }
 
 export interface HeroData {
+  eyebrow: "Founder + AI systems researcher";
   name: string;
   tagline: string;
   subtitle: string;
@@ -153,6 +154,7 @@ export interface ContactData {
 }
 
 export interface TimelineEntry {
+  slug: string;
   year: string;
   title: string;
   organization: string;
@@ -282,11 +284,16 @@ export interface ReadingEntry {
   annotation: string;
   lastingQuestion: string;
   connection?: string;
-  externalUrl?: string;
+  source?: ReadingSource;
   date?: string;
   publicationState: PublicationState;
   image?: string;
   imageAlt?: string;
+}
+
+export interface ReadingSource {
+  kind: "internal" | "external";
+  href: string;
 }
 
 export interface ReadingPageData {
@@ -319,7 +326,8 @@ export interface HomepageData {
   chapters: {
     eyebrow: string;
     title: string;
-    organizationNames: readonly string[];
+    timelineSlugs: readonly string[];
+    evidenceLabel: string;
     nextQuestionLabel: string;
     cta: { label: string; href: "/experience" };
   };
@@ -447,6 +455,7 @@ export const navItems: NavItem[] = [
 // ==================== HERO ====================
 
 export const heroData: HeroData = {
+  eyebrow: "Founder + AI systems researcher",
   name: "Shivansh Fulper",
   tagline: "I’m building the agent that stays on your side.",
   subtitle:
@@ -533,13 +542,14 @@ export const homepageData = {
   chapters: {
     eyebrow: "Selected chapters",
     title: "The work that changed the next question.",
-    organizationNames: [
-      "Atlan",
-      "Soket AI Labs",
-      "MIRAI-Setu",
-      "HackByte",
-      "IIITDM Jabalpur",
+    timelineSlugs: [
+      "atlan",
+      "project-eka",
+      "mirai-setu",
+      "hackbyte",
+      "smart-manufacturing",
     ],
+    evidenceLabel: "Bounded evidence",
     nextQuestionLabel: "Next question",
     cta: { label: "See the full experience", href: "/experience" },
   },
@@ -1522,6 +1532,7 @@ export const experiencePageData: ExperiencePageData = {
 
 export const timelineData: TimelineEntry[] = [
   {
+    slug: "waldo",
     year: "2026",
     title: "Founder",
     organization: "Waldo",
@@ -1536,6 +1547,7 @@ export const timelineData: TimelineEntry[] = [
       "Can one personal relationship preserve intent and evidence across agents while reducing what the person must carry?",
   },
   {
+    slug: "atlan",
     year: "2026",
     title: "FDE & AI Engineer Intern",
     organization: "Atlan",
@@ -1550,6 +1562,7 @@ export const timelineData: TimelineEntry[] = [
       "What does it take to know that an agent's finished run actually resolved the human outcome?",
   },
   {
+    slug: "project-eka",
     year: "2025",
     title: "MTS Intern · LLM Pre-training",
     organization: "Soket AI Labs · Project EKA",
@@ -1571,6 +1584,7 @@ export const timelineData: TimelineEntry[] = [
     ],
   },
   {
+    slug: "mirai-setu",
     year: "2025",
     title: "MIRAI-Setu Participant",
     organization: "India–Japan Exchange",
@@ -1596,6 +1610,7 @@ export const timelineData: TimelineEntry[] = [
     ],
   },
   {
+    slug: "openfn-c4gt",
     year: "2024",
     title: "AI Engineer Intern",
     organization: "OpenFn (C4GT)",
@@ -1610,6 +1625,7 @@ export const timelineData: TimelineEntry[] = [
       "How do language models become dependable components inside systems with explicit schemas and consequences?",
   },
   {
+    slug: "hackbyte",
     year: "2023–25",
     title: "HackByte Lead Organiser",
     organization: "The Programming Club · IIITDM Jabalpur",
@@ -1631,6 +1647,7 @@ export const timelineData: TimelineEntry[] = [
     ],
   },
   {
+    slug: "smart-manufacturing",
     year: "2022",
     title: "B.Tech — Smart Manufacturing",
     organization: "IIITDM Jabalpur",
@@ -1965,7 +1982,7 @@ export const readingEntries: ReadingEntry[] = [
       "MIRAI-Setu made infrastructure, safety, patience, and everyday attention to craft feel like engineering values rather than abstractions.",
     lastingQuestion:
       "What makes a technical system worthy of trust over decades rather than impressive for a launch?",
-    externalUrl: "/writing/mirai-setu-japan",
+    source: { kind: "internal", href: "/writing/mirai-setu-japan" },
     date: "2025-10",
     publicationState: "public",
   },
@@ -1989,7 +2006,7 @@ export const readingEntries: ReadingEntry[] = [
       "HackByte made community-building concrete: invite people into serious technical work without lowering the standard.",
     lastingQuestion:
       "How do you make technical depth inviting without lowering the standard?",
-    externalUrl: "https://www.hackbyte.in/",
+    source: { kind: "external", href: "https://www.hackbyte.in/" },
     date: "2023-2025",
     publicationState: "public",
   },
@@ -2033,11 +2050,11 @@ export const aboutPageData: AboutPageData = {
   ],
   learningArtifactsLabel: "The public record behind this chapter",
   influencesHeading: "What keeps shaping the work",
-  influencesKicker: "01 / Influences",
+  influencesKicker: "03 / Influences",
   principlesHeading: "A working compass",
-  principlesKicker: "02 / Principles",
+  principlesKicker: "01 / Principles",
   longerHorizonHeading: "The world I keep moving toward",
-  longerHorizonKicker: "03 / Longer horizon",
+  longerHorizonKicker: "02 / Longer horizon",
   longerHorizon: [
     "The world I keep moving toward is one where agents meet physical environments. Smart Manufacturing left me attentive to uncertainty, latency, energy, safety, and irreversibility—the things software can make easy to forget.",
     "MIRAI-Setu deepened that interest through infrastructure, craft, and long time horizons across Japan. Physical AI is a direction I am studying, not a claim of current deployment or robotics expertise.",

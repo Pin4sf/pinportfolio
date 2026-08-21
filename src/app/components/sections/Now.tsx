@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
+import ExternalLink from "../ui/ExternalLink";
 import {
   caseStudies,
   getPublicArtifacts,
@@ -33,22 +34,16 @@ export default function Now() {
               {nowSectionData.links.caseStudy.label}{" "}
               <ArrowUpRight size={15} aria-hidden="true" />
             </Link>
-            <a
+            <ExternalLink
               href={nowSectionData.links.product.href}
-              target="_blank"
               rel="noopener noreferrer"
             >
-              {nowSectionData.links.product.label}{" "}
-              <ArrowUpRight size={15} aria-hidden="true" />
-            </a>
+              {nowSectionData.links.product.label}
+            </ExternalLink>
             {founderVideo && (
-              <a
-                href={founderVideo.href}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {founderVideo.cta} <ArrowUpRight size={15} aria-hidden="true" />
-              </a>
+              <ExternalLink href={founderVideo.href} rel="noopener noreferrer">
+                {founderVideo.cta}
+              </ExternalLink>
             )}
           </div>
         </div>

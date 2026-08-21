@@ -1,18 +1,12 @@
 import clsx from "clsx";
-import {
-  ArrowLeft,
-  ArrowRight,
-  ExternalLink,
-  FileText,
-  Github,
-  Play,
-} from "lucide-react";
+import { ArrowLeft, ArrowRight, FileText, Github, Play } from "lucide-react";
 import type {
   CaseStudy as CaseStudyType,
   CaseStudyNarrative,
 } from "@/data/portfolio";
 import EditorialPrimaryNav from "@/app/components/editorial/EditorialPrimaryNav";
 import EditorialFooter from "@/app/components/editorial/EditorialFooter";
+import ExternalLink from "@/app/components/ui/ExternalLink";
 import styles from "./CaseStudy.module.scss";
 
 interface CaseStudyProps {
@@ -95,14 +89,13 @@ function RichCaseStudy({ caseStudy, narrative }: RichCaseStudyProps) {
         <div className={styles.overviewItem}>
           <span className={styles.overviewLabel}>Product</span>
           {caseStudy.liveUrl && (
-            <a
+            <ExternalLink
               href={caseStudy.liveUrl}
-              target="_blank"
               rel="noopener noreferrer"
               className={styles.link}
             >
-              heywaldo.in <ExternalLink size={14} aria-hidden="true" />
-            </a>
+              heywaldo.in
+            </ExternalLink>
           )}
         </div>
       </section>
@@ -217,30 +210,26 @@ function RichCaseStudy({ caseStudy, narrative }: RichCaseStudyProps) {
                   <figcaption>
                     <span>{section.media.caption}</span>
                     {section.media.source && (
-                      <a
+                      <ExternalLink
                         href={section.media.source.href}
-                        target="_blank"
                         rel="noopener noreferrer"
                       >
                         {section.media.source.label}
-                        <ExternalLink size={11} aria-hidden="true" />
-                      </a>
+                      </ExternalLink>
                     )}
                   </figcaption>
                 </figure>
               )}
 
               {section.link && (
-                <a
+                <ExternalLink
                   href={section.link.href}
-                  target="_blank"
                   rel="noopener noreferrer"
                   className={clsx(styles.link, styles.sectionLink)}
                 >
                   <FileText size={15} aria-hidden="true" />
                   {section.link.label}
-                  <ExternalLink size={13} aria-hidden="true" />
-                </a>
+                </ExternalLink>
               )}
             </div>
           </section>
@@ -295,50 +284,56 @@ function RichCaseStudy({ caseStudy, narrative }: RichCaseStudyProps) {
                 <p className={styles.cardLabel}>{artifact.eyebrow}</p>
                 <h3>{artifact.title}</h3>
                 <p>{artifact.description}</p>
-                <a
+                <ExternalLink
                   href={artifact.href}
-                  target="_blank"
                   rel="noopener noreferrer"
                   className={styles.artifactLink}
                 >
                   <Play size={15} aria-hidden="true" />
                   {artifact.cta}
-                  <ExternalLink size={13} aria-hidden="true" />
-                </a>
+                </ExternalLink>
               </div>
             </article>
           ))}
         </div>
 
         <div className={styles.resourceGrid}>
-          {linkArtifacts.map((artifact) => (
-            <a
-              key={artifact.href}
-              href={artifact.href}
-              target={artifact.href.startsWith("http") ? "_blank" : undefined}
-              rel={
-                artifact.href.startsWith("http")
-                  ? "noopener noreferrer"
-                  : undefined
-              }
-              className={styles.resourceCard}
-            >
-              <div>
-                <p className={styles.cardLabel}>{artifact.eyebrow}</p>
-                <h3>{artifact.title}</h3>
-                <p>{artifact.description}</p>
-              </div>
-              <span className={styles.resourceCta}>
-                <FileText size={15} aria-hidden="true" />
-                {artifact.cta}
-                {artifact.href.startsWith("http") ? (
-                  <ExternalLink size={13} aria-hidden="true" />
-                ) : (
-                  <ArrowRight size={13} aria-hidden="true" />
-                )}
-              </span>
-            </a>
-          ))}
+          {linkArtifacts.map((artifact) => {
+            const content = (
+              <>
+                <div>
+                  <p className={styles.cardLabel}>{artifact.eyebrow}</p>
+                  <h3>{artifact.title}</h3>
+                  <p>{artifact.description}</p>
+                </div>
+                <span className={styles.resourceCta}>
+                  <FileText size={15} aria-hidden="true" />
+                  {artifact.cta}
+                  {!artifact.href.startsWith("http") && (
+                    <ArrowRight size={13} aria-hidden="true" />
+                  )}
+                </span>
+              </>
+            );
+
+            return artifact.href.startsWith("http") ? (
+              <ExternalLink
+                key={artifact.href}
+                href={artifact.href}
+                className={styles.resourceCard}
+              >
+                {content}
+              </ExternalLink>
+            ) : (
+              <a
+                key={artifact.href}
+                href={artifact.href}
+                className={styles.resourceCard}
+              >
+                {content}
+              </a>
+            );
+          })}
         </div>
       </section>
 
@@ -389,24 +384,22 @@ function StandardCaseStudy({ caseStudy }: { caseStudy: CaseStudyType }) {
           <span className={styles.overviewLabel}>Links</span>
           <div className={styles.links}>
             {caseStudy.liveUrl && (
-              <a
+              <ExternalLink
                 href={caseStudy.liveUrl}
-                target="_blank"
                 rel="noopener noreferrer"
                 className={styles.link}
               >
-                <ExternalLink size={14} aria-hidden="true" /> Live
-              </a>
+                Live
+              </ExternalLink>
             )}
             {caseStudy.githubUrl && (
-              <a
+              <ExternalLink
                 href={caseStudy.githubUrl}
-                target="_blank"
                 rel="noopener noreferrer"
                 className={styles.link}
               >
                 <Github size={14} aria-hidden="true" /> GitHub
-              </a>
+              </ExternalLink>
             )}
           </div>
         </div>

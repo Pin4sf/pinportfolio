@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { getPublicCaseStudies } from "@/data/portfolio";
 import type { Metadata } from "next";
+import ExternalLink from "@/app/components/ui/ExternalLink";
 
 interface Props {
   params: { slug: string };
@@ -36,10 +37,7 @@ export default function ProjectPage({ params }: Props) {
   // Redirect to the new /work/[slug] route
   return (
     <main className="min-h-screen bg-bg-primary text-text-primary p-8 md:p-16">
-      <a
-        href="/"
-        className="inline-block mb-8 text-accent hover:underline"
-      >
+      <a href="/" className="inline-block mb-8 text-accent hover:underline">
         &larr; Back to Home
       </a>
 
@@ -78,24 +76,22 @@ export default function ProjectPage({ params }: Props) {
 
         <div className="flex gap-6">
           {cs.githubUrl && (
-            <a
+            <ExternalLink
               href={cs.githubUrl}
-              target="_blank"
               rel="noopener noreferrer"
               className="px-6 py-3 bg-accent text-bg-primary font-bold rounded-lg hover:bg-accent-hover transition-colors"
             >
               View on GitHub
-            </a>
+            </ExternalLink>
           )}
           {cs.liveUrl && (
-            <a
+            <ExternalLink
               href={cs.liveUrl}
-              target="_blank"
               rel="noopener noreferrer"
               className="px-6 py-3 border-2 border-accent text-accent font-bold rounded-lg hover:bg-accent hover:text-bg-primary transition-colors"
             >
               Live Preview
-            </a>
+            </ExternalLink>
           )}
         </div>
       </div>

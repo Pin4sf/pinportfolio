@@ -5,7 +5,8 @@ import { shouldEnableHeroEffects } from "../src/lib/heroEffects.ts";
 const capable = {
   reducedMotion: false,
   reducedData: false,
-  isMobile: false,
+  viewportWidth: 1024,
+  interactionCapable: true,
   gpuTier: "high",
 };
 
@@ -15,7 +16,8 @@ test("hero effects require a capable desktop with motion and data permission", (
   for (const override of [
     { reducedMotion: true },
     { reducedData: true },
-    { isMobile: true },
+    { viewportWidth: 1023 },
+    { interactionCapable: false },
     { gpuTier: "pending" },
     { gpuTier: "low" },
   ])

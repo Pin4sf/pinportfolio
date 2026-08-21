@@ -6,6 +6,7 @@ import Link from "next/link";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import EditorialPrimaryNav from "@/app/components/editorial/EditorialPrimaryNav";
 import EditorialFooter from "@/app/components/editorial/EditorialFooter";
+import { formatCalendarDate } from "@/lib/dates";
 
 interface BlogPostProps {
   post: Post;
@@ -34,25 +35,14 @@ export default function BlogPost({ post }: BlogPostProps) {
                 </>
               )}
               <span className={styles.dot}>·</span>
-              <span>
-                {new Date(post.date).toLocaleDateString("en-US", {
-                  month: "long",
-                  day: "numeric",
-                  year: "numeric",
-                })}
-              </span>
+              <span>{formatCalendarDate(post.date, "long")}</span>
               <span className={styles.dot}>·</span>
               <span>{post.readingTime} min read</span>
               {post.revised && (
                 <>
                   <span className={styles.dot}>·</span>
                   <span>
-                    Revised{" "}
-                    {new Date(post.revised).toLocaleDateString("en-US", {
-                      month: "long",
-                      day: "numeric",
-                      year: "numeric",
-                    })}
+                    Revised {formatCalendarDate(post.revised, "long")}
                   </span>
                 </>
               )}

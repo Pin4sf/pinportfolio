@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import EditorialFooter from "@/app/components/editorial/EditorialFooter";
 import EditorialHeader from "@/app/components/editorial/EditorialHeader";
+import ExternalLink from "@/app/components/ui/ExternalLink";
 import {
   getPublicReadingEntries,
   readingPageData,
@@ -54,16 +56,14 @@ export default function ReadingPage() {
                   {entry.connection && (
                     <p className={styles.connection}>{entry.connection}</p>
                   )}
-                  {entry.externalUrl && (
-                    <a
-                      href={entry.externalUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      Source <span aria-hidden="true">↗</span>
-                      <span className="sr-only">Opens in a new tab</span>
-                    </a>
-                  )}
+                  {entry.source &&
+                    (entry.source.kind === "internal" ? (
+                      <Link href={entry.source.href}>Source →</Link>
+                    ) : (
+                      <ExternalLink href={entry.source.href}>
+                        Source
+                      </ExternalLink>
+                    ))}
                 </div>
               </article>
             </li>

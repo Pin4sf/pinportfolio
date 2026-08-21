@@ -15,6 +15,7 @@ import { useGpuTier } from "@/app/hooks/useGpuTier";
 import { GpuTierProvider } from "@/lib/GpuTierContext";
 import { shouldEnableHeroEffects } from "@/lib/heroEffects";
 import ErrorBoundary from "../ErrorBoundary";
+import ExternalLink from "../ui/ExternalLink";
 import styles from "./Hero.module.scss";
 
 const HeroBackground = dynamic(() => import("../three/HeroBackground"), {
@@ -57,34 +58,58 @@ function useReducedData() {
   return reducedData;
 }
 
-function useMobileViewport() {
-  const [isMobile, setIsMobile] = useState(true);
+function useHeroCapabilities() {
+  const [capabilities, setCapabilities] = useState({
+    viewportWidth: 0,
+    interactionCapable: false,
+  });
 
   useEffect(() => {
-    const mediaQuery = window.matchMedia("(max-width: 767px)");
-    const handleChange = (event: MediaQueryListEvent) => {
-      setIsMobile(event.matches);
+    if (typeof window.matchMedia !== "function") {
+      setCapabilities({
+        viewportWidth: window.innerWidth,
+        interactionCapable: true,
+      });
+      return;
+    }
+
+    const desktopQuery = window.matchMedia("(min-width: 1024px)");
+    const interactionQuery = window.matchMedia(
+      "(hover: hover) and (pointer: fine)",
+    );
+    const syncCapabilities = () => {
+      setCapabilities({
+        viewportWidth: desktopQuery.matches ? window.innerWidth : 0,
+        interactionCapable: interactionQuery.matches,
+      });
     };
 
-    setIsMobile(mediaQuery.matches);
-    mediaQuery.addEventListener("change", handleChange);
-    return () => mediaQuery.removeEventListener("change", handleChange);
+    syncCapabilities();
+    desktopQuery.addEventListener("change", syncCapabilities);
+    interactionQuery.addEventListener("change", syncCapabilities);
+    window.addEventListener("resize", syncCapabilities);
+    return () => {
+      desktopQuery.removeEventListener("change", syncCapabilities);
+      interactionQuery.removeEventListener("change", syncCapabilities);
+      window.removeEventListener("resize", syncCapabilities);
+    };
   }, []);
 
-  return isMobile;
+  return capabilities;
 }
 
 function HeroContent() {
   const reducedMotion = useReducedMotion();
   const reducedData = useReducedData();
-  const isMobile = useMobileViewport();
+  const { viewportWidth, interactionCapable } = useHeroCapabilities();
   const gpuTier = useGpuTier();
   const [canvasFailed, setCanvasFailed] = useState(false);
   const handleCanvasFailure = useCallback(() => setCanvasFailed(true), []);
   const enableHeroEffects = shouldEnableHeroEffects({
     reducedMotion,
     reducedData,
-    isMobile,
+    viewportWidth,
+    interactionCapable,
     gpuTier,
   });
 
@@ -102,7 +127,7 @@ function HeroContent() {
       )}
 
       <div className={styles.content}>
-        <p className={styles.eyebrow}>Founder + AI systems researcher</p>
+        <p className={styles.eyebrow}>{heroData.eyebrow}</p>
         <h1 className={styles.name}>{heroData.name}</h1>
         <p className={styles.tagline}>{heroData.tagline}</p>
         <p className={styles.subtitle}>{heroData.subtitle}</p>
@@ -112,16 +137,15 @@ function HeroContent() {
         {heroData.socials.map((social) => {
           const Icon = iconMap[social.icon];
           return (
-            <a
+            <ExternalLink
               key={social.name}
               href={social.url}
-              target="_blank"
               rel="noopener noreferrer"
               className={styles.socialLink}
               aria-label={social.name}
             >
               {Icon && <Icon size={18} aria-hidden="true" />}
-            </a>
+            </ExternalLink>
           );
         })}
       </div>

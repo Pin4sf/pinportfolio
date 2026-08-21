@@ -101,11 +101,24 @@
 }
 
 .description,
+.evidence,
 .question {
   max-width: 46rem;
   margin: 0;
   line-height: 1.65;
   color: var(--text-secondary);
+}
+
+.evidence {
+  margin-top: 1rem;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+
+  span {
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
 }
 
 .question {

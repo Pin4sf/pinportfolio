@@ -4,23 +4,9 @@ import type {
   PostFormatFilter,
   WritingArchiveViewModel,
 } from "@/lib/postFormats";
+import { formatCalendarDate } from "../../lib/dates";
 
 export type WritingArchiveStyles = Readonly<Record<string, string>>;
-
-function shortDate(date: string) {
-  return new Date(date).toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-  });
-}
-
-function revisedDate(date: string) {
-  return new Date(date).toLocaleDateString("en-US", {
-    month: "short",
-    year: "numeric",
-  });
-}
 
 export function renderWritingArchive(
   viewModel: WritingArchiveViewModel<PostMeta>,
@@ -75,7 +61,11 @@ export function renderWritingArchive(
                 )
               : null,
             createElement("span", { className: styles.dot }, "·"),
-            createElement("span", null, shortDate(card.post.date)),
+            createElement(
+              "span",
+              null,
+              formatCalendarDate(card.post.date, "short"),
+            ),
             createElement("span", { className: styles.dot }, "·"),
             createElement("span", null, `${card.post.readingTime} min read`),
             card.post.revised
@@ -86,7 +76,7 @@ export function renderWritingArchive(
                   createElement(
                     "span",
                     null,
-                    `Revised ${revisedDate(card.post.revised)}`,
+                    `Revised ${formatCalendarDate(card.post.revised, "month-year")}`,
                   ),
                 )
               : null,

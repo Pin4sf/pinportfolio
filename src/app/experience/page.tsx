@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import EditorialHeader from "@/app/components/editorial/EditorialHeader";
 import EditorialFooter from "@/app/components/editorial/EditorialFooter";
+import ExternalLink from "@/app/components/ui/ExternalLink";
 import { experiencePageData, siteConfig, timelineData } from "@/data/portfolio";
 import styles from "./ExperiencePage.module.scss";
 
@@ -81,14 +82,13 @@ export default function ExperiencePage() {
                     >
                       {entry.links.map((link) =>
                         link.external ? (
-                          <a
+                          <ExternalLink
                             href={link.url}
                             key={link.url}
                             rel="noopener noreferrer"
-                            target="_blank"
                           >
-                            {link.label} <span aria-hidden="true">↗</span>
-                          </a>
+                            {link.label}
+                          </ExternalLink>
                         ) : (
                           <Link href={link.url} key={link.url}>
                             {link.label} <span aria-hidden="true">→</span>

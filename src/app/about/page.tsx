@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import EditorialHeader from "@/app/components/editorial/EditorialHeader";
 import EditorialFooter from "@/app/components/editorial/EditorialFooter";
+import ExternalLink from "@/app/components/ui/ExternalLink";
 import {
   aboutPageData,
   compassPrinciples,
@@ -39,17 +40,6 @@ function selectPublicArtifacts(slugs: string[], artifacts: PublicArtifact[]) {
     .filter(isPublicArtifact);
 }
 
-function ExternalMarker() {
-  return (
-    <>
-      <span className={styles.externalMarker} aria-hidden="true">
-        ↗
-      </span>
-      <span className="sr-only">Opens in a new tab</span>
-    </>
-  );
-}
-
 export default function AboutPage() {
   const influences = personalInfluences.filter(
     (influence) =>
@@ -85,59 +75,21 @@ export default function AboutPage() {
             className={styles.readingLinks}
             aria-label={aboutPageData.learningArtifactsLabel}
           >
-            {learningArtifacts.map((artifact) => (
-              <Link
-                href={artifact.href}
-                key={artifact.slug}
-                {...(artifact.external
-                  ? { target: "_blank", rel: "noopener noreferrer" }
-                  : {})}
-              >
-                {artifact.title}
-                {artifact.external && <ExternalMarker />}
-              </Link>
-            ))}
+            {learningArtifacts.map((artifact) =>
+              artifact.external ? (
+                <ExternalLink href={artifact.href} key={artifact.slug}>
+                  {artifact.title}
+                </ExternalLink>
+              ) : (
+                <Link href={artifact.href} key={artifact.slug}>
+                  {artifact.title}
+                </Link>
+              ),
+            )}
           </nav>
           <Link className={styles.readingLink} href="/reading">
             Read what shapes the work →
           </Link>
-        </section>
-
-        <section
-          className={styles.section}
-          aria-labelledby="influences-heading"
-        >
-          <p className={styles.kicker}>{aboutPageData.influencesKicker}</p>
-          <h2 id="influences-heading">{aboutPageData.influencesHeading}</h2>
-          <div className={styles.influenceGrid}>
-            {influences.map((influence) => {
-              const content = (
-                <>
-                  <p className={styles.cardKind}>{influence.kind}</p>
-                  <h3>{influence.title}</h3>
-                  <p>{influence.summary}</p>
-                </>
-              );
-
-              return influence.href ? (
-                <Link
-                  className={styles.influenceCard}
-                  href={influence.href}
-                  key={influence.slug}
-                  {...(influence.href.startsWith("http")
-                    ? { target: "_blank", rel: "noopener noreferrer" }
-                    : {})}
-                >
-                  {content}
-                  {influence.href.startsWith("http") && <ExternalMarker />}
-                </Link>
-              ) : (
-                <article className={styles.influenceCard} key={influence.slug}>
-                  {content}
-                </article>
-              );
-            })}
-          </div>
         </section>
 
         <section
@@ -189,6 +141,54 @@ export default function AboutPage() {
           </aside>
         </section>
 
+        <section
+          className={styles.section}
+          aria-labelledby="influences-heading"
+        >
+          <p className={styles.kicker}>{aboutPageData.influencesKicker}</p>
+          <h2 id="influences-heading">{aboutPageData.influencesHeading}</h2>
+          <div className={styles.influenceGrid}>
+            {influences.map((influence) => {
+              const content = (
+                <>
+                  <p className={styles.cardKind}>{influence.kind}</p>
+                  <h3>{influence.title}</h3>
+                  <p>{influence.summary}</p>
+                </>
+              );
+
+              if (!influence.href) {
+                return (
+                  <article
+                    className={styles.influenceCard}
+                    key={influence.slug}
+                  >
+                    {content}
+                  </article>
+                );
+              }
+
+              return influence.href.startsWith("http") ? (
+                <ExternalLink
+                  className={styles.influenceCard}
+                  href={influence.href}
+                  key={influence.slug}
+                >
+                  {content}
+                </ExternalLink>
+              ) : (
+                <Link
+                  className={styles.influenceCard}
+                  href={influence.href}
+                  key={influence.slug}
+                >
+                  {content}
+                </Link>
+              );
+            })}
+          </div>
+        </section>
+
         <section className={styles.now} aria-labelledby="now-heading">
           <p className={styles.kicker}>
             {aboutPageData.nowKicker} {aboutPageData.now.date}
@@ -203,15 +203,13 @@ export default function AboutPage() {
           <div className={styles.contactLinks}>
             <a href={`mailto:${contactData.email}`}>{contactData.email}</a>
             {contactData.socials.map((social) => (
-              <a
+              <ExternalLink
                 href={social.url}
                 key={social.name}
                 rel="noreferrer"
-                target="_blank"
               >
                 {social.name}
-                <ExternalMarker />
-              </a>
+              </ExternalLink>
             ))}
           </div>
         </section>

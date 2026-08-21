@@ -1,13 +1,13 @@
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { homepageData, timelineData } from "@/data/portfolio";
+import { selectTimelineChapters } from "@/lib/chapters";
 import styles from "./SelectedChapters.module.scss";
 
 export default function SelectedChapters() {
-  const chapters = timelineData.filter((entry) =>
-    homepageData.chapters.organizationNames.some((organization) =>
-      entry.organization.includes(organization),
-    ),
+  const chapters = selectTimelineChapters(
+    timelineData,
+    homepageData.chapters.timelineSlugs,
   );
 
   return (
@@ -23,15 +23,18 @@ export default function SelectedChapters() {
 
       <div className={styles.list}>
         {chapters.map((chapter) => (
-          <article
-            key={`${chapter.year}-${chapter.organization}`}
-            className={styles.chapter}
-          >
+          <article key={chapter.slug} className={styles.chapter}>
             <span className={styles.year}>{chapter.year}</span>
             <div>
               <p className={styles.organization}>{chapter.organization}</p>
               <h3>{chapter.title}</h3>
               <p className={styles.description}>{chapter.description}</p>
+              {chapter.evidence && (
+                <p className={styles.evidence}>
+                  <span>{homepageData.chapters.evidenceLabel}:</span>{" "}
+                  {chapter.evidence}
+                </p>
+              )}
               {chapter.nextQuestion && (
                 <p className={styles.question}>
                   {homepageData.chapters.nextQuestionLabel}:{" "}

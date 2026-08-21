@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { PublicArtifact } from "@/data/portfolio";
+import ExternalLink from "@/app/components/ui/ExternalLink";
 import styles from "./ArtifactList.module.scss";
 
 interface ArtifactListProps {
@@ -34,10 +35,11 @@ function ArtifactContents({
           <p className={styles.annotation}>{artifact.annotation}</p>
         )}
       </div>
-      <span className={styles.arrow} aria-hidden="true">
-        {external ? "↗" : "→"}
-      </span>
-      {external && <span className="sr-only">Opens in a new tab</span>}
+      {!external && (
+        <span className={styles.arrow} aria-hidden="true">
+          →
+        </span>
+      )}
     </>
   );
 }
@@ -51,10 +53,9 @@ export default function ArtifactList({
       {artifacts.map((artifact) => (
         <li key={artifact.slug} className={styles.item}>
           {artifact.external ? (
-            <a
+            <ExternalLink
               href={artifact.href}
               className={styles.link}
-              target="_blank"
               rel="noopener noreferrer"
             >
               <ArtifactContents
@@ -62,7 +63,7 @@ export default function ArtifactList({
                 headingLevel={headingLevel}
                 external
               />
-            </a>
+            </ExternalLink>
           ) : (
             <Link href={artifact.href} className={styles.link}>
               <ArtifactContents

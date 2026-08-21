@@ -1,4 +1,5 @@
 import { contactData, homepageData } from "@/data/portfolio";
+import ExternalLink from "../ui/ExternalLink";
 import styles from "./Contact.module.scss";
 
 export default function Contact() {
@@ -19,17 +20,13 @@ export default function Contact() {
 
           <div className={styles.socials}>
             {contactData.socials.map((social) => (
-              <a
+              <ExternalLink
                 key={social.name}
                 href={social.url}
-                target="_blank"
                 rel="noopener noreferrer"
               >
-                {social.name} <span aria-hidden="true">↗</span>
-                <span className="sr-only">
-                  {homepageData.contact.externalLinkLabel}
-                </span>
-              </a>
+                {social.name}
+              </ExternalLink>
             ))}
           </div>
         </div>

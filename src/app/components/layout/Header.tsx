@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import { navItems } from "@/data/portfolio";
 import { cn } from "@/lib/utils";
+import { isPageCurrent } from "@/lib/navigation";
 import styles from "./Header.module.scss";
 
 export default function Header() {
@@ -11,10 +12,6 @@ export default function Header() {
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
-  const isActive = (href: string) => {
-    const target = href.split("#")[0] || "/";
-    return target === "/" ? pathname === "/" : pathname.startsWith(target);
-  };
 
   useEffect(() => {
     if (!menuOpen) return;
@@ -68,7 +65,7 @@ export default function Header() {
 
           <nav className={styles.nav} aria-label="Main navigation">
             {navItems.map((item) => {
-              const active = isActive(item.href);
+              const active = isPageCurrent(pathname, item.href);
               return (
                 <a
                   key={item.label}
@@ -120,7 +117,9 @@ export default function Header() {
               className={styles.overlayLink}
               onClick={() => setMenuOpen(false)}
               tabIndex={menuOpen ? 0 : -1}
-              aria-current={isActive(item.href) ? "page" : undefined}
+              aria-current={
+                isPageCurrent(pathname, item.href) ? "page" : undefined
+              }
             >
               {item.label}
             </a>

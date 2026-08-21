@@ -387,12 +387,21 @@ function importCommonJsTypeScriptModule(file) {
   }).outputText;
   const module = { exports: {} };
   const requireFromModule = createRequire(path.join(root, file));
+  const moduleDirectory = path.dirname(path.join(root, file));
+  const requireWithTypeScriptResolution = (specifier) => {
+    if (specifier.startsWith(".")) {
+      const typeScriptPath = path.resolve(moduleDirectory, `${specifier}.ts`);
+      if (fs.existsSync(typeScriptPath))
+        return requireFromModule(typeScriptPath);
+    }
+    return requireFromModule(specifier);
+  };
   Function(
     "require",
     "module",
     "exports",
     output,
-  )(requireFromModule, module, module.exports);
+  )(requireWithTypeScriptResolution, module, module.exports);
   return module.exports;
 }
 
@@ -599,14 +608,14 @@ test("artifact date ranges omit invalid machine-readable dates", () => {
 test("external artifacts and About links expose a visible external affordance", () => {
   const artifactList = read("src/app/components/editorial/ArtifactList.tsx");
   const about = read("src/app/about/page.tsx");
+  const externalLink = read("src/app/components/ui/ExternalLink.tsx");
 
-  assert.match(artifactList, /external \? "↗" : "→"/);
-  assert.match(artifactList, /Opens in a new tab/);
-  assert.match(artifactList, /target="_blank"/);
-  assert.match(artifactList, /rel="noopener noreferrer"/);
-  assert.match(about, /function ExternalMarker/);
-  assert.match(about, /<ExternalMarker \/>/);
-  assert.match(about, /Opens in a new tab/);
+  assert.match(artifactList, /<ExternalLink/);
+  assert.match(about, /<ExternalLink/);
+  assert.match(externalLink, /aria-hidden="true">↗/);
+  assert.match(externalLink, /Opens in a new tab/);
+  assert.match(externalLink, /target="_blank"/);
+  assert.match(externalLink, /noopener noreferrer/);
 });
 
 test("about route is candid, server-rendered, and source bounded", () => {
