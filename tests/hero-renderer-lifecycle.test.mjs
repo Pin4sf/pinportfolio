@@ -209,14 +209,14 @@ function createHarness({
   };
 }
 
-test("HeroBackground delegates its effect lifecycle to the tested runtime", () => {
+test("HeroBackground delegates its lifecycle and failure handler to the tested runtime", () => {
   const source = fs.readFileSync(
     path.join(process.cwd(), "src/app/components/three/HeroBackground.tsx"),
     "utf8",
   );
   assert.match(
     source,
-    /return mountHeroRenderer\(\{[\s\S]*?environment: createBrowserHeroRendererEnvironment\(\)[\s\S]*?createResources:/,
+    /return mountHeroRenderer\(\{[\s\S]*?environment: createBrowserHeroRendererEnvironment\(\)[\s\S]*?createResources:[\s\S]*?\n\s+onFailure,\n\s+\}\);/,
   );
 });
 
