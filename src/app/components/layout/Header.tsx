@@ -1,58 +1,26 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { usePathname } from "next/navigation";
-import styles from "./Header.module.scss";
-import CoolLink from "../ui/CoolLink";
 import { navItems } from "@/data/portfolio";
 import { cn } from "@/lib/utils";
-
-gsap.registerPlugin(ScrollTrigger);
+import styles from "./Header.module.scss";
 
 export default function Header() {
-  const headerRef = useRef<HTMLElement>(null);
-  const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
-  const lastScrollY = useRef(0);
-  const progressRef = useRef<HTMLDivElement>(null);
-  const [hidden, setHidden] = useState(false);
+  const overlayRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
   const isActive = (href: string) => {
     const target = href.split("#")[0] || "/";
     return target === "/" ? pathname === "/" : pathname.startsWith(target);
   };
 
-  // Hide on scroll-down, show on scroll-up + glass effect
-  useEffect(() => {
-    const handleScroll = () => {
-      const currentY = window.scrollY;
-      setScrolled(currentY > 100);
-      setHidden(currentY > lastScrollY.current && currentY > 300);
-      lastScrollY.current = currentY;
-
-      // Update scroll progress bar
-      if (progressRef.current) {
-        const total =
-          document.documentElement.scrollHeight - window.innerHeight;
-        const progress = total > 0 ? currentY / total : 0;
-        progressRef.current.style.transform = `scaleX(${progress})`;
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  // Focus trap + Escape key for mobile overlay
   useEffect(() => {
     if (!menuOpen) return;
 
-    const overlay = document.querySelector(
-      `.${styles.overlay}`,
-    ) as HTMLElement | null;
+    const menuButton = menuButtonRef.current;
+    const overlay = overlayRef.current;
     if (!overlay) return;
 
     const previousBodyOverflow = document.body.style.overflow;
@@ -71,16 +39,12 @@ export default function Header() {
       }
       if (e.key !== "Tab") return;
 
-      if (e.shiftKey) {
-        if (document.activeElement === first) {
-          e.preventDefault();
-          last?.focus();
-        }
-      } else {
-        if (document.activeElement === last) {
-          e.preventDefault();
-          first?.focus();
-        }
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last?.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first?.focus();
       }
     };
 
@@ -90,52 +54,32 @@ export default function Header() {
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
       document.body.style.overflow = previousBodyOverflow;
-      menuButtonRef.current?.focus();
+      menuButton?.focus();
     };
   }, [menuOpen]);
 
-  // Reveal header after loading screen
-  useEffect(() => {
-    const header = headerRef.current;
-    if (!header) return;
-
-    gsap.fromTo(
-      header,
-      { y: -100, opacity: 0 },
-      { y: 0, opacity: 1, duration: 0.65, delay: 0.2, ease: "power3.out" },
-    );
-  }, []);
-
   return (
     <>
-      {/* Scroll progress indicator */}
-      <div ref={progressRef} className={styles.progress} aria-hidden="true" />
-
-      <header
-        ref={headerRef}
-        className={cn(
-          styles.header,
-          scrolled && styles.scrolled,
-          hidden && styles.hidden,
-        )}
-      >
+      <header className={styles.header}>
         <div className={styles.inner}>
-          <a href="/" className={styles.logo}>
+          <a href="/" className={styles.logo} aria-label="Shivansh Fulper home">
             SF
           </a>
 
           <nav className={styles.nav} aria-label="Main navigation">
-            {navItems.map((item) => (
-              <CoolLink
-                key={item.label}
-                href={item.href}
-                text={item.label}
-                className={cn(
-                  styles.navLink,
-                  isActive(item.href) && styles.active,
-                )}
-              />
-            ))}
+            {navItems.map((item) => {
+              const active = isActive(item.href);
+              return (
+                <a
+                  key={item.label}
+                  href={item.href}
+                  className={cn(styles.navLink, active && styles.active)}
+                  aria-current={active ? "page" : undefined}
+                >
+                  {item.label}
+                </a>
+              );
+            })}
           </nav>
 
           <div className={styles.actions}>
@@ -146,10 +90,12 @@ export default function Header() {
 
           <button
             ref={menuButtonRef}
+            type="button"
             className={cn(styles.menuBtn, menuOpen && styles.menuOpen)}
-            onClick={() => setMenuOpen(!menuOpen)}
+            onClick={() => setMenuOpen((open) => !open)}
             aria-label={menuOpen ? "Close menu" : "Open menu"}
             aria-expanded={menuOpen}
+            aria-controls="mobile-navigation"
           >
             <span />
             <span />
@@ -157,8 +103,9 @@ export default function Header() {
         </div>
       </header>
 
-      {/* Mobile overlay */}
       <div
+        ref={overlayRef}
+        id="mobile-navigation"
         className={cn(styles.overlay, menuOpen && styles.overlayOpen)}
         role="dialog"
         aria-modal="true"
@@ -166,12 +113,11 @@ export default function Header() {
         aria-hidden={!menuOpen}
       >
         <nav className={styles.overlayNav} aria-label="Mobile navigation">
-          {navItems.map((item, i) => (
+          {navItems.map((item) => (
             <a
               key={item.label}
               href={item.href}
               className={styles.overlayLink}
-              style={{ transitionDelay: `${0.1 + i * 0.05}s` }}
               onClick={() => setMenuOpen(false)}
               tabIndex={menuOpen ? 0 : -1}
               aria-current={isActive(item.href) ? "page" : undefined}
@@ -182,7 +128,6 @@ export default function Header() {
           <a
             href="/#contact"
             className={styles.overlayLink}
-            style={{ transitionDelay: `${0.1 + navItems.length * 0.05}s` }}
             onClick={() => setMenuOpen(false)}
             tabIndex={menuOpen ? 0 : -1}
           >

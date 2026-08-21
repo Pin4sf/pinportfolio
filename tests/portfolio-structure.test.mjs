@@ -64,8 +64,6 @@ const findMarkupPosition = (source, markup) =>
 const portfolio = read("src/data/portfolio.ts");
 const page = read("src/app/page.tsx");
 const hero = read("src/app/components/sections/Hero.tsx");
-const customCursor = read("src/app/components/ui/CustomCursor.tsx");
-const clientShell = read("src/app/components/ClientShell.tsx");
 const reducedMotionHook = read("src/app/hooks/useReducedMotion.ts");
 const gpuTierContext = read("src/lib/GpuTierContext.tsx");
 const globals = read("src/app/globals.scss");
@@ -236,18 +234,18 @@ test("homepage Waldo and contact remain compact", () => {
   assert.match(contact, /mailto:/);
 });
 
-test("global visual utilities stay homepage-only", () => {
-  assert.match(clientShell, /usePathname/);
-  assert.match(clientShell, /const isHomepage = pathname === "\/"/);
-  assert.ok(
-    clientShell.indexOf("if (!isHomepage)") <
-      clientShell.indexOf("<GpuTierProvider>"),
-    "editorial routes should return before mounting GPU-tier visual utilities",
-  );
+test("the active homepage mounts at most one rich canvas", () => {
+  const hero = read("src/app/components/sections/Hero.tsx");
+  assert.match(hero, /HeroBackground/);
+  assert.doesNotMatch(hero, /FluidBackground/);
+  assert.equal((hero.match(/<HeroBackground/g) ?? []).length, 1);
 });
 
-test("hero effects honor mobile, reduced-motion, and GPU-tier gates", () => {
+test("hero effects honor mobile, reduced-data, reduced-motion, and GPU-tier gates", () => {
   assert.match(hero, /shouldEnableHeroEffects/);
+  assert.match(hero, /reducedData/);
+  assert.match(hero, /navigator\.connection/);
+  assert.match(hero, /saveData === true/);
   assert.match(
     gpuTierContext,
     /GpuTier = "pending" \| "low" \| "mid" \| "high"/,
@@ -259,17 +257,6 @@ test("hero effects honor mobile, reduced-motion, and GPU-tier gates", () => {
     reducedMotionHook,
     /useState\(\s*\(\) =>[\s\S]*matchMedia\("\(prefers-reduced-motion: reduce\)"\)/,
   );
-});
-
-test("cursor work waits for a resolved capable GPU tier", () => {
-  assert.match(hero, /Magnetic text[\s\S]*if \(!enableHeroEffects\) return/);
-  assert.match(
-    customCursor,
-    /const cursorEffectsEnabled =\s*gpuTier === "mid" \|\| gpuTier === "high"/,
-  );
-  assert.match(customCursor, /if \(!cursorEffectsEnabled\) return/);
-  assert.match(customCursor, /if \(!cursorEffectsEnabled\) return null/);
-  assert.doesNotMatch(customCursor, /gpuTier !== "low"/);
 });
 
 test("tertiary text meets AA contrast on every dark surface", () => {

@@ -101,12 +101,6 @@ body {
   transition: var(--theme-transition);
 }
 
-/* Custom cursor — hide default on non-touch devices */
-html.custom-cursor-active,
-html.custom-cursor-active * {
-  cursor: none !important;
-}
-
 button,
 input,
 textarea,
@@ -224,58 +218,6 @@ ul {
   transform: translate(-50%, -50%);
 }
 
-/* ---- Marquee ---- */
-.marquee {
-  position: absolute;
-  width: 100%;
-  overflow: hidden;
-  pointer-events: none;
-  z-index: 0;
-  aria-hidden: true;
-}
-
-.marquee__inner {
-  display: flex;
-  width: max-content;
-  gap: var(--space-2xl);
-  animation: marquee 25s linear infinite;
-}
-
-.marquee__text {
-  font-family: var(--font-display);
-  font-size: clamp(4rem, 12vw, 10rem);
-  font-weight: 400;
-  color: var(--text-heading);
-  opacity: var(--bg-text-opacity);
-  white-space: nowrap;
-  flex-shrink: 0;
-}
-
-/* Giant marquee text — fills entire viewport */
-.marquee__text--giant {
-  font-size: clamp(8rem, 25vw, 22rem);
-}
-
-/* Hide marquees on mobile — GPU waste for barely visible decoration */
-@media (max-width: 767px) {
-  .marquee {
-    display: none;
-  }
-}
-
-@keyframes marquee {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(-50%);
-  }
-}
-
-.marquee--reverse .marquee__inner {
-  animation-direction: reverse;
-}
-
 /* ---- Utility: Visually Hidden ---- */
 .sr-only {
   position: absolute;
@@ -362,9 +304,8 @@ ul {
   *,
   *::before,
   *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
+    animation: none !important;
+    transition: none !important;
     scroll-behavior: auto !important;
   }
 }
@@ -400,56 +341,12 @@ ul {
 body::after {
   content: "";
   position: fixed;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
+  inset: 0;
   z-index: 9998;
   pointer-events: none;
-  opacity: 0.06;
+  opacity: 0.025;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  animation: grain 0.4s steps(8) infinite;
-}
-
-@keyframes grain {
-  0%,
-  100% {
-    transform: translate(0, 0);
-  }
-  10% {
-    transform: translate(-5%, -10%);
-  }
-  20% {
-    transform: translate(8%, 2%);
-  }
-  30% {
-    transform: translate(3%, -15%);
-  }
-  40% {
-    transform: translate(-3%, 12%);
-  }
-  50% {
-    transform: translate(12%, 9%);
-  }
-  60% {
-    transform: translate(-8%, -5%);
-  }
-  70% {
-    transform: translate(9%, 4%);
-  }
-  80% {
-    transform: translate(2%, -8%);
-  }
-  90% {
-    transform: translate(-1%, 7%);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  body::after {
-    animation: none;
-    opacity: 0.03;
-  }
+  background-size: 180px 180px;
 }
 
 /* Disable film grain on mobile — pure GPU waste */
@@ -464,13 +361,4 @@ body::after {
   :root {
     --section-py: clamp(2rem, 4vw, 4rem);
   }
-}
-
-/* ---- Scroll-Velocity Skew ---- */
-:root {
-  --sv: 0;
-}
-
-main img {
-  transform: skewY(calc(var(--sv) * 1deg));
 }

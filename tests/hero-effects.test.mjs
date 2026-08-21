@@ -2,21 +2,21 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { shouldEnableHeroEffects } from "../src/lib/heroEffects.ts";
 
-test("hero effects require a resolved capable desktop without reduced motion", () => {
-  const cases = [
-    [{ reducedMotion: false, isMobile: false, gpuTier: "pending" }, false],
-    [{ reducedMotion: false, isMobile: false, gpuTier: "low" }, false],
-    [{ reducedMotion: false, isMobile: false, gpuTier: "mid" }, true],
-    [{ reducedMotion: false, isMobile: false, gpuTier: "high" }, true],
-    [{ reducedMotion: false, isMobile: true, gpuTier: "high" }, false],
-    [{ reducedMotion: true, isMobile: false, gpuTier: "high" }, false],
-  ];
+const capable = {
+  reducedMotion: false,
+  reducedData: false,
+  isMobile: false,
+  gpuTier: "high",
+};
 
-  for (const [input, expected] of cases) {
-    assert.equal(
-      shouldEnableHeroEffects(input),
-      expected,
-      JSON.stringify(input),
-    );
-  }
+test("hero effects require a capable desktop with motion and data permission", () => {
+  assert.equal(shouldEnableHeroEffects(capable), true);
+  for (const override of [
+    { reducedMotion: true },
+    { reducedData: true },
+    { isMobile: true },
+    { gpuTier: "pending" },
+    { gpuTier: "low" },
+  ])
+    assert.equal(shouldEnableHeroEffects({ ...capable, ...override }), false);
 });

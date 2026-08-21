@@ -6,6 +6,25 @@ import test from "node:test";
 const root = process.cwd();
 const read = (file) => fs.readFileSync(path.join(root, file), "utf8");
 
+test("the global shell excludes smooth scroll, custom cursor, and transition machinery", () => {
+  const layout = read("src/app/layout.tsx");
+  const page = read("src/app/page.tsx");
+  const header = read("src/app/components/layout/Header.tsx");
+  assert.doesNotMatch(layout, /ClientShell|TransitionProvider|GpuTierProvider/);
+  assert.doesNotMatch(page, /SmoothScroll/);
+  assert.doesNotMatch(header, /gsap|ScrollTrigger|TransitionLink/);
+  assert.doesNotMatch(
+    read("src/app/globals.scss"),
+    /custom-cursor-active|--sv|skewY\(/,
+  );
+});
+
+test("case study navigation stays direct without a transition provider", () => {
+  const caseStudy = read("src/app/work/[slug]/CaseStudy.tsx");
+  assert.doesNotMatch(caseStudy, /TransitionLink|useTransition/);
+  assert.match(caseStudy, /<a href="\/" className=\{styles\.back\}>/);
+});
+
 test("editorial routes avoid heavy client-only dependencies", () => {
   for (const file of [
     "src/app/about/page.tsx",
@@ -123,7 +142,8 @@ test("mobile navigation owns focus and scroll for the full dialog lifecycle", ()
     header,
     /document\.body\.style\.overflow = previousBodyOverflow/,
   );
-  assert.match(header, /menuButtonRef\.current\?\.focus\(\)/);
+  assert.match(header, /const menuButton = menuButtonRef\.current/);
+  assert.match(header, /menuButton\?\.focus\(\)/);
   assert.match(header, /if \(e\.key === "Escape"\)/);
   assert.match(header, /document\.activeElement === first/);
   assert.match(header, /document\.activeElement === last/);

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Instrument_Serif, JetBrains_Mono } from "next/font/google";
 import "./globals.scss";
 import { siteConfig } from "@/data/portfolio";
-import ClientShell from "./components/ClientShell";
+import ViewportFrame from "./components/ui/ViewportFrame";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -167,7 +167,8 @@ export default function RootLayout({
         >
           Skip to content
         </a>
-        <ClientShell>{children}</ClientShell>
+        <ViewportFrame />
+        {children}
       </body>
     </html>
   );

@@ -17,7 +17,6 @@ import type {
   CaseStudyNarrative,
 } from "@/data/portfolio";
 import { useReducedMotion } from "@/app/hooks/useReducedMotion";
-import TransitionLink from "@/app/components/ui/TransitionLink";
 import EditorialPrimaryNav from "@/app/components/editorial/EditorialPrimaryNav";
 import styles from "./CaseStudy.module.scss";
 
@@ -532,50 +531,50 @@ export default function CaseStudy({
         ref={pageRef}
         className={clsx(styles.page, caseStudy.narrative && styles.richPage)}
       >
-      <div className={styles.primaryNavigation}>
-        <TransitionLink href="/" className={styles.back}>
-          <ArrowLeft size={16} aria-hidden="true" />
-          Home
-        </TransitionLink>
-        <EditorialPrimaryNav />
-      </div>
-
-      {caseStudy.narrative ? (
-        <RichCaseStudy caseStudy={caseStudy} narrative={caseStudy.narrative} />
-      ) : (
-        <StandardCaseStudy caseStudy={caseStudy} />
-      )}
-
-      <nav className={styles.nav} aria-label="Case studies">
-        {prev ? (
-          <TransitionLink
-            href={`/work/${prev.slug}`}
-            className={styles.navLink}
-          >
+        <div className={styles.primaryNavigation}>
+          <a href="/" className={styles.back}>
             <ArrowLeft size={16} aria-hidden="true" />
-            <div>
-              <span className={styles.navLabel}>Previous</span>
-              <span className={styles.navName}>{prev.name}</span>
-            </div>
-          </TransitionLink>
+            Home
+          </a>
+          <EditorialPrimaryNav />
+        </div>
+
+        {caseStudy.narrative ? (
+          <RichCaseStudy
+            caseStudy={caseStudy}
+            narrative={caseStudy.narrative}
+          />
         ) : (
-          <div />
+          <StandardCaseStudy caseStudy={caseStudy} />
         )}
-        {next ? (
-          <TransitionLink
-            href={`/work/${next.slug}`}
-            className={clsx(styles.navLink, styles.navRight)}
-          >
-            <div>
-              <span className={styles.navLabel}>Next</span>
-              <span className={styles.navName}>{next.name}</span>
-            </div>
-            <ArrowRight size={16} aria-hidden="true" />
-          </TransitionLink>
-        ) : (
-          <div />
-        )}
-      </nav>
+
+        <nav className={styles.nav} aria-label="Case studies">
+          {prev ? (
+            <a href={`/work/${prev.slug}`} className={styles.navLink}>
+              <ArrowLeft size={16} aria-hidden="true" />
+              <div>
+                <span className={styles.navLabel}>Previous</span>
+                <span className={styles.navName}>{prev.name}</span>
+              </div>
+            </a>
+          ) : (
+            <div />
+          )}
+          {next ? (
+            <a
+              href={`/work/${next.slug}`}
+              className={clsx(styles.navLink, styles.navRight)}
+            >
+              <div>
+                <span className={styles.navLabel}>Next</span>
+                <span className={styles.navName}>{next.name}</span>
+              </div>
+              <ArrowRight size={16} aria-hidden="true" />
+            </a>
+          ) : (
+            <div />
+          )}
+        </nav>
       </main>
       {editorialFooter}
     </>

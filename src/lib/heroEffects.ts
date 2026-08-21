@@ -1,17 +1,22 @@
 import type { GpuTier } from "./GpuTierContext";
 
-type HeroEffectInputs = {
+export type HeroEffectInputs = {
   reducedMotion: boolean;
+  reducedData: boolean;
   isMobile: boolean;
   gpuTier: GpuTier;
 };
 
 export function shouldEnableHeroEffects({
   reducedMotion,
+  reducedData,
   isMobile,
   gpuTier,
 }: HeroEffectInputs) {
   return (
-    !reducedMotion && !isMobile && (gpuTier === "mid" || gpuTier === "high")
+    !reducedMotion &&
+    !reducedData &&
+    !isMobile &&
+    (gpuTier === "mid" || gpuTier === "high")
   );
 }

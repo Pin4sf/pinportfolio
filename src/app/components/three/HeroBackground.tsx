@@ -2,118 +2,99 @@
 
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
-import { useGpuTier, type GpuTier } from "@/app/hooks/useGpuTier";
+import { useGpuTier } from "@/app/hooks/useGpuTier";
 
 const vertexShader = `
   varying vec2 vUv;
+
   void main() {
     vUv = uv;
     gl_Position = vec4(position, 1.0);
   }
 `;
 
-const buildFragmentShader = (tier: GpuTier) => {
-  const octaves = tier === "low" ? 3 : 4;
-  const cursorEnabled = tier !== "low";
-
-  return `
+const fragmentShader = `
   precision highp float;
 
   uniform float uTime;
   uniform vec2 uResolution;
-  uniform vec2 uMouse;
 
   varying vec2 vUv;
 
-  vec3 mod289(vec3 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
-  vec2 mod289(vec2 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
-  vec3 permute(vec3 x) { return mod289(((x * 34.0) + 1.0) * x); }
-
-  float snoise(vec2 v) {
-    const vec4 C = vec4(0.211324865405187, 0.366025403784439,
-                        -0.577350269189626, 0.024390243902439);
-    vec2 i  = floor(v + dot(v, C.yy));
-    vec2 x0 = v - i + dot(i, C.xx);
-    vec2 i1;
-    i1 = (x0.x > x0.y) ? vec2(1.0, 0.0) : vec2(0.0, 1.0);
-    vec4 x12 = x0.xyxy + C.xxzz;
-    x12.xy -= i1;
-    i = mod289(i);
-    vec3 p = permute(permute(i.y + vec3(0.0, i1.y, 1.0))
-                            + i.x + vec3(0.0, i1.x, 1.0));
-    vec3 m = max(0.5 - vec3(dot(x0, x0), dot(x12.xy, x12.xy),
-                             dot(x12.zw, x12.zw)), 0.0);
-    m = m * m;
-    m = m * m;
-    vec3 x = 2.0 * fract(p * C.www) - 1.0;
-    vec3 h = abs(x) - 0.5;
-    vec3 ox = floor(x + 0.5);
-    vec3 a0 = x - ox;
-    m *= 1.79284291400159 - 0.85373472095314 * (a0 * a0 + h * h);
-    vec3 g;
-    g.x = a0.x * x0.x + h.x * x0.y;
-    g.yz = a0.yz * x12.xz + h.yz * x12.yw;
-    return 130.0 * dot(m, g);
+  vec2 hash22(vec2 point) {
+    point = vec2(
+      dot(point, vec2(127.1, 311.7)),
+      dot(point, vec2(269.5, 183.3))
+    );
+    return fract(sin(point) * 43758.5453);
   }
 
-  float fbm(vec2 p) {
-    float value = 0.0;
-    float amplitude = 0.5;
-    float frequency = 1.0;
-    for (int i = 0; i < ${octaves}; i++) {
-      value += amplitude * snoise(p * frequency);
-      frequency *= 2.0;
-      amplitude *= 0.5;
+  float cellular(vec2 point) {
+    vec2 cell = floor(point);
+    vec2 local = fract(point);
+    float nearest = 1.0;
+
+    for (int y = -1; y <= 1; y++) {
+      for (int x = -1; x <= 1; x++) {
+        vec2 neighbor = vec2(float(x), float(y));
+        vec2 seed = hash22(cell + neighbor);
+        vec2 drift = 0.5 + 0.32 * sin(uTime * 0.16 + 6.28318 * seed);
+        nearest = min(nearest, length(neighbor + drift - local));
+      }
     }
-    return value;
+
+    return nearest;
   }
 
   void main() {
-    vec2 uv = vUv;
-    float aspect = uResolution.x / uResolution.y;
-    vec2 st = vec2(uv.x * aspect, uv.y);
+    float aspect = uResolution.x / max(uResolution.y, 1.0);
+    vec2 fieldPosition = vUv - 0.5;
+    fieldPosition.x *= aspect;
 
-    float t = uTime * 0.15;
+    float distanceField = cellular(
+      fieldPosition * 5.2 + vec2(uTime * 0.035, -uTime * 0.018)
+    );
+    float contour = 1.0 - smoothstep(
+      0.025,
+      0.105,
+      abs(distanceField - 0.42)
+    );
 
-    ${cursorEnabled ? `
-    vec2 mouse = vec2(uMouse.x * aspect, uMouse.y);
-    float cursorDist = length(st - mouse);
-    float cursorWarp = smoothstep(0.8, 0.0, cursorDist) * 0.15;
-    ` : `
-    float cursorWarp = 0.0;
-    `}
+    float wave =
+      0.045 * sin(fieldPosition.x * 9.0 + uTime * 0.34) +
+      0.022 * sin(fieldPosition.x * 24.0 - uTime * 0.21);
+    float liveTrace = 1.0 - smoothstep(
+      0.007,
+      0.022,
+      abs(fieldPosition.y - wave)
+    );
 
-    float n1 = fbm(st * 1.5 + vec2(t, t * 0.7) + cursorWarp);
-    float n2 = fbm(st * 2.5 + vec2(-t * 0.5, t * 0.3));
-    float n3 = fbm(st * 0.8 + vec2(t * 0.2, -t * 0.4));
+    float lift = 1.0 - smoothstep(
+      0.05,
+      0.92,
+      length(fieldPosition - vec2(-0.22, 0.08))
+    );
 
-    float noise = n1 * 0.5 + n2 * 0.3 + n3 * 0.2;
+    vec3 blackField = vec3(0.018, 0.021, 0.017);
+    vec3 warmCream = vec3(0.945, 0.918, 0.858);
+    vec3 liveGreen = vec3(0.424, 1.0, 0.553);
 
-    vec3 bgDark = vec3(0.035, 0.039, 0.055);
-    vec3 accent  = vec3(0.424, 1.0, 0.553);
-    vec3 warm    = vec3(0.941, 0.753, 0.251);
-    vec3 deep    = vec3(0.15, 0.18, 0.25);
+    vec3 color = blackField;
+    color = mix(color, warmCream, contour * 0.052 + lift * 0.025);
+    color = mix(color, liveGreen, liveTrace * (0.34 + contour * 0.12));
 
-    float grad = (uv.x * 0.3 + uv.y * 0.7) + noise * 0.3;
+    float edgeFade = 1.0 - smoothstep(0.42, 0.95, length(vUv - 0.5));
+    color *= mix(0.72, 1.0, edgeFade);
 
-    vec3 col = bgDark;
-    col = mix(col, deep, smoothstep(0.1, 0.5, grad) * 0.4);
-    col = mix(col, accent * 0.15, smoothstep(0.3, 0.8, noise + cursorWarp * 2.0) * 0.3);
-    col = mix(col, warm * 0.08, smoothstep(0.5, 0.9, n2) * 0.2);
-
-    float vignette = 1.0 - smoothstep(0.4, 1.4, length(uv - 0.5) * 1.5);
-    col *= mix(0.7, 1.0, vignette);
-
-    gl_FragColor = vec4(col, 1.0);
+    gl_FragColor = vec4(color, 0.9);
   }
 `;
-};
 
 interface HeroBackgroundProps {
-  onCanvasReady?: (canvas: HTMLCanvasElement) => void;
+  onFailure?: () => void;
 }
 
-export default function HeroBackground({ onCanvasReady }: HeroBackgroundProps) {
+export default function HeroBackground({ onFailure }: HeroBackgroundProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const gpuTier = useGpuTier();
 
@@ -121,98 +102,165 @@ export default function HeroBackground({ onCanvasReady }: HeroBackgroundProps) {
     const container = containerRef.current;
     if (!container) return;
 
-    const maxDpr = gpuTier === "low" ? 1 : gpuTier === "mid" ? 1.5 : 2;
+    let animationFrame: number | null = null;
+    let disposed = false;
+    let failureReported = false;
+    let isIntersecting = true;
+    let lastRenderTime = 0;
+
+    const stopLoop = () => {
+      if (animationFrame === null) return;
+      cancelAnimationFrame(animationFrame);
+      animationFrame = null;
+    };
+
+    const reportFailure = () => {
+      if (failureReported || disposed) return;
+      failureReported = true;
+      stopLoop();
+      onFailure?.();
+    };
+
+    let renderer: THREE.WebGLRenderer;
+    try {
+      renderer = new THREE.WebGLRenderer({ antialias: false, alpha: true });
+    } catch {
+      onFailure?.();
+      return;
+    }
 
     const scene = new THREE.Scene();
     const camera = new THREE.Camera();
-
-    const renderer = new THREE.WebGLRenderer({ antialias: false, alpha: false, preserveDrawingBuffer: true });
-    renderer.setSize(container.clientWidth, container.clientHeight);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, maxDpr));
-    container.appendChild(renderer.domElement);
-    onCanvasReady?.(renderer.domElement);
-
+    const geometry = new THREE.PlaneGeometry(2, 2);
     const uniforms = {
       uTime: { value: 0 },
-      uResolution: {
-        value: new THREE.Vector2(container.clientWidth, container.clientHeight),
-      },
-      uMouse: { value: new THREE.Vector2(0.5, 0.5) },
+      uResolution: { value: new THREE.Vector2(1, 1) },
     };
-
-    const geometry = new THREE.PlaneGeometry(2, 2);
     const material = new THREE.ShaderMaterial({
       vertexShader,
-      fragmentShader: buildFragmentShader(gpuTier),
+      fragmentShader,
       uniforms,
+      transparent: true,
+      depthWrite: false,
+      depthTest: false,
     });
-
     scene.add(new THREE.Mesh(geometry, material));
 
-    // Mouse tracking (skip listener on low tier — shader ignores it)
-    let targetMouse = { x: 0.5, y: 0.5 };
-    const onMouseMove = gpuTier !== "low"
-      ? (e: MouseEvent) => {
-          const rect = container.getBoundingClientRect();
-          targetMouse.x = (e.clientX - rect.left) / rect.width;
-          targetMouse.y = 1.0 - (e.clientY - rect.top) / rect.height;
-        }
-      : null;
-    if (onMouseMove) window.addEventListener("mousemove", onMouseMove);
+    const canvas = renderer.domElement;
+    canvas.setAttribute("aria-hidden", "true");
+    canvas.setAttribute("role", "presentation");
+    canvas.tabIndex = -1;
+    canvas.style.pointerEvents = "none";
 
-    // Resize
-    const onResize = () => {
-      const w = container.clientWidth;
-      const h = container.clientHeight;
-      renderer.setSize(w, h);
-      uniforms.uResolution.value.set(w, h);
-    };
-    window.addEventListener("resize", onResize);
+    const maxDpr = gpuTier === "high" ? 1.25 : 1;
+    renderer.setClearColor(0x000000, 0);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, maxDpr));
 
-    // Render loop with visibility check
-    const clock = new THREE.Clock();
-    let animationId: number;
-    let isVisible = true;
+    const resize = () => {
+      const width = Math.max(1, container.clientWidth);
+      const height = Math.max(1, container.clientHeight);
 
-    const animate = () => {
-      if (isVisible) {
-        uniforms.uTime.value = clock.getElapsedTime();
-
-        if (onMouseMove) {
-          uniforms.uMouse.value.x += (targetMouse.x - uniforms.uMouse.value.x) * 0.05;
-          uniforms.uMouse.value.y += (targetMouse.y - uniforms.uMouse.value.y) * 0.05;
-        }
-
-        renderer.render(scene, camera);
+      try {
+        renderer.setSize(width, height, false);
+        uniforms.uResolution.value.set(width, height);
+      } catch {
+        reportFailure();
       }
-      animationId = requestAnimationFrame(animate);
     };
-    animate();
 
-    // Pause rendering when offscreen
-    const observer = new IntersectionObserver(
-      ([entry]) => { isVisible = entry.isIntersecting; },
-      { threshold: 0.05 }
-    );
-    observer.observe(container);
-
-    return () => {
-      cancelAnimationFrame(animationId);
-      observer.disconnect();
-      if (onMouseMove) window.removeEventListener("mousemove", onMouseMove);
-      window.removeEventListener("resize", onResize);
+    resize();
+    if (failureReported) {
       geometry.dispose();
       material.dispose();
       renderer.dispose();
-      if (container.contains(renderer.domElement)) {
-        container.removeChild(renderer.domElement);
+      return;
+    }
+    container.appendChild(canvas);
+
+    const frameInterval = 1000 / 30;
+
+    const scheduleFrame = () => {
+      if (
+        disposed ||
+        failureReported ||
+        animationFrame !== null ||
+        document.hidden ||
+        !isIntersecting
+      )
+        return;
+
+      animationFrame = requestAnimationFrame(renderFrame);
+    };
+
+    const renderFrame = (time: number) => {
+      animationFrame = null;
+      if (disposed || failureReported || document.hidden || !isIntersecting)
+        return;
+
+      if (lastRenderTime === 0 || time - lastRenderTime >= frameInterval) {
+        uniforms.uTime.value = time * 0.001;
+        try {
+          renderer.render(scene, camera);
+        } catch {
+          reportFailure();
+          return;
+        }
+        lastRenderTime = time;
+      }
+
+      scheduleFrame();
+    };
+
+    const handleVisibilityChange = () => {
+      if (document.hidden) stopLoop();
+      else {
+        lastRenderTime = 0;
+        scheduleFrame();
       }
     };
-  }, [onCanvasReady, gpuTier]);
+
+    const handleContextLost = (event: Event) => {
+      event.preventDefault();
+      reportFailure();
+    };
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        isIntersecting = entry.isIntersecting;
+        if (isIntersecting) {
+          lastRenderTime = 0;
+          scheduleFrame();
+        } else {
+          stopLoop();
+        }
+      },
+      { threshold: 0.01 },
+    );
+
+    observer.observe(container);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    window.addEventListener("resize", resize, { passive: true });
+    canvas.addEventListener("webglcontextlost", handleContextLost);
+    scheduleFrame();
+
+    return () => {
+      disposed = true;
+      stopLoop();
+      observer.disconnect();
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      window.removeEventListener("resize", resize);
+      canvas.removeEventListener("webglcontextlost", handleContextLost);
+      geometry.dispose();
+      material.dispose();
+      renderer.dispose();
+      if (container.contains(canvas)) container.removeChild(canvas);
+    };
+  }, [gpuTier, onFailure]);
 
   return (
     <div
       ref={containerRef}
+      aria-hidden="true"
       style={{
         position: "absolute",
         inset: 0,
