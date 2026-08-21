@@ -10,8 +10,22 @@ export const formatLabels: Record<PostFormat, string> = {
 };
 
 type FormattedPost = { format: PostFormat };
-type ArchivePost = FormattedPost & { slug: string; title: string };
+export type ArchivePost = FormattedPost & { slug: string; title: string };
 export type PostFormatFilter = "all" | PostFormat;
+
+export interface WritingArchiveViewModel<T extends ArchivePost> {
+  filters: Array<{
+    value: PostFormatFilter;
+    label: string;
+    active: boolean;
+  }>;
+  cards: Array<{
+    href: string;
+    title: string;
+    formatLabel: string;
+    post: T;
+  }>;
+}
 
 export function getAvailableFormats(
   posts: readonly FormattedPost[],
@@ -31,7 +45,7 @@ export function filterPostsByFormat<T extends FormattedPost>(
 export function createWritingArchiveViewModel<T extends ArchivePost>(
   posts: readonly T[],
   activeFormat: PostFormatFilter,
-) {
+): WritingArchiveViewModel<T> {
   return {
     filters: (["all", ...getAvailableFormats(posts)] as const).map((value) => ({
       value,

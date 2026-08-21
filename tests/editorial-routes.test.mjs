@@ -1,11 +1,14 @@
 import assert from "node:assert/strict";
 import fs from "node:fs";
+import { createRequire } from "node:module";
 import path from "node:path";
 import test from "node:test";
 import ts from "typescript";
 
 const root = process.cwd();
 const read = (file) => fs.readFileSync(path.join(root, file), "utf8");
+const requireFromTest = createRequire(import.meta.url);
+const React = requireFromTest("react");
 const editorialRouteEntries = [
   "src/app/about/page.tsx",
   "src/app/research/page.tsx",
@@ -154,43 +157,138 @@ function runtimeViolations(file) {
   return violations;
 }
 
+function splitSelectorList(source) {
+  const members = [];
+  let start = 0;
+  let quote = null;
+  let escaped = false;
+  let brackets = 0;
+  let parentheses = 0;
+  let interpolation = 0;
+
+  for (let cursor = 0; cursor < source.length; cursor += 1) {
+    const character = source[cursor];
+    if (escaped) {
+      escaped = false;
+      continue;
+    }
+    if (character === "\\") {
+      escaped = true;
+      continue;
+    }
+    if (quote) {
+      if (character === quote) quote = null;
+      continue;
+    }
+    if (character === '"' || character === "'") {
+      quote = character;
+      continue;
+    }
+    if (character === "#" && source[cursor + 1] === "{") {
+      interpolation += 1;
+      cursor += 1;
+      continue;
+    }
+    if (interpolation > 0) {
+      if (character === "{") interpolation += 1;
+      if (character === "}") interpolation -= 1;
+      continue;
+    }
+    if (character === "[") brackets += 1;
+    if (character === "]") brackets -= 1;
+    if (character === "(") parentheses += 1;
+    if (character === ")") parentheses -= 1;
+    if (
+      character === "," &&
+      brackets === 0 &&
+      parentheses === 0 &&
+      interpolation === 0
+    ) {
+      members.push(source.slice(start, cursor).trim());
+      start = cursor + 1;
+    }
+  }
+
+  members.push(source.slice(start).trim());
+  return members;
+}
+
 function scssBlocks(source, selector) {
   const blocks = [];
   const clean = source.replace(/\/\*[\s\S]*?\*\//g, "");
-  let depth = 0;
+  let blockDepth = 0;
   let preludeStart = 0;
+  let matchedBlockStart = null;
+  let quote = null;
+  let escaped = false;
+  let brackets = 0;
+  let parentheses = 0;
+  let interpolation = 0;
 
   for (let cursor = 0; cursor < clean.length; cursor += 1) {
-    if (clean[cursor] === "{" && depth === 0) {
-      const members = clean
-        .slice(preludeStart, cursor)
-        .split(",")
-        .map((member) => member.trim());
-      if (members.includes(selector.trim())) {
-        let blockDepth = 1;
-        let end = cursor + 1;
-        while (end < clean.length && blockDepth > 0) {
-          if (clean[end] === "{") blockDepth += 1;
-          if (clean[end] === "}") blockDepth -= 1;
-          end += 1;
-        }
-        if (blockDepth === 0) blocks.push(clean.slice(cursor + 1, end - 1));
-      }
-      depth += 1;
+    const character = clean[cursor];
+    if (escaped) {
+      escaped = false;
       continue;
     }
-    if (clean[cursor] === "{") depth += 1;
-    if (clean[cursor] === "}") {
-      depth -= 1;
-      if (depth === 0) preludeStart = cursor + 1;
+    if (character === "\\") {
+      escaped = true;
+      continue;
     }
-    if (clean[cursor] === ";" && depth === 0) preludeStart = cursor + 1;
+    if (quote) {
+      if (character === quote) quote = null;
+      continue;
+    }
+    if (character === '"' || character === "'") {
+      quote = character;
+      continue;
+    }
+    if (character === "#" && clean[cursor + 1] === "{") {
+      interpolation += 1;
+      cursor += 1;
+      continue;
+    }
+    if (interpolation > 0) {
+      if (character === "{") interpolation += 1;
+      if (character === "}") interpolation -= 1;
+      continue;
+    }
+    if (character === "[") brackets += 1;
+    if (character === "]") brackets -= 1;
+    if (character === "(") parentheses += 1;
+    if (character === ")") parentheses -= 1;
+    if (brackets > 0 || parentheses > 0) continue;
+
+    if (character === "{") {
+      if (
+        blockDepth === 0 &&
+        splitSelectorList(clean.slice(preludeStart, cursor)).includes(
+          selector.trim(),
+        )
+      ) {
+        matchedBlockStart = cursor;
+      }
+      blockDepth += 1;
+      continue;
+    }
+    if (character === "}") {
+      blockDepth -= 1;
+      if (blockDepth === 0) {
+        if (matchedBlockStart !== null) {
+          blocks.push(clean.slice(matchedBlockStart + 1, cursor));
+          matchedBlockStart = null;
+        }
+        preludeStart = cursor + 1;
+      }
+      continue;
+    }
+    if (character === ";" && blockDepth === 0) preludeStart = cursor + 1;
   }
 
   return blocks;
 }
 
-function archiveRendersViewModel(source) {
+function archiveIsThinWrapper(source) {
   const ast = parseSource(source);
   const component = ast.statements.find(
     (statement) =>
@@ -198,119 +296,65 @@ function archiveRendersViewModel(source) {
       statement.name?.text === "WritingArchive",
   );
   if (!component?.body) return false;
-
-  function contains(node, predicate) {
-    let found = false;
-    function visit(child) {
-      if (predicate(child)) {
-        found = true;
-        return;
-      }
-      ts.forEachChild(child, visit);
-    }
-    visit(node);
-    return found;
-  }
-
-  const modelDeclaration = component.body.statements
-    .filter(ts.isVariableStatement)
-    .flatMap((statement) => [...statement.declarationList.declarations])
-    .find(
-      (declaration) =>
-        ts.isIdentifier(declaration.name) &&
-        declaration.initializer &&
-        ts.isCallExpression(declaration.initializer) &&
-        ts.isIdentifier(declaration.initializer.expression) &&
-        declaration.initializer.expression.text ===
-          "createWritingArchiveViewModel" &&
-        declaration.initializer.arguments.length === 2 &&
-        declaration.initializer.arguments.every(
-          (argument, index) =>
-            ts.isIdentifier(argument) &&
-            argument.text === ["posts", "activeFormat"][index],
-        ),
-    );
-  if (!modelDeclaration || !ts.isIdentifier(modelDeclaration.name))
+  if (component.body.statements.length !== 2) return false;
+  const [stateStatement, returnStatement] = component.body.statements;
+  if (
+    !ts.isVariableStatement(stateStatement) ||
+    stateStatement.declarationList.declarations.length !== 1 ||
+    !ts.isReturnStatement(returnStatement) ||
+    !returnStatement.expression
+  ) {
     return false;
-  const modelName = modelDeclaration.name.text;
-
-  const renderUses = new Set();
-  let returnedMapCalls = 0;
-  for (const statement of component.body.statements) {
-    if (!ts.isReturnStatement(statement) || !statement.expression) continue;
-    contains(statement.expression, (node) => {
-      let returnAncestor = node.parent;
-      let crossesNestedFunction = false;
-      while (returnAncestor && returnAncestor !== statement.expression) {
-        if (ts.isFunctionLike(returnAncestor)) crossesNestedFunction = true;
-        returnAncestor = returnAncestor.parent;
-      }
-      if (
-        !ts.isCallExpression(node) ||
-        !ts.isPropertyAccessExpression(node.expression) ||
-        node.expression.name.text !== "map"
-      ) {
-        return false;
-      }
-      returnedMapCalls += 1;
-      if (
-        node.arguments.length === 0 ||
-        crossesNestedFunction ||
-        returnAncestor !== statement.expression ||
-        !ts.isJsxExpression(node.parent) ||
-        node.parent.expression !== node
-      ) {
-        return false;
-      }
-      const receiver = node.expression.expression;
-      if (
-        !ts.isPropertyAccessExpression(receiver) ||
-        !ts.isIdentifier(receiver.expression) ||
-        receiver.expression.text !== modelName
-      ) {
-        return false;
-      }
-      const callback = node.arguments[0];
-      if (
-        receiver.name.text === "filters" &&
-        contains(
-          callback,
-          (child) =>
-            (ts.isJsxOpeningElement(child) ||
-              ts.isJsxSelfClosingElement(child)) &&
-            child.tagName.getText(ast).toLowerCase() === "button",
-        )
-      ) {
-        renderUses.add("filters");
-      }
-      if (
-        receiver.name.text === "cards" &&
-        contains(callback, (child) => {
-          if (
-            !ts.isJsxAttribute(child) ||
-            child.name.getText(ast) !== "className"
-          ) {
-            return false;
-          }
-          const expression = child.initializer;
-          return (
-            expression !== undefined &&
-            ts.isJsxExpression(expression) &&
-            expression.expression !== undefined &&
-            ts.isPropertyAccessExpression(expression.expression) &&
-            ts.isIdentifier(expression.expression.expression) &&
-            expression.expression.expression.text === "styles" &&
-            expression.expression.name.text === "card"
-          );
-        })
-      ) {
-        renderUses.add("cards");
-      }
-      return false;
-    });
   }
 
-  return returnedMapCalls === 2 && renderUses.size === 2;
+  const [stateDeclaration] = stateStatement.declarationList.declarations;
+  if (
+    !ts.isArrayBindingPattern(stateDeclaration.name) ||
+    stateDeclaration.name.elements.length !== 2 ||
+    !stateDeclaration.initializer ||
+    !ts.isCallExpression(stateDeclaration.initializer) ||
+    !ts.isIdentifier(stateDeclaration.initializer.expression) ||
+    stateDeclaration.initializer.expression.text !== "useState" ||
+    stateDeclaration.initializer.arguments.length !== 1 ||
+    !ts.isStringLiteral(stateDeclaration.initializer.arguments[0]) ||
+    stateDeclaration.initializer.arguments[0].text !== "all"
+  ) {
+    return false;
+  }
+  const [stateElement, setterElement] = stateDeclaration.name.elements;
+  if (
+    !ts.isBindingElement(stateElement) ||
+    !ts.isIdentifier(stateElement.name) ||
+    !ts.isBindingElement(setterElement) ||
+    !ts.isIdentifier(setterElement.name)
+  ) {
+    return false;
+  }
+
+  const surfaceCall = returnStatement.expression;
+  if (
+    !ts.isCallExpression(surfaceCall) ||
+    !ts.isIdentifier(surfaceCall.expression) ||
+    surfaceCall.expression.text !== "renderWritingArchive" ||
+    surfaceCall.arguments.length !== 3
+  ) {
+    return false;
+  }
+  const [modelCall, selectionCallback, classNames] = surfaceCall.arguments;
+  return (
+    ts.isCallExpression(modelCall) &&
+    ts.isIdentifier(modelCall.expression) &&
+    modelCall.expression.text === "createWritingArchiveViewModel" &&
+    modelCall.arguments.length === 2 &&
+    ts.isIdentifier(modelCall.arguments[0]) &&
+    modelCall.arguments[0].text === "posts" &&
+    ts.isIdentifier(modelCall.arguments[1]) &&
+    modelCall.arguments[1].text === stateElement.name.text &&
+    ts.isIdentifier(selectionCallback) &&
+    selectionCallback.text === setterElement.name.text &&
+    ts.isIdentifier(classNames) &&
+    classNames.text === "styles"
+  );
 }
 
 function animationDeclarations(source) {
@@ -332,6 +376,48 @@ async function importTypeScriptModule(file) {
   return import(
     `data:text/javascript;base64,${Buffer.from(output).toString("base64")}`
   );
+}
+
+function importCommonJsTypeScriptModule(file) {
+  const output = ts.transpileModule(read(file), {
+    compilerOptions: {
+      module: ts.ModuleKind.CommonJS,
+      target: ts.ScriptTarget.ES2022,
+    },
+  }).outputText;
+  const module = { exports: {} };
+  const requireFromModule = createRequire(path.join(root, file));
+  Function(
+    "require",
+    "module",
+    "exports",
+    output,
+  )(requireFromModule, module, module.exports);
+  return module.exports;
+}
+
+function reactElements(rootElement) {
+  const elements = [];
+  function visit(node) {
+    if (Array.isArray(node)) {
+      node.forEach(visit);
+      return;
+    }
+    if (!React.isValidElement(node)) return;
+    elements.push(node);
+    React.Children.forEach(node.props.children, visit);
+  }
+  visit(rootElement);
+  return elements;
+}
+
+function reactText(node) {
+  if (node === null || node === undefined || typeof node === "boolean")
+    return "";
+  if (typeof node === "string" || typeof node === "number") return String(node);
+  if (Array.isArray(node)) return node.map(reactText).join("");
+  if (React.isValidElement(node)) return reactText(node.props.children);
+  return "";
 }
 
 test("the global shell excludes smooth scroll, custom cursor, and transition machinery", () => {
@@ -624,12 +710,6 @@ test("sitemap and machine surfaces expose only canonical public routes", () => {
   }
 });
 
-test("writing format filters expose their selected state", () => {
-  const source = read("src/app/writing/WritingArchive.tsx");
-  assert.match(source, /aria-pressed=\{filter\.active\}/);
-  assert.match(source, /setActiveFormat\(filter\.value\)/);
-});
-
 test("editorial shell and routes apply the real static texture without theatre", () => {
   const texture = path.join(root, "public/noisetexture.jpg");
   assert.ok(fs.statSync(texture).size > 0);
@@ -696,6 +776,26 @@ test("SCSS root matching rejects exact selectors nested below another rule", () 
     scssBlocks('.page { background: url("/noisetexture.jpg"); }', ".page"),
     [' background: url("/noisetexture.jpg"); '],
   );
+});
+
+test("SCSS selector lists ignore commas inside selector syntax", () => {
+  for (const selector of [
+    '[data-copy="x, .page, y"]',
+    "[data-copy='x, .page, y']",
+    ":is(.foo,.page)",
+    String.raw`.escaped\,item`,
+    String.raw`.item-#{"x,.page"}`,
+  ]) {
+    assert.deepEqual(
+      scssBlocks(`${selector} { color: green; }`, ".page"),
+      [],
+      `${selector} exposed an internal comma as a selector boundary`,
+    );
+  }
+
+  assert.deepEqual(scssBlocks(".pageShell, .page { color: green; }", ".page"), [
+    " color: green; ",
+  ]);
 });
 
 test("animation scanning rejects renamed shorthand and name declarations", () => {
@@ -807,8 +907,133 @@ test("writing derives only available formats and filters real post fixtures", as
   );
 
   const archive = read("src/app/writing/WritingArchive.tsx");
-  assert.equal(archiveRendersViewModel(archive), true);
+  assert.equal(archiveIsThinWrapper(archive), true);
   assert.doesNotMatch(archive, /No posts in this category yet/);
+});
+
+test("archive presentation renders the verified model and wires selection", async () => {
+  const presentationPath = "src/app/writing/WritingArchivePresentation.ts";
+  assert.ok(fs.existsSync(path.join(root, presentationPath)));
+  const { renderWritingArchive } =
+    importCommonJsTypeScriptModule(presentationPath);
+  const { createWritingArchiveViewModel } = await importTypeScriptModule(
+    "src/lib/postFormats.ts",
+  );
+  const posts = [
+    {
+      slug: "essay-a",
+      title: "Essay A",
+      description: "A public essay.",
+      date: "2026-08-01",
+      category: "research",
+      format: "essay",
+      publicationState: "public",
+      featured: false,
+      readingTime: 4,
+    },
+    {
+      slug: "research-b",
+      title: "Research B",
+      description: "A public research note.",
+      date: "2026-08-02",
+      category: "research",
+      format: "research-note",
+      publicationState: "public",
+      featured: false,
+      readingTime: 6,
+    },
+    {
+      slug: "draft-c",
+      title: "Draft C",
+      description: "Not public.",
+      date: "2026-08-03",
+      category: "field-note",
+      format: "field-note",
+      publicationState: "draft",
+      featured: false,
+      readingTime: 2,
+    },
+  ];
+  const publicPosts = posts.filter(
+    ({ publicationState }) => publicationState === "public",
+  );
+  const model = createWritingArchiveViewModel(publicPosts, "all");
+  let selectedFormat = null;
+  const surface = renderWritingArchive(
+    model,
+    (format) => {
+      selectedFormat = format;
+    },
+    {
+      filters: "filters",
+      filterBtn: "filter-button",
+      active: "active",
+      list: "list",
+      card: "card",
+      cardMeta: "card-meta",
+      format: "format",
+      dot: "dot",
+      evidence: "evidence",
+      cardTitle: "card-title",
+      cardDescription: "card-description",
+    },
+  );
+  const elements = reactElements(surface);
+  const buttons = elements.filter(({ type }) => type === "button");
+  const links = elements.filter(({ type }) => type === "a");
+
+  assert.deepEqual(buttons.map(reactText), ["All", "Essay", "Research Note"]);
+  assert.deepEqual(
+    buttons.map(({ props }) => props["aria-pressed"]),
+    [true, false, false],
+  );
+  assert.deepEqual(
+    links.map(({ props }) => props.href),
+    ["/writing/essay-a", "/writing/research-b"],
+  );
+  assert.deepEqual(
+    elements.filter(({ type }) => type === "h2").map(reactText),
+    ["Essay A", "Research B"],
+  );
+  assert.deepEqual(elements.filter(({ type }) => type === "p").map(reactText), [
+    "A public essay.",
+    "A public research note.",
+  ]);
+  assert.doesNotMatch(reactText(surface), /Draft C|Field Note/);
+
+  buttons
+    .find((button) => reactText(button) === "Research Note")
+    .props.onClick();
+  assert.equal(selectedFormat, "research-note");
+
+  const filteredSurface = renderWritingArchive(
+    createWritingArchiveViewModel(publicPosts, selectedFormat),
+    () => {},
+    {
+      filters: "filters",
+      filterBtn: "filter-button",
+      active: "active",
+      list: "list",
+      card: "card",
+      cardMeta: "card-meta",
+      format: "format",
+      dot: "dot",
+      evidence: "evidence",
+      cardTitle: "card-title",
+      cardDescription: "card-description",
+    },
+  );
+  const filteredElements = reactElements(filteredSurface);
+  assert.deepEqual(
+    filteredElements
+      .filter(({ type }) => type === "button")
+      .map(({ props }) => props["aria-pressed"]),
+    [false, false, true],
+  );
+  assert.deepEqual(
+    filteredElements.filter(({ type }) => type === "h2").map(reactText),
+    ["Research B"],
+  );
 });
 
 test("archive helper checks reject dead comment mutations", () => {
@@ -818,7 +1043,7 @@ test("archive helper checks reject dead comment mutations", () => {
     // getAvailableFormats(posts)
     // filterPostsByFormat(posts, activeFormat)
   `;
-  assert.equal(archiveRendersViewModel(mutation), false);
+  assert.equal(archiveIsThinWrapper(mutation), false);
 });
 
 test("archive helper checks reject dead variables bypassed by render maps", () => {
@@ -836,7 +1061,7 @@ test("archive helper checks reject dead variables bypassed by render maps", () =
       );
     }
   `;
-  assert.equal(archiveRendersViewModel(mutation), false);
+  assert.equal(archiveIsThinWrapper(mutation), false);
 });
 
 test("archive helper checks reject correct render maps hidden behind false", () => {
@@ -853,7 +1078,7 @@ test("archive helper checks reject correct render maps hidden behind false", () 
       );
     }
   `;
-  assert.equal(archiveRendersViewModel(mutation), false);
+  assert.equal(archiveIsThinWrapper(mutation), false);
 });
 
 test("archive helper checks reject a view model shadowed inside a returned function", () => {
@@ -876,7 +1101,7 @@ test("archive helper checks reject a view model shadowed inside a returned funct
       })();
     }
   `;
-  assert.equal(archiveRendersViewModel(mutation), false);
+  assert.equal(archiveIsThinWrapper(mutation), false);
 });
 
 test("archive helper checks reject extra hard-coded render maps", () => {
@@ -894,7 +1119,62 @@ test("archive helper checks reject extra hard-coded render maps", () => {
       );
     }
   `;
-  assert.equal(archiveRendersViewModel(mutation), false);
+  assert.equal(archiveIsThinWrapper(mutation), false);
+});
+
+test("archive helper checks reject expected JSX in an unreachable branch", () => {
+  const mutation = `
+    function WritingArchive({ posts }) {
+      const activeFormat = "all";
+      const viewModel = createWritingArchiveViewModel(posts, activeFormat);
+      return false
+        ? <section>
+            {viewModel.filters.map((filter) => <button>{filter.label}</button>)}
+            {viewModel.cards.map((card) => <a className={styles.card}>{card.title}</a>)}
+          </section>
+        : null;
+    }
+  `;
+  assert.equal(archiveIsThinWrapper(mutation), false);
+});
+
+test("archive helper checks reject view-model reassignment", () => {
+  const mutation = `
+    function WritingArchive({ posts }) {
+      const activeFormat = "all";
+      let viewModel = createWritingArchiveViewModel(posts, activeFormat);
+      viewModel = {
+        filters: [{ value: "all", label: "Hard coded", active: true }],
+        cards: [{ title: "Hard coded", href: "/wrong", post: posts[0] }],
+      };
+      return (
+        <section>
+          {viewModel.filters.map((filter) => <button>{filter.label}</button>)}
+          {viewModel.cards.map((card) => <a className={styles.card}>{card.title}</a>)}
+        </section>
+      );
+    }
+  `;
+  assert.equal(archiveIsThinWrapper(mutation), false);
+});
+
+test("archive helper checks reject extra flat-mapped draft cards", () => {
+  const mutation = `
+    function WritingArchive({ posts }) {
+      const activeFormat = "all";
+      const viewModel = createWritingArchiveViewModel(posts, activeFormat);
+      return (
+        <section>
+          {viewModel.filters.map((filter) => <button>{filter.label}</button>)}
+          {viewModel.cards.map((card) => <a className={styles.card}>{card.title}</a>)}
+          {posts.flatMap((post) => post.publicationState === "draft"
+            ? [<a className={styles.card} href={"/writing/" + post.slug}>{post.title}</a>]
+            : [])}
+        </section>
+      );
+    }
+  `;
+  assert.equal(archiveIsThinWrapper(mutation), false);
 });
 
 test("article and archive share one server-safe format vocabulary", () => {
