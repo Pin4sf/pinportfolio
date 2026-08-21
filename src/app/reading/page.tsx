@@ -42,7 +42,9 @@ export default function ReadingPage() {
                 <div className={styles.meta}>
                   <span>{String(index + 1).padStart(2, "0")}</span>
                   <span>{entry.kind}</span>
-                  {entry.date && <time dateTime={entry.date}>{entry.date}</time>}
+                  {entry.date && (
+                    <time dateTime={entry.date}>{entry.date}</time>
+                  )}
                 </div>
                 <div>
                   <p className={styles.creator}>{entry.creator}</p>

@@ -2,9 +2,171 @@ import assert from "node:assert/strict";
 import fs from "node:fs";
 import path from "node:path";
 import test from "node:test";
+import ts from "typescript";
 
 const root = process.cwd();
 const read = (file) => fs.readFileSync(path.join(root, file), "utf8");
+
+function sourceFile(file) {
+  return ts.createSourceFile(
+    file,
+    read(file),
+    ts.ScriptTarget.Latest,
+    true,
+    file.endsWith(".tsx") ? ts.ScriptKind.TSX : ts.ScriptKind.TS,
+  );
+}
+
+function hasClientDirective(file) {
+  const [first] = sourceFile(file).statements;
+  return Boolean(
+    first &&
+    ts.isExpressionStatement(first) &&
+    ts.isStringLiteral(first.expression) &&
+    first.expression.text === "use client",
+  );
+}
+
+function localDependencies(file) {
+  const dependencies = [];
+  const directory = path.dirname(path.join(root, file));
+
+  for (const imported of ts.preProcessFile(read(file)).importedFiles) {
+    const specifier = imported.fileName;
+    if (!specifier.startsWith(".") && !specifier.startsWith("@/")) continue;
+
+    const base = specifier.startsWith("@/")
+      ? path.join(root, "src", specifier.slice(2))
+      : path.resolve(directory, specifier);
+    const resolved = [
+      base,
+      `${base}.ts`,
+      `${base}.tsx`,
+      path.join(base, "index.ts"),
+      path.join(base, "index.tsx"),
+    ].find(
+      (candidate) =>
+        fs.existsSync(candidate) && fs.statSync(candidate).isFile(),
+    );
+
+    if (resolved) dependencies.push(path.relative(root, resolved));
+  }
+
+  return dependencies;
+}
+
+function dependencyClosure(entry) {
+  const pending = [entry];
+  const visited = new Set();
+
+  while (pending.length > 0) {
+    const file = pending.pop();
+    if (!file || visited.has(file)) continue;
+    visited.add(file);
+    pending.push(...localDependencies(file));
+  }
+
+  return [...visited];
+}
+
+function runtimeViolations(file) {
+  const violations = [];
+  const ast = sourceFile(file);
+
+  function visit(node) {
+    if (
+      ts.isImportDeclaration(node) &&
+      ts.isStringLiteral(node.moduleSpecifier)
+    ) {
+      const specifier = node.moduleSpecifier.text;
+      if (
+        /^(?:gsap|three|lenis|framer-motion|@react-three|@react-spring)(?:\/|$)/.test(
+          specifier,
+        ) ||
+        /(?:^|\/)hooks(?:\/|$)|(?:^|\/)components\/(?:three|ui\/TransitionLink)(?:\/|$)/.test(
+          specifier,
+        )
+      ) {
+        violations.push(`${file}: imports ${specifier}`);
+      }
+    }
+
+    if (
+      ts.isIdentifier(node) &&
+      [
+        "gsap",
+        "ScrollTrigger",
+        "TransitionLink",
+        "window",
+        "document",
+        "requestAnimationFrame",
+        "cancelAnimationFrame",
+        "IntersectionObserver",
+        "ResizeObserver",
+      ].includes(node.text)
+    ) {
+      violations.push(`${file}: references ${node.text}`);
+    }
+
+    if (
+      ts.isCallExpression(node) &&
+      ts.isIdentifier(node.expression) &&
+      /^use[A-Z]/.test(node.expression.text)
+    ) {
+      violations.push(`${file}: calls ${node.expression.text}`);
+    }
+
+    if (
+      (ts.isJsxOpeningElement(node) || ts.isJsxSelfClosingElement(node)) &&
+      node.tagName.getText(ast).toLowerCase() === "canvas"
+    ) {
+      violations.push(`${file}: renders canvas`);
+    }
+
+    ts.forEachChild(node, visit);
+  }
+
+  visit(ast);
+  return violations;
+}
+
+function scssBlocks(source, selector) {
+  const blocks = [];
+  const clean = source.replace(/\/\*[\s\S]*?\*\//g, "");
+  let cursor = 0;
+
+  while (cursor < clean.length) {
+    const start = clean.indexOf(selector, cursor);
+    if (start === -1) break;
+    const open = clean.indexOf("{", start + selector.length);
+    if (open === -1) break;
+
+    let depth = 1;
+    let end = open + 1;
+    while (end < clean.length && depth > 0) {
+      if (clean[end] === "{") depth += 1;
+      if (clean[end] === "}") depth -= 1;
+      end += 1;
+    }
+
+    if (depth === 0) blocks.push(clean.slice(open + 1, end - 1));
+    cursor = end;
+  }
+
+  return blocks;
+}
+
+async function importTypeScriptModule(file) {
+  const output = ts.transpileModule(read(file), {
+    compilerOptions: {
+      module: ts.ModuleKind.ESNext,
+      target: ts.ScriptTarget.ES2022,
+    },
+  }).outputText;
+  return import(
+    `data:text/javascript;base64,${Buffer.from(output).toString("base64")}`
+  );
+}
 
 test("the global shell excludes smooth scroll, custom cursor, and transition machinery", () => {
   const layout = read("src/app/layout.tsx");
@@ -25,19 +187,37 @@ test("case study navigation stays direct without a transition provider", () => {
   assert.match(caseStudy, /<a href="\/" className=\{styles\.back\}>/);
 });
 
-test("editorial routes avoid heavy client-only dependencies", () => {
-  for (const file of [
-    "src/app/about/page.tsx",
-    "src/app/research/page.tsx",
-    "src/app/experience/page.tsx",
-  ]) {
-    const source = read(file);
-    assert.doesNotMatch(source, /^"use client"/);
-    assert.doesNotMatch(
-      source,
-      /gsap|three|ScrollTrigger|Lenis|TransitionLink/,
-    );
-  }
+test("the case-study dependency graph stays server-rendered and static", () => {
+  const files = dependencyClosure("src/app/work/[slug]/page.tsx");
+  const clientFiles = files.filter(hasClientDirective);
+  const violations = files.flatMap(runtimeViolations);
+
+  assert.deepEqual(clientFiles, []);
+  assert.deepEqual(violations, []);
+  assert.ok(files.includes("src/app/work/[slug]/CaseStudy.tsx"));
+  assert.ok(files.includes("src/app/components/editorial/EditorialFooter.tsx"));
+});
+
+test("archive filtering is the only client island in editorial routes", () => {
+  const directories = [
+    "src/app/about",
+    "src/app/research",
+    "src/app/experience",
+    "src/app/reading",
+    "src/app/writing",
+    "src/app/work",
+    "src/app/components/editorial",
+  ];
+  const files = directories.flatMap((directory) =>
+    fs
+      .readdirSync(path.join(root, directory), { recursive: true })
+      .filter((name) => /\.(?:ts|tsx)$/.test(name))
+      .map((name) => path.join(directory, name)),
+  );
+
+  assert.deepEqual(files.filter(hasClientDirective), [
+    "src/app/writing/WritingArchive.tsx",
+  ]);
 });
 
 test("editorial primitives stay server-rendered", () => {
@@ -287,36 +467,130 @@ test("writing format filters expose their selected state", () => {
   assert.match(source, /aria-pressed=\{activeFormat === format\}/);
 });
 
-test("editorial routes use static texture and bounded reading measures", () => {
-  for (const file of [
-    "src/app/research/ResearchPage.module.scss",
-    "src/app/writing/[slug]/BlogPost.module.scss",
-    "src/app/experience/ExperiencePage.module.scss",
-    "src/app/about/AboutPage.module.scss",
-    "src/app/work/[slug]/CaseStudy.module.scss",
+test("editorial shell and routes apply the real static texture without theatre", () => {
+  const texture = path.join(root, "public/noisetexture.jpg");
+  assert.ok(fs.statSync(texture).size > 0);
+
+  for (const [file, rootSelector] of [
+    ["src/app/components/editorial/EditorialHeader.module.scss", ".header"],
+    ["src/app/research/ResearchPage.module.scss", ".page"],
+    ["src/app/writing/WritingArchive.module.scss", ".page"],
+    ["src/app/writing/[slug]/BlogPost.module.scss", ".page"],
+    ["src/app/experience/ExperiencePage.module.scss", ".page"],
+    ["src/app/about/AboutPage.module.scss", ".page"],
+    ["src/app/work/[slug]/CaseStudy.module.scss", ".page"],
   ]) {
     const source = read(file);
+    const [rootRule] = scssBlocks(source, rootSelector);
+    assert.ok(rootRule, `${file} is missing ${rootSelector}`);
+    assert.match(rootRule, /url\("\/noisetexture\.jpg"\)/);
     assert.doesNotMatch(
-      source,
-      /animation:\s*grain|backdrop-filter|position:\s*sticky[\s\S]*height:\s*100vh/i,
+      source.replace(/\/\*[\s\S]*?\*\//g, ""),
+      /animation:\s*grain|backdrop-filter|position:\s*sticky/i,
     );
   }
-  assert.match(
+
+  const [article] = scssBlocks(
     read("src/app/writing/[slug]/BlogPost.module.scss"),
-    /max-width:\s*(?:68ch|760px)/,
+    ".article",
   );
+  assert.match(article, /max-width:\s*68ch/);
 });
 
-test("writing exposes complete formats without empty categories", () => {
+test("writing derives only available formats and filters real post fixtures", async () => {
+  const modulePath = path.join(root, "src/lib/postFormats.ts");
+  assert.ok(fs.existsSync(modulePath), "missing shared post-format module");
+  const { filterPostsByFormat, formatLabels, getAvailableFormats } =
+    await importTypeScriptModule("src/lib/postFormats.ts");
+  const posts = [
+    { slug: "a", format: "essay" },
+    { slug: "b", format: "research-note" },
+    { slug: "c", format: "essay" },
+  ];
+
+  assert.deepEqual(getAvailableFormats(posts), ["essay", "research-note"]);
+  assert.deepEqual(
+    filterPostsByFormat(posts, "research-note").map((post) => post.slug),
+    ["b"],
+  );
+  assert.strictEqual(filterPostsByFormat(posts, "all"), posts);
+  assert.deepEqual(formatLabels, {
+    essay: "Essay",
+    "research-note": "Research Note",
+    "field-note": "Field Note",
+    explainer: "Explainer",
+    "book-chapter": "Book / Chapter",
+    "course-lesson": "Course / Lesson",
+  });
+
   const archive = read("src/app/writing/WritingArchive.tsx");
-  assert.match(archive, /post\.format/);
-  assert.match(archive, /availableFormats/);
+  assert.match(archive, /getAvailableFormats\(posts\)/);
+  assert.match(archive, /filterPostsByFormat\(posts, activeFormat\)/);
   assert.doesNotMatch(archive, /No posts in this category yet/);
 });
 
-test("article and archive expose format labels from typed metadata", () => {
-  assert.match(read("src/app/writing/[slug]/BlogPost.tsx"), /post\.format/);
-  assert.match(read("src/app/writing/WritingArchive.tsx"), /formatLabels/);
+test("article and archive share one server-safe format vocabulary", () => {
+  for (const file of [
+    "src/app/writing/[slug]/BlogPost.tsx",
+    "src/app/writing/WritingArchive.tsx",
+  ]) {
+    const imports = sourceFile(file)
+      .statements.filter(ts.isImportDeclaration)
+      .map((statement) => statement.moduleSpecifier.text);
+    assert.ok(imports.includes("@/lib/postFormats"));
+  }
+
+  const shared = read("src/lib/postFormats.ts");
+  assert.doesNotMatch(shared, /use client|node:fs|node:path/);
+});
+
+test("mobile editorial rules scope one-column layouts and usable controls", () => {
+  const experience = read("src/app/experience/ExperiencePage.module.scss");
+  const experienceMobile = scssBlocks(
+    experience,
+    "@media (max-width: 700px)",
+  ).find((block) => block.includes(".timeline::before"));
+  assert.ok(experienceMobile, "experience timeline must collapse at 700px");
+  assert.match(
+    experienceMobile,
+    /\.entry\s*\{[\s\S]*grid-template-columns:\s*1fr/,
+  );
+
+  const waldo = read("src/app/work/[slug]/CaseStudy.module.scss");
+  const waldoMobile = scssBlocks(waldo, "@media (max-width: 700px)").find(
+    (block) => block.includes(".overview"),
+  );
+  assert.ok(waldoMobile, "Waldo is missing its 700px layout contract");
+  assert.match(waldoMobile, /\.cardGrid[\s\S]*grid-template-columns:\s*1fr/);
+
+  const artifact = read(
+    "src/app/components/editorial/ArtifactList.module.scss",
+  );
+  const [artifactMeta] = scssBlocks(artifact, ".meta");
+  assert.match(artifactMeta, /font-size:\s*0\.75rem/);
+  const artifactMobile = scssBlocks(artifact, "@media (max-width: 700px)").find(
+    (block) => block.includes(".link"),
+  );
+  assert.match(artifactMobile, /\.link\s*\{[\s\S]*min-height:\s*44px/);
+
+  const [media] = scssBlocks(waldo, ".heroFigure,\n.storyMedia");
+  const [caption] = scssBlocks(media, "figcaption");
+  const [captionLink] = scssBlocks(caption, "a");
+  assert.match(captionLink, /min-height:\s*44px/);
+});
+
+test("Waldo reserves the display scale for its title", () => {
+  const waldo = read("src/app/work/[slug]/CaseStudy.module.scss");
+  const displayConsumers = waldo.match(
+    /font-size:\s*var\(--editorial-display\)/g,
+  );
+  const [title] = scssBlocks(waldo, ".richTitle");
+  const [closing] = scssBlocks(waldo, ".closing");
+  const [closingCopy] = scssBlocks(closing, "p");
+
+  assert.equal(displayConsumers?.length, 1);
+  assert.match(title, /font-size:\s*var\(--editorial-display\)/);
+  assert.match(closingCopy, /font-size:\s*clamp\(1\.8rem, 3vw, 3rem\)/);
 });
 
 test("reading is canonical, server-rendered, and absent from primary navigation", () => {

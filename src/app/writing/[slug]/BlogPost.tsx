@@ -1,19 +1,11 @@
 import styles from "./BlogPost.module.scss";
-import type { Post, PostFormat } from "@/lib/mdx";
+import type { Post } from "@/lib/mdx";
+import { formatLabels } from "@/lib/postFormats";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import EditorialPrimaryNav from "@/app/components/editorial/EditorialPrimaryNav";
 import EditorialFooter from "@/app/components/editorial/EditorialFooter";
-
-const formatLabels: Record<PostFormat, string> = {
-  essay: "Essay",
-  "research-note": "Research Note",
-  "field-note": "Field Note",
-  explainer: "Explainer",
-  "book-chapter": "Book / Chapter",
-  "course-lesson": "Course / Lesson",
-};
 
 interface BlogPostProps {
   post: Post;

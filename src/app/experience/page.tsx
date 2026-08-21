@@ -64,7 +64,10 @@ export default function ExperiencePage() {
                   )}
 
                   {entry.tags && (
-                    <ul className={styles.tags} aria-label={`${entry.title} tags`}>
+                    <ul
+                      className={styles.tags}
+                      aria-label={`${entry.title} tags`}
+                    >
                       {entry.tags.map((tag) => (
                         <li key={tag}>{tag}</li>
                       ))}

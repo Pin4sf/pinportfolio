@@ -74,7 +74,9 @@ function parsePostMeta(
 ): PostMeta {
   const category = data.category as PostCategory;
   if (!POST_CATEGORIES.has(category)) {
-    throw new Error(`Invalid writing category "${data.category}" in ${filename}`);
+    throw new Error(
+      `Invalid writing category "${data.category}" in ${filename}`,
+    );
   }
 
   const format = data.format as PostFormat;
@@ -122,9 +124,9 @@ export function getAllPosts(): PostMeta[] {
     return parsePostMeta(slug, filename, data, content);
   });
 
-  return posts.filter((post) => post.publicationState === "public").sort(
-    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
-  );
+  return posts
+    .filter((post) => post.publicationState === "public")
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 }
 
 export function getPostBySlug(slug: string): Post | null {

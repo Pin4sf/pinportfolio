@@ -1,9 +1,4 @@
-"use client";
-
-import { useEffect, useRef, type KeyboardEvent, type ReactNode } from "react";
 import clsx from "clsx";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import {
   ArrowLeft,
   ArrowRight,
@@ -16,33 +11,19 @@ import type {
   CaseStudy as CaseStudyType,
   CaseStudyNarrative,
 } from "@/data/portfolio";
-import { useReducedMotion } from "@/app/hooks/useReducedMotion";
 import EditorialPrimaryNav from "@/app/components/editorial/EditorialPrimaryNav";
+import EditorialFooter from "@/app/components/editorial/EditorialFooter";
 import styles from "./CaseStudy.module.scss";
-
-gsap.registerPlugin(ScrollTrigger);
 
 interface CaseStudyProps {
   caseStudy: CaseStudyType;
   prev: CaseStudyType | null;
   next: CaseStudyType | null;
-  editorialFooter: EditorialFooterSlot;
 }
-
-type EditorialFooterSlot = ReactNode;
 
 interface RichCaseStudyProps {
   caseStudy: CaseStudyType;
   narrative: CaseStudyNarrative;
-}
-
-function handleMatrixKeyDown(event: KeyboardEvent<HTMLDivElement>) {
-  if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
-
-  event.preventDefault();
-  event.currentTarget.scrollBy({
-    left: event.key === "ArrowRight" ? 180 : -180,
-  });
 }
 
 function RichCaseStudy({ caseStudy, narrative }: RichCaseStudyProps) {
@@ -55,7 +36,7 @@ function RichCaseStudy({ caseStudy, narrative }: RichCaseStudyProps) {
 
   return (
     <>
-      <header className={styles.richHero} data-reveal>
+      <header className={styles.richHero}>
         <div className={styles.heroCopy}>
           <div className={styles.heroBrandRow}>
             {narrative.brandMark && (
@@ -92,7 +73,6 @@ function RichCaseStudy({ caseStudy, narrative }: RichCaseStudyProps) {
       <section
         className={clsx(styles.section, styles.overview)}
         aria-label={`${caseStudy.name} project overview`}
-        data-reveal
       >
         <div className={styles.overviewItem}>
           <span className={styles.overviewLabel}>Role</span>
@@ -133,7 +113,6 @@ function RichCaseStudy({ caseStudy, narrative }: RichCaseStudyProps) {
             id={section.id}
             key={section.id}
             className={clsx(styles.section, styles.storySection)}
-            data-reveal
           >
             <div className={styles.storyHeading}>
               <div className={styles.storyMeta}>
@@ -188,7 +167,6 @@ function RichCaseStudy({ caseStudy, narrative }: RichCaseStudyProps) {
                     aria-label={section.matrix.caption}
                     aria-describedby={`${section.id}-matrix-hint`}
                     tabIndex={0}
-                    onKeyDown={handleMatrixKeyDown}
                   >
                     <table className={styles.matrix}>
                       <caption>{section.matrix.caption}</caption>
@@ -269,7 +247,7 @@ function RichCaseStudy({ caseStudy, narrative }: RichCaseStudyProps) {
         ))}
       </div>
 
-      <section className={clsx(styles.section, styles.teamSection)} data-reveal>
+      <section className={clsx(styles.section, styles.teamSection)}>
         <div className={styles.storyHeading}>
           <p className={styles.eyebrow}>{narrative.teamEyebrow}</p>
           <h2>{narrative.teamTitle}</h2>
@@ -291,7 +269,6 @@ function RichCaseStudy({ caseStudy, narrative }: RichCaseStudyProps) {
       <section
         id="artifacts"
         className={clsx(styles.section, styles.artifactsSection)}
-        data-reveal
       >
         <div className={styles.artifactsHeader}>
           <div className={styles.storyHeading}>
@@ -365,7 +342,7 @@ function RichCaseStudy({ caseStudy, narrative }: RichCaseStudyProps) {
         </div>
       </section>
 
-      <blockquote className={styles.closing} data-reveal>
+      <blockquote className={styles.closing}>
         <p>{narrative.closing}</p>
       </blockquote>
     </>
@@ -482,53 +459,11 @@ function StandardCaseStudy({ caseStudy }: { caseStudy: CaseStudyType }) {
   );
 }
 
-export default function CaseStudy({
-  caseStudy,
-  prev,
-  next,
-  editorialFooter,
-}: CaseStudyProps) {
-  const pageRef = useRef<HTMLElement>(null);
-  const reducedMotion = useReducedMotion();
-
-  useEffect(() => {
-    if (
-      reducedMotion ||
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches
-    )
-      return;
-
-    const page = pageRef.current;
-    if (!page) return;
-
-    const context = gsap.context(() => {
-      gsap.utils.toArray<HTMLElement>("[data-reveal]").forEach((element) => {
-        gsap.fromTo(
-          element,
-          { y: 28, opacity: 0 },
-          {
-            y: 0,
-            opacity: 1,
-            duration: 0.75,
-            ease: "power3.out",
-            scrollTrigger: {
-              trigger: element,
-              start: "top 84%",
-              once: true,
-            },
-          },
-        );
-      });
-    }, page);
-
-    return () => context.revert();
-  }, [reducedMotion]);
-
+export default function CaseStudy({ caseStudy, prev, next }: CaseStudyProps) {
   return (
     <>
       <main
         id="main-content"
-        ref={pageRef}
         className={clsx(styles.page, caseStudy.narrative && styles.richPage)}
       >
         <div className={styles.primaryNavigation}>
@@ -576,7 +511,7 @@ export default function CaseStudy({
           )}
         </nav>
       </main>
-      {editorialFooter}
+      <EditorialFooter />
     </>
   );
 }

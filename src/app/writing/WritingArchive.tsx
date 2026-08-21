@@ -2,32 +2,23 @@
 
 import { useState } from "react";
 import styles from "./WritingArchive.module.scss";
-import type { PostFormat, PostMeta } from "@/lib/mdx";
+import type { PostMeta } from "@/lib/mdx";
+import {
+  filterPostsByFormat,
+  formatLabels,
+  getAvailableFormats,
+  type PostFormatFilter,
+} from "@/lib/postFormats";
 import Link from "next/link";
-
-const formatLabels: Record<PostFormat, string> = {
-  essay: "Essay",
-  "research-note": "Research Note",
-  "field-note": "Field Note",
-  explainer: "Explainer",
-  "book-chapter": "Book / Chapter",
-  "course-lesson": "Course / Lesson",
-};
 
 interface WritingArchiveProps {
   posts: PostMeta[];
 }
 
 export default function WritingArchive({ posts }: WritingArchiveProps) {
-  const [activeFormat, setActiveFormat] = useState<"all" | PostFormat>("all");
-  const availableFormats = Array.from(
-    new Set(posts.map((post) => post.format)),
-  );
-
-  const filteredPosts =
-    activeFormat === "all"
-      ? posts
-      : posts.filter((post) => post.format === activeFormat);
+  const [activeFormat, setActiveFormat] = useState<PostFormatFilter>("all");
+  const availableFormats = getAvailableFormats(posts);
+  const filteredPosts = filterPostsByFormat(posts, activeFormat);
 
   return (
     <section aria-label="Writing archive">
