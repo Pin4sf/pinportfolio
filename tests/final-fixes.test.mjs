@@ -73,14 +73,17 @@ test("selected chapters use exact stable slugs and expose bounded evidence", asy
 });
 
 test("homepage restores the strongest original articulation without rolling back Reading", async () => {
-  const { homepageData, researchDirectionData } =
+  const { homepageData, researchDirectionData, trajectoryPhases } =
     await import("../src/data/portfolio.ts");
 
   assert.equal(researchDirectionData.eyebrow, "A thread of curiosity");
   assert.equal(researchDirectionData.title, "Models → Agents → World.");
   assert.equal(
     researchDirectionData.introduction,
-    "I started below the interface, working on multilingual data and model infrastructure. Then I watched models become systems with tools, permissions, failures, and real users. Now I want to understand what changes when agents begin to see, move, and act in the physical world.",
+    trajectoryPhases
+      .filter(({ id }) => ["models", "agents", "world"].includes(id))
+      .map(({ summary }) => summary)
+      .join(" "),
   );
   assert.equal(
     researchDirectionData.waypoints[2].question,
@@ -90,7 +93,7 @@ test("homepage restores the strongest original articulation without rolling back
   assert.equal(homepageData.contact.title, "Let’s Build Something");
   assert.equal(
     homepageData.contact.invitation,
-    "Have a question, a disagreement, or something worth building? Write to me.",
+    "Have a question, a disagreement, or a thread worth following? Write to me.",
   );
   assert.equal(homepageData.reading.title, "Things I keep returning to.");
   assert.equal(homepageData.reading.cta.href, "/reading");

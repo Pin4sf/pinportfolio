@@ -496,11 +496,23 @@ export const nowSectionData = {
   },
 } as const;
 
+const trajectoryNarrative = {
+  models:
+    "I started below the interface, working on multilingual data and model infrastructure.",
+  agents:
+    "Then I watched models become systems with tools, permissions, failures, and real users.",
+  world:
+    "I want to understand what changes when agents begin to see, move, and act in the physical world.",
+} as const;
+
 export const researchDirectionData = {
   eyebrow: "A thread of curiosity",
   title: "Models → Agents → World.",
-  introduction:
-    "I started below the interface, working on multilingual data and model infrastructure. Then I watched models become systems with tools, permissions, failures, and real users. Now I want to understand what changes when agents begin to see, move, and act in the physical world.",
+  introduction: [
+    trajectoryNarrative.models,
+    trajectoryNarrative.agents,
+    trajectoryNarrative.world,
+  ].join(" "),
   waypoints: [
     {
       label: "Models",
@@ -566,7 +578,7 @@ export const homepageData = {
     eyebrow: "Contact",
     title: "Let’s Build Something",
     invitation:
-      "Have a question, a disagreement, or something worth building? Write to me.",
+      "Have a question, a disagreement, or a thread worth following? Write to me.",
     externalLinkLabel: "Opens in a new tab",
   },
 } as const satisfies HomepageData;
@@ -607,16 +619,14 @@ export const trajectoryPhases: TrajectoryPhase[] = [
     number: "01",
     title: "Models",
     context: "Project EKA",
-    summary:
-      "I started below the interface, working on multilingual data and model infrastructure.",
+    summary: trajectoryNarrative.models,
   },
   {
     id: "agents",
     number: "02",
     title: "Agents",
     context: "Atlan",
-    summary:
-      "Then I watched models become systems with tools, permissions, failures, and real users.",
+    summary: trajectoryNarrative.agents,
   },
   {
     id: "waldo",
@@ -631,8 +641,7 @@ export const trajectoryPhases: TrajectoryPhase[] = [
     number: "04",
     title: "World",
     context: "Longer term",
-    summary:
-      "I want to understand what changes when agents begin to see, move, and act in the physical world.",
+    summary: trajectoryNarrative.world,
   },
 ];
 
