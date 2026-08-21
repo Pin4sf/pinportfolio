@@ -26,21 +26,20 @@ export default function Now() {
           <span className="section__label">{nowSectionData.eyebrow}</span>
           <h2>{nowSectionData.title}</h2>
           <p>{waldo.summary}</p>
-          <p className={styles.status}>
-            Working internal foundations; external product and market validation
-            remain open.
-          </p>
+          <p className={styles.status}>{nowSectionData.status}</p>
 
           <div className={styles.links}>
             <Link href={waldo.href}>
-              Explore Waldo <ArrowUpRight size={15} aria-hidden="true" />
+              {nowSectionData.links.caseStudy.label}{" "}
+              <ArrowUpRight size={15} aria-hidden="true" />
             </Link>
             <a
-              href="https://www.heywaldo.in/"
+              href={nowSectionData.links.product.href}
               target="_blank"
               rel="noopener noreferrer"
             >
-              Visit Waldo <ArrowUpRight size={15} aria-hidden="true" />
+              {nowSectionData.links.product.label}{" "}
+              <ArrowUpRight size={15} aria-hidden="true" />
             </a>
             {founderVideo && (
               <a
@@ -59,7 +58,7 @@ export default function Now() {
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={waldo.image}
-              alt="Waldo product system"
+              alt={nowSectionData.imageAlt}
               className={styles.image}
               loading="lazy"
             />

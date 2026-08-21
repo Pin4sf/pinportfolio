@@ -9,7 +9,6 @@ interface ReadingPreviewProps {
 export default function ReadingPreview({ entries }: ReadingPreviewProps) {
   return (
     <section className={styles.section} aria-labelledby="reading-preview-title">
-      {/* Reading · Things I keep returning to. */}
       <div className={styles.header}>
         <div>
           <span className="section__label">{homepageData.reading.eyebrow}</span>

@@ -21,6 +21,18 @@ const writingStyles = read("src/app/components/sections/Writing.module.scss");
 const blogPost = read("src/app/writing/[slug]/BlogPost.tsx");
 const caseStudyComponent = read("src/app/work/[slug]/CaseStudy.tsx");
 const homepageSources = [portfolio, page, hero].join("\n");
+const nowSectionSource = portfolio.slice(
+  portfolio.indexOf("export const nowSectionData"),
+  portfolio.indexOf("export const researchDirectionData"),
+);
+const researchDirectionSource = portfolio.slice(
+  portfolio.indexOf("export const researchDirectionData"),
+  portfolio.indexOf("export const homepageData"),
+);
+const homepageDataSource = portfolio.slice(
+  portfolio.indexOf("export const homepageData"),
+  portfolio.indexOf("// ==================== ABOUT"),
+);
 const caseStudiesSource = portfolio.slice(
   portfolio.indexOf("export const caseStudies"),
   portfolio.indexOf("// ==================== SKILLS"),
@@ -48,11 +60,23 @@ test("homepage follows the approved signal-observatory sequence", () => {
     "<PersonalPreview />",
     "<Contact />",
   ];
+  const positions = sequence.map((component) => {
+    const position = page.indexOf(component);
+    assert.notEqual(position, -1, `Homepage missing ${component}`);
+    return position;
+  });
   for (let index = 1; index < sequence.length; index += 1) {
     assert.ok(
-      page.indexOf(sequence[index - 1]) < page.indexOf(sequence[index]),
+      positions[index - 1] < positions[index],
+      `${sequence[index - 1]} should precede ${sequence[index]}`,
     );
   }
+  const footerPosition = page.indexOf("<EditorialFooter />");
+  assert.notEqual(footerPosition, -1, "Homepage missing EditorialFooter");
+  assert.ok(
+    positions.at(-1) < footerPosition,
+    "EditorialFooter should follow Contact",
+  );
   assert.doesNotMatch(
     page,
     /<SmoothScroll|dynamic\(\(\) => import\("\.\/components\/sections\/(?:Now|CuriosityThread|Writing|ReadingPreview|SelectedChapters|PersonalPreview|Contact)/,
@@ -61,29 +85,81 @@ test("homepage follows the approved signal-observatory sequence", () => {
 
 test("connected research direction has one path and one action", () => {
   const source = read("src/app/components/sections/CuriosityThread.tsx");
-  assert.match(source, /Research direction/);
-  assert.match(source, /From capability to consequence\./);
-  assert.match(source, /researchDirectionData\.waypoints\.map/);
-  assert.equal((source.match(/href="\/research"/g) ?? []).length, 1);
-  assert.doesNotMatch(source, /Follow the thread|<Link[\s\S]*waypoints\.map/);
+  assert.match(researchDirectionSource, /eyebrow: "Research direction"/);
+  assert.match(
+    researchDirectionSource,
+    /title: "From capability to consequence\."/,
+  );
+  assert.match(
+    researchDirectionSource,
+    /cta: \{ label: "Explore the research", href: "\/research" \}/,
+  );
+  for (const binding of ["eyebrow", "title", "introduction"]) {
+    assert.match(source, new RegExp(`researchDirectionData\\.${binding}`));
+  }
+
+  const mapStart = source.indexOf("researchDirectionData.waypoints.map");
+  const mapEnd = source.indexOf("</ol>", mapStart);
+  assert.notEqual(mapStart, -1, "Research waypoint map is missing");
+  assert.notEqual(mapEnd, -1, "Research waypoint list is not closed");
+  const waypointCallback = source.slice(mapStart, mapEnd);
+  assert.doesNotMatch(
+    waypointCallback,
+    /<Link\b|href=/,
+    "Waypoints must not contain links",
+  );
+
+  assert.equal((source.match(/<Link\b/g) ?? []).length, 1);
+  assert.match(
+    source,
+    /<Link href=\{researchDirectionData\.cta\.href\} className=\{styles\.cta\}>[\s\S]*?\{researchDirectionData\.cta\.label\}/,
+  );
+  assert.doesNotMatch(
+    source,
+    /Research direction|From capability to consequence\.|Follow the thread/,
+  );
 });
 
 test("homepage writing and reading are editorial lists", () => {
   const writing = read("src/app/components/sections/Writing.tsx");
   const reading = read("src/app/components/sections/ReadingPreview.tsx");
+  assert.match(homepageDataSource, /title: "Notes from the work\."/);
+  assert.match(homepageDataSource, /title: "Things I keep returning to\."/);
   assert.match(writing, /<ol/);
   assert.match(writing, /post\.format/);
   assert.match(writing, /post\.date/);
-  assert.match(reading, /Things I keep returning to\./);
+  assert.match(writing, /homepageData\.writing\.title/);
+  assert.match(writing, /homepageData\.writing\.introduction/);
+  assert.doesNotMatch(
+    writing,
+    /Notes from the work\.|Research questions usually arrive after something breaks/,
+  );
   assert.match(reading, /<ol/);
+  assert.match(reading, /homepageData\.reading\.title/);
+  assert.match(reading, /homepageData\.reading\.introduction/);
+  assert.doesNotMatch(reading, /Things I keep returning to\./);
   assert.doesNotMatch(reading, /rating|cover|coming soon/i);
 });
 
 test("homepage Waldo and contact remain compact", () => {
   const now = read("src/app/components/sections/Now.tsx");
   const contact = read("src/app/components/sections/Contact.tsx");
+  assert.match(
+    nowSectionSource,
+    /status:\s*"Working internal foundations; external product and market validation remain open\."/,
+  );
+  assert.match(nowSectionSource, /imageAlt: "Waldo product system"/);
+  assert.match(nowSectionSource, /label: "Explore Waldo"/);
+  assert.match(nowSectionSource, /label: "Visit Waldo"/);
   assert.match(now, /nowSectionData\.title/);
-  assert.doesNotMatch(now, /Founder & CEO|market validation has been proven/i);
+  assert.match(now, /nowSectionData\.status/);
+  assert.match(now, /nowSectionData\.imageAlt/);
+  assert.match(now, /nowSectionData\.links\.caseStudy\.label/);
+  assert.match(now, /nowSectionData\.links\.product\.(?:label|href)/);
+  assert.doesNotMatch(
+    now,
+    /Founder & CEO|market validation has been proven|Working internal foundations|Explore Waldo|Visit Waldo|Waldo product system/i,
+  );
   assert.doesNotMatch(contact, /<form|formAction|fetch\(|ScrollTrigger|gsap/);
   assert.match(contact, /mailto:/);
 });
@@ -162,11 +238,8 @@ test("tertiary text meets AA contrast on every dark surface", () => {
 test("homepage keeps a compact research-writing section", () => {
   assert.match(portfolio, /Research \+ Writing/);
   assert.doesNotMatch(hero, /EcoFresh|Co-founder/i);
-  assert.match(writing, /Notes from the work/i);
-  assert.match(
-    writing,
-    /Research questions usually arrive after something breaks/i,
-  );
+  assert.match(writing, /homepageData\.writing\.title/);
+  assert.match(writing, /homepageData\.writing\.introduction/);
   assert.doesNotMatch(writing, /researchAreas/);
 });
 

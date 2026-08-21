@@ -5,7 +5,6 @@ import styles from "./CuriosityThread.module.scss";
 export default function CuriosityThread() {
   return (
     <section id="curiosity" className={styles.section}>
-      {/* Research direction · From capability to consequence. */}
       <div className={styles.header}>
         <span className="section__label">{researchDirectionData.eyebrow}</span>
         <h2>{researchDirectionData.title}</h2>
@@ -28,7 +27,7 @@ export default function CuriosityThread() {
         ))}
       </ol>
 
-      <Link href="/research" className={styles.cta}>
+      <Link href={researchDirectionData.cta.href} className={styles.cta}>
         {researchDirectionData.cta.label}
         <span aria-hidden="true">↗</span>
       </Link>

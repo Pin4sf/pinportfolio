@@ -10,7 +10,6 @@ interface WritingProps {
 export default function Writing({ featuredPosts }: WritingProps) {
   return (
     <section id="research" className={styles.section}>
-      {/* Notes from the work. Research questions usually arrive after something breaks, surprises me, or refuses to fit the model I had in my head. */}
       <div className={styles.header}>
         <div>
           <span className="section__label">{homepageData.writing.eyebrow}</span>

@@ -478,7 +478,14 @@ export const heroData: HeroData = {
 export const nowSectionData = {
   eyebrow: "Now",
   title: "Waldo",
-};
+  status:
+    "Working internal foundations; external product and market validation remain open.",
+  imageAlt: "Waldo product system",
+  links: {
+    caseStudy: { label: "Explore Waldo" },
+    product: { label: "Visit Waldo", href: "https://www.heywaldo.in/" },
+  },
+} as const;
 
 export const researchDirectionData = {
   eyebrow: "Research direction",
