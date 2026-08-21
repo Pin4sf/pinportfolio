@@ -26,6 +26,9 @@
 .reading,
 .navigation a,
 .contact a {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
   color: var(--text-secondary);
   font-size: var(--text-sm);
   transition: color 180ms ease;
@@ -63,6 +66,12 @@
 .socials a span[aria-hidden="true"] {
   color: var(--accent);
   font-family: var(--font-mono);
+}
+
+.socials a {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
 }
 
 .copyright {

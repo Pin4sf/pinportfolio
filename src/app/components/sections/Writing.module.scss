@@ -45,6 +45,7 @@
 .allLink {
   display: inline-flex;
   flex: none;
+  min-height: 44px;
   align-items: center;
   gap: 0.35rem;
   font-family: var(--font-mono);

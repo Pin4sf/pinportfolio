@@ -6,6 +6,7 @@
   max-width: 72rem;
   margin: 0 auto;
   padding: clamp(7rem, 12vw, 11rem) var(--editorial-gutter) 4rem;
+  background-color: #080a09;
   background-image:
     radial-gradient(
       circle at 80% 15%,
@@ -13,9 +14,11 @@
       transparent 32%
     ),
     linear-gradient(180deg, rgba(238, 233, 220, 0.025), transparent 72%),
+    linear-gradient(rgba(8, 10, 9, 0.94), rgba(8, 10, 9, 0.97)),
     url("/noisetexture.jpg");
-  background-blend-mode: normal, normal, soft-light;
+  background-blend-mode: normal, normal, normal, soft-light;
   background-size:
+    auto,
     auto,
     auto,
     240px 240px;
