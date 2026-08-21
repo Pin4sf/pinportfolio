@@ -218,7 +218,6 @@
   font-size: var(--text-base);
   color: var(--text-secondary);
   text-decoration: none;
-  display: inline-block;
   width: fit-content;
   position: relative;
   transition: color 0.3s ease;
@@ -409,4 +408,8 @@
     color: var(--accent);
     border-color: var(--accent);
   }
+}
+
+.reveal {
+  opacity: 1;
 }
