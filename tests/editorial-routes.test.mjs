@@ -160,15 +160,20 @@ function scssBlocks(source, selector) {
   let cursor = 0;
 
   while (cursor < clean.length) {
-    const start = clean.indexOf(selector, cursor);
-    if (start === -1) break;
-    const before = clean[start - 1];
-    let open = start + selector.length;
-    while (/\s/.test(clean[open] ?? "")) open += 1;
-    const exactStart =
-      start === 0 || /[\s{},]/.test(before) || before === undefined;
-    if (!exactStart || clean[open] !== "{") {
-      cursor = start + selector.length;
+    const open = clean.indexOf("{", cursor);
+    if (open === -1) break;
+    const preludeStart =
+      Math.max(
+        clean.lastIndexOf("{", open - 1),
+        clean.lastIndexOf("}", open - 1),
+        clean.lastIndexOf(";", open - 1),
+      ) + 1;
+    const members = clean
+      .slice(preludeStart, open)
+      .split(",")
+      .map((member) => member.trim());
+    cursor = open + 1;
+    if (!members.includes(selector.trim())) {
       continue;
     }
 
@@ -181,18 +186,95 @@ function scssBlocks(source, selector) {
     }
 
     if (depth === 0) blocks.push(clean.slice(open + 1, end - 1));
-    cursor = end;
   }
 
   return blocks;
 }
 
 function archiveUsesFormatHelpers(source) {
+  const ast = parseSource(source);
+  const component = ast.statements.find(
+    (statement) =>
+      ts.isFunctionDeclaration(statement) &&
+      statement.name?.text === "WritingArchive",
+  );
+  if (!component?.body) return false;
+
   const expectedCalls = new Map([
     ["availableFormats", ["getAvailableFormats", ["posts"]]],
     ["filteredPosts", ["filterPostsByFormat", ["posts", "activeFormat"]]],
   ]);
   const matches = new Set();
+
+  function unwrapExpression(expression) {
+    let current = expression;
+    while (
+      ts.isParenthesizedExpression(current) ||
+      ts.isAsExpression(current) ||
+      ts.isTypeAssertionExpression(current) ||
+      ts.isSatisfiesExpression(current)
+    ) {
+      current = current.expression;
+    }
+    return current;
+  }
+
+  function receiverUses(receiver, collection) {
+    const expression = unwrapExpression(receiver);
+    if (ts.isIdentifier(expression)) return expression.text === collection;
+    return (
+      ts.isArrayLiteralExpression(expression) &&
+      expression.elements.some(
+        (element) =>
+          ts.isSpreadElement(element) &&
+          ts.isIdentifier(unwrapExpression(element.expression)) &&
+          unwrapExpression(element.expression).text === collection,
+      )
+    );
+  }
+
+  function contains(node, predicate) {
+    let found = false;
+    function visit(child) {
+      if (predicate(child)) {
+        found = true;
+        return;
+      }
+      ts.forEachChild(child, visit);
+    }
+    visit(node);
+    return found;
+  }
+
+  function rendersButton(node) {
+    return contains(
+      node,
+      (child) =>
+        (ts.isJsxOpeningElement(child) || ts.isJsxSelfClosingElement(child)) &&
+        child.tagName.getText(ast).toLowerCase() === "button",
+    );
+  }
+
+  function rendersArchiveCard(node) {
+    return contains(node, (child) => {
+      if (
+        !ts.isJsxAttribute(child) ||
+        child.name.getText(ast) !== "className"
+      ) {
+        return false;
+      }
+      const expression = child.initializer;
+      return (
+        expression !== undefined &&
+        ts.isJsxExpression(expression) &&
+        expression.expression !== undefined &&
+        ts.isPropertyAccessExpression(expression.expression) &&
+        ts.isIdentifier(expression.expression.expression) &&
+        expression.expression.expression.text === "styles" &&
+        expression.expression.name.text === "card"
+      );
+    });
+  }
 
   function visit(node) {
     if (
@@ -219,14 +301,50 @@ function archiveUsesFormatHelpers(source) {
     ts.forEachChild(node, visit);
   }
 
-  visit(parseSource(source));
-  return matches.size === expectedCalls.size;
+  visit(component.body);
+
+  const renderUses = new Set();
+  for (const statement of component.body.statements) {
+    if (!ts.isReturnStatement(statement) || !statement.expression) continue;
+    contains(statement.expression, (node) => {
+      if (
+        !ts.isCallExpression(node) ||
+        !ts.isPropertyAccessExpression(node.expression) ||
+        node.expression.name.text !== "map" ||
+        node.arguments.length === 0
+      ) {
+        return false;
+      }
+      const receiver = node.expression.expression;
+      const callback = node.arguments[0];
+      if (
+        receiverUses(receiver, "availableFormats") &&
+        rendersButton(callback)
+      ) {
+        renderUses.add("availableFormats");
+      }
+      if (
+        receiverUses(receiver, "filteredPosts") &&
+        rendersArchiveCard(callback)
+      ) {
+        renderUses.add("filteredPosts");
+      }
+      return false;
+    });
+  }
+
+  return (
+    matches.size === expectedCalls.size &&
+    renderUses.size === expectedCalls.size
+  );
 }
 
 function animationDeclarations(source) {
   const clean = source.replace(/\/\*[\s\S]*?\*\//g, "");
   return [
-    ...clean.matchAll(/(?:^|[;{\n])\s*(animation(?:-[a-z-]+)?)\s*:/gim),
+    ...clean.matchAll(
+      /(?:^|[;{\n])\s*((?:-[a-z0-9]+-)?animation(?:-[a-z-]+)?)\s*:/gim,
+    ),
   ].map((match) => match[1].toLowerCase());
 }
 
@@ -574,6 +692,23 @@ test("SCSS root matching rejects selector prefixes", () => {
   );
 });
 
+test("SCSS root matching rejects descendants and accepts exact selector-list members", () => {
+  assert.deepEqual(
+    scssBlocks(
+      '.pageShell .page { background: url("/noisetexture.jpg"); }',
+      ".page",
+    ),
+    [],
+  );
+  assert.deepEqual(
+    scssBlocks(
+      '.pageShell,\n.page { background: url("/noisetexture.jpg"); }',
+      ".page",
+    ),
+    [' background: url("/noisetexture.jpg"); '],
+  );
+});
+
 test("animation scanning rejects renamed shorthand and name declarations", () => {
   const mutation = `
     .page { animation: shimmer 1s linear infinite; }
@@ -583,6 +718,19 @@ test("animation scanning rejects renamed shorthand and name declarations", () =>
   assert.deepEqual(animationDeclarations(mutation), [
     "animation",
     "animation-name",
+  ]);
+});
+
+test("animation scanning rejects vendor-prefixed declarations", () => {
+  const mutation = `
+    .page { -webkit-animation: shimmer 1s linear infinite; }
+    .article { -webkit-animation-name: drift; }
+    .legacy { -moz-animation-duration: 2s; }
+  `;
+  assert.deepEqual(animationDeclarations(mutation), [
+    "-webkit-animation",
+    "-webkit-animation-name",
+    "-moz-animation-duration",
   ]);
 });
 
@@ -643,6 +791,24 @@ test("archive helper checks reject dead comment mutations", () => {
   assert.equal(archiveUsesFormatHelpers(mutation), false);
 });
 
+test("archive helper checks reject dead variables bypassed by render maps", () => {
+  const mutation = `
+    function WritingArchive({ posts }) {
+      const activeFormat = "all";
+      const availableFormats = getAvailableFormats(posts);
+      const filteredPosts = filterPostsByFormat(posts, activeFormat);
+
+      return (
+        <section>
+          <div>{["all", "essay"].map((format) => <button>{format}</button>)}</div>
+          <div>{posts.map((post) => <a className={styles.card}>{post.title}</a>)}</div>
+        </section>
+      );
+    }
+  `;
+  assert.equal(archiveUsesFormatHelpers(mutation), false);
+});
+
 test("article and archive share one server-safe format vocabulary", () => {
   for (const file of [
     "src/app/writing/[slug]/BlogPost.tsx",
@@ -687,7 +853,7 @@ test("mobile editorial rules scope one-column layouts and usable controls", () =
   );
   assert.match(artifactMobile, /\.link\s*\{[\s\S]*min-height:\s*44px/);
 
-  const [media] = scssBlocks(waldo, ".heroFigure,\n.storyMedia");
+  const [media] = scssBlocks(waldo, ".heroFigure");
   const [caption] = scssBlocks(media, "figcaption");
   const [captionLink] = scssBlocks(caption, "a");
   assert.match(captionLink, /min-height:\s*44px/);
