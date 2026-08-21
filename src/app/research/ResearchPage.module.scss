@@ -34,6 +34,16 @@
   }
 }
 
+.readingLink {
+  display: inline-block;
+  margin-top: 1.75rem;
+  color: var(--accent);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
 .cluster {
   display: grid;
   grid-template-columns: minmax(9rem, 0.42fr) minmax(0, 1fr);

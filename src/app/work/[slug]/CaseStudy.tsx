@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, type KeyboardEvent } from "react";
+import { useEffect, useRef, type KeyboardEvent, type ReactNode } from "react";
 import clsx from "clsx";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -27,7 +27,10 @@ interface CaseStudyProps {
   caseStudy: CaseStudyType;
   prev: CaseStudyType | null;
   next: CaseStudyType | null;
+  editorialFooter: EditorialFooterSlot;
 }
+
+type EditorialFooterSlot = ReactNode;
 
 interface RichCaseStudyProps {
   caseStudy: CaseStudyType;
@@ -480,7 +483,12 @@ function StandardCaseStudy({ caseStudy }: { caseStudy: CaseStudyType }) {
   );
 }
 
-export default function CaseStudy({ caseStudy, prev, next }: CaseStudyProps) {
+export default function CaseStudy({
+  caseStudy,
+  prev,
+  next,
+  editorialFooter,
+}: CaseStudyProps) {
   const pageRef = useRef<HTMLElement>(null);
   const reducedMotion = useReducedMotion();
 
@@ -518,11 +526,12 @@ export default function CaseStudy({ caseStudy, prev, next }: CaseStudyProps) {
   }, [reducedMotion]);
 
   return (
-    <main
-      id="main-content"
-      ref={pageRef}
-      className={clsx(styles.page, caseStudy.narrative && styles.richPage)}
-    >
+    <>
+      <main
+        id="main-content"
+        ref={pageRef}
+        className={clsx(styles.page, caseStudy.narrative && styles.richPage)}
+      >
       <div className={styles.primaryNavigation}>
         <TransitionLink href="/" className={styles.back}>
           <ArrowLeft size={16} aria-hidden="true" />
@@ -567,6 +576,8 @@ export default function CaseStudy({ caseStudy, prev, next }: CaseStudyProps) {
           <div />
         )}
       </nav>
-    </main>
+      </main>
+      {editorialFooter}
+    </>
   );
 }

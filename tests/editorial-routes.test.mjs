@@ -266,3 +266,40 @@ test("writing category filters expose their selected state", () => {
   const source = read("src/app/writing/WritingArchive.tsx");
   assert.match(source, /aria-pressed=\{activeCategory === cat\.key\}/);
 });
+
+test("reading is canonical, server-rendered, and absent from primary navigation", () => {
+  const reading = read("src/app/reading/page.tsx");
+  const primaryNav = read("src/data/portfolio.ts").slice(
+    read("src/data/portfolio.ts").indexOf("export const navItems"),
+    read("src/data/portfolio.ts").indexOf("// ==================== HERO"),
+  );
+  assert.doesNotMatch(reading, /^"use client"/);
+  assert.match(reading, /getPublicReadingEntries/);
+  assert.match(reading, /<main(?=[^>]*\bid="main-content")[^>]*>/);
+  assert.match(reading, /<ol/);
+  assert.doesNotMatch(reading, /rating|stars|coming soon/i);
+  assert.doesNotMatch(primaryNav, /Reading|\/reading/);
+});
+
+test("reading is linked from research, writing, about, and the editorial footer", () => {
+  for (const file of [
+    "src/app/research/page.tsx",
+    "src/app/writing/page.tsx",
+    "src/app/about/page.tsx",
+    "src/app/components/editorial/EditorialFooter.tsx",
+  ])
+    assert.match(read(file), /href="\/reading"/);
+});
+
+test("every editorial destination shares the quiet footer", () => {
+  for (const file of [
+    "src/app/reading/page.tsx",
+    "src/app/research/page.tsx",
+    "src/app/writing/page.tsx",
+    "src/app/writing/[slug]/BlogPost.tsx",
+    "src/app/about/page.tsx",
+    "src/app/experience/page.tsx",
+    "src/app/work/[slug]/CaseStudy.tsx",
+  ])
+    assert.match(read(file), /EditorialFooter/);
+});

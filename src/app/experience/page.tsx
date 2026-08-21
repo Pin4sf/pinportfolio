@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import EditorialHeader from "@/app/components/editorial/EditorialHeader";
+import EditorialFooter from "@/app/components/editorial/EditorialFooter";
 import { experiencePageData, siteConfig, timelineData } from "@/data/portfolio";
 import styles from "./ExperiencePage.module.scss";
 
@@ -99,6 +100,7 @@ export default function ExperiencePage() {
           ))}
         </ol>
       </main>
+      <EditorialFooter />
     </>
   );
 }

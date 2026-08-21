@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import ArtifactList from "@/app/components/editorial/ArtifactList";
+import EditorialFooter from "@/app/components/editorial/EditorialFooter";
 import EditorialHeader from "@/app/components/editorial/EditorialHeader";
 import {
   getPublicArtifacts,
@@ -58,6 +59,10 @@ export default function ResearchPage() {
             </Link>
           ))}
         </nav>
+
+        <Link className={styles.readingLink} href="/reading">
+          Read what shapes the work →
+        </Link>
 
         {researchClusters.map((cluster, index) => {
           const clusterArtifacts = cluster.artifactSlugs
@@ -139,6 +144,7 @@ export default function ResearchPage() {
           );
         })}
       </main>
+      <EditorialFooter />
     </>
   );
 }

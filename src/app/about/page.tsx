@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import EditorialHeader from "@/app/components/editorial/EditorialHeader";
+import EditorialFooter from "@/app/components/editorial/EditorialFooter";
 import {
   aboutPageData,
   compassPrinciples,
@@ -97,6 +98,9 @@ export default function AboutPage() {
               </Link>
             ))}
           </nav>
+          <Link className={styles.readingLink} href="/reading">
+            Read what shapes the work →
+          </Link>
         </section>
 
         <section
@@ -212,6 +216,7 @@ export default function AboutPage() {
           </div>
         </section>
       </main>
+      <EditorialFooter />
     </>
   );
 }

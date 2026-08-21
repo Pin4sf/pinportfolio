@@ -4,6 +4,7 @@ import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import EditorialPrimaryNav from "@/app/components/editorial/EditorialPrimaryNav";
+import EditorialFooter from "@/app/components/editorial/EditorialFooter";
 
 const categoryColors: Record<string, string> = {
   research: "var(--accent)",
@@ -25,7 +26,8 @@ interface BlogPostProps {
 
 export default function BlogPost({ post }: BlogPostProps) {
   return (
-    <main id="main-content" className={styles.page}>
+    <>
+      <main id="main-content" className={styles.page}>
       <div className={styles.navigation}>
         <Link href="/writing" className={styles.back}>
           <ArrowLeft size={16} aria-hidden="true" />
@@ -83,6 +85,8 @@ export default function BlogPost({ post }: BlogPostProps) {
           &larr; All Writing
         </Link>
       </div>
-    </main>
+      </main>
+      <EditorialFooter />
+    </>
   );
 }

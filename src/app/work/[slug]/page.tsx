@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { getPublicCaseStudies, siteConfig } from "@/data/portfolio";
 import type { Metadata } from "next";
 import CaseStudy from "./CaseStudy";
+import EditorialFooter from "@/app/components/editorial/EditorialFooter";
 
 interface Props {
   params: { slug: string };
@@ -97,7 +98,12 @@ export default function WorkPage({ params }: Props) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <CaseStudy caseStudy={cs} prev={prev} next={next} />
+      <CaseStudy
+        caseStudy={cs}
+        prev={prev}
+        next={next}
+        editorialFooter={<EditorialFooter />}
+      />
     </>
   );
 }

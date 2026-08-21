@@ -3,6 +3,7 @@ import { siteConfig, writingPageData } from "@/data/portfolio";
 import type { Metadata } from "next";
 import Link from "next/link";
 import EditorialHeader from "@/app/components/editorial/EditorialHeader";
+import EditorialFooter from "@/app/components/editorial/EditorialFooter";
 import WritingArchive from "./WritingArchive";
 import styles from "./WritingArchive.module.scss";
 
@@ -35,8 +36,12 @@ export default function WritingPage() {
         <Link className={styles.researchLink} href="/research">
           Explore the research questions →
         </Link>
+        <Link className={styles.readingLink} href="/reading">
+          Read what shapes the work →
+        </Link>
         <WritingArchive posts={posts} />
       </main>
+      <EditorialFooter />
     </>
   );
 }
