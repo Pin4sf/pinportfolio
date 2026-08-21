@@ -46,7 +46,7 @@ All authoritative final checks passed against the final source/build:
 - `node --test tests/generated-output.test.mjs` — 8/8 passed.
 - `npm run lint` — exit 0.
 - `git diff --check` — passed.
-- Fresh build sizes: Home 6.07 kB / 97.4 kB first-load JS; article 577 B / 91.9 kB.
+- Fresh build sizes: Home 6.08 kB / 97.4 kB first-load JS; article 578 B / 91.9 kB.
 
 The first post-dev `npm test` attempt correctly refused three generated-output checks because Next dev had replaced the production `.next/BUILD_ID`; the other 103 tests passed. A fresh production build was created, after which the authoritative full run passed 106/106 and the dedicated generated-output suite passed 8/8.
 
@@ -88,6 +88,6 @@ The available in-app browser exposes viewport control but not a native reduced-m
 ## Running localhost
 
 - URL: `http://127.0.0.1:3000/`
-- Unified exec session: `91737`
-- Listener PID at handoff: `2767`
+- Unified exec session: `38785`
+- Listener PID at handoff: `3083`
 - The in-app browser is left open on Home.
