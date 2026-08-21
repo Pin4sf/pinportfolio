@@ -163,22 +163,40 @@ function decodeUrlEscapes(source) {
 }
 
 function absoluteUserPaths(source) {
-  return source.match(/\/Users\/[^"'`\\\s<>{}\[\](),;]*/g) ?? [];
+  return source.match(/\/Users\/[^"'`\s<>{}\[\](),;]*/g) ?? [];
+}
+
+function isSamePathOrDescendant(candidate, allowedRoot) {
+  const relativePath = path.relative(allowedRoot, candidate);
+  return (
+    relativePath === "" ||
+    (relativePath !== ".." &&
+      !relativePath.startsWith(`..${path.sep}`) &&
+      !path.isAbsolute(relativePath))
+  );
 }
 
 function frameworkBuildRootException({
-  absolutePath,
+  canonicalAbsolutePath,
   buildDir,
+  canonicalRepositoryRoot,
   file,
-  normalizedRepositoryRoot,
   publicFileSet,
 }) {
   const relativeBuildPath = path
     .relative(buildDir, file)
     .split(path.sep)
     .join("/");
-  const repositorySourcePath = `${normalizedRepositoryRoot}/src/app/`;
-  const nextRuntimePath = `${normalizedRepositoryRoot}/node_modules/next/`;
+  const repositorySourceRoot = path.resolve(
+    canonicalRepositoryRoot,
+    "src",
+    "app",
+  );
+  const nextRuntimeRoot = path.resolve(
+    canonicalRepositoryRoot,
+    "node_modules",
+    "next",
+  );
 
   // Public machine context, rendered payloads, and browser-delivered assets
   // have no build-root exception. The cases below are server/build metadata
@@ -192,38 +210,38 @@ function frameworkBuildRootException({
   }
   if (
     relativeBuildPath === "required-server-files.json" &&
-    absolutePath === normalizedRepositoryRoot
+    canonicalAbsolutePath === canonicalRepositoryRoot
   ) {
     return "required server configuration root";
   }
   if (
     /^server\/next-font-manifest\.(?:js|json)$/.test(relativeBuildPath) &&
-    absolutePath.startsWith(repositorySourcePath)
+    isSamePathOrDescendant(canonicalAbsolutePath, repositorySourceRoot)
   ) {
     return "Next font source metadata";
   }
   if (
     /^server\/app\/.+_client-reference-manifest\.js$/.test(relativeBuildPath) &&
-    (absolutePath.startsWith(repositorySourcePath) ||
-      absolutePath.startsWith(nextRuntimePath))
+    (isSamePathOrDescendant(canonicalAbsolutePath, repositorySourceRoot) ||
+      isSamePathOrDescendant(canonicalAbsolutePath, nextRuntimeRoot))
   ) {
     return "RSC client-reference metadata";
   }
   if (
     /^server\/app\/.+\.js$/.test(relativeBuildPath) &&
-    absolutePath.startsWith(repositorySourcePath)
+    isSamePathOrDescendant(canonicalAbsolutePath, repositorySourceRoot)
   ) {
     return "compiled app source metadata";
   }
   if (
     /^server\/chunks\/[^/]+\.js$/.test(relativeBuildPath) &&
-    absolutePath.startsWith(nextRuntimePath)
+    isSamePathOrDescendant(canonicalAbsolutePath, nextRuntimeRoot)
   ) {
     return "Next server-chunk source metadata";
   }
   if (
     /^types\/app\/.+\.ts$/.test(relativeBuildPath) &&
-    absolutePath.startsWith(repositorySourcePath)
+    isSamePathOrDescendant(canonicalAbsolutePath, repositorySourceRoot)
   ) {
     return "generated route-type source metadata";
   }
@@ -232,8 +250,10 @@ function frameworkBuildRootException({
 
 function scanPublicArtifacts({ buildDir, publicFiles, repositoryRoot }) {
   const artifacts = discoverDeployableArtifacts(buildDir, publicFiles);
-  const normalizedRepositoryRoot = repositoryRoot.replace(/\/$/, "");
-  const publicFileSet = new Set(publicFiles.map((file) => path.resolve(file)));
+  const canonicalRepositoryRoot = path.normalize(path.resolve(repositoryRoot));
+  const publicFileSet = new Set(
+    publicFiles.map((file) => path.normalize(path.resolve(file))),
+  );
   const acceptedBuildRootOccurrences = [];
   for (const file of artifacts) {
     const source = fs.readFileSync(file, "utf8");
@@ -250,22 +270,23 @@ function scanPublicArtifacts({ buildDir, publicFiles, repositoryRoot }) {
     }
 
     for (const absolutePath of absoluteUserPaths(decodedSource)) {
+      const canonicalAbsolutePath = path.normalize(path.resolve(absolutePath));
       const classification = frameworkBuildRootException({
-        absolutePath,
+        canonicalAbsolutePath,
         buildDir,
+        canonicalRepositoryRoot,
         file,
-        normalizedRepositoryRoot,
         publicFileSet,
       });
       if (classification) {
         acceptedBuildRootOccurrences.push({
           classification,
           file,
-          value: absolutePath,
+          value: canonicalAbsolutePath,
         });
       } else {
         throw new Error(
-          `private absolute source path leaked into ${path.relative(repositoryRoot, file)}: ${absolutePath}`,
+          `private absolute source path leaked into ${path.relative(repositoryRoot, file)}: ${absolutePath} (canonical: ${canonicalAbsolutePath})`,
         );
       }
     }
@@ -591,6 +612,12 @@ test("build-root exceptions stay out of public and rendered artifacts", (t) => {
   const htmlPath = path.join(fixtureBuild, "server", "app", "page.html");
   const rscPath = path.join(fixtureBuild, "server", "app", "page.rsc");
   const appSourcePath = path.join(fixtureBuild, "server", "app", "page.js");
+  const clientReferencePath = path.join(
+    fixtureBuild,
+    "server",
+    "app",
+    "page_client-reference-manifest.js",
+  );
   const fontManifestPath = path.join(
     fixtureBuild,
     "server",
@@ -627,6 +654,10 @@ test("build-root exceptions stay out of public and rendered artifacts", (t) => {
     `//# sourceURL=${acceptedRoot}/src/app/page.tsx`,
   );
   fs.writeFileSync(
+    clientReferencePath,
+    JSON.stringify({ source: `${acceptedRoot}/src/app/components/Nav.tsx` }),
+  );
+  fs.writeFileSync(
     fontManifestPath,
     JSON.stringify({ [`${acceptedRoot}/src/app/layout`]: [] }),
   );
@@ -656,6 +687,7 @@ test("build-root exceptions stay out of public and rendered artifacts", (t) => {
     new Set([
       "required server configuration root",
       "Next font source metadata",
+      "RSC client-reference metadata",
       "compiled app source metadata",
       "Next server-chunk source metadata",
       "generated route-type source metadata",
@@ -697,6 +729,47 @@ test("build-root exceptions stay out of public and rendered artifacts", (t) => {
       file: serverChunkPath,
       source: `//# sourceURL=${acceptedRoot}/notes`,
       expected: /absolute source path.*server\/chunks\/runtime\.js/,
+    },
+    {
+      file: appSourcePath,
+      source: `//# sourceURL=${acceptedRoot}/src/app/../../notes/private.js`,
+      expected: /absolute source path.*server\/app\/page\.js/,
+    },
+    {
+      file: appSourcePath,
+      source: encodeURIComponent(
+        `${acceptedRoot}/src/app/../../notes/private.js`,
+      ),
+      expected: /absolute source path.*server\/app\/page\.js/,
+    },
+    {
+      file: serverChunkPath,
+      source: `//# sourceURL=${acceptedRoot}/node_modules/next/../../notes/private.js`,
+      expected: /absolute source path.*server\/chunks\/runtime\.js/,
+    },
+    {
+      file: clientReferencePath,
+      source: encodeURIComponent(
+        `${acceptedRoot}/node_modules/next/../../notes/private.js`,
+      ),
+      expected: /absolute source path.*page_client-reference-manifest\.js/,
+    },
+    {
+      file: appSourcePath,
+      source: `//# sourceURL=${acceptedRoot}/src/application/private.js`,
+      expected: /absolute source path.*server\/app\/page\.js/,
+    },
+    {
+      file: appSourcePath,
+      source: `//# sourceURL=${acceptedRoot}/src/app\\..\\..\\notes\\private.js`,
+      expected: /absolute source path.*server\/app\/page\.js/,
+    },
+    {
+      file: clientReferencePath,
+      source: encodeURIComponent(
+        `${acceptedRoot}/node_modules/next\\..\\..\\notes\\private.js`,
+      ),
+      expected: /absolute source path.*page_client-reference-manifest\.js/,
     },
   ]) {
     const original = fs.readFileSync(mutation.file, "utf8");
