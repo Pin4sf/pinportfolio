@@ -10,6 +10,7 @@
 
 .researchLink {
   display: inline-flex;
+  min-height: 44px;
   align-items: center;
   margin-bottom: 2.5rem;
   color: var(--accent);
@@ -52,6 +53,7 @@
 }
 
 .filterBtn {
+  min-height: 44px;
   font-size: 0.8125rem;
   font-weight: 500;
   color: var(--text-secondary);

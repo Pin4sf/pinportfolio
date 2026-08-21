@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import styles from "./CustomCursor.module.scss";
 import { useGpuTier } from "@/app/hooks/useGpuTier";
+import { useReducedMotion } from "@/app/hooks/useReducedMotion";
 
 export default function CustomCursor() {
   const cursorRef = useRef<HTMLDivElement>(null);
@@ -11,10 +12,11 @@ export default function CustomCursor() {
   const spotlightRef = useRef<HTMLDivElement>(null);
   const [isTouchDevice, setIsTouchDevice] = useState(false);
   const gpuTier = useGpuTier();
+  const reducedMotion = useReducedMotion();
   const cursorEffectsEnabled = gpuTier === "mid" || gpuTier === "high";
 
   useEffect(() => {
-    if (!cursorEffectsEnabled) return;
+    if (reducedMotion || !cursorEffectsEnabled) return;
 
     // Skip on touch devices — don't render at all
     if (window.matchMedia("(pointer: coarse)").matches) {
@@ -217,9 +219,9 @@ export default function CustomCursor() {
       });
       document.documentElement.classList.remove("custom-cursor-active");
     };
-  }, [cursorEffectsEnabled]);
+  }, [cursorEffectsEnabled, reducedMotion]);
 
-  if (!cursorEffectsEnabled) return null;
+  if (reducedMotion || !cursorEffectsEnabled) return null;
   if (isTouchDevice) return null;
 
   return (

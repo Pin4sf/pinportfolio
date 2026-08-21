@@ -2,15 +2,13 @@
 
 import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { usePathname } from "next/navigation";
 import styles from "./Header.module.scss";
 import CoolLink from "../ui/CoolLink";
 import { navItems } from "@/data/portfolio";
 import { cn } from "@/lib/utils";
 import { isPageCurrent } from "@/lib/navigation";
-
-gsap.registerPlugin(ScrollTrigger);
+import { useReducedMotion } from "@/app/hooks/useReducedMotion";
 
 export default function Header() {
   const headerRef = useRef<HTMLElement>(null);
@@ -21,6 +19,7 @@ export default function Header() {
   const progressRef = useRef<HTMLDivElement>(null);
   const [hidden, setHidden] = useState(false);
   const pathname = usePathname();
+  const reducedMotion = useReducedMotion();
   const isActive = (href: string) => isPageCurrent(pathname, href);
 
   // Hide on scroll-down, show on scroll-up + glass effect
@@ -93,13 +92,17 @@ export default function Header() {
   useEffect(() => {
     const header = headerRef.current;
     if (!header) return;
+    if (reducedMotion) return;
 
-    gsap.fromTo(
-      header,
-      { y: -100, opacity: 0 },
-      { y: 0, opacity: 1, duration: 0.65, delay: 0.2, ease: "power3.out" },
-    );
-  }, []);
+    const ctx = gsap.context(() => {
+      gsap.fromTo(
+        header,
+        { y: -100, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.65, delay: 0.2, ease: "power3.out" },
+      );
+    }, header);
+    return () => ctx.revert();
+  }, [reducedMotion]);
 
   return (
     <>
@@ -129,6 +132,7 @@ export default function Header() {
                   styles.navLink,
                   isActive(item.href) && styles.active,
                 )}
+                aria-current={isActive(item.href) ? "page" : undefined}
               />
             ))}
           </nav>

@@ -246,6 +246,12 @@ test("the active homepage mounts at most one rich canvas", () => {
   assert.match(hero, /HeroBackground/);
   assert.doesNotMatch(hero, /FluidBackground/);
   assert.equal((hero.match(/<HeroBackground/g) ?? []).length, 1);
+  assert.match(
+    hero,
+    /const \[canvasFailed, setCanvasFailed\] = useState\(false\)/,
+  );
+  assert.match(hero, /<HeroBackground onFailure=\{handleCanvasFailure\}/);
+  assert.match(hero, /enableHeroEffects && !canvasFailed/);
 });
 
 test("hero effects honor mobile, reduced-data, reduced-motion, and GPU-tier gates", () => {

@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useCallback } from "react";
+import { useRef, useCallback, type AriaAttributes } from "react";
 import styles from "./CoolLink.module.scss";
 import clsx from "clsx";
 
@@ -11,9 +11,15 @@ interface CoolLinkProps {
   href: string;
   text: string;
   className?: string;
+  "aria-current"?: AriaAttributes["aria-current"];
 }
 
-export default function CoolLink({ href, text, className }: CoolLinkProps) {
+export default function CoolLink({
+  href,
+  text,
+  className,
+  "aria-current": ariaCurrent,
+}: CoolLinkProps) {
   const spanRef = useRef<HTMLSpanElement>(null);
   const rafRef = useRef<number>(0);
   const intervalRef = useRef<ReturnType<typeof setInterval>>(
@@ -60,6 +66,7 @@ export default function CoolLink({ href, text, className }: CoolLinkProps) {
       onMouseEnter={scramble}
       onMouseLeave={reset}
       aria-label={text}
+      aria-current={ariaCurrent}
     >
       <span ref={spanRef} aria-hidden="true">
         {text}

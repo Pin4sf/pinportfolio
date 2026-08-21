@@ -142,6 +142,9 @@
 }
 
 .links a {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
   border-bottom: 1px solid var(--border-visible);
   color: var(--text-primary);
   font-family: var(--font-mono);

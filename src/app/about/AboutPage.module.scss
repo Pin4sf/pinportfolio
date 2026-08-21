@@ -221,6 +221,7 @@
 
 .artifact {
   display: block;
+  min-height: 44px;
   padding: 1.25rem 0;
   border-bottom: 1px solid var(--border-subtle);
   transition: padding 180ms ease;
@@ -261,6 +262,9 @@
   margin-top: 2rem;
 
   a {
+    display: inline-flex;
+    min-height: 44px;
+    align-items: center;
     border: 1px solid var(--border-visible);
     padding: 0.5rem 0.8rem;
     color: var(--text-secondary);

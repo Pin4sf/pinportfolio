@@ -71,6 +71,7 @@
 // Email link
 .emailLink {
   display: inline-flex;
+  min-height: 44px;
   align-items: center;
   gap: 0.5rem;
   margin-top: var(--space-lg);
@@ -89,7 +90,7 @@
 
   // Animated underline
   &::after {
-    content: '';
+    content: "";
     position: absolute;
     bottom: -4px;
     left: 0;
@@ -211,6 +212,9 @@
 }
 
 .link {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
   font-size: var(--text-base);
   color: var(--text-secondary);
   text-decoration: none;
@@ -220,7 +224,7 @@
   transition: color 0.3s ease;
 
   &::after {
-    content: '';
+    content: "";
     position: absolute;
     bottom: -2px;
     left: 0;
@@ -301,6 +305,7 @@
 
 .socialLink {
   display: inline-flex;
+  min-height: 44px;
   align-items: center;
   gap: 0.5rem;
   font-size: var(--text-sm);
@@ -331,7 +336,9 @@
   height: 36px;
   border-radius: 50%;
   border: 1px solid var(--border-subtle);
-  transition: border-color 0.3s ease, background 0.3s ease;
+  transition:
+    border-color 0.3s ease,
+    background 0.3s ease;
 
   .socialLink:hover & {
     border-color: var(--accent);
@@ -393,19 +400,13 @@
   border-radius: var(--radius-full, 999px);
   padding: 0.5rem 1rem;
   cursor: pointer;
-  transition: color 0.3s ease, border-color 0.3s ease;
+  transition:
+    color 0.3s ease,
+    border-color 0.3s ease;
   will-change: transform;
 
   &:hover {
     color: var(--accent);
     border-color: var(--accent);
   }
-}
-
-// ══════════════════════════════════════════════════════
-// Reveal helper — GSAP sets initial opacity
-// ══════════════════════════════════════════════════════
-
-.reveal {
-  opacity: 0;
 }

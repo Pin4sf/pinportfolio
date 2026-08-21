@@ -588,8 +588,14 @@ test("mobile navigation owns focus and scroll for the full dialog lifecycle", ()
 
 test("restored header links stay native and bypass transition machinery", () => {
   const coolLink = read("src/app/components/ui/CoolLink.tsx");
+  const header = read("src/app/components/layout/Header.tsx");
   assert.doesNotMatch(coolLink, /TransitionLink|useTransition/);
   assert.match(coolLink, /<a[\s\S]*href=\{href\}/);
+  assert.match(coolLink, /aria-current=\{ariaCurrent\}/);
+  assert.match(
+    header,
+    /aria-current=\{isActive\(item\.href\) \? "page" : undefined\}/,
+  );
 });
 
 test("artifact date ranges omit invalid machine-readable dates", () => {

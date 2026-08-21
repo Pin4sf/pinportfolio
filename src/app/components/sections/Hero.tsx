@@ -107,6 +107,7 @@ export default function Hero() {
   const charsRef = useRef<HTMLSpanElement[]>([]);
   const reducedMotion = useReducedMotion();
   const reducedData = useReducedData();
+  const [canvasFailed, setCanvasFailed] = useState(false);
   const { viewportWidth, interactionCapable } = useHeroCapabilities();
   const gpuTier = useGpuTier();
 
@@ -118,6 +119,7 @@ export default function Hero() {
     gpuTier,
   });
   const particleCount = enableHeroEffects ? (gpuTier === "mid" ? 25 : 30) : 0;
+  const handleCanvasFailure = useCallback(() => setCanvasFailed(true), []);
 
   const particles = useMemo(
     () =>
@@ -334,9 +336,9 @@ export default function Hero() {
   return (
     <section ref={sectionRef} id="home" className={styles.hero}>
       {/* Three.js backgrounds — disabled on mobile for GPU savings */}
-      {enableHeroEffects && (
+      {enableHeroEffects && !canvasFailed && (
         <ErrorBoundary>
-          <HeroBackground />
+          <HeroBackground onFailure={handleCanvasFailure} />
         </ErrorBoundary>
       )}
 

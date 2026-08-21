@@ -74,12 +74,15 @@ export default function Footer() {
     const lenis = (
       window as unknown as { __lenis?: { scrollTo: (target: number) => void } }
     ).__lenis;
-    if (lenis) {
+    if (!reducedMotion && lenis) {
       lenis.scrollTo(0);
     } else {
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      window.scrollTo({
+        top: 0,
+        behavior: reducedMotion ? "auto" : "smooth",
+      });
     }
-  }, []);
+  }, [reducedMotion]);
 
   const runRevealAnimation = useCallback(() => {
     const footer = footerRef.current;
@@ -142,9 +145,21 @@ export default function Footer() {
 
   // ── Reveal animation (IntersectionObserver → sequenced GSAP timeline) ──
   useEffect(() => {
-    if (reducedMotion) return;
     const footer = footerRef.current;
     if (!footer) return;
+
+    const revealEls = footer.querySelectorAll(`.${styles.reveal}`);
+    const chars = ctaCharsRef.current.filter(Boolean);
+
+    if (reducedMotion) {
+      hasRevealed.current = true;
+      gsap.set(revealEls, { opacity: 1, y: 0 });
+      gsap.set(chars, { opacity: 1, y: "0%" });
+      return;
+    }
+
+    hasRevealed.current = false;
+    gsap.set(revealEls, { opacity: 0, y: 30 });
 
     const observer = new IntersectionObserver(
       (entries) => {

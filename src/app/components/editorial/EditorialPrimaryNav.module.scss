@@ -6,6 +6,9 @@
   justify-content: flex-end;
 
   a {
+    display: inline-flex;
+    min-height: 44px;
+    align-items: center;
     color: var(--text-secondary);
     font-family: var(--font-mono);
     font-size: var(--text-xs);

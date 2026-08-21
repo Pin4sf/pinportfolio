@@ -70,9 +70,70 @@ test("active mobile navigation and editorial actions own 44px targets", () => {
       "src/app/reading/ReadingPage.module.scss",
       /\.entry a\s*\{[\s\S]*?min-height:\s*44px/,
     ],
+    [
+      "src/app/components/editorial/EditorialHeader.module.scss",
+      /\.home\s*\{[\s\S]*?min-height:\s*44px/,
+    ],
+    [
+      "src/app/components/editorial/EditorialPrimaryNav.module.scss",
+      /\.nav\s*\{[\s\S]*?a\s*\{[\s\S]*?min-height:\s*44px/,
+    ],
+    [
+      "src/app/writing/WritingArchive.module.scss",
+      /\.researchLink\s*\{[\s\S]*?min-height:\s*44px/,
+    ],
+    [
+      "src/app/writing/WritingArchive.module.scss",
+      /\.filterBtn\s*\{[\s\S]*?min-height:\s*44px/,
+    ],
+    [
+      "src/app/writing/[slug]/BlogPost.module.scss",
+      /\.back\s*\{[\s\S]*?min-height:\s*44px/,
+    ],
+    [
+      "src/app/experience/ExperiencePage.module.scss",
+      /\.links a\s*\{[\s\S]*?min-height:\s*44px/,
+    ],
+    [
+      "src/app/about/AboutPage.module.scss",
+      /\.readingLinks\s*\{[\s\S]*?a\s*\{[\s\S]*?min-height:\s*44px/,
+    ],
+    [
+      "src/app/research/ResearchPage.module.scss",
+      /\.readingLink\s*\{[\s\S]*?min-height:\s*44px/,
+    ],
+    [
+      "src/app/work/[slug]/CaseStudy.module.scss",
+      /\.back\s*\{[\s\S]*?min-height:\s*44px/,
+    ],
+    [
+      "src/app/work/[slug]/CaseStudy.module.scss",
+      /\.navLink\s*\{[\s\S]*?min-height:\s*44px/,
+    ],
   ];
 
   for (const [file, pattern] of expectations) {
     assert.match(read(file), pattern, file);
   }
+});
+
+test("restored home motion stays optional and reduced-motion content stays visible", () => {
+  const footer = read("src/app/components/sections/Footer.tsx");
+  const footerStyles = read("src/app/components/sections/Footer.module.scss");
+  const header = read("src/app/components/layout/Header.tsx");
+  const homeExperience = read("src/app/components/HomeExperience.tsx");
+  const cursor = read("src/app/components/ui/CustomCursor.tsx");
+
+  assert.doesNotMatch(footerStyles, /\.reveal\s*\{[\s\S]*?opacity:\s*0/);
+  assert.match(footer, /if \(reducedMotion\)[\s\S]*?opacity:\s*1/);
+  assert.match(footer, /behavior:\s*reducedMotion \? "auto" : "smooth"/);
+  assert.match(header, /useReducedMotion/);
+  assert.match(header, /if \(reducedMotion\) return/);
+  assert.doesNotMatch(header, /ScrollTrigger/);
+  assert.match(homeExperience, /!reducedMotion && <CustomCursor/);
+  assert.match(cursor, /useReducedMotion/);
+  assert.match(
+    cursor,
+    /if \(reducedMotion \|\| !cursorEffectsEnabled\) return null/,
+  );
 });
