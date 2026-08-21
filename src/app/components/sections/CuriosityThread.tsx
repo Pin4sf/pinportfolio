@@ -11,9 +11,9 @@ export default function CuriosityThread() {
         <p>{researchDirectionData.introduction}</p>
       </div>
 
-      <ol className={styles.path}>
+      <ol className={styles.thread}>
         {researchDirectionData.waypoints.map((waypoint, index) => (
-          <li key={waypoint.label} className={styles.waypoint}>
+          <li key={waypoint.label} className={styles.cell}>
             <span className={styles.number}>
               {String(index + 1).padStart(2, "0")}
             </span>
@@ -22,7 +22,7 @@ export default function CuriosityThread() {
               <span>{waypoint.role}</span>
             </div>
             <p className={styles.question}>{waypoint.question}</p>
-            <p className={styles.evidence}>{waypoint.evidence}</p>
+            <p className={styles.detail}>{waypoint.evidence}</p>
           </li>
         ))}
       </ol>

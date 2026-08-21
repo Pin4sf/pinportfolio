@@ -1,4 +1,4 @@
-import EditorialFooter from "./components/editorial/EditorialFooter";
+import HomeExperience from "./components/HomeExperience";
 import Header from "./components/layout/Header";
 import Contact from "./components/sections/Contact";
 import CuriosityThread from "./components/sections/CuriosityThread";
@@ -8,6 +8,7 @@ import PersonalPreview from "./components/sections/PersonalPreview";
 import ReadingPreview from "./components/sections/ReadingPreview";
 import SelectedChapters from "./components/sections/SelectedChapters";
 import Writing from "./components/sections/Writing";
+import Footer from "./components/sections/Footer";
 import { getPublicReadingEntries } from "@/data/portfolio";
 import { getFeaturedPosts } from "@/lib/mdx";
 
@@ -16,7 +17,7 @@ export default function Page() {
   const readingEntries = getPublicReadingEntries(3);
 
   return (
-    <>
+    <HomeExperience>
       <Header />
       <main id="main-content">
         <Hero />
@@ -28,7 +29,7 @@ export default function Page() {
         <PersonalPreview />
         <Contact />
       </main>
-      <EditorialFooter />
-    </>
+      <Footer />
+    </HomeExperience>
   );
 }

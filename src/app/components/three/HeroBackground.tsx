@@ -25,72 +25,74 @@ const fragmentShader = `
 
   varying vec2 vUv;
 
-  vec2 hash22(vec2 point) {
-    point = vec2(
-      dot(point, vec2(127.1, 311.7)),
-      dot(point, vec2(269.5, 183.3))
-    );
-    return fract(sin(point) * 43758.5453);
+  vec3 mod289(vec3 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
+  vec2 mod289(vec2 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
+  vec3 permute(vec3 x) { return mod289(((x * 34.0) + 1.0) * x); }
+
+  float snoise(vec2 v) {
+    const vec4 C = vec4(0.211324865405187, 0.366025403784439,
+                        -0.577350269189626, 0.024390243902439);
+    vec2 i = floor(v + dot(v, C.yy));
+    vec2 x0 = v - i + dot(i, C.xx);
+    vec2 i1 = (x0.x > x0.y) ? vec2(1.0, 0.0) : vec2(0.0, 1.0);
+    vec4 x12 = x0.xyxy + C.xxzz;
+    x12.xy -= i1;
+    i = mod289(i);
+    vec3 p = permute(permute(i.y + vec3(0.0, i1.y, 1.0))
+                            + i.x + vec3(0.0, i1.x, 1.0));
+    vec3 m = max(0.5 - vec3(dot(x0, x0), dot(x12.xy, x12.xy),
+                             dot(x12.zw, x12.zw)), 0.0);
+    m = m * m;
+    m = m * m;
+    vec3 x = 2.0 * fract(p * C.www) - 1.0;
+    vec3 h = abs(x) - 0.5;
+    vec3 ox = floor(x + 0.5);
+    vec3 a0 = x - ox;
+    m *= 1.79284291400159 - 0.85373472095314 * (a0 * a0 + h * h);
+    vec3 g;
+    g.x = a0.x * x0.x + h.x * x0.y;
+    g.yz = a0.yz * x12.xz + h.yz * x12.yw;
+    return 130.0 * dot(m, g);
   }
 
-  float cellular(vec2 point) {
-    vec2 cell = floor(point);
-    vec2 local = fract(point);
-    float nearest = 1.0;
-
-    for (int y = -1; y <= 1; y++) {
-      for (int x = -1; x <= 1; x++) {
-        vec2 neighbor = vec2(float(x), float(y));
-        vec2 seed = hash22(cell + neighbor);
-        vec2 drift = 0.5 + 0.32 * sin(uTime * 0.16 + 6.28318 * seed);
-        nearest = min(nearest, length(neighbor + drift - local));
-      }
+  float fbm(vec2 point) {
+    float value = 0.0;
+    float amplitude = 0.5;
+    float frequency = 1.0;
+    for (int octave = 0; octave < 4; octave++) {
+      value += amplitude * snoise(point * frequency);
+      frequency *= 2.0;
+      amplitude *= 0.5;
     }
-
-    return nearest;
+    return value;
   }
 
   void main() {
+    vec2 uv = vUv;
     float aspect = uResolution.x / max(uResolution.y, 1.0);
-    vec2 fieldPosition = vUv - 0.5;
-    fieldPosition.x *= aspect;
+    vec2 field = vec2(uv.x * aspect, uv.y);
+    float time = uTime * 0.15;
 
-    float distanceField = cellular(
-      fieldPosition * 5.2 + vec2(uTime * 0.035, -uTime * 0.018)
-    );
-    float contour = 1.0 - smoothstep(
-      0.025,
-      0.105,
-      abs(distanceField - 0.42)
-    );
+    float first = fbm(field * 1.5 + vec2(time, time * 0.7));
+    float second = fbm(field * 2.5 + vec2(-time * 0.5, time * 0.3));
+    float third = fbm(field * 0.8 + vec2(time * 0.2, -time * 0.4));
+    float noise = first * 0.5 + second * 0.3 + third * 0.2;
 
-    float wave =
-      0.045 * sin(fieldPosition.x * 9.0 + uTime * 0.34) +
-      0.022 * sin(fieldPosition.x * 24.0 - uTime * 0.21);
-    float liveTrace = 1.0 - smoothstep(
-      0.007,
-      0.022,
-      abs(fieldPosition.y - wave)
-    );
+    vec3 background = vec3(0.035, 0.039, 0.055);
+    vec3 green = vec3(0.424, 1.0, 0.553);
+    vec3 warm = vec3(0.941, 0.753, 0.251);
+    vec3 deep = vec3(0.15, 0.18, 0.25);
 
-    float lift = 1.0 - smoothstep(
-      0.05,
-      0.92,
-      length(fieldPosition - vec2(-0.22, 0.08))
-    );
+    float gradient = (uv.x * 0.3 + uv.y * 0.7) + noise * 0.3;
+    vec3 color = background;
+    color = mix(color, deep, smoothstep(0.1, 0.5, gradient) * 0.4);
+    color = mix(color, green * 0.15, smoothstep(0.3, 0.8, noise) * 0.3);
+    color = mix(color, warm * 0.08, smoothstep(0.5, 0.9, second) * 0.2);
 
-    vec3 blackField = vec3(0.018, 0.021, 0.017);
-    vec3 warmCream = vec3(0.945, 0.918, 0.858);
-    vec3 liveGreen = vec3(0.424, 1.0, 0.553);
+    float vignette = 1.0 - smoothstep(0.4, 1.4, length(uv - 0.5) * 1.5);
+    color *= mix(0.7, 1.0, vignette);
 
-    vec3 color = blackField;
-    color = mix(color, warmCream, contour * 0.052 + lift * 0.025);
-    color = mix(color, liveGreen, liveTrace * (0.34 + contour * 0.12));
-
-    float edgeFade = 1.0 - smoothstep(0.42, 0.95, length(vUv - 0.5));
-    color *= mix(0.72, 1.0, edgeFade);
-
-    gl_FragColor = vec4(color, 0.9);
+    gl_FragColor = vec4(color, 1.0);
   }
 `;
 

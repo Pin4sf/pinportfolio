@@ -10,13 +10,16 @@ interface WritingProps {
 export default function Writing({ featuredPosts }: WritingProps) {
   return (
     <section id="research" className={styles.section}>
-      <div className={styles.header}>
+      <div className={styles.notesHeader}>
         <div>
           <span className="section__label">{homepageData.writing.eyebrow}</span>
           <h2>{homepageData.writing.title}</h2>
           <p>{homepageData.writing.introduction}</p>
         </div>
-        <Link href={homepageData.writing.cta.href} className={styles.allLink}>
+        <Link
+          href={homepageData.writing.cta.href}
+          className={styles.allWriting}
+        >
           {homepageData.writing.cta.label} <span aria-hidden="true">↗</span>
         </Link>
       </div>
@@ -25,20 +28,16 @@ export default function Writing({ featuredPosts }: WritingProps) {
         {featuredPosts.map((post, index) => (
           <li key={post.slug}>
             <Link href={`/writing/${post.slug}`} className={styles.essay}>
-              <div className={styles.index}>
-                {String(index + 1).padStart(2, "0")}
-              </div>
-              <div className={styles.meta}>
+              <div className={styles.essayMeta}>
+                <span>{String(index + 1).padStart(2, "0")}</span>
                 <span>{post.format.replaceAll("-", " ")}</span>
                 <time dateTime={post.revised ?? post.date}>
                   {post.revised ?? post.date}
                 </time>
                 <span>{post.readingTime} min</span>
               </div>
-              <div className={styles.copy}>
-                <h3>{post.title}</h3>
-                <p>{post.description}</p>
-              </div>
+              <h3>{post.title}</h3>
+              <p>{post.description}</p>
               <span className={styles.readLink} aria-hidden="true">
                 ↗
               </span>

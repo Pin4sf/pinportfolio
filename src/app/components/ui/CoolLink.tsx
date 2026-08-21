@@ -3,9 +3,9 @@
 import { useRef, useCallback } from "react";
 import styles from "./CoolLink.module.scss";
 import clsx from "clsx";
-import TransitionLink from "./TransitionLink";
 
-const CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%&*<>[]{}";
+const CHARS =
+  "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%&*<>[]{}";
 
 interface CoolLinkProps {
   href: string;
@@ -14,11 +14,11 @@ interface CoolLinkProps {
 }
 
 export default function CoolLink({ href, text, className }: CoolLinkProps) {
-  const isPageLink = href.startsWith("/") && !href.includes("#");
-  const Tag = isPageLink ? TransitionLink : "a";
   const spanRef = useRef<HTMLSpanElement>(null);
   const rafRef = useRef<number>(0);
-  const intervalRef = useRef<ReturnType<typeof setInterval>>(0 as unknown as ReturnType<typeof setInterval>);
+  const intervalRef = useRef<ReturnType<typeof setInterval>>(
+    0 as unknown as ReturnType<typeof setInterval>,
+  );
 
   const scramble = useCallback(() => {
     const el = spanRef.current;
@@ -54,14 +54,16 @@ export default function CoolLink({ href, text, className }: CoolLinkProps) {
   }, [text]);
 
   return (
-    <Tag
+    <a
       href={href}
       className={clsx(styles.coolLinks, className)}
       onMouseEnter={scramble}
       onMouseLeave={reset}
       aria-label={text}
     >
-      <span ref={spanRef} aria-hidden="true">{text}</span>
-    </Tag>
+      <span ref={spanRef} aria-hidden="true">
+        {text}
+      </span>
+    </a>
   );
 }

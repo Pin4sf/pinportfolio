@@ -1,7 +1,7 @@
 .section {
   padding: var(--section-py) var(--section-px);
   background: var(--bg-secondary);
-  border-bottom: 1px solid var(--border-subtle);
+  border-block: 1px solid var(--border-subtle);
 }
 
 .header,
@@ -15,14 +15,15 @@
   align-items: end;
   justify-content: space-between;
   gap: 1.5rem;
-  margin-bottom: clamp(2.5rem, 5vw, 4.5rem);
+  margin-bottom: 2rem;
 
   h2 {
+    max-width: 52rem;
     margin: 1rem 0;
     font-family: var(--font-display);
-    font-size: clamp(2.4rem, 5vw, 5rem);
+    font-size: clamp(3.4rem, 7vw, 7rem);
     font-weight: 400;
-    line-height: 0.95;
+    line-height: 0.92;
     letter-spacing: -0.05em;
     color: var(--text-heading);
   }
@@ -30,8 +31,9 @@
   p {
     max-width: 42rem;
     margin: 0;
-    line-height: 1.7;
     color: var(--text-secondary);
+    font-size: clamp(1rem, 1.35vw, 1.15rem);
+    line-height: 1.7;
   }
 
   @media (max-width: 640px) {
@@ -42,13 +44,12 @@
 
 .allLink {
   display: inline-flex;
-  flex: none;
   min-height: 44px;
   align-items: center;
   gap: 0.35rem;
+  color: var(--text-primary);
   font-family: var(--font-mono);
   font-size: 0.7rem;
-  color: var(--text-primary);
   text-decoration: none;
   transition:
     color 0.2s ease,
@@ -62,34 +63,32 @@
 }
 
 .entries {
-  margin-block: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1px;
   padding: 0;
+  border: 1px solid var(--border-subtle);
+  background: var(--border-subtle);
   list-style: none;
-  border-top: 1px solid var(--border-subtle);
 
-  li {
-    display: grid;
-    grid-template-columns: 3rem minmax(8rem, 0.25fr) minmax(0, 1fr);
-    gap: clamp(1rem, 3vw, 3rem);
-    padding: clamp(1.5rem, 3vw, 2.5rem) 0;
-    border-bottom: 1px solid var(--border-subtle);
-
-    @media (max-width: 640px) {
-      grid-template-columns: 2rem 1fr;
-
-      .copy {
-        grid-column: 2;
-      }
-    }
+  @media (max-width: 900px) {
+    grid-template-columns: 1fr;
   }
+}
+
+.entries li {
+  display: flex;
+  min-height: 20rem;
+  flex-direction: column;
+  padding: clamp(1.5rem, 3vw, 2.25rem);
+  background: var(--bg-primary);
 }
 
 .index,
 .kind {
   font-family: var(--font-mono);
   font-size: 0.65rem;
-  line-height: 1.6;
-  letter-spacing: 0.055em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
 }
 
@@ -98,23 +97,25 @@
 }
 
 .kind {
+  margin-top: 0.4rem;
   color: var(--text-tertiary);
 }
 
 .copy {
+  margin-top: auto;
+
   h3 {
-    margin: 0 0 0.65rem;
-    font-family: var(--font-display);
-    font-size: clamp(1.65rem, 3vw, 2.9rem);
-    font-weight: 400;
-    line-height: 1.05;
+    margin: 3rem 0 0.85rem;
     color: var(--text-heading);
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 3vw, 3.25rem);
+    font-weight: 400;
+    line-height: 1.04;
   }
 
   p {
-    max-width: 48rem;
     margin: 0;
-    line-height: 1.65;
     color: var(--text-secondary);
+    line-height: 1.65;
   }
 }

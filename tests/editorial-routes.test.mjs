@@ -429,17 +429,16 @@ function reactText(node) {
   return "";
 }
 
-test("the global shell excludes smooth scroll, custom cursor, and transition machinery", () => {
+test("the global shell keeps restored homepage motion out of editorial routes", () => {
   const layout = read("src/app/layout.tsx");
   const page = read("src/app/page.tsx");
-  const header = read("src/app/components/layout/Header.tsx");
+  const homeExperience = read("src/app/components/HomeExperience.tsx");
   assert.doesNotMatch(layout, /ClientShell|TransitionProvider|GpuTierProvider/);
   assert.doesNotMatch(page, /SmoothScroll/);
-  assert.doesNotMatch(header, /gsap|ScrollTrigger|TransitionLink/);
-  assert.doesNotMatch(
-    read("src/app/globals.scss"),
-    /custom-cursor-active|--sv|skewY\(/,
-  );
+  assert.match(page, /HomeExperience/);
+  assert.match(homeExperience, /CustomCursor/);
+  assert.match(homeExperience, /GpuTierProvider/);
+  assert.doesNotMatch(homeExperience, /SmoothScroll|TransitionProvider/);
 });
 
 test("case study navigation stays direct without a transition provider", () => {
@@ -587,9 +586,10 @@ test("mobile navigation owns focus and scroll for the full dialog lifecycle", ()
   assert.match(header, /ref=\{menuButtonRef\}/);
 });
 
-test("hash routes bypass the page-transition curtain", () => {
+test("restored header links stay native and bypass transition machinery", () => {
   const coolLink = read("src/app/components/ui/CoolLink.tsx");
-  assert.match(coolLink, /href\.startsWith\("\/"\) && !href\.includes\("#"\)/);
+  assert.doesNotMatch(coolLink, /TransitionLink|useTransition/);
+  assert.match(coolLink, /<a[\s\S]*href=\{href\}/);
 });
 
 test("artifact date ranges omit invalid machine-readable dates", () => {
@@ -794,7 +794,7 @@ test("machine surfaces keep Reading summaries public and distribution canonical"
   assert.match(llmsFull, /external validation/i);
 });
 
-test("editorial shell and routes apply the real static texture without theatre", () => {
+test("editorial shell restores the predesign dark surfaces without theatre", () => {
   const texture = path.join(root, "public/noisetexture.jpg");
   assert.ok(fs.statSync(texture).size > 0);
 
@@ -810,18 +810,18 @@ test("editorial shell and routes apply the real static texture without theatre",
     const source = read(file);
     const [rootRule] = scssBlocks(source, rootSelector);
     assert.ok(rootRule, `${file} is missing ${rootSelector}`);
-    assert.match(rootRule, /url\("\/noisetexture\.jpg"\)/);
+    assert.doesNotMatch(rootRule, /url\("\/noisetexture\.jpg"\)/);
     assert.doesNotMatch(
       source.replace(/\/\*[\s\S]*?\*\//g, ""),
       /animation:\s*grain|backdrop-filter|position:\s*sticky/i,
     );
   }
 
-  const [article] = scssBlocks(
-    read("src/app/writing/[slug]/BlogPost.module.scss"),
-    ".article",
+  const [header] = scssBlocks(
+    read("src/app/components/editorial/EditorialHeader.module.scss"),
+    ".header",
   );
-  assert.match(article, /max-width:\s*68ch/);
+  assert.match(header, /max-width:\s*72rem/);
 });
 
 test("SCSS root matching rejects selector prefixes", () => {
@@ -1280,7 +1280,7 @@ test("mobile editorial rules scope one-column layouts and usable controls", () =
   const experience = read("src/app/experience/ExperiencePage.module.scss");
   const experienceMobile = scssBlocks(
     experience,
-    "@media (max-width: 700px)",
+    "@media (max-width: 680px)",
   ).find((block) => block.includes(".timeline::before"));
   assert.ok(experienceMobile, "experience timeline must collapse at 700px");
   assert.match(
@@ -1311,18 +1311,14 @@ test("mobile editorial rules scope one-column layouts and usable controls", () =
   assert.match(captionLink, /min-height:\s*44px/);
 });
 
-test("Waldo reserves the display scale for its title", () => {
+test("Waldo restores the predesign display hierarchy", () => {
   const waldo = read("src/app/work/[slug]/CaseStudy.module.scss");
-  const displayConsumers = waldo.match(
-    /font-size:\s*var\(--editorial-display\)/g,
-  );
   const [title] = scssBlocks(waldo, ".richTitle");
   const [closing] = scssBlocks(waldo, ".closing");
   const [closingCopy] = scssBlocks(closing, "p");
 
-  assert.equal(displayConsumers?.length, 1);
-  assert.match(title, /font-size:\s*var\(--editorial-display\)/);
-  assert.match(closingCopy, /font-size:\s*clamp\(1\.8rem, 3vw, 3rem\)/);
+  assert.match(title, /font-size:\s*clamp\(5rem, 14vw, 10\.5rem\)/);
+  assert.match(closingCopy, /font-size:\s*clamp\(2\.2rem, 6\.5vw, 5\.8rem\)/);
 });
 
 test("reading is canonical, server-rendered, and absent from primary navigation", () => {

@@ -1,7 +1,29 @@
 .page {
+  position: relative;
   max-width: 72rem;
   margin: 0 auto;
   padding: 0 var(--section-px) clamp(6rem, 12vw, 10rem);
+
+  &::before {
+    position: absolute;
+    inset: 0 var(--section-px);
+    z-index: -1;
+    border-inline: 1px solid var(--border-subtle);
+    background-image:
+      linear-gradient(var(--border-subtle) 1px, transparent 1px),
+      linear-gradient(90deg, var(--border-subtle) 1px, transparent 1px);
+    background-size: 4rem 4rem;
+    content: "";
+    mask-image: linear-gradient(
+      to bottom,
+      transparent,
+      black 10%,
+      black 90%,
+      transparent
+    );
+    opacity: 0.22;
+    pointer-events: none;
+  }
 }
 
 .kicker,
@@ -21,15 +43,16 @@
 }
 
 .entries {
-  list-style: none;
+  padding: 0;
   border-top: 1px solid var(--border-subtle);
+  list-style: none;
 }
 
 .entry {
   display: grid;
-  grid-template-columns: minmax(9rem, 0.38fr) minmax(0, 1fr);
+  grid-template-columns: minmax(8rem, 0.28fr) minmax(0, 1fr);
   gap: clamp(2rem, 7vw, 7rem);
-  padding: clamp(2.75rem, 6vw, 5rem) 0;
+  padding: clamp(2.5rem, 5vw, 4.5rem) 0;
   border-bottom: 1px solid var(--border-subtle);
 }
 
@@ -48,39 +71,36 @@
 }
 
 .creator {
-  color: var(--text-secondary);
+  color: var(--text-tertiary);
   font-size: var(--text-xs);
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 
 .entry h2 {
-  max-width: 16ch;
+  max-width: 18ch;
   margin-top: 0.65rem;
-  font-size: clamp(2.2rem, 5vw, 4.5rem);
+  font-size: clamp(2.1rem, 4.5vw, 4rem);
   font-weight: 400;
-  letter-spacing: -0.045em;
+  letter-spacing: -0.04em;
 }
 
-.annotation {
-  max-width: 58ch;
-  margin-top: 1.5rem;
-  color: #eadfc8;
-  font-family: var(--font-display);
-  font-size: clamp(1.3rem, 2.3vw, 1.8rem);
-  line-height: 1.35;
-}
-
+.annotation,
 .question,
 .connection {
   max-width: 64ch;
   margin-top: 1.25rem;
-  color: var(--text-secondary);
   line-height: 1.7;
 }
 
-.question {
+.annotation {
   color: var(--text-primary);
+  font-size: clamp(1.05rem, 1.6vw, 1.25rem);
+}
+
+.question,
+.connection {
+  color: var(--text-secondary);
 }
 
 .connection {
@@ -91,7 +111,7 @@
   display: inline-flex;
   min-height: 44px;
   align-items: center;
-  margin-top: 1.5rem;
+  margin-top: 1.25rem;
   color: var(--accent);
   font-family: var(--font-mono);
   font-size: var(--text-xs);

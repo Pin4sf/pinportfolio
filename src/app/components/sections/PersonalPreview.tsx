@@ -21,29 +21,28 @@ export default function PersonalPreview() {
       <div className={styles.header}>
         <span className="section__label">{homepageData.personal.eyebrow}</span>
         <h2>{homepageData.personal.title}</h2>
+        <Link href={homepageData.personal.cta.href} className={styles.allLink}>
+          {homepageData.personal.cta.label} <span aria-hidden="true">↗</span>
+        </Link>
       </div>
 
-      <div className={styles.preview}>
-        <article>
-          <span className={styles.kicker}>
+      <div className={styles.grid}>
+        <article className={styles.card}>
+          <span className={styles.kind}>
             {homepageData.personal.livedDetailLabel}
           </span>
           <h3>{livedDetail.title}</h3>
           <p>{livedDetail.summary}</p>
         </article>
 
-        <article>
-          <span className={styles.kicker}>
+        <article className={styles.card}>
+          <span className={styles.kind}>
             {homepageData.personal.principleLabel}
           </span>
           <h3>{principle.title}</h3>
           <p>{principle.body}</p>
         </article>
       </div>
-
-      <Link href={homepageData.personal.cta.href} className={styles.allLink}>
-        {homepageData.personal.cta.label} <span aria-hidden="true">↗</span>
-      </Link>
     </section>
   );
 }

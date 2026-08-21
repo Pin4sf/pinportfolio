@@ -64,6 +64,7 @@ const findMarkupPosition = (source, markup) =>
 const portfolio = read("src/data/portfolio.ts");
 const page = read("src/app/page.tsx");
 const hero = read("src/app/components/sections/Hero.tsx");
+const header = read("src/app/components/layout/Header.tsx");
 const reducedMotionHook = read("src/app/hooks/useReducedMotion.ts");
 const gpuTierContext = read("src/lib/GpuTierContext.tsx");
 const globals = read("src/app/globals.scss");
@@ -98,6 +99,15 @@ test("homepage restores the personal founder introduction", () => {
   assert.match(portfolio, /Waldo \+ Kennel/i);
   assert.doesNotMatch(homepageSources, /Explore the evidence/i);
   assert.doesNotMatch(hero, /heroData\.actions|actionPrimary/i);
+});
+
+test("homepage restores the predesign visual shell without dropping reading", () => {
+  assert.match(header, /styles\.progress/);
+  assert.match(hero, /nameChars/);
+  assert.match(hero, /styles\.particles/);
+  assert.match(page, /<ReadingPreview entries=\{readingEntries\} \/>/);
+  assert.match(page, /<Footer \/>/);
+  assert.doesNotMatch(page, /<EditorialFooter \/>/);
 });
 
 test("homepage markup lookup ignores commented component lookalikes", () => {
@@ -140,12 +150,9 @@ test("homepage follows the approved signal-observatory sequence", () => {
       `${sequence[index - 1]} should precede ${sequence[index]}`,
     );
   }
-  const footerPosition = findMarkupPosition(page, "<EditorialFooter />");
-  assert.notEqual(footerPosition, -1, "Homepage missing EditorialFooter");
-  assert.ok(
-    positions.at(-1) < footerPosition,
-    "EditorialFooter should follow Contact",
-  );
+  const footerPosition = findMarkupPosition(page, "<Footer />");
+  assert.notEqual(footerPosition, -1, "Homepage missing Footer");
+  assert.ok(positions.at(-1) < footerPosition, "Footer should follow Contact");
   assert.doesNotMatch(
     page,
     /<SmoothScroll|dynamic\(\(\) => import\("\.\/components\/sections\/(?:Now|CuriosityThread|Writing|ReadingPreview|SelectedChapters|PersonalPreview|Contact)/,

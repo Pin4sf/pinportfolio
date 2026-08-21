@@ -1,26 +1,10 @@
 .page {
-  --editorial-gutter: clamp(1.5rem, 4vw, 4.75rem);
-  --reading-measure: 68ch;
-  --editorial-display: clamp(2.9rem, 7vw, 6.5rem);
-
   min-height: 100vh;
-  max-width: calc(var(--reading-measure) + (2 * var(--editorial-gutter)));
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  padding: 2rem 1.5rem 4rem;
+  max-width: 720px;
   margin: 0 auto;
-  padding: 2rem var(--editorial-gutter) 4rem;
-  background:
-    radial-gradient(
-      circle at 82% 8%,
-      rgba(108, 255, 141, 0.05),
-      transparent 28%
-    ),
-    linear-gradient(180deg, rgba(238, 233, 220, 0.022), transparent 44%),
-    url("/noisetexture.jpg"), var(--bg-primary);
-  background-blend-mode: normal, normal, soft-light;
-  background-size:
-    auto,
-    auto,
-    240px 240px;
-  color: #eee9dc;
 
   @media (min-width: 768px) {
     padding: 3rem 2rem 6rem;
@@ -47,7 +31,6 @@
   font-size: 0.8125rem;
   color: var(--text-secondary);
   transition: color 0.3s ease;
-  min-height: 44px;
 
   &:hover {
     color: var(--accent);
@@ -55,7 +38,6 @@
 }
 
 .article {
-  max-width: 68ch;
   margin-bottom: 4rem;
 }
 
@@ -70,12 +52,12 @@
   align-items: center;
   flex-wrap: wrap;
   gap: 0.5rem;
-  font-family: var(--font-mono);
   font-size: 0.75rem;
   color: var(--text-tertiary);
   margin-bottom: 1.5rem;
 }
 
+.category,
 .format,
 .evidence {
   font-weight: 600;
@@ -84,11 +66,11 @@
 }
 
 .format {
-  color: #c9c3b6;
+  color: var(--accent);
 }
 
 .evidence {
-  color: var(--accent);
+  color: var(--accent-warm);
 }
 
 .dot {
@@ -99,14 +81,14 @@
   font-family: var(--font-display);
   font-size: clamp(2rem, 5vw, 3rem);
   font-weight: 400;
-  color: #f1ecdf;
+  color: var(--text-heading);
   line-height: 1.15;
   margin-bottom: 1rem;
 }
 
 .description {
   font-size: 1.125rem;
-  color: #b9b4a8;
+  color: var(--text-secondary);
   line-height: 1.6;
 }
 
@@ -114,7 +96,6 @@
 .content {
   line-height: 1.75;
   font-size: 1.0625rem;
-  max-width: var(--reading-measure);
 
   h1,
   h2,
@@ -127,7 +108,7 @@
   }
 
   h2 {
-    font-size: clamp(1.8rem, 3vw, 3rem);
+    font-size: 1.75rem;
   }
 
   h3 {
@@ -136,7 +117,7 @@
 
   p {
     margin-bottom: 1.5rem;
-    color: #eee9dc;
+    color: var(--text-primary);
   }
 
   strong {
@@ -145,7 +126,7 @@
   }
 
   a {
-    color: #d4cec1;
+    color: var(--accent);
     text-decoration: underline;
     text-underline-offset: 3px;
     transition: color 0.3s ease;
@@ -176,7 +157,7 @@
     background: var(--bg-tertiary);
     padding: 0.15em 0.4em;
     border-radius: 3px;
-    color: #d4cec1;
+    color: var(--accent);
   }
 
   pre {
@@ -198,7 +179,7 @@
   }
 
   blockquote {
-    border-left: 3px solid var(--border-visible);
+    border-left: 3px solid var(--accent);
     padding-left: 1.25rem;
     margin: 1.5rem 0;
     color: var(--text-secondary);
@@ -223,24 +204,11 @@
 }
 
 .backLink {
-  display: inline-flex;
-  min-height: 44px;
-  align-items: center;
   font-size: 0.9375rem;
-  color: var(--text-secondary);
+  color: var(--accent);
   transition: color 0.3s ease;
 
   &:hover {
     color: var(--accent-hover);
-  }
-}
-
-@media (max-width: 700px) {
-  .title {
-    max-width: 100%;
-  }
-
-  .content pre {
-    max-width: calc(100vw - (2 * var(--editorial-gutter)));
   }
 }

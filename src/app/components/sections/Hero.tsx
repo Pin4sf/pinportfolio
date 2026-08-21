@@ -1,26 +1,22 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useRef, useMemo, useCallback, useState } from "react";
 import dynamic from "next/dynamic";
-import {
-  Github,
-  Instagram,
-  Linkedin,
-  Twitter,
-  type LucideIcon,
-} from "lucide-react";
+import gsap from "gsap";
+import styles from "./Hero.module.scss";
 import { heroData } from "@/data/portfolio";
 import { useReducedMotion } from "@/app/hooks/useReducedMotion";
 import { useGpuTier } from "@/app/hooks/useGpuTier";
-import { GpuTierProvider } from "@/lib/GpuTierContext";
 import { shouldEnableHeroEffects } from "@/lib/heroEffects";
+import {
+  Github,
+  Linkedin,
+  Twitter,
+  Instagram,
+  type LucideIcon,
+} from "lucide-react";
 import ErrorBoundary from "../ErrorBoundary";
 import ExternalLink from "../ui/ExternalLink";
-import styles from "./Hero.module.scss";
-
-const HeroBackground = dynamic(() => import("../three/HeroBackground"), {
-  ssr: false,
-});
 
 interface HeroNetworkInformation {
   readonly saveData?: boolean;
@@ -34,6 +30,10 @@ declare global {
   }
 }
 
+const HeroBackground = dynamic(() => import("../three/HeroBackground"), {
+  ssr: false,
+});
+
 const iconMap: Record<string, LucideIcon> = {
   linkedin: Linkedin,
   github: Github,
@@ -46,9 +46,7 @@ function useReducedData() {
 
   useEffect(() => {
     const connection = navigator.connection;
-    const syncPreference = () => {
-      setReducedData(connection?.saveData === true);
-    };
+    const syncPreference = () => setReducedData(connection?.saveData === true);
 
     syncPreference();
     connection?.addEventListener?.("change", syncPreference);
@@ -98,13 +96,20 @@ function useHeroCapabilities() {
   return capabilities;
 }
 
-function HeroContent() {
+export default function Hero() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const nameRef = useRef<HTMLHeadingElement>(null);
+  const taglineRef = useRef<HTMLParagraphElement>(null);
+  const subtitleRef = useRef<HTMLParagraphElement>(null);
+  const socialsRef = useRef<HTMLDivElement>(null);
+  const glowRef = useRef<HTMLDivElement>(null);
+  const particlesRef = useRef<HTMLDivElement>(null);
+  const charsRef = useRef<HTMLSpanElement[]>([]);
   const reducedMotion = useReducedMotion();
   const reducedData = useReducedData();
   const { viewportWidth, interactionCapable } = useHeroCapabilities();
   const gpuTier = useGpuTier();
-  const [canvasFailed, setCanvasFailed] = useState(false);
-  const handleCanvasFailure = useCallback(() => setCanvasFailed(true), []);
+
   const enableHeroEffects = shouldEnableHeroEffects({
     reducedMotion,
     reducedData,
@@ -112,28 +117,283 @@ function HeroContent() {
     interactionCapable,
     gpuTier,
   });
+  const particleCount = enableHeroEffects ? (gpuTier === "mid" ? 25 : 30) : 0;
+
+  const particles = useMemo(
+    () =>
+      Array.from({ length: particleCount }, (_, i) => ({
+        id: i,
+        left: `${Math.random() * 100}%`,
+        top: `${Math.random() * 100}%`,
+        size: Math.random() * 4 + 2,
+      })),
+    [particleCount],
+  );
+
+  // Split name into individual character spans for magnetic effect
+  const nameChars = useMemo(() => {
+    const name = heroData.name;
+    const chars: { char: string; isSpace: boolean }[] = [];
+    for (const c of name) {
+      chars.push({ char: c, isSpace: c === " " });
+    }
+    return chars;
+  }, []);
+
+  const setCharRef = useCallback((el: HTMLSpanElement | null, idx: number) => {
+    if (el) charsRef.current[idx] = el;
+  }, []);
+
+  // Entrance animation — stagger characters from bottom
+  useEffect(() => {
+    if (reducedMotion) return;
+
+    const chars = charsRef.current.filter(Boolean);
+    if (chars.length === 0) return;
+
+    gsap.set(chars, { y: "110%", opacity: 0 });
+    gsap.set(taglineRef.current, { y: 20, opacity: 0 });
+    gsap.set(subtitleRef.current, { y: 12, opacity: 0 });
+
+    const tl = gsap.timeline({ delay: 0.2 });
+
+    tl.to(
+      chars,
+      {
+        y: "0%",
+        opacity: 1,
+        duration: 0.8,
+        stagger: 0.025,
+        ease: "power4.out",
+      },
+      "-=0.2",
+    )
+      .to(
+        taglineRef.current,
+        { y: 0, opacity: 1, duration: 0.6, ease: "power3.out" },
+        "-=0.3",
+      )
+      .to(
+        subtitleRef.current,
+        { y: 0, opacity: 1, duration: 0.45, ease: "power3.out" },
+        "-=0.35",
+      )
+      .fromTo(
+        socialsRef.current?.children
+          ? Array.from(socialsRef.current.children)
+          : [],
+        { y: 10, opacity: 0 },
+        {
+          y: 0,
+          opacity: 1,
+          duration: 0.4,
+          stagger: 0.04,
+          ease: "power3.out",
+        },
+        "-=0.2",
+      );
+  }, [reducedMotion]);
+
+  // Magnetic text — characters repel from cursor on resolved capable desktops.
+  useEffect(() => {
+    if (!enableHeroEffects) return;
+
+    const section = sectionRef.current;
+    const chars = charsRef.current.filter(Boolean);
+    if (!section || chars.length === 0) return;
+
+    if (window.matchMedia("(pointer: coarse)").matches) return;
+
+    const RADIUS = 150;
+    const STRENGTH = 25;
+
+    const quickX = chars.map((el) =>
+      gsap.quickTo(el, "x", { duration: 0.4, ease: "power3" }),
+    );
+    const quickY = chars.map((el) =>
+      gsap.quickTo(el, "y", { duration: 0.4, ease: "power3" }),
+    );
+
+    const handleMouseMove = (e: MouseEvent) => {
+      chars.forEach((el, i) => {
+        const rect = el.getBoundingClientRect();
+        const charCenterX = rect.left + rect.width / 2;
+        const charCenterY = rect.top + rect.height / 2;
+
+        const dx = e.clientX - charCenterX;
+        const dy = e.clientY - charCenterY;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+
+        if (dist < RADIUS) {
+          const force = (1 - dist / RADIUS) * STRENGTH;
+          const angle = Math.atan2(dy, dx);
+          quickX[i](-Math.cos(angle) * force);
+          quickY[i](-Math.sin(angle) * force);
+        } else {
+          quickX[i](0);
+          quickY[i](0);
+        }
+      });
+    };
+
+    const handleMouseLeave = () => {
+      chars.forEach((_, i) => {
+        quickX[i](0);
+        quickY[i](0);
+      });
+    };
+
+    section.addEventListener("mousemove", handleMouseMove);
+    section.addEventListener("mouseleave", handleMouseLeave);
+
+    return () => {
+      section.removeEventListener("mousemove", handleMouseMove);
+      section.removeEventListener("mouseleave", handleMouseLeave);
+    };
+  }, [enableHeroEffects]);
+
+  // Cursor-responsive glow follows the same resolved capability gate.
+  useEffect(() => {
+    if (!enableHeroEffects) return;
+
+    const section = sectionRef.current;
+    const glow = glowRef.current;
+    if (!section || !glow) return;
+
+    const moveGlow = gsap.quickTo(glow, "left", {
+      duration: 0.8,
+      ease: "power3",
+    });
+    const moveGlowY = gsap.quickTo(glow, "top", {
+      duration: 0.8,
+      ease: "power3",
+    });
+
+    const handleMouseMove = (e: MouseEvent) => {
+      const rect = section.getBoundingClientRect();
+      moveGlow(e.clientX - rect.left);
+      moveGlowY(e.clientY - rect.top);
+    };
+
+    section.addEventListener("mousemove", handleMouseMove);
+    return () => section.removeEventListener("mousemove", handleMouseMove);
+  }, [enableHeroEffects]);
+
+  // Floating particles — pause when offscreen
+  useEffect(() => {
+    if (!enableHeroEffects) return;
+    const section = sectionRef.current;
+    const container = particlesRef.current;
+    if (!container || !section) return;
+
+    const dots = container.querySelectorAll(`.${styles.particle}`);
+
+    gsap.fromTo(
+      dots,
+      { opacity: 0, scale: 0 },
+      {
+        opacity: () => Math.random() * 0.5 + 0.25,
+        scale: 1,
+        duration: 2.5,
+        stagger: { each: 0.12, from: "center" },
+        ease: "expo.out",
+      },
+    );
+
+    const floatTweens: gsap.core.Tween[] = [];
+    Array.from(dots).forEach((dot) => {
+      floatTweens.push(
+        gsap.to(dot, {
+          y: gsap.utils.random(-60, 60),
+          x: gsap.utils.random(-30, 30),
+          duration: gsap.utils.random(3, 6),
+          delay: gsap.utils.random(0, 2),
+          yoyo: true,
+          repeat: -1,
+          ease: "sine.inOut",
+        }),
+      );
+    });
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        floatTweens.forEach((t) =>
+          entry.isIntersecting ? t.resume() : t.pause(),
+        );
+      },
+      { threshold: 0.05 },
+    );
+    observer.observe(section);
+
+    return () => {
+      observer.disconnect();
+      floatTweens.forEach((t) => t.kill());
+    };
+  }, [enableHeroEffects]);
 
   return (
-    <section id="home" className={styles.hero}>
-      <div className={styles.signalPoster} aria-hidden="true">
-        <span className={styles.signalTrace} />
-        <span className={styles.signalNode} />
-      </div>
-
-      {enableHeroEffects && !canvasFailed && (
+    <section ref={sectionRef} id="home" className={styles.hero}>
+      {/* Three.js backgrounds — disabled on mobile for GPU savings */}
+      {enableHeroEffects && (
         <ErrorBoundary>
-          <HeroBackground onFailure={handleCanvasFailure} />
+          <HeroBackground />
         </ErrorBoundary>
+      )}
+
+      {/* Floating particles */}
+      {enableHeroEffects && (
+        <div
+          ref={particlesRef}
+          className={styles.particles}
+          aria-hidden="true"
+          role="presentation"
+        >
+          {particles.map((p) => (
+            <span
+              key={p.id}
+              className={styles.particle}
+              style={{
+                left: p.left,
+                top: p.top,
+                width: p.size,
+                height: p.size,
+              }}
+            />
+          ))}
+        </div>
+      )}
+
+      {/* Cursor-responsive glow (hidden on low tier) */}
+      {enableHeroEffects && (
+        <div ref={glowRef} className={styles.glow} aria-hidden="true" />
       )}
 
       <div className={styles.content}>
         <p className={styles.eyebrow}>{heroData.eyebrow}</p>
-        <h1 className={styles.name}>{heroData.name}</h1>
-        <p className={styles.tagline}>{heroData.tagline}</p>
-        <p className={styles.subtitle}>{heroData.subtitle}</p>
+        <h1 ref={nameRef} className={styles.name}>
+          {nameChars.map((c, i) =>
+            c.isSpace ? (
+              <span key={i} className={styles.charSpace}>
+                &nbsp;
+              </span>
+            ) : (
+              <span key={i} className={styles.charWrap}>
+                <span ref={(el) => setCharRef(el, i)} className={styles.char}>
+                  {c.char}
+                </span>
+              </span>
+            ),
+          )}
+        </h1>
+        <p ref={taglineRef} className={styles.tagline}>
+          {heroData.tagline}
+        </p>
+        <p ref={subtitleRef} className={styles.subtitle}>
+          {heroData.subtitle}
+        </p>
       </div>
 
-      <div className={styles.socials}>
+      <div ref={socialsRef} className={styles.socials}>
         {heroData.socials.map((social) => {
           const Icon = iconMap[social.icon];
           return (
@@ -144,24 +404,16 @@ function HeroContent() {
               className={styles.socialLink}
               aria-label={social.name}
             >
-              {Icon && <Icon size={18} aria-hidden="true" />}
+              {Icon && <Icon size={18} />}
             </ExternalLink>
           );
         })}
       </div>
 
-      <div className={styles.scrollIndicator} aria-hidden="true">
+      <div className={styles.scrollIndicator}>
         <span className={styles.scrollLine} />
         <span className={styles.scrollText}>Scroll</span>
       </div>
     </section>
-  );
-}
-
-export default function Hero() {
-  return (
-    <GpuTierProvider>
-      <HeroContent />
-    </GpuTierProvider>
   );
 }

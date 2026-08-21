@@ -1,23 +1,57 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { usePathname } from "next/navigation";
+import styles from "./Header.module.scss";
+import CoolLink from "../ui/CoolLink";
 import { navItems } from "@/data/portfolio";
 import { cn } from "@/lib/utils";
 import { isPageCurrent } from "@/lib/navigation";
-import styles from "./Header.module.scss";
+
+gsap.registerPlugin(ScrollTrigger);
 
 export default function Header() {
+  const headerRef = useRef<HTMLElement>(null);
+  const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
-  const overlayRef = useRef<HTMLDivElement>(null);
+  const lastScrollY = useRef(0);
+  const progressRef = useRef<HTMLDivElement>(null);
+  const [hidden, setHidden] = useState(false);
   const pathname = usePathname();
+  const isActive = (href: string) => isPageCurrent(pathname, href);
 
+  // Hide on scroll-down, show on scroll-up + glass effect
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentY = window.scrollY;
+      setScrolled(currentY > 100);
+      setHidden(currentY > lastScrollY.current && currentY > 300);
+      lastScrollY.current = currentY;
+
+      // Update scroll progress bar
+      if (progressRef.current) {
+        const total =
+          document.documentElement.scrollHeight - window.innerHeight;
+        const progress = total > 0 ? currentY / total : 0;
+        progressRef.current.style.transform = `scaleX(${progress})`;
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // Focus trap + Escape key for mobile overlay
   useEffect(() => {
     if (!menuOpen) return;
 
     const menuButton = menuButtonRef.current;
-    const overlay = overlayRef.current;
+    const overlay = document.querySelector(
+      `.${styles.overlay}`,
+    ) as HTMLElement | null;
     if (!overlay) return;
 
     const previousBodyOverflow = document.body.style.overflow;
@@ -55,28 +89,48 @@ export default function Header() {
     };
   }, [menuOpen]);
 
+  // Reveal header after loading screen
+  useEffect(() => {
+    const header = headerRef.current;
+    if (!header) return;
+
+    gsap.fromTo(
+      header,
+      { y: -100, opacity: 0 },
+      { y: 0, opacity: 1, duration: 0.65, delay: 0.2, ease: "power3.out" },
+    );
+  }, []);
+
   return (
     <>
-      <header className={styles.header}>
+      {/* Scroll progress indicator */}
+      <div ref={progressRef} className={styles.progress} aria-hidden="true" />
+
+      <header
+        ref={headerRef}
+        className={cn(
+          styles.header,
+          scrolled && styles.scrolled,
+          hidden && styles.hidden,
+        )}
+      >
         <div className={styles.inner}>
-          <a href="/" className={styles.logo} aria-label="Shivansh Fulper home">
+          <a href="/" className={styles.logo}>
             SF
           </a>
 
           <nav className={styles.nav} aria-label="Main navigation">
-            {navItems.map((item) => {
-              const active = isPageCurrent(pathname, item.href);
-              return (
-                <a
-                  key={item.label}
-                  href={item.href}
-                  className={cn(styles.navLink, active && styles.active)}
-                  aria-current={active ? "page" : undefined}
-                >
-                  {item.label}
-                </a>
-              );
-            })}
+            {navItems.map((item) => (
+              <CoolLink
+                key={item.label}
+                href={item.href}
+                text={item.label}
+                className={cn(
+                  styles.navLink,
+                  isActive(item.href) && styles.active,
+                )}
+              />
+            ))}
           </nav>
 
           <div className={styles.actions}>
@@ -89,10 +143,9 @@ export default function Header() {
             ref={menuButtonRef}
             type="button"
             className={cn(styles.menuBtn, menuOpen && styles.menuOpen)}
-            onClick={() => setMenuOpen((open) => !open)}
+            onClick={() => setMenuOpen(!menuOpen)}
             aria-label={menuOpen ? "Close menu" : "Open menu"}
             aria-expanded={menuOpen}
-            aria-controls="mobile-navigation"
           >
             <span />
             <span />
@@ -100,9 +153,8 @@ export default function Header() {
         </div>
       </header>
 
+      {/* Mobile overlay */}
       <div
-        ref={overlayRef}
-        id="mobile-navigation"
         className={cn(styles.overlay, menuOpen && styles.overlayOpen)}
         role="dialog"
         aria-modal="true"
@@ -110,16 +162,15 @@ export default function Header() {
         aria-hidden={!menuOpen}
       >
         <nav className={styles.overlayNav} aria-label="Mobile navigation">
-          {navItems.map((item) => (
+          {navItems.map((item, i) => (
             <a
               key={item.label}
               href={item.href}
               className={styles.overlayLink}
+              style={{ transitionDelay: `${0.1 + i * 0.05}s` }}
               onClick={() => setMenuOpen(false)}
               tabIndex={menuOpen ? 0 : -1}
-              aria-current={
-                isPageCurrent(pathname, item.href) ? "page" : undefined
-              }
+              aria-current={isActive(item.href) ? "page" : undefined}
             >
               {item.label}
             </a>
@@ -127,6 +178,7 @@ export default function Header() {
           <a
             href="/#contact"
             className={styles.overlayLink}
+            style={{ transitionDelay: `${0.1 + navItems.length * 0.05}s` }}
             onClick={() => setMenuOpen(false)}
             tabIndex={menuOpen ? 0 : -1}
           >
