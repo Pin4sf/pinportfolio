@@ -2,29 +2,16 @@
 
 import { useState } from "react";
 import styles from "./WritingArchive.module.scss";
-import type { PostMeta } from "@/lib/mdx";
+import type { PostFormat, PostMeta } from "@/lib/mdx";
 import Link from "next/link";
 
-const categories = [
-  { key: "all", label: "All" },
-  { key: "research", label: "Research" },
-  { key: "field-note", label: "Field notes" },
-  { key: "founder-note", label: "Founder notes" },
-  { key: "historical", label: "Historical" },
-];
-
-const categoryColors: Record<string, string> = {
-  research: "var(--accent)",
-  "field-note": "#8aa9ff",
-  "founder-note": "var(--accent-warm)",
-  historical: "var(--text-tertiary)",
-};
-
-const categoryLabels: Record<string, string> = {
-  research: "Research",
-  "field-note": "Field note",
-  "founder-note": "Founder note",
-  historical: "Historical",
+const formatLabels: Record<PostFormat, string> = {
+  essay: "Essay",
+  "research-note": "Research Note",
+  "field-note": "Field Note",
+  explainer: "Explainer",
+  "book-chapter": "Book / Chapter",
+  "course-lesson": "Course / Lesson",
 };
 
 interface WritingArchiveProps {
@@ -32,24 +19,27 @@ interface WritingArchiveProps {
 }
 
 export default function WritingArchive({ posts }: WritingArchiveProps) {
-  const [activeCategory, setActiveCategory] = useState("all");
+  const [activeFormat, setActiveFormat] = useState<"all" | PostFormat>("all");
+  const availableFormats = Array.from(
+    new Set(posts.map((post) => post.format)),
+  );
 
   const filteredPosts =
-    activeCategory === "all"
+    activeFormat === "all"
       ? posts
-      : posts.filter((p) => p.category === activeCategory);
+      : posts.filter((post) => post.format === activeFormat);
 
   return (
     <section aria-label="Writing archive">
       <div className={styles.filters}>
-        {categories.map((cat) => (
+        {(["all", ...availableFormats] as const).map((format) => (
           <button
-            key={cat.key}
-            aria-pressed={activeCategory === cat.key}
-            className={`${styles.filterBtn} ${activeCategory === cat.key ? styles.active : ""}`}
-            onClick={() => setActiveCategory(cat.key)}
+            key={format}
+            aria-pressed={activeFormat === format}
+            className={`${styles.filterBtn} ${activeFormat === format ? styles.active : ""}`}
+            onClick={() => setActiveFormat(format)}
           >
-            {cat.label}
+            {format === "all" ? "All" : formatLabels[format]}
           </button>
         ))}
       </div>
@@ -62,14 +52,13 @@ export default function WritingArchive({ posts }: WritingArchiveProps) {
             className={styles.card}
           >
             <div className={styles.cardMeta}>
-              <span
-                className={styles.category}
-                style={{
-                  color: categoryColors[post.category] || "var(--accent)",
-                }}
-              >
-                {categoryLabels[post.category] ?? post.category}
-              </span>
+              <span className={styles.format}>{formatLabels[post.format]}</span>
+              {post.evidenceStatus && (
+                <>
+                  <span className={styles.dot}>·</span>
+                  <span className={styles.evidence}>{post.evidenceStatus}</span>
+                </>
+              )}
               <span className={styles.dot}>·</span>
               <span>
                 {new Date(post.date).toLocaleDateString("en-US", {
@@ -97,10 +86,6 @@ export default function WritingArchive({ posts }: WritingArchiveProps) {
             <p className={styles.cardDescription}>{post.description}</p>
           </Link>
         ))}
-
-        {filteredPosts.length === 0 && (
-          <p className={styles.empty}>No posts in this category yet.</p>
-        )}
       </div>
     </section>
   );

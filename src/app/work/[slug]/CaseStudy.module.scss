@@ -1,10 +1,26 @@
 .page {
+  --editorial-gutter: clamp(1.5rem, 4vw, 4.75rem);
+  --reading-measure: 68ch;
+  --editorial-display: clamp(2.9rem, 7vw, 6.5rem);
+
   min-height: 100vh;
   max-width: 900px;
   margin: 0 auto;
-  padding: 2rem 1.5rem 4rem;
-  background: var(--bg-primary);
-  color: var(--text-primary);
+  padding: 2rem var(--editorial-gutter) 4rem;
+  background:
+    radial-gradient(
+      circle at 84% 6%,
+      rgba(108, 255, 141, 0.05),
+      transparent 25%
+    ),
+    linear-gradient(180deg, rgba(238, 233, 220, 0.022), transparent 42%),
+    url("/noisetexture.jpg"), var(--bg-primary);
+  background-blend-mode: normal, normal, soft-light;
+  background-size:
+    auto,
+    auto,
+    240px 240px;
+  color: #eee9dc;
 
   @media (min-width: 768px) {
     padding: 3rem 2rem 6rem;
@@ -13,7 +29,7 @@
 
 .richPage {
   max-width: 1240px;
-  padding-inline: clamp(1.25rem, 4vw, 4rem);
+  padding-inline: var(--editorial-gutter);
 }
 
 .primaryNavigation {
@@ -31,6 +47,7 @@
 
 .back {
   display: inline-flex;
+  min-height: 44px;
   align-items: center;
   gap: 0.375rem;
   color: var(--text-secondary);
@@ -64,8 +81,9 @@
 .eyebrow,
 .cardLabel,
 .personRole {
-  color: var(--accent-warm);
-  font-size: 0.6875rem;
+  color: #b9b4a8;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
   font-weight: 600;
   letter-spacing: 0.12em;
   line-height: 1.5;
@@ -81,7 +99,7 @@
   margin-bottom: 1rem;
   color: var(--text-heading);
   font-family: var(--font-display);
-  font-size: clamp(2.5rem, 6vw, 4rem);
+  font-size: clamp(2.9rem, 7vw, 6.5rem);
   font-weight: 400;
   line-height: 1.1;
 }
@@ -150,26 +168,26 @@
   margin-bottom: clamp(2.5rem, 6vw, 5rem);
   color: var(--text-heading);
   font-family: var(--font-display);
-  font-size: clamp(5rem, 14vw, 10.5rem);
+  font-size: var(--editorial-display);
   font-weight: 400;
   letter-spacing: -0.065em;
   line-height: 0.76;
 }
 
 .heroStatement {
-  max-width: 760px;
+  max-width: var(--reading-measure);
   color: var(--text-heading);
   font-family: var(--font-display);
-  font-size: clamp(2rem, 5vw, 4.4rem);
+  font-size: clamp(1.8rem, 3vw, 3rem);
   letter-spacing: -0.025em;
   line-height: 0.98;
   text-wrap: balance;
 }
 
 .heroQuote {
-  max-width: 680px;
+  max-width: var(--reading-measure);
   margin-top: 1.5rem;
-  border-left: 2px solid var(--accent-warm);
+  border-left: 2px solid var(--border-visible);
   border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
   padding: 0.8rem 1rem;
   background: rgba(240, 192, 64, 0.04);
@@ -186,7 +204,7 @@
 }
 
 .heroBody {
-  max-width: 680px;
+  max-width: var(--reading-measure);
   margin-top: 1rem;
   color: var(--text-secondary);
   font-size: clamp(1rem, 1.5vw, 1.2rem);
@@ -209,7 +227,7 @@
   color: var(--accent);
   background: rgba(108, 255, 141, 0.06);
   font-family: var(--font-mono);
-  font-size: 0.58rem;
+  font-size: 0.75rem;
   letter-spacing: 0.08em;
   line-height: 1;
   text-transform: uppercase;
@@ -300,7 +318,7 @@
 
 .overviewLabel {
   color: var(--text-tertiary);
-  font-size: 0.6875rem;
+  font-size: 0.75rem;
   font-weight: 500;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -335,9 +353,10 @@
 .artifactLink,
 .resourceCta {
   display: inline-flex;
+  min-height: 44px;
   align-items: center;
   gap: 0.375rem;
-  color: var(--accent);
+  color: #c9c3b6;
   font-size: 0.8125rem;
   transition: color 0.25s ease;
 
@@ -362,6 +381,7 @@
 }
 
 .sectionText {
+  max-width: var(--reading-measure);
   color: var(--text-primary);
   font-size: 1.0625rem;
   line-height: 1.75;
@@ -370,7 +390,7 @@
 .pullQuote {
   position: relative;
   margin: 3rem 0;
-  border-left: 3px solid var(--accent-warm);
+  border-left: 3px solid var(--border-visible);
   border-radius: 0 var(--radius-md) var(--radius-md) 0;
   padding: 2rem 2rem 2rem 2.5rem;
   background: rgba(240, 192, 64, 0.04);
@@ -420,16 +440,11 @@
 .storyHeading {
   align-self: start;
 
-  @media (min-width: 900px) {
-    position: sticky;
-    top: 2rem;
-  }
-
   h2 {
     margin-top: 0.9rem;
     color: var(--text-heading);
     font-family: var(--font-display);
-    font-size: clamp(2rem, 4.5vw, 4rem);
+    font-size: clamp(1.8rem, 3vw, 3rem);
     font-weight: 400;
     letter-spacing: -0.025em;
     line-height: 1;
@@ -443,8 +458,8 @@
 
 .prose,
 .sectionLead {
-  max-width: 760px;
-  color: var(--text-primary);
+  max-width: var(--reading-measure);
+  color: #eee9dc;
   font-size: clamp(1rem, 1.45vw, 1.16rem);
   line-height: 1.8;
   text-wrap: pretty;
@@ -480,7 +495,7 @@
 .person {
   min-width: 0;
   border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-md);
+  border-radius: 2px;
   padding: clamp(1.2rem, 2.5vw, 1.7rem);
   background:
     linear-gradient(145deg, rgba(255, 255, 255, 0.025), transparent 55%),
@@ -533,7 +548,7 @@
 .matrixWrap {
   overflow-x: auto;
   border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-md);
+  border-radius: 2px;
   background: var(--bg-secondary);
   scrollbar-color: var(--border-visible) transparent;
   scrollbar-width: thin;
@@ -708,7 +723,7 @@
 .videoCard {
   overflow: hidden;
   border: 1px solid var(--border-visible);
-  border-radius: var(--radius-lg);
+  border-radius: 2px;
   background: var(--bg-secondary);
 
   video {
@@ -759,7 +774,7 @@
   flex-direction: column;
   justify-content: space-between;
   border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-md);
+  border-radius: 2px;
   padding: clamp(1.25rem, 2.5vw, 1.75rem);
   background:
     radial-gradient(
@@ -792,7 +807,6 @@
   @media (hover: hover) {
     &:hover {
       border-color: rgba(108, 255, 141, 0.35);
-      transform: translateY(-4px);
       background-color: rgba(108, 255, 141, 0.025);
     }
   }
@@ -808,10 +822,10 @@
   padding: clamp(4rem, 10vw, 9rem) 0;
 
   p {
-    max-width: 1050px;
+    max-width: var(--reading-measure);
     color: var(--text-heading);
     font-family: var(--font-display);
-    font-size: clamp(2.2rem, 6.5vw, 5.8rem);
+    font-size: var(--editorial-display);
     letter-spacing: -0.035em;
     line-height: 0.98;
     text-wrap: balance;
@@ -833,6 +847,7 @@
 
 .navLink {
   display: flex;
+  min-height: 44px;
   align-items: center;
   gap: 0.75rem;
   color: inherit;
@@ -844,7 +859,6 @@
   @media (hover: hover) {
     &:hover {
       color: var(--accent);
-      transform: translateY(-2px);
     }
   }
 }
@@ -856,7 +870,7 @@
 .navLabel {
   display: block;
   color: var(--text-tertiary);
-  font-size: 0.6875rem;
+  font-size: 0.75rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
 }
@@ -869,17 +883,31 @@
   font-size: 1.125rem;
 }
 
-@media (max-width: 520px) {
+@media (max-width: 700px) {
   .overview {
     grid-template-columns: 1fr;
   }
 
   .richTitle {
-    font-size: clamp(4.5rem, 27vw, 7rem);
+    font-size: clamp(3.5rem, 22vw, 6.5rem);
   }
 
   .heroStatement {
-    font-size: clamp(2rem, 10vw, 3rem);
+    max-width: 100%;
+    font-size: clamp(1.8rem, 8vw, 3rem);
+  }
+
+  .storySection,
+  .teamSection,
+  .artifactsHeader,
+  .videoGrid,
+  .resourceGrid,
+  .teamGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .person:first-child {
+    grid-column: auto;
   }
 
   .resourceCard {

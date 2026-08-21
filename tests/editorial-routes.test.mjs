@@ -282,9 +282,41 @@ test("sitemap and machine surfaces expose only canonical public routes", () => {
   }
 });
 
-test("writing category filters expose their selected state", () => {
+test("writing format filters expose their selected state", () => {
   const source = read("src/app/writing/WritingArchive.tsx");
-  assert.match(source, /aria-pressed=\{activeCategory === cat\.key\}/);
+  assert.match(source, /aria-pressed=\{activeFormat === format\}/);
+});
+
+test("editorial routes use static texture and bounded reading measures", () => {
+  for (const file of [
+    "src/app/research/ResearchPage.module.scss",
+    "src/app/writing/[slug]/BlogPost.module.scss",
+    "src/app/experience/ExperiencePage.module.scss",
+    "src/app/about/AboutPage.module.scss",
+    "src/app/work/[slug]/CaseStudy.module.scss",
+  ]) {
+    const source = read(file);
+    assert.doesNotMatch(
+      source,
+      /animation:\s*grain|backdrop-filter|position:\s*sticky[\s\S]*height:\s*100vh/i,
+    );
+  }
+  assert.match(
+    read("src/app/writing/[slug]/BlogPost.module.scss"),
+    /max-width:\s*(?:68ch|760px)/,
+  );
+});
+
+test("writing exposes complete formats without empty categories", () => {
+  const archive = read("src/app/writing/WritingArchive.tsx");
+  assert.match(archive, /post\.format/);
+  assert.match(archive, /availableFormats/);
+  assert.doesNotMatch(archive, /No posts in this category yet/);
+});
+
+test("article and archive expose format labels from typed metadata", () => {
+  assert.match(read("src/app/writing/[slug]/BlogPost.tsx"), /post\.format/);
+  assert.match(read("src/app/writing/WritingArchive.tsx"), /formatLabels/);
 });
 
 test("reading is canonical, server-rendered, and absent from primary navigation", () => {

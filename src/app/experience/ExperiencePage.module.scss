@@ -1,8 +1,26 @@
 .page {
+  --editorial-gutter: clamp(1.5rem, 4vw, 4.75rem);
+  --reading-measure: 68ch;
+  --editorial-display: clamp(2.9rem, 7vw, 6.5rem);
+
   position: relative;
   max-width: 72rem;
   margin: 0 auto;
-  padding: 0 var(--section-px) clamp(6rem, 12vw, 11rem);
+  padding: 0 var(--editorial-gutter) clamp(6rem, 12vw, 11rem);
+  background:
+    radial-gradient(
+      circle at 82% 12%,
+      rgba(108, 255, 141, 0.045),
+      transparent 24%
+    ),
+    linear-gradient(180deg, rgba(238, 233, 220, 0.018), transparent 50%),
+    url("/noisetexture.jpg"), var(--bg-primary);
+  background-blend-mode: normal, normal, soft-light;
+  background-size:
+    auto,
+    auto,
+    240px 240px;
+  color: #eee9dc;
 }
 
 .kicker,
@@ -10,7 +28,7 @@
 .organization,
 .meta,
 .tags li {
-  color: var(--accent);
+  color: #aaa69a;
   font-family: var(--font-mono);
   font-size: var(--text-xs);
   font-weight: 600;
@@ -52,7 +70,7 @@
   left: clamp(5.5rem, 16vw, 12rem);
   width: 0.75rem;
   height: 0.75rem;
-  border: 2px solid var(--accent);
+  border: 2px solid var(--border-visible);
   border-radius: 50%;
   background: var(--bg-primary);
   transform: translateX(-50%);
@@ -83,14 +101,14 @@
   margin-top: 0.65rem;
   color: var(--text-heading);
   font-family: var(--font-display);
-  font-size: clamp(2.25rem, 5vw, 5rem);
+  font-size: clamp(1.8rem, 3vw, 3rem);
   font-weight: 400;
   letter-spacing: -0.045em;
   line-height: 0.95;
 }
 
 .description {
-  max-width: 62ch;
+  max-width: var(--reading-measure);
   margin-top: 1.4rem;
   color: var(--text-primary);
   font-size: clamp(1.05rem, 1.5vw, 1.25rem);
@@ -99,7 +117,7 @@
 
 .detail,
 .question {
-  max-width: 64ch;
+  max-width: var(--reading-measure);
   margin-top: 2rem;
   padding-top: 1.25rem;
   border-top: 1px solid var(--border-subtle);
@@ -114,7 +132,7 @@
 .question {
   padding: 1.25rem 1.5rem;
   border-top: 0;
-  border-left: 2px solid var(--accent);
+  border-left: 2px solid var(--border-visible);
   background: var(--bg-secondary);
 
   > p:last-child {
@@ -142,11 +160,16 @@
 }
 
 .links a {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
   border-bottom: 1px solid var(--border-visible);
   color: var(--text-primary);
   font-family: var(--font-mono);
   font-size: var(--text-sm);
-  transition: border-color 180ms ease, color 180ms ease;
+  transition:
+    border-color 180ms ease,
+    color 180ms ease;
 
   &:hover {
     border-color: var(--accent);
@@ -175,5 +198,9 @@
     p + p {
       margin-top: 0;
     }
+  }
+
+  .content h2 {
+    max-width: 100%;
   }
 }
