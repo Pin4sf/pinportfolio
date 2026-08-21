@@ -270,6 +270,14 @@ function scanPublicArtifacts({ buildDir, publicFiles, repositoryRoot }) {
     }
 
     for (const absolutePath of absoluteUserPaths(decodedSource)) {
+      // This acceptance target is POSIX/macOS, where `\` is not a path
+      // separator. Reject it before canonicalization or exception matching so
+      // an ambiguous cross-platform candidate can never inherit an allowlist.
+      if (absolutePath.includes("\\")) {
+        throw new Error(
+          `cross-separator absolute source path leaked into ${path.relative(repositoryRoot, file)}: ${absolutePath}`,
+        );
+      }
       const canonicalAbsolutePath = path.normalize(path.resolve(absolutePath));
       const classification = frameworkBuildRootException({
         canonicalAbsolutePath,
@@ -631,6 +639,10 @@ test("build-root exceptions stay out of public and rendered artifacts", (t) => {
   );
   const staticPath = path.join(fixtureBuild, "static", "chunks", "page.js");
   const routeTypePath = path.join(fixtureBuild, "types", "app", "page.ts");
+  const requiredServerFilesPath = path.join(
+    fixtureBuild,
+    "required-server-files.json",
+  );
 
   for (const directory of [
     fixturePublic,
@@ -643,7 +655,7 @@ test("build-root exceptions stay out of public and rendered artifacts", (t) => {
   }
   fs.writeFileSync(path.join(fixtureBuild, "BUILD_ID"), "fixture");
   fs.writeFileSync(
-    path.join(fixtureBuild, "required-server-files.json"),
+    requiredServerFilesPath,
     JSON.stringify({ appDir: acceptedRoot, files: [] }),
   );
   fs.writeFileSync(llmsPath, "public machine context");
@@ -775,6 +787,69 @@ test("build-root exceptions stay out of public and rendered artifacts", (t) => {
     const original = fs.readFileSync(mutation.file, "utf8");
     fs.writeFileSync(mutation.file, mutation.source);
     assert.throws(scan, mutation.expected);
+    fs.writeFileSync(mutation.file, original);
+  }
+
+  const crossSeparatorCases = [
+    {
+      label: "benign child candidate",
+      file: appSourcePath,
+      candidate: `${acceptedRoot}/src/app/components\\Button.tsx`,
+    },
+    {
+      label: "font metadata",
+      file: fontManifestPath,
+      candidate: `${acceptedRoot}/src/app/fonts/page\\..\\..\\notes\\private.js`,
+    },
+    {
+      label: "client-reference metadata",
+      file: clientReferencePath,
+      candidate: `${acceptedRoot}/src/app/components/Nav.tsx\\..\\..\\notes\\private.js`,
+    },
+    {
+      label: "compiled app source metadata",
+      file: appSourcePath,
+      candidate: `${acceptedRoot}/src/app/page.tsx\\..\\..\\notes\\private.js`,
+    },
+    {
+      label: "app-server runtime metadata",
+      file: clientReferencePath,
+      candidate: `${acceptedRoot}/node_modules/next/dist/client/link.js\\..\\..\\notes\\private.js`,
+    },
+    {
+      label: "server-chunk metadata",
+      file: serverChunkPath,
+      candidate: `${acceptedRoot}/node_modules/next/dist/client/link.js\\..\\..\\notes\\private.js`,
+    },
+    {
+      label: "route-type metadata",
+      file: routeTypePath,
+      candidate: `${acceptedRoot}/src/app/page.tsx\\..\\..\\notes\\private.js`,
+    },
+    {
+      label: "required-server configuration",
+      file: requiredServerFilesPath,
+      candidate: `${acceptedRoot}\\metadata\\..\\..\\notes\\private.js`,
+      serialize: (candidate) =>
+        JSON.stringify({ appDir: candidate, files: [] }),
+    },
+  ];
+  for (const mutation of crossSeparatorCases) {
+    const original = fs.readFileSync(mutation.file, "utf8");
+    for (const candidate of [
+      mutation.candidate,
+      encodeURIComponent(mutation.candidate),
+    ]) {
+      fs.writeFileSync(
+        mutation.file,
+        mutation.serialize ? mutation.serialize(candidate) : candidate,
+      );
+      assert.throws(
+        scan,
+        /cross-separator absolute source path/,
+        `${mutation.label} accepted ${candidate}`,
+      );
+    }
     fs.writeFileSync(mutation.file, original);
   }
 });
