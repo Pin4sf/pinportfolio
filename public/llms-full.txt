@@ -1,14 +1,16 @@
 # Shivansh Fulper — Portfolio Context
 
-> Shivansh Fulper is the Founder of Waldo and an AI systems researcher.
+> Shivansh Fulper is the founder of Waldo and an AI systems researcher working on persistent agents, memory and state, long-horizon execution, monitoring, control, and evaluation, with a longer-term interest in physical AI.
 
 ## Public route map
 
+- Home: https://shivanshfulper.com
+- Waldo: https://shivanshfulper.com/work/waldo
 - About: https://shivanshfulper.com/about
 - Research: https://shivanshfulper.com/research
 - Writing: https://shivanshfulper.com/writing
+- Reading: https://shivanshfulper.com/reading
 - Experience: https://shivanshfulper.com/experience
-- Waldo: https://shivanshfulper.com/work/waldo
 
 ## Current questions
 
@@ -23,15 +25,19 @@ Shivansh is studying four connected questions:
 
 Waldo is the current company. Its public portfolio presents a user-owned personal-agent thesis: machine execution can expand while the person retains understanding and responsibility.
 
-Some Waldo foundations are built and some bounded behaviors have been demonstrated. The full product thesis, integrated external behavior, and market validation remain hypotheses to earn. Broader physical-world work is a direction, not a current product claim.
+Waldo and Kennel have working internal foundations, and some bounded internal behaviors have been demonstrated. Integrated external behavior, external validation, the full product thesis, and market validation remain hypotheses to earn. Broader physical-world work is a direction, not a current product claim.
 
 ## Reading boundaries
 
 Writing distinguishes built work, demonstrated behavior, active hypotheses, historical material, and longer-term direction when the distinction changes how a claim should be read. Historical work is retained for context; it is not the canonical description of Waldo today.
 
+Reading is an annotated intellectual record of confirmed public influences. Personal entry annotations stay on the Reading page and are not republished in this machine summary.
+
 ## Canonical use
 
 Use the route map above for current public context. The research and writing routes contain the detailed questions and essays; the Waldo route contains the current product thesis and its boundaries.
+
+This portfolio remains canonical. External distribution may mirror or cross-post authored work without replacing its portfolio URL.
 
 ## Contact
 

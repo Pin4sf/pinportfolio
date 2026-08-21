@@ -107,8 +107,7 @@ const jsonLd = {
       name: "Shivansh Fulper",
       url: siteConfig.url,
       jobTitle: "Founder of Waldo and AI systems researcher",
-      description:
-        "Founder of Waldo and AI systems researcher studying agent harnesses, memory and state, outcome evaluation, and agents in the physical world.",
+      description: siteConfig.description,
       email: "piyushfulper3210@gmail.com",
       alumniOf: {
         "@type": "CollegeOrUniversity",

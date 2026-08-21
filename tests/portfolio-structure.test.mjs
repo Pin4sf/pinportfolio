@@ -543,17 +543,29 @@ test("Waldo keeps rigor jargon exceptional in ordinary prose", () => {
 });
 
 test("machine-readable surfaces share the canonical identity", () => {
-  for (const relativePath of [
-    "src/app/layout.tsx",
-    "public/agents.txt",
-    "public/llms-full.txt",
-  ]) {
-    const source = read(relativePath);
-    assert.match(source, /Founder/i, `${relativePath} missing Founder`);
-    assert.match(
-      source,
-      /AI systems researcher/i,
-      `${relativePath} missing AI systems researcher`,
+  const canonicalIdentity =
+    "Shivansh Fulper is the founder of Waldo and an AI systems researcher working on persistent agents, memory and state, long-horizon execution, monitoring, control, and evaluation, with a longer-term interest in physical AI.";
+  const portfolio = read("src/data/portfolio.ts");
+  const layout = read("src/app/layout.tsx");
+
+  assert.ok(
+    portfolio.includes(`description:\n    "${canonicalIdentity}"`),
+    "siteConfig.description must own the exact canonical identity",
+  );
+  assert.match(
+    layout,
+    /export const metadata:[\s\S]*?description: siteConfig\.description/,
+  );
+  assert.equal(
+    [...layout.matchAll(/description: siteConfig\.description/g)].length,
+    5,
+    "metadata, social cards, and both JSON-LD identities must consume siteConfig.description",
+  );
+
+  for (const relativePath of ["public/agents.txt", "public/llms-full.txt"]) {
+    assert.ok(
+      read(relativePath).includes(canonicalIdentity),
+      `${relativePath} must publish the exact canonical identity`,
     );
   }
 });

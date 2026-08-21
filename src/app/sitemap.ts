@@ -2,54 +2,38 @@ import type { MetadataRoute } from "next";
 import { siteConfig } from "@/data/portfolio";
 import { getAllPosts } from "@/lib/mdx";
 
+type CanonicalStaticRoute = {
+  path:
+    | ""
+    | "/work/waldo"
+    | "/research"
+    | "/writing"
+    | "/reading"
+    | "/experience"
+    | "/about";
+  changeFrequency: "weekly" | "monthly";
+  priority: number;
+};
+
+const staticRoutes = [
+  { path: "", changeFrequency: "weekly", priority: 1 },
+  { path: "/work/waldo", changeFrequency: "monthly", priority: 0.8 },
+  { path: "/research", changeFrequency: "weekly", priority: 0.8 },
+  { path: "/writing", changeFrequency: "weekly", priority: 0.8 },
+  { path: "/reading", changeFrequency: "monthly", priority: 0.7 },
+  { path: "/experience", changeFrequency: "monthly", priority: 0.7 },
+  { path: "/about", changeFrequency: "monthly", priority: 0.7 },
+] satisfies readonly CanonicalStaticRoute[];
+
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = siteConfig.url;
 
-  // Canonical public pages
-  const staticPages: MetadataRoute.Sitemap = [
-    {
-      url: baseUrl,
-      lastModified: new Date(),
-      changeFrequency: "weekly",
-      priority: 1,
-    },
-    {
-      url: `${baseUrl}/about`,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.7,
-    },
-    {
-      url: `${baseUrl}/research`,
-      lastModified: new Date(),
-      changeFrequency: "weekly",
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/experience`,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.7,
-    },
-    {
-      url: `${baseUrl}/writing`,
-      lastModified: new Date(),
-      changeFrequency: "weekly",
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/reading`,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.7,
-    },
-    {
-      url: `${baseUrl}/work/waldo`,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.8,
-    },
-  ];
+  const staticPages: MetadataRoute.Sitemap = staticRoutes.map((route) => ({
+    url: `${baseUrl}${route.path}`,
+    lastModified: new Date(),
+    changeFrequency: route.changeFrequency,
+    priority: route.priority,
+  }));
 
   // Blog post pages
   const posts = getAllPosts();

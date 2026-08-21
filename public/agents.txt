@@ -3,7 +3,7 @@
 name: Shivansh Fulper
 type: founder-researcher-portfolio
 url: https://shivanshfulper.com
-identity: Founder of Waldo and AI systems researcher
+identity: Shivansh Fulper is the founder of Waldo and an AI systems researcher working on persistent agents, memory and state, long-horizon execution, monitoring, control, and evaluation, with a longer-term interest in physical AI.
 
 description: A public notebook about building Waldo and studying how agents can carry context, state, and responsibility over time.
 
@@ -14,10 +14,15 @@ evidence-boundaries: Built describes an implemented contribution. Demonstrated d
 primary-page: https://shivanshfulper.com/about
 primary-page: https://shivanshfulper.com/research
 primary-page: https://shivanshfulper.com/writing
+primary-page: https://shivanshfulper.com/reading
 primary-page: https://shivanshfulper.com/experience
 primary-page: https://shivanshfulper.com/work/waldo
 
-work: Waldo is the current company. Its public record distinguishes working foundations and demonstrations from product hypotheses and future direction.
+reading: Reading is an annotated intellectual record of confirmed public influences. Entry annotations remain on the canonical Reading page rather than being republished here.
+
+distribution: This portfolio remains canonical. External distribution may mirror or cross-post authored work without replacing its portfolio URL.
+
+work: Waldo is the current company. Its public record distinguishes working internal foundations and demonstrations from integrated external behavior, external validation, product hypotheses, and future direction.
 
 machine-readable-content: https://shivanshfulper.com/llms.txt
 machine-readable-content: https://shivanshfulper.com/llms-full.txt

@@ -426,7 +426,7 @@ export interface SiteConfig {
 export const siteConfig: SiteConfig = {
   title: "Shivansh Fulper — Founder & AI Systems Researcher",
   description:
-    "Shivansh Fulper is the founder of Waldo and an AI systems researcher working on persistent agents, memory, control, and long-running work.",
+    "Shivansh Fulper is the founder of Waldo and an AI systems researcher working on persistent agents, memory and state, long-horizon execution, monitoring, control, and evaluation, with a longer-term interest in physical AI.",
   author: "Shivansh Fulper",
   keywords:
     "Shivansh Fulper, Founder, AI Systems Researcher, Waldo, Kennel, Atlan, Persistent Agents, Agent Harnesses, Agent Memory, Long-Horizon Agents, Agent Evaluation, Physical AI, Project EKA, IIITDM Jabalpur",

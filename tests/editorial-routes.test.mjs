@@ -691,23 +691,98 @@ test("experience route uses an editorial chronology", () => {
 
 test("sitemap and machine surfaces expose only canonical public routes", () => {
   const sitemap = read("src/app/sitemap.ts");
-  for (const route of [
-    "/about",
-    "/research",
-    "/experience",
-    "/writing",
+  const canonicalRoutes = [
+    "",
     "/work/waldo",
-  ]) {
-    assert.match(sitemap, new RegExp(route.replace("/", "\\/")));
+    "/research",
+    "/writing",
+    "/reading",
+    "/experience",
+    "/about",
+  ];
+  const staticRouteBlock = sitemap.slice(
+    sitemap.indexOf("const staticRoutes"),
+    sitemap.indexOf("const posts"),
+  );
+
+  for (const route of canonicalRoutes) {
+    const pathDeclaration = `path: "${route}"`;
+    assert.equal(
+      staticRouteBlock.split(pathDeclaration).length - 1,
+      1,
+      `${route || "/"} must occur exactly once in the static sitemap map`,
+    );
   }
-  for (const file of ["public/agents.txt", "public/llms-full.txt"]) {
-    const source = read(file);
+
+  assert.match(sitemap, /const posts = getAllPosts\(\)/);
+  assert.match(sitemap, /posts\.map\(\(post\) =>/);
+
+  const agents = read("public/agents.txt");
+  assert.equal(
+    agents.split("primary-page: https://shivanshfulper.com/reading").length - 1,
+    1,
+    "agents.txt must expose Reading exactly once",
+  );
+
+  const llmsFull = read("public/llms-full.txt");
+  const llmsRouteMap = llmsFull.slice(
+    llmsFull.indexOf("## Public route map"),
+    llmsFull.indexOf("## Current questions"),
+  );
+  assert.equal(
+    llmsRouteMap.split("https://shivanshfulper.com/reading").length - 1,
+    1,
+    "llms-full.txt must expose Reading exactly once in its route map",
+  );
+
+  for (const [file, source] of [
+    ["public/agents.txt", agents],
+    ["public/llms-full.txt", llmsFull],
+  ]) {
     assert.doesNotMatch(
       source,
       /06-Applications-and-Outreach|waldo-brain|\/Users\//,
+      `${file} exposes private provenance`,
     );
-    assert.doesNotMatch(source, /EcoFresh|OneSync|Quantum \+ AI/);
+    assert.doesNotMatch(
+      source,
+      /EcoFresh|OneSync|Quantum \+ AI/,
+      `${file} exposes excluded primary-surface material`,
+    );
   }
+});
+
+test("machine surfaces keep Reading summaries public and distribution canonical", () => {
+  const machineSources = [
+    read("public/agents.txt"),
+    read("public/llms-full.txt"),
+  ];
+  const readingAnnotations = [
+    "MIRAI-Setu made infrastructure, safety, patience, and everyday attention to craft feel like engineering values rather than abstractions.",
+    "I care about what deserves motion, what should remain quiet, and how defaults can make powerful systems easier to trust.",
+    "HackByte made community-building concrete: invite people into serious technical work without lowering the standard.",
+  ];
+
+  for (const source of machineSources) {
+    assert.match(source, /annotated intellectual record/i);
+    assert.match(
+      source,
+      /portfolio remains canonical/i,
+      "machine copy must keep this portfolio canonical",
+    );
+    assert.match(source, /mirror|cross-post/i);
+    assert.doesNotMatch(source, /substack\.com/i);
+    for (const annotation of readingAnnotations) {
+      assert.ok(
+        !source.includes(annotation),
+        "machine summaries must not republish a Reading annotation",
+      );
+    }
+  }
+
+  const llmsFull = machineSources[1];
+  assert.match(llmsFull, /working internal foundations/i);
+  assert.match(llmsFull, /external validation/i);
 });
 
 test("editorial shell and routes apply the real static texture without theatre", () => {
