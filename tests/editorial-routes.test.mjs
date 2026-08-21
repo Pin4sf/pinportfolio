@@ -157,41 +157,40 @@ function runtimeViolations(file) {
 function scssBlocks(source, selector) {
   const blocks = [];
   const clean = source.replace(/\/\*[\s\S]*?\*\//g, "");
-  let cursor = 0;
+  let depth = 0;
+  let preludeStart = 0;
 
-  while (cursor < clean.length) {
-    const open = clean.indexOf("{", cursor);
-    if (open === -1) break;
-    const preludeStart =
-      Math.max(
-        clean.lastIndexOf("{", open - 1),
-        clean.lastIndexOf("}", open - 1),
-        clean.lastIndexOf(";", open - 1),
-      ) + 1;
-    const members = clean
-      .slice(preludeStart, open)
-      .split(",")
-      .map((member) => member.trim());
-    cursor = open + 1;
-    if (!members.includes(selector.trim())) {
+  for (let cursor = 0; cursor < clean.length; cursor += 1) {
+    if (clean[cursor] === "{" && depth === 0) {
+      const members = clean
+        .slice(preludeStart, cursor)
+        .split(",")
+        .map((member) => member.trim());
+      if (members.includes(selector.trim())) {
+        let blockDepth = 1;
+        let end = cursor + 1;
+        while (end < clean.length && blockDepth > 0) {
+          if (clean[end] === "{") blockDepth += 1;
+          if (clean[end] === "}") blockDepth -= 1;
+          end += 1;
+        }
+        if (blockDepth === 0) blocks.push(clean.slice(cursor + 1, end - 1));
+      }
+      depth += 1;
       continue;
     }
-
-    let depth = 1;
-    let end = open + 1;
-    while (end < clean.length && depth > 0) {
-      if (clean[end] === "{") depth += 1;
-      if (clean[end] === "}") depth -= 1;
-      end += 1;
+    if (clean[cursor] === "{") depth += 1;
+    if (clean[cursor] === "}") {
+      depth -= 1;
+      if (depth === 0) preludeStart = cursor + 1;
     }
-
-    if (depth === 0) blocks.push(clean.slice(open + 1, end - 1));
+    if (clean[cursor] === ";" && depth === 0) preludeStart = cursor + 1;
   }
 
   return blocks;
 }
 
-function archiveUsesFormatHelpers(source) {
+function archiveRendersViewModel(source) {
   const ast = parseSource(source);
   const component = ast.statements.find(
     (statement) =>
@@ -199,39 +198,6 @@ function archiveUsesFormatHelpers(source) {
       statement.name?.text === "WritingArchive",
   );
   if (!component?.body) return false;
-
-  const expectedCalls = new Map([
-    ["availableFormats", ["getAvailableFormats", ["posts"]]],
-    ["filteredPosts", ["filterPostsByFormat", ["posts", "activeFormat"]]],
-  ]);
-  const matches = new Set();
-
-  function unwrapExpression(expression) {
-    let current = expression;
-    while (
-      ts.isParenthesizedExpression(current) ||
-      ts.isAsExpression(current) ||
-      ts.isTypeAssertionExpression(current) ||
-      ts.isSatisfiesExpression(current)
-    ) {
-      current = current.expression;
-    }
-    return current;
-  }
-
-  function receiverUses(receiver, collection) {
-    const expression = unwrapExpression(receiver);
-    if (ts.isIdentifier(expression)) return expression.text === collection;
-    return (
-      ts.isArrayLiteralExpression(expression) &&
-      expression.elements.some(
-        (element) =>
-          ts.isSpreadElement(element) &&
-          ts.isIdentifier(unwrapExpression(element.expression)) &&
-          unwrapExpression(element.expression).text === collection,
-      )
-    );
-  }
 
   function contains(node, predicate) {
     let found = false;
@@ -246,104 +212,112 @@ function archiveUsesFormatHelpers(source) {
     return found;
   }
 
-  function rendersButton(node) {
-    return contains(
-      node,
-      (child) =>
-        (ts.isJsxOpeningElement(child) || ts.isJsxSelfClosingElement(child)) &&
-        child.tagName.getText(ast).toLowerCase() === "button",
-    );
-  }
-
-  function rendersArchiveCard(node) {
-    return contains(node, (child) => {
-      if (
-        !ts.isJsxAttribute(child) ||
-        child.name.getText(ast) !== "className"
-      ) {
-        return false;
-      }
-      const expression = child.initializer;
-      return (
-        expression !== undefined &&
-        ts.isJsxExpression(expression) &&
-        expression.expression !== undefined &&
-        ts.isPropertyAccessExpression(expression.expression) &&
-        ts.isIdentifier(expression.expression.expression) &&
-        expression.expression.expression.text === "styles" &&
-        expression.expression.name.text === "card"
-      );
-    });
-  }
-
-  function visit(node) {
-    if (
-      ts.isVariableDeclaration(node) &&
-      ts.isIdentifier(node.name) &&
-      node.initializer &&
-      ts.isCallExpression(node.initializer) &&
-      ts.isIdentifier(node.initializer.expression)
-    ) {
-      const expected = expectedCalls.get(node.name.text);
-      const argumentsList = node.initializer.arguments;
-      if (
-        expected &&
-        node.initializer.expression.text === expected[0] &&
-        argumentsList.length === expected[1].length &&
-        argumentsList.every(
+  const modelDeclaration = component.body.statements
+    .filter(ts.isVariableStatement)
+    .flatMap((statement) => [...statement.declarationList.declarations])
+    .find(
+      (declaration) =>
+        ts.isIdentifier(declaration.name) &&
+        declaration.initializer &&
+        ts.isCallExpression(declaration.initializer) &&
+        ts.isIdentifier(declaration.initializer.expression) &&
+        declaration.initializer.expression.text ===
+          "createWritingArchiveViewModel" &&
+        declaration.initializer.arguments.length === 2 &&
+        declaration.initializer.arguments.every(
           (argument, index) =>
-            ts.isIdentifier(argument) && argument.text === expected[1][index],
-        )
-      ) {
-        matches.add(node.name.text);
-      }
-    }
-    ts.forEachChild(node, visit);
-  }
-
-  visit(component.body);
+            ts.isIdentifier(argument) &&
+            argument.text === ["posts", "activeFormat"][index],
+        ),
+    );
+  if (!modelDeclaration || !ts.isIdentifier(modelDeclaration.name))
+    return false;
+  const modelName = modelDeclaration.name.text;
 
   const renderUses = new Set();
+  let returnedMapCalls = 0;
   for (const statement of component.body.statements) {
     if (!ts.isReturnStatement(statement) || !statement.expression) continue;
     contains(statement.expression, (node) => {
+      let returnAncestor = node.parent;
+      let crossesNestedFunction = false;
+      while (returnAncestor && returnAncestor !== statement.expression) {
+        if (ts.isFunctionLike(returnAncestor)) crossesNestedFunction = true;
+        returnAncestor = returnAncestor.parent;
+      }
       if (
         !ts.isCallExpression(node) ||
         !ts.isPropertyAccessExpression(node.expression) ||
-        node.expression.name.text !== "map" ||
-        node.arguments.length === 0
+        node.expression.name.text !== "map"
+      ) {
+        return false;
+      }
+      returnedMapCalls += 1;
+      if (
+        node.arguments.length === 0 ||
+        crossesNestedFunction ||
+        returnAncestor !== statement.expression ||
+        !ts.isJsxExpression(node.parent) ||
+        node.parent.expression !== node
       ) {
         return false;
       }
       const receiver = node.expression.expression;
+      if (
+        !ts.isPropertyAccessExpression(receiver) ||
+        !ts.isIdentifier(receiver.expression) ||
+        receiver.expression.text !== modelName
+      ) {
+        return false;
+      }
       const callback = node.arguments[0];
       if (
-        receiverUses(receiver, "availableFormats") &&
-        rendersButton(callback)
+        receiver.name.text === "filters" &&
+        contains(
+          callback,
+          (child) =>
+            (ts.isJsxOpeningElement(child) ||
+              ts.isJsxSelfClosingElement(child)) &&
+            child.tagName.getText(ast).toLowerCase() === "button",
+        )
       ) {
-        renderUses.add("availableFormats");
+        renderUses.add("filters");
       }
       if (
-        receiverUses(receiver, "filteredPosts") &&
-        rendersArchiveCard(callback)
+        receiver.name.text === "cards" &&
+        contains(callback, (child) => {
+          if (
+            !ts.isJsxAttribute(child) ||
+            child.name.getText(ast) !== "className"
+          ) {
+            return false;
+          }
+          const expression = child.initializer;
+          return (
+            expression !== undefined &&
+            ts.isJsxExpression(expression) &&
+            expression.expression !== undefined &&
+            ts.isPropertyAccessExpression(expression.expression) &&
+            ts.isIdentifier(expression.expression.expression) &&
+            expression.expression.expression.text === "styles" &&
+            expression.expression.name.text === "card"
+          );
+        })
       ) {
-        renderUses.add("filteredPosts");
+        renderUses.add("cards");
       }
       return false;
     });
   }
 
-  return (
-    matches.size === expectedCalls.size &&
-    renderUses.size === expectedCalls.size
-  );
+  return returnedMapCalls === 2 && renderUses.size === 2;
 }
 
 function animationDeclarations(source) {
   const clean = source.replace(/\/\*[\s\S]*?\*\//g, "");
   return [
     ...clean.matchAll(
-      /(?:^|[;{\n])\s*((?:-[a-z0-9]+-)?animation(?:-[a-z-]+)?)\s*:/gim,
+      /(?:^|[;{}\n])\s*((?:-[a-z0-9]+-)?animation(?:-[a-z-]+)?)\s*:/gim,
     ),
   ].map((match) => match[1].toLowerCase());
 }
@@ -652,7 +626,8 @@ test("sitemap and machine surfaces expose only canonical public routes", () => {
 
 test("writing format filters expose their selected state", () => {
   const source = read("src/app/writing/WritingArchive.tsx");
-  assert.match(source, /aria-pressed=\{activeFormat === format\}/);
+  assert.match(source, /aria-pressed=\{filter\.active\}/);
+  assert.match(source, /setActiveFormat\(filter\.value\)/);
 });
 
 test("editorial shell and routes apply the real static texture without theatre", () => {
@@ -709,6 +684,20 @@ test("SCSS root matching rejects descendants and accepts exact selector-list mem
   );
 });
 
+test("SCSS root matching rejects exact selectors nested below another rule", () => {
+  assert.deepEqual(
+    scssBlocks(
+      '.pageShell { .page { background: url("/noisetexture.jpg"); } }',
+      ".page",
+    ),
+    [],
+  );
+  assert.deepEqual(
+    scssBlocks('.page { background: url("/noisetexture.jpg"); }', ".page"),
+    [' background: url("/noisetexture.jpg"); '],
+  );
+});
+
 test("animation scanning rejects renamed shorthand and name declarations", () => {
   const mutation = `
     .page { animation: shimmer 1s linear infinite; }
@@ -734,6 +723,17 @@ test("animation scanning rejects vendor-prefixed declarations", () => {
   ]);
 });
 
+test("animation scanning resumes after same-line nested rule boundaries", () => {
+  const mutation = `
+    .page { .child {} -webkit-animation-name: pulse; }
+    .article { .mark {} animation-duration: 2s; }
+  `;
+  assert.deepEqual(animationDeclarations(mutation), [
+    "-webkit-animation-name",
+    "animation-duration",
+  ]);
+});
+
 test("editorial route dependency styles do not declare animations", () => {
   const styles = editorialDependencyClosure().filter((file) =>
     file.endsWith(".scss"),
@@ -753,12 +753,16 @@ test("editorial route dependency styles do not declare animations", () => {
 test("writing derives only available formats and filters real post fixtures", async () => {
   const modulePath = path.join(root, "src/lib/postFormats.ts");
   assert.ok(fs.existsSync(modulePath), "missing shared post-format module");
-  const { filterPostsByFormat, formatLabels, getAvailableFormats } =
-    await importTypeScriptModule("src/lib/postFormats.ts");
+  const {
+    createWritingArchiveViewModel,
+    filterPostsByFormat,
+    formatLabels,
+    getAvailableFormats,
+  } = await importTypeScriptModule("src/lib/postFormats.ts");
   const posts = [
-    { slug: "a", format: "essay" },
-    { slug: "b", format: "research-note" },
-    { slug: "c", format: "essay" },
+    { slug: "a", title: "Essay A", format: "essay" },
+    { slug: "b", title: "Research B", format: "research-note" },
+    { slug: "c", title: "Essay C", format: "essay" },
   ];
 
   assert.deepEqual(getAvailableFormats(posts), ["essay", "research-note"]);
@@ -776,8 +780,34 @@ test("writing derives only available formats and filters real post fixtures", as
     "course-lesson": "Course / Lesson",
   });
 
+  assert.equal(typeof createWritingArchiveViewModel, "function");
+  const initial = createWritingArchiveViewModel(posts, "all");
+  assert.deepEqual(initial.filters, [
+    { value: "all", label: "All", active: true },
+    { value: "essay", label: "Essay", active: false },
+    { value: "research-note", label: "Research Note", active: false },
+  ]);
+  assert.deepEqual(
+    initial.cards.map(({ title, href }) => ({ title, href })),
+    [
+      { title: "Essay A", href: "/writing/a" },
+      { title: "Research B", href: "/writing/b" },
+      { title: "Essay C", href: "/writing/c" },
+    ],
+  );
+
+  const filtered = createWritingArchiveViewModel(posts, "research-note");
+  assert.deepEqual(
+    filtered.filters.filter(({ active }) => active).map(({ value }) => value),
+    ["research-note"],
+  );
+  assert.deepEqual(
+    filtered.cards.map(({ title, href }) => ({ title, href })),
+    [{ title: "Research B", href: "/writing/b" }],
+  );
+
   const archive = read("src/app/writing/WritingArchive.tsx");
-  assert.equal(archiveUsesFormatHelpers(archive), true);
+  assert.equal(archiveRendersViewModel(archive), true);
   assert.doesNotMatch(archive, /No posts in this category yet/);
 });
 
@@ -788,7 +818,7 @@ test("archive helper checks reject dead comment mutations", () => {
     // getAvailableFormats(posts)
     // filterPostsByFormat(posts, activeFormat)
   `;
-  assert.equal(archiveUsesFormatHelpers(mutation), false);
+  assert.equal(archiveRendersViewModel(mutation), false);
 });
 
 test("archive helper checks reject dead variables bypassed by render maps", () => {
@@ -806,7 +836,65 @@ test("archive helper checks reject dead variables bypassed by render maps", () =
       );
     }
   `;
-  assert.equal(archiveUsesFormatHelpers(mutation), false);
+  assert.equal(archiveRendersViewModel(mutation), false);
+});
+
+test("archive helper checks reject correct render maps hidden behind false", () => {
+  const mutation = `
+    function WritingArchive({ posts }) {
+      const activeFormat = "all";
+      const viewModel = createWritingArchiveViewModel(posts, activeFormat);
+
+      return (
+        <section>
+          {false && viewModel.filters.map((filter) => <button>{filter.label}</button>)}
+          {false && viewModel.cards.map((card) => <a className={styles.card}>{card.title}</a>)}
+        </section>
+      );
+    }
+  `;
+  assert.equal(archiveRendersViewModel(mutation), false);
+});
+
+test("archive helper checks reject a view model shadowed inside a returned function", () => {
+  const mutation = `
+    function WritingArchive({ posts }) {
+      const activeFormat = "all";
+      const viewModel = createWritingArchiveViewModel(posts, activeFormat);
+
+      return (() => {
+        const viewModel = {
+          filters: [{ value: "all", label: "All", active: true }],
+          cards: posts,
+        };
+        return (
+          <section>
+            {viewModel.filters.map((filter) => <button>{filter.label}</button>)}
+            {viewModel.cards.map((post) => <a className={styles.card}>{post.title}</a>)}
+          </section>
+        );
+      })();
+    }
+  `;
+  assert.equal(archiveRendersViewModel(mutation), false);
+});
+
+test("archive helper checks reject extra hard-coded render maps", () => {
+  const mutation = `
+    function WritingArchive({ posts }) {
+      const activeFormat = "all";
+      const viewModel = createWritingArchiveViewModel(posts, activeFormat);
+
+      return (
+        <section>
+          {viewModel.filters.map((filter) => <button>{filter.label}</button>)}
+          {viewModel.cards.map((card) => <a className={styles.card}>{card.title}</a>)}
+          {posts.map((post) => <a className={styles.card}>{post.title}</a>)}
+        </section>
+      );
+    }
+  `;
+  assert.equal(archiveRendersViewModel(mutation), false);
 });
 
 test("article and archive share one server-safe format vocabulary", () => {
