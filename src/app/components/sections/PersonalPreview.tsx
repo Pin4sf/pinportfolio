@@ -1,53 +1,49 @@
 import Link from "next/link";
-import { ArrowUpRight } from "lucide-react";
-import { personalInfluences } from "@/data/portfolio";
+import {
+  compassPrinciples,
+  homepageData,
+  personalInfluences,
+} from "@/data/portfolio";
 import styles from "./PersonalPreview.module.scss";
 
 export default function PersonalPreview() {
-  const influences = personalInfluences
-    .filter((influence) => influence.publicationState === "public")
-    .slice(0, 4);
+  const livedDetail = personalInfluences.find(
+    (influence) =>
+      influence.slug === homepageData.personal.influenceSlug &&
+      influence.publicationState === "public",
+  );
+  const principle = compassPrinciples[homepageData.personal.principleIndex];
+
+  if (!livedDetail || !principle) return null;
 
   return (
     <section id="personal" className={styles.section}>
       <div className={styles.header}>
-        <span className="section__label">Outside the thesis</span>
-        <h2>What keeps the work personal.</h2>
-        <Link href="/about" className={styles.allLink}>
-          More about me <ArrowUpRight size={15} aria-hidden="true" />
-        </Link>
+        <span className="section__label">{homepageData.personal.eyebrow}</span>
+        <h2>{homepageData.personal.title}</h2>
       </div>
 
-      <div className={styles.grid}>
-        {influences.map((influence) => {
-          const content = (
-            <>
-              {influence.image && (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={influence.image}
-                  alt=""
-                  className={styles.image}
-                  loading="lazy"
-                />
-              )}
-              <span className={styles.kind}>{influence.kind}</span>
-              <h3>{influence.title}</h3>
-              <p>{influence.summary}</p>
-            </>
-          );
+      <div className={styles.preview}>
+        <article>
+          <span className={styles.kicker}>
+            {homepageData.personal.livedDetailLabel}
+          </span>
+          <h3>{livedDetail.title}</h3>
+          <p>{livedDetail.summary}</p>
+        </article>
 
-          return influence.href ? (
-            <a key={influence.slug} href={influence.href} className={styles.card}>
-              {content}
-            </a>
-          ) : (
-            <article key={influence.slug} className={styles.card}>
-              {content}
-            </article>
-          );
-        })}
+        <article>
+          <span className={styles.kicker}>
+            {homepageData.personal.principleLabel}
+          </span>
+          <h3>{principle.title}</h3>
+          <p>{principle.body}</p>
+        </article>
       </div>
+
+      <Link href={homepageData.personal.cta.href} className={styles.allLink}>
+        {homepageData.personal.cta.label} <span aria-hidden="true">↗</span>
+      </Link>
     </section>
   );
 }

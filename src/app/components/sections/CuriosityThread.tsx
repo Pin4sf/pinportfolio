@@ -1,53 +1,37 @@
 import Link from "next/link";
-import { ArrowUpRight } from "lucide-react";
+import { researchDirectionData } from "@/data/portfolio";
 import styles from "./CuriosityThread.module.scss";
-
-const threads = [
-  {
-    title: "Models",
-    question: "How is capability made?",
-    detail: "Project EKA · Qwen3 MoE",
-    href: "/research#models",
-  },
-  {
-    title: "Agents",
-    question: "What happens when capability can act?",
-    detail: "Atlan · Waldo · Harnesses",
-    href: "/research#agents",
-  },
-  {
-    title: "World",
-    question: "What changes when actions have physical consequences?",
-    detail: "Smart Manufacturing · Physical AI",
-    href: "/research#world",
-  },
-];
 
 export default function CuriosityThread() {
   return (
     <section id="curiosity" className={styles.section}>
+      {/* Research direction · From capability to consequence. */}
       <div className={styles.header}>
-        <span className="section__label">A thread of curiosity</span>
-        <h2>Models → Agents → World.</h2>
+        <span className="section__label">{researchDirectionData.eyebrow}</span>
+        <h2>{researchDirectionData.title}</h2>
+        <p>{researchDirectionData.introduction}</p>
       </div>
 
-      <ol className={styles.thread}>
-        {threads.map((thread, index) => (
-          <li key={thread.title} className={styles.cell}>
-            <Link href={thread.href}>
-              <span className={styles.number}>
-                {String(index + 1).padStart(2, "0")}
-              </span>
-              <h3>{thread.title}</h3>
-              <p className={styles.question}>{thread.question}</p>
-              <p className={styles.detail}>{thread.detail}</p>
-              <span className={styles.link}>
-                Follow the thread <ArrowUpRight size={14} aria-hidden="true" />
-              </span>
-            </Link>
+      <ol className={styles.path}>
+        {researchDirectionData.waypoints.map((waypoint, index) => (
+          <li key={waypoint.label} className={styles.waypoint}>
+            <span className={styles.number}>
+              {String(index + 1).padStart(2, "0")}
+            </span>
+            <div className={styles.labelLine}>
+              <h3>{waypoint.label}</h3>
+              <span>{waypoint.role}</span>
+            </div>
+            <p className={styles.question}>{waypoint.question}</p>
+            <p className={styles.evidence}>{waypoint.evidence}</p>
           </li>
         ))}
       </ol>
+
+      <Link href="/research" className={styles.cta}>
+        {researchDirectionData.cta.label}
+        <span aria-hidden="true">↗</span>
+      </Link>
     </section>
   );
 }

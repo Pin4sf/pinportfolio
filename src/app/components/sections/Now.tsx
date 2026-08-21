@@ -26,7 +26,6 @@ export default function Now() {
           <span className="section__label">{nowSectionData.eyebrow}</span>
           <h2>{nowSectionData.title}</h2>
           <p>{waldo.summary}</p>
-          <p>{waldo.caption}</p>
           <p className={styles.status}>
             Working internal foundations; external product and market validation
             remain open.

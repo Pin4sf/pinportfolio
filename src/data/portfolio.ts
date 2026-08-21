@@ -296,6 +296,50 @@ export interface ReadingPageData {
   metadata: { description: string; openGraphDescription: string };
 }
 
+export interface ResearchWaypoint {
+  label: "Models" | "Agents" | "World";
+  role: "capability" | "agency" | "consequence";
+  question: string;
+  evidence: string;
+}
+
+export interface HomepageData {
+  writing: {
+    eyebrow: string;
+    title: string;
+    introduction: string;
+    cta: { label: string; href: "/writing" };
+  };
+  reading: {
+    eyebrow: "Reading";
+    title: string;
+    introduction: string;
+    cta: { label: string; href: "/reading" };
+  };
+  chapters: {
+    eyebrow: string;
+    title: string;
+    organizationNames: readonly string[];
+    nextQuestionLabel: string;
+    cta: { label: string; href: "/experience" };
+  };
+  personal: {
+    eyebrow: string;
+    title: string;
+    livedDetailLabel: string;
+    influenceSlug: string;
+    principleLabel: string;
+    principleIndex: number;
+    cta: { label: string; href: "/about" };
+  };
+  contact: {
+    eyebrow: "Contact";
+    title: string;
+    invitation: string;
+    externalLinkLabel: string;
+  };
+}
+
 export interface AboutPageData {
   eyebrow: string;
   title: string;
@@ -435,6 +479,80 @@ export const nowSectionData = {
   eyebrow: "Now",
   title: "Waldo",
 };
+
+export const researchDirectionData = {
+  eyebrow: "Research direction",
+  title: "From capability to consequence.",
+  introduction:
+    "I began by asking how models acquire capability. Building agents shifted the question toward memory, judgment, and control. Waldo—and my interest in physical AI—asks what happens when those decisions persist and touch the world.",
+  waypoints: [
+    {
+      label: "Models",
+      role: "capability",
+      question: "How is capability made?",
+      evidence: "Project EKA · Qwen3 MoE",
+    },
+    {
+      label: "Agents",
+      role: "agency",
+      question: "What happens when capability can act?",
+      evidence: "Atlan · Waldo · harness research",
+    },
+    {
+      label: "World",
+      role: "consequence",
+      question: "What changes when decisions touch physical systems?",
+      evidence: "Smart Manufacturing · physical AI direction",
+    },
+  ] satisfies ResearchWaypoint[],
+  cta: { label: "Explore the research", href: "/research" },
+} as const;
+
+export const homepageData = {
+  writing: {
+    eyebrow: "Research + Writing",
+    title: "Notes from the work.",
+    introduction:
+      "Research questions usually arrive after something breaks, surprises me, or refuses to fit the model I had in my head.",
+    cta: { label: "View all writing", href: "/writing" },
+  },
+  reading: {
+    eyebrow: "Reading",
+    title: "Things I keep returning to.",
+    introduction:
+      "Places, communities, and design questions that continue to change how I see and build.",
+    cta: { label: "Open the reading record", href: "/reading" },
+  },
+  chapters: {
+    eyebrow: "Selected chapters",
+    title: "The work that changed the next question.",
+    organizationNames: [
+      "Atlan",
+      "Soket AI Labs",
+      "MIRAI-Setu",
+      "HackByte",
+      "IIITDM Jabalpur",
+    ],
+    nextQuestionLabel: "Next question",
+    cta: { label: "See the full experience", href: "/experience" },
+  },
+  personal: {
+    eyebrow: "Personal compass",
+    title: "What keeps the work personal.",
+    livedDetailLabel: "A lived detail",
+    influenceSlug: "pokedex-origin",
+    principleLabel: "A working principle",
+    principleIndex: 0,
+    cta: { label: "More about me", href: "/about" },
+  },
+  contact: {
+    eyebrow: "Contact",
+    title: "Let’s compare notes.",
+    invitation:
+      "Have a question, a disagreement, or a thread worth following? Write to me.",
+    externalLinkLabel: "Opens in a new tab",
+  },
+} as const satisfies HomepageData;
 
 // ==================== ABOUT ====================
 

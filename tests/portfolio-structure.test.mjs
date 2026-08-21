@@ -37,23 +37,55 @@ test("homepage restores the personal founder introduction", () => {
   assert.doesNotMatch(hero, /heroData\.actions|actionPrimary/i);
 });
 
-test("homepage is a short cinematic overview", () => {
-  for (const component of [
+test("homepage follows the approved signal-observatory sequence", () => {
+  const sequence = [
     "<Hero />",
     "<Now />",
     "<CuriosityThread />",
     "<Writing featuredPosts={featuredPosts} />",
+    "<ReadingPreview entries={readingEntries} />",
     "<SelectedChapters />",
     "<PersonalPreview />",
     "<Contact />",
-  ]) {
-    assert.match(page, new RegExp(component.replace(/[<>/]/g, "\\$&")));
+  ];
+  for (let index = 1; index < sequence.length; index += 1) {
+    assert.ok(
+      page.indexOf(sequence[index - 1]) < page.indexOf(sequence[index]),
+    );
   }
   assert.doesNotMatch(
     page,
-    /<About \/>|<Timeline \/>|<SkillsExperience \/>|<SelectedWork \/>/,
+    /<SmoothScroll|dynamic\(\(\) => import\("\.\/components\/sections\/(?:Now|CuriosityThread|Writing|ReadingPreview|SelectedChapters|PersonalPreview|Contact)/,
   );
-  assert.doesNotMatch(page, /SectionProgress/);
+});
+
+test("connected research direction has one path and one action", () => {
+  const source = read("src/app/components/sections/CuriosityThread.tsx");
+  assert.match(source, /Research direction/);
+  assert.match(source, /From capability to consequence\./);
+  assert.match(source, /researchDirectionData\.waypoints\.map/);
+  assert.equal((source.match(/href="\/research"/g) ?? []).length, 1);
+  assert.doesNotMatch(source, /Follow the thread|<Link[\s\S]*waypoints\.map/);
+});
+
+test("homepage writing and reading are editorial lists", () => {
+  const writing = read("src/app/components/sections/Writing.tsx");
+  const reading = read("src/app/components/sections/ReadingPreview.tsx");
+  assert.match(writing, /<ol/);
+  assert.match(writing, /post\.format/);
+  assert.match(writing, /post\.date/);
+  assert.match(reading, /Things I keep returning to\./);
+  assert.match(reading, /<ol/);
+  assert.doesNotMatch(reading, /rating|cover|coming soon/i);
+});
+
+test("homepage Waldo and contact remain compact", () => {
+  const now = read("src/app/components/sections/Now.tsx");
+  const contact = read("src/app/components/sections/Contact.tsx");
+  assert.match(now, /nowSectionData\.title/);
+  assert.doesNotMatch(now, /Founder & CEO|market validation has been proven/i);
+  assert.doesNotMatch(contact, /<form|formAction|fetch\(|ScrollTrigger|gsap/);
+  assert.match(contact, /mailto:/);
 });
 
 test("global visual utilities stay homepage-only", () => {
