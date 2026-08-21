@@ -497,10 +497,10 @@ export const nowSectionData = {
 } as const;
 
 export const researchDirectionData = {
-  eyebrow: "Research direction",
-  title: "From capability to consequence.",
+  eyebrow: "A thread of curiosity",
+  title: "Models → Agents → World.",
   introduction:
-    "I began by asking how models acquire capability. Building agents shifted the question toward memory, judgment, and control. Waldo—and my interest in physical AI—asks what happens when those decisions persist and touch the world.",
+    "I started below the interface, working on multilingual data and model infrastructure. Then I watched models become systems with tools, permissions, failures, and real users. Now I want to understand what changes when agents begin to see, move, and act in the physical world.",
   waypoints: [
     {
       label: "Models",
@@ -517,7 +517,7 @@ export const researchDirectionData = {
     {
       label: "World",
       role: "consequence",
-      question: "What changes when decisions touch physical systems?",
+      question: "What changes when actions have physical consequences?",
       evidence: "Smart Manufacturing · physical AI direction",
     },
   ] satisfies ResearchWaypoint[],
@@ -554,7 +554,7 @@ export const homepageData = {
     cta: { label: "See the full experience", href: "/experience" },
   },
   personal: {
-    eyebrow: "Personal compass",
+    eyebrow: "Outside the thesis",
     title: "What keeps the work personal.",
     livedDetailLabel: "A lived detail",
     influenceSlug: "pokedex-origin",
@@ -564,9 +564,9 @@ export const homepageData = {
   },
   contact: {
     eyebrow: "Contact",
-    title: "Let’s compare notes.",
+    title: "Let’s Build Something",
     invitation:
-      "Have a question, a disagreement, or a thread worth following? Write to me.",
+      "Have a question, a disagreement, or something worth building? Write to me.",
     externalLinkLabel: "Opens in a new tab",
   },
 } as const satisfies HomepageData;

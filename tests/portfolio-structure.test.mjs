@@ -161,11 +161,8 @@ test("homepage follows the approved signal-observatory sequence", () => {
 
 test("connected research direction has one path and one action", () => {
   const source = read("src/app/components/sections/CuriosityThread.tsx");
-  assert.match(researchDirectionSource, /eyebrow: "Research direction"/);
-  assert.match(
-    researchDirectionSource,
-    /title: "From capability to consequence\."/,
-  );
+  assert.match(researchDirectionSource, /eyebrow: "A thread of curiosity"/);
+  assert.match(researchDirectionSource, /title: "Models → Agents → World\."/);
   assert.match(
     researchDirectionSource,
     /cta: \{ label: "Explore the research", href: "\/research" \}/,

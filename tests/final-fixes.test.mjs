@@ -72,6 +72,30 @@ test("selected chapters use exact stable slugs and expose bounded evidence", asy
   assert.doesNotMatch(component, /organizationNames|\.includes\(/);
 });
 
+test("homepage restores the strongest original articulation without rolling back Reading", async () => {
+  const { homepageData, researchDirectionData } =
+    await import("../src/data/portfolio.ts");
+
+  assert.equal(researchDirectionData.eyebrow, "A thread of curiosity");
+  assert.equal(researchDirectionData.title, "Models → Agents → World.");
+  assert.equal(
+    researchDirectionData.introduction,
+    "I started below the interface, working on multilingual data and model infrastructure. Then I watched models become systems with tools, permissions, failures, and real users. Now I want to understand what changes when agents begin to see, move, and act in the physical world.",
+  );
+  assert.equal(
+    researchDirectionData.waypoints[2].question,
+    "What changes when actions have physical consequences?",
+  );
+  assert.equal(homepageData.personal.eyebrow, "Outside the thesis");
+  assert.equal(homepageData.contact.title, "Let’s Build Something");
+  assert.equal(
+    homepageData.contact.invitation,
+    "Have a question, a disagreement, or something worth building? Write to me.",
+  );
+  assert.equal(homepageData.reading.title, "Things I keep returning to.");
+  assert.equal(homepageData.reading.cta.href, "/reading");
+});
+
 test("hero effects begin at 1024px and require fine hover interaction", () => {
   return import("../src/lib/heroEffects.ts").then(
     ({ shouldEnableHeroEffects }) => {
