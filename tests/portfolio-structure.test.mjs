@@ -8,6 +8,59 @@ const root = process.cwd();
 const read = (relativePath) =>
   fs.readFileSync(path.join(root, relativePath), "utf8");
 
+const stripSourceComments = (source) => {
+  let result = "";
+  let quote = null;
+
+  for (let index = 0; index < source.length; index += 1) {
+    const character = source[index];
+    const nextCharacter = source[index + 1];
+
+    if (quote) {
+      result += character;
+      if (character === "\\") {
+        result += nextCharacter ?? "";
+        index += 1;
+      } else if (character === quote) {
+        quote = null;
+      }
+      continue;
+    }
+
+    if (character === '"' || character === "'" || character === "`") {
+      quote = character;
+      result += character;
+      continue;
+    }
+
+    if (character === "/" && nextCharacter === "/") {
+      while (index < source.length && source[index] !== "\n") index += 1;
+      result += "\n";
+      continue;
+    }
+
+    if (character === "/" && nextCharacter === "*") {
+      index += 2;
+      while (
+        index < source.length &&
+        !(source[index] === "*" && source[index + 1] === "/")
+      ) {
+        if (source[index] === "\n") result += "\n";
+        index += 1;
+      }
+      index += 1;
+      continue;
+    }
+
+    result += character;
+  }
+
+  return result;
+};
+
+const findMarkupPosition = (source, markup) =>
+  stripSourceComments(source).indexOf(markup);
+
 const portfolio = read("src/data/portfolio.ts");
 const page = read("src/app/page.tsx");
 const hero = read("src/app/components/sections/Hero.tsx");
@@ -49,6 +102,24 @@ test("homepage restores the personal founder introduction", () => {
   assert.doesNotMatch(hero, /heroData\.actions|actionPrimary/i);
 });
 
+test("homepage markup lookup ignores commented component lookalikes", () => {
+  const commentedFixture = [
+    "{/* <Hero /> */}",
+    "/* <Now /> */",
+    "const ignored = true; // <CuriosityThread />",
+    "<Contact />",
+  ].join("\n");
+
+  for (const commentedComponent of [
+    "<Hero />",
+    "<Now />",
+    "<CuriosityThread />",
+  ]) {
+    assert.equal(findMarkupPosition(commentedFixture, commentedComponent), -1);
+  }
+  assert.notEqual(findMarkupPosition(commentedFixture, "<Contact />"), -1);
+});
+
 test("homepage follows the approved signal-observatory sequence", () => {
   const sequence = [
     "<Hero />",
@@ -61,7 +132,7 @@ test("homepage follows the approved signal-observatory sequence", () => {
     "<Contact />",
   ];
   const positions = sequence.map((component) => {
-    const position = page.indexOf(component);
+    const position = findMarkupPosition(page, component);
     assert.notEqual(position, -1, `Homepage missing ${component}`);
     return position;
   });
@@ -71,7 +142,7 @@ test("homepage follows the approved signal-observatory sequence", () => {
       `${sequence[index - 1]} should precede ${sequence[index]}`,
     );
   }
-  const footerPosition = page.indexOf("<EditorialFooter />");
+  const footerPosition = findMarkupPosition(page, "<EditorialFooter />");
   assert.notEqual(footerPosition, -1, "Homepage missing EditorialFooter");
   assert.ok(
     positions.at(-1) < footerPosition,
@@ -155,7 +226,8 @@ test("homepage Waldo and contact remain compact", () => {
   assert.match(now, /nowSectionData\.status/);
   assert.match(now, /nowSectionData\.imageAlt/);
   assert.match(now, /nowSectionData\.links\.caseStudy\.label/);
-  assert.match(now, /nowSectionData\.links\.product\.(?:label|href)/);
+  assert.match(now, /nowSectionData\.links\.product\.label/);
+  assert.match(now, /nowSectionData\.links\.product\.href/);
   assert.doesNotMatch(
     now,
     /Founder & CEO|market validation has been proven|Working internal foundations|Explore Waldo|Visit Waldo|Waldo product system/i,
