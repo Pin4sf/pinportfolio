@@ -166,9 +166,74 @@ function absoluteUserPaths(source) {
   return source.match(/\/Users\/[^"'`\\\s<>{}\[\](),;]*/g) ?? [];
 }
 
+function frameworkBuildRootException({
+  absolutePath,
+  buildDir,
+  file,
+  normalizedRepositoryRoot,
+  publicFileSet,
+}) {
+  const relativeBuildPath = path
+    .relative(buildDir, file)
+    .split(path.sep)
+    .join("/");
+  const repositorySourcePath = `${normalizedRepositoryRoot}/src/app/`;
+  const nextRuntimePath = `${normalizedRepositoryRoot}/node_modules/next/`;
+
+  // Public machine context, rendered payloads, and browser-delivered assets
+  // have no build-root exception. The cases below are server/build metadata
+  // classes observed in a fresh Next production build.
+  if (
+    publicFileSet.has(path.resolve(file)) ||
+    relativeBuildPath.startsWith("static/") ||
+    /\.(?:body|html|meta|rsc)$/.test(relativeBuildPath)
+  ) {
+    return null;
+  }
+  if (
+    relativeBuildPath === "required-server-files.json" &&
+    absolutePath === normalizedRepositoryRoot
+  ) {
+    return "required server configuration root";
+  }
+  if (
+    /^server\/next-font-manifest\.(?:js|json)$/.test(relativeBuildPath) &&
+    absolutePath.startsWith(repositorySourcePath)
+  ) {
+    return "Next font source metadata";
+  }
+  if (
+    /^server\/app\/.+_client-reference-manifest\.js$/.test(relativeBuildPath) &&
+    (absolutePath.startsWith(repositorySourcePath) ||
+      absolutePath.startsWith(nextRuntimePath))
+  ) {
+    return "RSC client-reference metadata";
+  }
+  if (
+    /^server\/app\/.+\.js$/.test(relativeBuildPath) &&
+    absolutePath.startsWith(repositorySourcePath)
+  ) {
+    return "compiled app source metadata";
+  }
+  if (
+    /^server\/chunks\/[^/]+\.js$/.test(relativeBuildPath) &&
+    absolutePath.startsWith(nextRuntimePath)
+  ) {
+    return "Next server-chunk source metadata";
+  }
+  if (
+    /^types\/app\/.+\.ts$/.test(relativeBuildPath) &&
+    absolutePath.startsWith(repositorySourcePath)
+  ) {
+    return "generated route-type source metadata";
+  }
+  return null;
+}
+
 function scanPublicArtifacts({ buildDir, publicFiles, repositoryRoot }) {
   const artifacts = discoverDeployableArtifacts(buildDir, publicFiles);
   const normalizedRepositoryRoot = repositoryRoot.replace(/\/$/, "");
+  const publicFileSet = new Set(publicFiles.map((file) => path.resolve(file)));
   const acceptedBuildRootOccurrences = [];
   for (const file of artifacts) {
     const source = fs.readFileSync(file, "utf8");
@@ -185,11 +250,19 @@ function scanPublicArtifacts({ buildDir, publicFiles, repositoryRoot }) {
     }
 
     for (const absolutePath of absoluteUserPaths(decodedSource)) {
-      if (
-        absolutePath === normalizedRepositoryRoot ||
-        absolutePath.startsWith(`${normalizedRepositoryRoot}/`)
-      ) {
-        acceptedBuildRootOccurrences.push({ file, value: absolutePath });
+      const classification = frameworkBuildRootException({
+        absolutePath,
+        buildDir,
+        file,
+        normalizedRepositoryRoot,
+        publicFileSet,
+      });
+      if (classification) {
+        acceptedBuildRootOccurrences.push({
+          classification,
+          file,
+          value: absolutePath,
+        });
       } else {
         throw new Error(
           `private absolute source path leaked into ${path.relative(repositoryRoot, file)}: ${absolutePath}`,
@@ -342,21 +415,23 @@ test("generated public output excludes private and explicitly excluded material"
   const acceptedByFile = new Map();
   for (const occurrence of acceptedBuildRootOccurrences) {
     const relativePath = path.relative(root, occurrence.file);
-    const summary = acceptedByFile.get(relativePath) ?? {
+    const summaryKey = `${occurrence.classification}\t${relativePath}`;
+    const summary = acceptedByFile.get(summaryKey) ?? {
       count: 0,
     };
     summary.count += 1;
-    acceptedByFile.set(relativePath, summary);
+    acceptedByFile.set(summaryKey, summary);
   }
   assert.ok(
     acceptedBuildRootOccurrences.length > 0,
     "expected framework-generated build-root metadata was not reported",
   );
   console.log("accepted framework build-root metadata exceptions:");
-  for (const [file, summary] of [...acceptedByFile].sort(([a], [b]) =>
+  for (const [summaryKey, summary] of [...acceptedByFile].sort(([a], [b]) =>
     a.localeCompare(b),
   )) {
-    console.log(`${file}: ${summary.count} occurrence(s)`);
+    const [classification, file] = summaryKey.split("\t");
+    console.log(`[${classification}] ${file}: ${summary.count} occurrence(s)`);
   }
 });
 
@@ -489,10 +564,146 @@ test("privacy scan rejects encoded private paths and reports its build-root exce
   });
   assert.deepEqual(result.acceptedBuildRootOccurrences, [
     {
+      classification: "required server configuration root",
       file: path.join(fixtureBuild, "required-server-files.json"),
       value: acceptedRoot,
     },
   ]);
+});
+
+test("build-root exceptions stay out of public and rendered artifacts", (t) => {
+  const fixtureRoot = fs.mkdtempSync(
+    path.join(os.tmpdir(), "portfolio-path-classes-"),
+  );
+  t.after(() => fs.rmSync(fixtureRoot, { force: true, recursive: true }));
+  const fixtureBuild = path.join(fixtureRoot, ".next");
+  const fixturePublic = path.join(fixtureRoot, "public");
+  const acceptedRoot = [
+    "",
+    "Users",
+    "builder",
+    ".codex",
+    "worktrees",
+    "fixture",
+    "pinportfolio",
+  ].join("/");
+  const llmsPath = path.join(fixturePublic, "llms.txt");
+  const htmlPath = path.join(fixtureBuild, "server", "app", "page.html");
+  const rscPath = path.join(fixtureBuild, "server", "app", "page.rsc");
+  const appSourcePath = path.join(fixtureBuild, "server", "app", "page.js");
+  const fontManifestPath = path.join(
+    fixtureBuild,
+    "server",
+    "next-font-manifest.json",
+  );
+  const serverChunkPath = path.join(
+    fixtureBuild,
+    "server",
+    "chunks",
+    "runtime.js",
+  );
+  const staticPath = path.join(fixtureBuild, "static", "chunks", "page.js");
+  const routeTypePath = path.join(fixtureBuild, "types", "app", "page.ts");
+
+  for (const directory of [
+    fixturePublic,
+    path.dirname(htmlPath),
+    path.dirname(serverChunkPath),
+    path.dirname(staticPath),
+    path.dirname(routeTypePath),
+  ]) {
+    fs.mkdirSync(directory, { recursive: true });
+  }
+  fs.writeFileSync(path.join(fixtureBuild, "BUILD_ID"), "fixture");
+  fs.writeFileSync(
+    path.join(fixtureBuild, "required-server-files.json"),
+    JSON.stringify({ appDir: acceptedRoot, files: [] }),
+  );
+  fs.writeFileSync(llmsPath, "public machine context");
+  fs.writeFileSync(htmlPath, "<main>public page</main>");
+  fs.writeFileSync(rscPath, "public RSC payload");
+  fs.writeFileSync(
+    appSourcePath,
+    `//# sourceURL=${acceptedRoot}/src/app/page.tsx`,
+  );
+  fs.writeFileSync(
+    fontManifestPath,
+    JSON.stringify({ [`${acceptedRoot}/src/app/layout`]: [] }),
+  );
+  fs.writeFileSync(
+    serverChunkPath,
+    `//# sourceURL=${acceptedRoot}/node_modules/next/dist/client/link.js`,
+  );
+  fs.writeFileSync(staticPath, "self.page = true;");
+  fs.writeFileSync(
+    routeTypePath,
+    `// generated from ${acceptedRoot}/src/app/page.tsx`,
+  );
+
+  const scan = () =>
+    scanPublicArtifacts({
+      buildDir: fixtureBuild,
+      publicFiles: [llmsPath],
+      repositoryRoot: acceptedRoot,
+    });
+  const acceptedClassifications = new Set(
+    scan().acceptedBuildRootOccurrences.map(
+      (occurrence) => occurrence.classification,
+    ),
+  );
+  assert.deepEqual(
+    acceptedClassifications,
+    new Set([
+      "required server configuration root",
+      "Next font source metadata",
+      "compiled app source metadata",
+      "Next server-chunk source metadata",
+      "generated route-type source metadata",
+    ]),
+  );
+
+  for (const mutation of [
+    {
+      file: llmsPath,
+      source: `repositoryRoot=${acceptedRoot}/notes`,
+      expected: /absolute source path.*public\/llms\.txt/,
+    },
+    {
+      file: htmlPath,
+      source: `<meta name="repositoryRoot" content="${acceptedRoot}/notes">`,
+      expected: /absolute source path.*server\/app\/page\.html/,
+    },
+    {
+      file: rscPath,
+      source: encodeURIComponent(`${acceptedRoot}/notes`),
+      expected: /absolute source path.*server\/app\/page\.rsc/,
+    },
+    {
+      file: staticPath,
+      source: `self.repositoryRoot = ${JSON.stringify(`${acceptedRoot}/notes`)};`,
+      expected: /absolute source path.*static\/chunks\/page\.js/,
+    },
+    {
+      file: fontManifestPath,
+      source: JSON.stringify({ source: `${acceptedRoot}/notes` }),
+      expected: /absolute source path.*server\/next-font-manifest\.json/,
+    },
+    {
+      file: appSourcePath,
+      source: `//# sourceURL=${acceptedRoot}/notes`,
+      expected: /absolute source path.*server\/app\/page\.js/,
+    },
+    {
+      file: serverChunkPath,
+      source: `//# sourceURL=${acceptedRoot}/notes`,
+      expected: /absolute source path.*server\/chunks\/runtime\.js/,
+    },
+  ]) {
+    const original = fs.readFileSync(mutation.file, "utf8");
+    fs.writeFileSync(mutation.file, mutation.source);
+    assert.throws(scan, mutation.expected);
+    fs.writeFileSync(mutation.file, original);
+  }
 });
 
 test("route isolation follows NFT-referenced server chunks", (t) => {
