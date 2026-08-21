@@ -11,6 +11,7 @@ const capable = {
 
 test("hero effects require a capable desktop with motion and data permission", () => {
   assert.equal(shouldEnableHeroEffects(capable), true);
+  assert.equal(shouldEnableHeroEffects({ ...capable, gpuTier: "mid" }), true);
   for (const override of [
     { reducedMotion: true },
     { reducedData: true },
