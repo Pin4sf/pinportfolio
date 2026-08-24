@@ -617,3 +617,36 @@ test("machine-readable surfaces share the canonical identity", () => {
     );
   }
 });
+
+test("every public LinkedIn surface uses the canonical profile URL", async () => {
+  const canonicalLinkedIn = "https://www.linkedin.com/in/shivanshfulper/";
+  const { heroData, contactData } = await import("../src/data/portfolio.ts");
+  const layout = read("src/app/layout.tsx");
+
+  for (const [surface, socials] of [
+    ["hero", heroData.socials],
+    ["contact", contactData.socials],
+  ]) {
+    const linkedIn = socials.find((social) => social.name === "LinkedIn");
+    assert.equal(
+      linkedIn?.url,
+      canonicalLinkedIn,
+      `${surface} publishes a stale LinkedIn profile`,
+    );
+  }
+
+  assert.ok(
+    layout.includes(`"${canonicalLinkedIn}"`),
+    "structured person data publishes a stale LinkedIn profile",
+  );
+  for (const relativePath of [
+    "public/agents.txt",
+    "public/llms.txt",
+    "public/llms-full.txt",
+  ]) {
+    assert.ok(
+      read(relativePath).includes(canonicalLinkedIn),
+      `${relativePath} publishes a stale LinkedIn profile`,
+    );
+  }
+});

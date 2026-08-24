@@ -487,7 +487,7 @@ export const heroData: HeroData = {
     {
       name: "LinkedIn",
       icon: "linkedin",
-      url: "https://www.linkedin.com/in/shivansh-fulper/",
+      url: "https://www.linkedin.com/in/shivanshfulper/",
     },
     {
       name: "GitHub",
@@ -2158,7 +2158,7 @@ export const contactData: ContactData = {
     {
       name: "LinkedIn",
       icon: "linkedin",
-      url: "https://www.linkedin.com/in/shivansh-fulper/",
+      url: "https://www.linkedin.com/in/shivanshfulper/",
     },
     {
       name: "GitHub",

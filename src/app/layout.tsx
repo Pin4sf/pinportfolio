@@ -127,7 +127,7 @@ const jsonLd = {
         "Agents in the Physical World",
       ],
       sameAs: [
-        "https://www.linkedin.com/in/shivansh-fulper/",
+        "https://www.linkedin.com/in/shivanshfulper/",
         "https://github.com/Pin4sf",
         "https://x.com/shivanshfulper",
         "https://instagram.com/pin4sf",

@@ -32,5 +32,5 @@ machine-readable-content: https://shivanshfulper.com/llms-full.txt
 sitemap: https://shivanshfulper.com/sitemap.xml
 
 contact-email: piyushfulper3210@gmail.com
-social: https://www.linkedin.com/in/shivansh-fulper/
+social: https://www.linkedin.com/in/shivanshfulper/
 social: https://github.com/Pin4sf
