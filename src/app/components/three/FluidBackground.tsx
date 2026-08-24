@@ -3,6 +3,7 @@
 import { useRef, useEffect } from "react";
 import { useReducedMotion } from "@/app/hooks/useReducedMotion";
 import { useGpuTier } from "@/app/hooks/useGpuTier";
+import { getFluidRendererProfile } from "@/lib/fluidRendererProfile";
 
 import baseVert from "@/shaders/fluid/base.vert.glsl";
 import dropFrag from "@/shaders/fluid/drop.frag.glsl";
@@ -133,11 +134,12 @@ export default function FluidBackground({
     // --- Config (GPU tier-aware) ---
     const isCoarse = window.matchMedia("(pointer: coarse)").matches;
     const tier = isCoarse ? "low" : gpuTier;
+    const { framesPerSecond, damping } = getFluidRendererProfile(tier);
 
     const SIM_RES = tier === "low" ? 128 : tier === "mid" ? 192 : 256;
     const DROP_RADIUS = tier === "low" ? 0.05 : 0.035;
     const DROP_STRENGTH = tier === "low" ? 0.02 : 0.025;
-    const DAMPING = tier === "low" ? 0.97 : tier === "mid" ? 0.976 : 0.982;
+    const DAMPING = damping;
     const PERTURBANCE = tier === "low" ? 0.03 : 0.04;
     const RAIN_INTERVAL = tier === "low" ? 3000 : tier === "mid" ? 2000 : 1400;
     const RAIN_RADIUS = tier === "low" ? 0.04 : 0.035;
@@ -434,7 +436,9 @@ export default function FluidBackground({
 
     let lastRainTime = 0;
     let lastFrameTime = 0;
-    const FRAME_INTERVAL_MS = 1000 / 30;
+    let lastBackgroundUploadTime = 0;
+    const FRAME_INTERVAL_MS = 1000 / framesPerSecond;
+    const BACKGROUND_UPLOAD_INTERVAL_MS = 1000 / 30;
 
     // --- Main loop ---
     const step = (time: number) => {
@@ -449,10 +453,16 @@ export default function FluidBackground({
       }
       lastFrameTime = time;
 
-      // The source renderer is also capped at 30 fps, so upload at the same cadence.
+      // The source renderer remains capped at 30 fps. The fluid simulation can run
+      // faster for responsive pointer trails without uploading duplicate frames.
       const bgCanvas = bgCanvasRef.current;
-      if (bgCanvas) {
+      if (
+        bgCanvas &&
+        (lastBackgroundUploadTime === 0 ||
+          time - lastBackgroundUploadTime >= BACKGROUND_UPLOAD_INTERVAL_MS)
+      ) {
         updateBackgroundTexture(bgCanvas);
+        lastBackgroundUploadTime = time;
       }
 
       // If background isn't ready yet, skip rendering (HeroBackground visible underneath)

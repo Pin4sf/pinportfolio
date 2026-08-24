@@ -271,7 +271,8 @@ test("the liquid renderer fails closed and avoids full-frame texture allocation"
   assert.match(fluid, /checkFramebufferStatus/);
   assert.match(fluid, /FRAMEBUFFER_COMPLETE/);
   assert.match(fluid, /texSubImage2D/);
-  assert.match(fluid, /FRAME_INTERVAL_MS\s*=\s*1000\s*\/\s*30/);
+  assert.match(fluid, /getFluidRendererProfile/);
+  assert.match(fluid, /1000\s*\/\s*framesPerSecond/);
   assert.match(fluid, /visibility:\s*"hidden"/);
   assert.match(fluid, /canvas\.style\.visibility\s*=\s*"visible"/);
 });

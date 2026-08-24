@@ -120,6 +120,7 @@ export interface CaseStudy {
   name: string;
   tagline: string;
   heroImage: string;
+  homepageImage?: string;
   role: string;
   timeline: string;
   techStack: string[];
@@ -892,6 +893,7 @@ export const caseStudies: CaseStudy[] = [
     name: "Waldo",
     tagline: "A user-owned agent that stays on your side.",
     heroImage: "/images/projects/waldo/waldo-ecosystem.webp",
+    homepageImage: "/images/projects/waldo/frame.png",
     role: "Founder",
     timeline: "May 2026 — Present",
     techStack: [
