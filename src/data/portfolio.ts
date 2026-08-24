@@ -209,8 +209,12 @@ export interface PublicArtifact {
   annotation?: string;
 }
 
+const systemsAroundModelsSlug = "systems-around-models" as const;
+
+export type AuthoredPublicationSlug = typeof systemsAroundModelsSlug;
+
 export interface AuthoredPublication {
-  slug: string;
+  slug: AuthoredPublicationSlug;
   title: string;
   label: string;
   summary: string;
@@ -526,6 +530,7 @@ const trajectoryNarrative = {
 export const researchDirectionData = {
   eyebrow: "A thread of curiosity",
   title: "Models → Agents → World.",
+  publicationSlug: systemsAroundModelsSlug,
   homepageIntroduction:
     "I started with the layers below the model, then watched models become agents with tools, memory, permissions, and real users. Now I’m trying to understand what changes when those systems act in the world. Systems Around Models is where I write down what I’m learning about the harness around the model—and what it takes to know the work is actually done.",
   introduction: [
@@ -1695,7 +1700,7 @@ export const timelineData: TimelineEntry[] = [
 // ==================== LIVING NOTEBOOK ====================
 
 const systemsAroundModelsIdentity = {
-  slug: "systems-around-models",
+  slug: systemsAroundModelsSlug,
   title: "Systems Around Models",
   href: "https://systems-around-models.vercel.app/",
   external: true,
@@ -2228,6 +2233,14 @@ export function getPublicAuthoredPublications(
   limit?: number,
 ): AuthoredPublication[] {
   return selectPublicAuthoredPublications(authoredPublications, {}, limit);
+}
+
+export function getPublicAuthoredPublication(
+  slug: AuthoredPublicationSlug,
+): AuthoredPublication | undefined {
+  return getPublicAuthoredPublications().find(
+    (publication) => publication.slug === slug,
+  );
 }
 
 export function getFeaturedAuthoredPublications(

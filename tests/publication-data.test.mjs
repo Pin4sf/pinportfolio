@@ -65,8 +65,10 @@ test("every MDX record declares an explicit publication state and format", () =>
 test("Systems Around Models is one public authored publication across portfolio surfaces", async () => {
   const {
     getFeaturedAuthoredPublications,
+    getPublicAuthoredPublication,
     getPublicAuthoredPublications,
     publicArtifacts,
+    researchDirectionData,
     researchClusters,
     selectPublicAuthoredPublications,
   } = await import("../src/data/portfolio.ts");
@@ -93,6 +95,11 @@ test("Systems Around Models is one public authored publication across portfolio 
   assert.equal(publication.featured, true);
   assert.equal(publication.publicationState, "public");
   assert.equal(publication.evidenceStatus, "demonstrated");
+  assert.equal(researchDirectionData.publicationSlug, "systems-around-models");
+  assert.equal(
+    getPublicAuthoredPublication(researchDirectionData.publicationSlug),
+    publication,
+  );
 
   const draft = {
     ...publication,

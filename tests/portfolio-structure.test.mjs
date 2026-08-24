@@ -184,7 +184,10 @@ test("research direction is one paragraph with one fieldbook action", () => {
   for (const binding of ["eyebrow", "title", "homepageIntroduction"]) {
     assert.match(source, new RegExp(`researchDirectionData\\.${binding}`));
   }
-  assert.match(source, /getFeaturedAuthoredPublications\(1\)/);
+  assert.match(
+    source,
+    /getPublicAuthoredPublication\(\s*researchDirectionData\.publicationSlug,?\s*\)/,
+  );
   assert.match(source, /<ExternalLink/);
   assert.equal((source.match(/<p\b/g) ?? []).length, 1);
   assert.match(source, /href=\{fieldbook\.href\}[\s\S]*?\{fieldbook\.cta\}/);

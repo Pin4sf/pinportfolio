@@ -1,12 +1,14 @@
 import {
-  getFeaturedAuthoredPublications,
+  getPublicAuthoredPublication,
   researchDirectionData,
 } from "@/data/portfolio";
 import ExternalLink from "../ui/ExternalLink";
 import styles from "./CuriosityThread.module.scss";
 
 export default function CuriosityThread() {
-  const [fieldbook] = getFeaturedAuthoredPublications(1);
+  const fieldbook = getPublicAuthoredPublication(
+    researchDirectionData.publicationSlug,
+  );
 
   return (
     <section id="research" className={styles.section}>

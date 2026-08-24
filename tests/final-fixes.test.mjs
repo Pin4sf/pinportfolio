@@ -225,7 +225,10 @@ test("the fieldbook is featured from typed data without duplicating its copy in 
 
   assert.match(home, /<CuriosityThread \/>/);
   assert.doesNotMatch(homeWriting, /<FeaturedPublication/);
-  assert.match(homeResearch, /getFeaturedAuthoredPublications\(1\)/);
+  assert.match(
+    homeResearch,
+    /getPublicAuthoredPublication\(\s*researchDirectionData\.publicationSlug,?\s*\)/,
+  );
   assert.match(homeResearch, /<ExternalLink/);
   assert.match(homeResearch, /fieldbook\.href/);
   assert.match(homeResearch, /fieldbook\.cta/);
