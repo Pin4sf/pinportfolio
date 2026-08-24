@@ -245,17 +245,36 @@ test("homepage Waldo and contact remain compact", () => {
   assert.match(contact, /mailto:/);
 });
 
-test("the active homepage mounts at most one rich canvas", () => {
+test("the capable desktop hero restores the original liquid-water layer", () => {
   const hero = read("src/app/components/sections/Hero.tsx");
+  const fluid = read("src/app/components/three/FluidBackground.tsx");
   assert.match(hero, /HeroBackground/);
-  assert.doesNotMatch(hero, /FluidBackground/);
+  assert.match(hero, /FluidBackground/);
   assert.equal((hero.match(/<HeroBackground/g) ?? []).length, 1);
+  assert.equal((hero.match(/<FluidBackground/g) ?? []).length, 1);
   assert.match(
     hero,
     /const \[canvasFailed, setCanvasFailed\] = useState\(false\)/,
   );
-  assert.match(hero, /<HeroBackground onFailure=\{handleCanvasFailure\}/);
+  assert.match(hero, /onCanvasReady=\{handleBackgroundCanvasReady\}/);
+  assert.match(hero, /backgroundCanvas=\{backgroundCanvas\}/);
+  assert.match(hero, /<FluidBackground[\s\S]{0,200}onFailure=/);
   assert.match(hero, /enableHeroEffects && !canvasFailed/);
+  assert.match(fluid, /aria-hidden="true"/);
+  assert.match(fluid, /role="presentation"/);
+  assert.match(fluid, /tabIndex=\{-1\}/);
+});
+
+test("the public resume is linked from typed contact data", async () => {
+  const { contactData } = await import("../src/data/portfolio.ts");
+  const contact = read("src/app/components/sections/Contact.tsx");
+  const resumePath = path.join(root, "public/shivansh-fulper-resume.pdf");
+
+  assert.equal(contactData.resumeUrl, "/shivansh-fulper-resume.pdf");
+  assert.match(contact, /contactData\.resumeUrl/);
+  assert.match(contact, />\s*View résumé\s*</);
+  assert.ok(fs.existsSync(resumePath), "public resume PDF is missing");
+  assert.equal(fs.readFileSync(resumePath).subarray(0, 5).toString(), "%PDF-");
 });
 
 test("hero effects honor mobile, reduced-data, reduced-motion, and GPU-tier gates", () => {

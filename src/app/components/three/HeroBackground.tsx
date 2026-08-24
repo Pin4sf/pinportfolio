@@ -97,10 +97,14 @@ const fragmentShader = `
 `;
 
 interface HeroBackgroundProps {
+  onCanvasReady?: (canvas: HTMLCanvasElement) => void;
   onFailure?: () => void;
 }
 
-export default function HeroBackground({ onFailure }: HeroBackgroundProps) {
+export default function HeroBackground({
+  onCanvasReady,
+  onFailure,
+}: HeroBackgroundProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const gpuTier = useGpuTier();
 
@@ -130,7 +134,9 @@ export default function HeroBackground({ onFailure }: HeroBackgroundProps) {
         const renderer = new THREE.WebGLRenderer({
           antialias: false,
           alpha: true,
+          preserveDrawingBuffer: true,
         });
+        onCanvasReady?.(renderer.domElement);
         const scene = new THREE.Scene();
         const camera = new THREE.Camera();
         const geometry = new THREE.PlaneGeometry(2, 2);
@@ -160,7 +166,7 @@ export default function HeroBackground({ onFailure }: HeroBackgroundProps) {
       },
       onFailure,
     });
-  }, [gpuTier, onFailure]);
+  }, [gpuTier, onCanvasReady, onFailure]);
 
   return (
     <div

@@ -19,6 +19,14 @@ export default function Contact() {
           <p className={styles.location}>{contactData.location}</p>
 
           <div className={styles.socials}>
+            {contactData.resumeUrl && (
+              <ExternalLink
+                href={contactData.resumeUrl}
+                rel="noopener noreferrer"
+              >
+                View résumé
+              </ExternalLink>
+            )}
             {contactData.socials.map((social) => (
               <ExternalLink
                 key={social.name}

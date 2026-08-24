@@ -11,6 +11,7 @@ import renderFrag from "@/shaders/fluid/render.frag.glsl";
 
 interface Props {
   backgroundCanvas?: HTMLCanvasElement | null;
+  onFailure?: () => void;
 }
 
 interface FBO {
@@ -37,7 +38,10 @@ interface Program {
   bind(): void;
 }
 
-export default function FluidBackground({ backgroundCanvas }: Props) {
+export default function FluidBackground({
+  backgroundCanvas,
+  onFailure,
+}: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const reducedMotion = useReducedMotion();
   const gpuTier = useGpuTier();
@@ -66,13 +70,28 @@ export default function FluidBackground({ backgroundCanvas }: Props) {
       preserveDrawingBuffer: false,
     };
 
-    let gl = canvas.getContext("webgl2", params) as WebGL2RenderingContext | null;
+    let gl = canvas.getContext(
+      "webgl2",
+      params,
+    ) as WebGL2RenderingContext | null;
     const isWebGL2 = !!gl;
     if (!gl) {
       gl = (canvas.getContext("webgl", params) ||
-        canvas.getContext("experimental-webgl", params)) as WebGL2RenderingContext | null;
+        canvas.getContext(
+          "experimental-webgl",
+          params,
+        )) as WebGL2RenderingContext | null;
     }
-    if (!gl) return;
+    if (!gl) {
+      onFailure?.();
+      return;
+    }
+
+    const handleContextLost = (event: Event) => {
+      event.preventDefault();
+      onFailure?.();
+    };
+    canvas.addEventListener("webglcontextlost", handleContextLost);
 
     let halfFloatExt: { HALF_FLOAT_OES: number } | null = null;
     if (!isWebGL2) {
@@ -90,7 +109,9 @@ export default function FluidBackground({ backgroundCanvas }: Props) {
         ? halfFloatExt.HALF_FLOAT_OES
         : gl.UNSIGNED_BYTE;
 
-    const internalFormat = isWebGL2 ? (gl as WebGL2RenderingContext).RGBA16F : gl.RGBA;
+    const internalFormat = isWebGL2
+      ? (gl as WebGL2RenderingContext).RGBA16F
+      : gl.RGBA;
     const format = gl.RGBA;
 
     // --- Config (GPU tier-aware) ---
@@ -119,7 +140,10 @@ export default function FluidBackground({ backgroundCanvas }: Props) {
     resize();
 
     // --- Compile shader ---
-    const compileShader = (type: number, source: string): WebGLShader | null => {
+    const compileShader = (
+      type: number,
+      source: string,
+    ): WebGLShader | null => {
       const shader = gl!.createShader(type);
       if (!shader) return null;
       gl!.shaderSource(shader, source);
@@ -133,7 +157,10 @@ export default function FluidBackground({ backgroundCanvas }: Props) {
     };
 
     // --- Create program ---
-    const createProgram = (vertSrc: string, fragSrc: string): Program | null => {
+    const createProgram = (
+      vertSrc: string,
+      fragSrc: string,
+    ): Program | null => {
       const vert = compileShader(gl!.VERTEX_SHADER, vertSrc);
       const frag = compileShader(gl!.FRAGMENT_SHADER, fragSrc);
       if (!vert || !frag) return null;
@@ -151,7 +178,10 @@ export default function FluidBackground({ backgroundCanvas }: Props) {
       }
 
       const uniforms: Record<string, WebGLUniformLocation | null> = {};
-      const uniformCount = gl!.getProgramParameter(program, gl!.ACTIVE_UNIFORMS);
+      const uniformCount = gl!.getProgramParameter(
+        program,
+        gl!.ACTIVE_UNIFORMS,
+      );
       for (let i = 0; i < uniformCount; i++) {
         const info = gl!.getActiveUniform(program, i);
         if (info) {
@@ -179,13 +209,29 @@ export default function FluidBackground({ backgroundCanvas }: Props) {
       gl!.texParameteri(gl!.TEXTURE_2D, gl!.TEXTURE_MAG_FILTER, gl!.LINEAR);
       gl!.texParameteri(gl!.TEXTURE_2D, gl!.TEXTURE_WRAP_S, gl!.CLAMP_TO_EDGE);
       gl!.texParameteri(gl!.TEXTURE_2D, gl!.TEXTURE_WRAP_T, gl!.CLAMP_TO_EDGE);
-      gl!.texImage2D(gl!.TEXTURE_2D, 0, internalFormat, w, h, 0, format, halfFloatType, null);
+      gl!.texImage2D(
+        gl!.TEXTURE_2D,
+        0,
+        internalFormat,
+        w,
+        h,
+        0,
+        format,
+        halfFloatType,
+        null,
+      );
 
       const fbo = gl!.createFramebuffer();
       if (!fbo) return null;
 
       gl!.bindFramebuffer(gl!.FRAMEBUFFER, fbo);
-      gl!.framebufferTexture2D(gl!.FRAMEBUFFER, gl!.COLOR_ATTACHMENT0, gl!.TEXTURE_2D, texture, 0);
+      gl!.framebufferTexture2D(
+        gl!.FRAMEBUFFER,
+        gl!.COLOR_ATTACHMENT0,
+        gl!.TEXTURE_2D,
+        texture,
+        0,
+      );
       gl!.viewport(0, 0, w, h);
       gl!.clear(gl!.COLOR_BUFFER_BIT);
 
@@ -229,13 +275,13 @@ export default function FluidBackground({ backgroundCanvas }: Props) {
     gl.bufferData(
       gl.ARRAY_BUFFER,
       new Float32Array([-1, -1, -1, 1, 1, 1, 1, -1]),
-      gl.STATIC_DRAW
+      gl.STATIC_DRAW,
     );
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, gl.createBuffer());
     gl.bufferData(
       gl.ELEMENT_ARRAY_BUFFER,
       new Uint16Array([0, 1, 2, 0, 2, 3]),
-      gl.STATIC_DRAW
+      gl.STATIC_DRAW,
     );
     gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0);
     gl.enableVertexAttribArray(0);
@@ -258,6 +304,8 @@ export default function FluidBackground({ backgroundCanvas }: Props) {
 
     if (!dropProg || !updateProg || !renderProg) {
       console.warn("FluidBackground: shader compilation failed");
+      canvas.removeEventListener("webglcontextlost", handleContextLost);
+      onFailure?.();
       return;
     }
 
@@ -265,7 +313,10 @@ export default function FluidBackground({ backgroundCanvas }: Props) {
     const getResolution = (res: number) => {
       const aspectRatio = gl!.drawingBufferWidth / gl!.drawingBufferHeight;
       if (aspectRatio < 1) {
-        return { width: Math.round(res), height: Math.round(res / aspectRatio) };
+        return {
+          width: Math.round(res),
+          height: Math.round(res / aspectRatio),
+        };
       }
       return { width: Math.round(res * aspectRatio), height: Math.round(res) };
     };
@@ -276,6 +327,8 @@ export default function FluidBackground({ backgroundCanvas }: Props) {
     let ripples = createDoubleFBO(simSize.width, simSize.height);
     if (!ripples) {
       console.warn("FluidBackground: FBO creation failed");
+      canvas.removeEventListener("webglcontextlost", handleContextLost);
+      onFailure?.();
       return;
     }
 
@@ -288,8 +341,17 @@ export default function FluidBackground({ backgroundCanvas }: Props) {
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
     // Initialize with 1x1 dark pixel as fallback
-    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE,
-      new Uint8Array([9, 10, 14, 255]));
+    gl.texImage2D(
+      gl.TEXTURE_2D,
+      0,
+      gl.RGBA,
+      1,
+      1,
+      0,
+      gl.RGBA,
+      gl.UNSIGNED_BYTE,
+      new Uint8Array([9, 10, 14, 255]),
+    );
 
     let bgTextureReady = false;
 
@@ -298,9 +360,12 @@ export default function FluidBackground({ backgroundCanvas }: Props) {
       gl!.activeTexture(gl!.TEXTURE2);
       gl!.bindTexture(gl!.TEXTURE_2D, bgTexture);
       gl!.texImage2D(
-        gl!.TEXTURE_2D, 0, gl!.RGBA,
-        gl!.RGBA, gl!.UNSIGNED_BYTE,
-        sourceCanvas
+        gl!.TEXTURE_2D,
+        0,
+        gl!.RGBA,
+        gl!.RGBA,
+        gl!.UNSIGNED_BYTE,
+        sourceCanvas,
       );
       bgTextureReady = true;
     };
@@ -343,9 +408,18 @@ export default function FluidBackground({ backgroundCanvas }: Props) {
       }
 
       // --- Helper: emit a single drop ---
-      const emitDrop = (cx: number, cy: number, radius: number, strength: number) => {
+      const emitDrop = (
+        cx: number,
+        cy: number,
+        radius: number,
+        strength: number,
+      ) => {
         dropProg.bind();
-        gl!.uniform2f(dropProg.uniforms.texelSize, ripples!.texelSizeX, ripples!.texelSizeY);
+        gl!.uniform2f(
+          dropProg.uniforms.texelSize,
+          ripples!.texelSizeX,
+          ripples!.texelSizeY,
+        );
         gl!.uniform1i(dropProg.uniforms.uTexture, ripples!.read.attach(0));
         gl!.uniform2f(dropProg.uniforms.uCenter, cx, cy);
         gl!.uniform1f(dropProg.uniforms.uRadius, radius);
@@ -374,7 +448,10 @@ export default function FluidBackground({ backgroundCanvas }: Props) {
           const strength = DROP_STRENGTH * (0.6 + velFactor * 0.8);
 
           // Interpolate trail drops between prev and current position
-          const steps = Math.max(1, Math.min(TRAIL_MAX_STEPS, Math.floor(velocity / 0.008)));
+          const steps = Math.max(
+            1,
+            Math.min(TRAIL_MAX_STEPS, Math.floor(velocity / 0.008)),
+          );
           for (let s = 0; s < steps; s++) {
             const t = steps === 1 ? 1 : s / (steps - 1);
             const cx = ppx + (px - ppx) * t;
@@ -398,7 +475,7 @@ export default function FluidBackground({ backgroundCanvas }: Props) {
           Math.random(),
           Math.random(),
           RAIN_RADIUS * (0.6 + Math.random() * 0.8),
-          RAIN_STRENGTH * (0.5 + Math.random())
+          RAIN_STRENGTH * (0.5 + Math.random()),
         );
 
         // 15% chance of a burst: 1 extra drop nearby
@@ -411,7 +488,7 @@ export default function FluidBackground({ backgroundCanvas }: Props) {
               burstX + (Math.random() - 0.5) * 0.15,
               burstY + (Math.random() - 0.5) * 0.15,
               RAIN_RADIUS * (0.4 + Math.random() * 0.5),
-              RAIN_STRENGTH * (0.3 + Math.random() * 0.5)
+              RAIN_STRENGTH * (0.3 + Math.random() * 0.5),
             );
           }
         }
@@ -419,7 +496,11 @@ export default function FluidBackground({ backgroundCanvas }: Props) {
 
       // --- Update: wave equation propagation ---
       updateProg.bind();
-      gl!.uniform2f(updateProg.uniforms.texelSize, ripples!.texelSizeX, ripples!.texelSizeY);
+      gl!.uniform2f(
+        updateProg.uniforms.texelSize,
+        ripples!.texelSizeX,
+        ripples!.texelSizeY,
+      );
       gl!.uniform1i(updateProg.uniforms.uTexture, ripples!.read.attach(0));
       gl!.uniform1f(updateProg.uniforms.uDamping, DAMPING);
       blit(ripples!.write);
@@ -431,7 +512,11 @@ export default function FluidBackground({ backgroundCanvas }: Props) {
       gl!.activeTexture(gl!.TEXTURE2);
       gl!.bindTexture(gl!.TEXTURE_2D, bgTexture);
       gl!.uniform1i(renderProg.uniforms.uBackground, 2);
-      gl!.uniform2f(renderProg.uniforms.uDelta, ripples!.texelSizeX, ripples!.texelSizeY);
+      gl!.uniform2f(
+        renderProg.uniforms.uDelta,
+        ripples!.texelSizeX,
+        ripples!.texelSizeY,
+      );
       gl!.uniform1f(renderProg.uniforms.uPerturbance, PERTURBANCE);
       gl!.uniform1i(renderProg.uniforms.uLowTier, tier === "low" ? 1 : 0);
       blit(null);
@@ -444,7 +529,7 @@ export default function FluidBackground({ backgroundCanvas }: Props) {
       ([entry]) => {
         visibleRef.current = entry.isIntersecting;
       },
-      { threshold: 0.05 }
+      { threshold: 0.05 },
     );
     observer.observe(canvas);
 
@@ -475,9 +560,15 @@ export default function FluidBackground({ backgroundCanvas }: Props) {
       cancelAnimationFrame(animRef.current);
       observer.disconnect();
       window.removeEventListener("resize", handleResize);
-      canvas.parentElement?.removeEventListener("pointermove", handlePointerMove);
+      canvas.removeEventListener("webglcontextlost", handleContextLost);
+      canvas.parentElement?.removeEventListener(
+        "pointermove",
+        handlePointerMove,
+      );
 
-      [dropProg, updateProg, renderProg].forEach((p) => gl!.deleteProgram(p.program));
+      [dropProg, updateProg, renderProg].forEach((p) =>
+        gl!.deleteProgram(p.program),
+      );
 
       if (ripples) {
         gl!.deleteTexture(ripples.read.texture);
@@ -488,13 +579,16 @@ export default function FluidBackground({ backgroundCanvas }: Props) {
       if (bgTexture) gl!.deleteTexture(bgTexture);
       gl!.deleteBuffer(quadBuffer);
     };
-  }, [reducedMotion, gpuTier]);
+  }, [reducedMotion, gpuTier, onFailure]);
 
   if (reducedMotion) return null;
 
   return (
     <canvas
       ref={canvasRef}
+      aria-hidden="true"
+      role="presentation"
+      tabIndex={-1}
       style={{
         position: "absolute",
         inset: 0,

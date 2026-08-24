@@ -2151,6 +2151,7 @@ export const contactData: ContactData = {
   email: "piyushfulper3210@gmail.com",
   formAction: "https://formsubmit.co/piyushfulper3210@gmail.com",
   location: "Nagpur, India",
+  resumeUrl: "/shivansh-fulper-resume.pdf",
   socials: [
     {
       name: "LinkedIn",

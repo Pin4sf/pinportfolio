@@ -34,6 +34,10 @@ const HeroBackground = dynamic(() => import("../three/HeroBackground"), {
   ssr: false,
 });
 
+const FluidBackground = dynamic(() => import("../three/FluidBackground"), {
+  ssr: false,
+});
+
 const iconMap: Record<string, LucideIcon> = {
   linkedin: Linkedin,
   github: Github,
@@ -108,6 +112,9 @@ export default function Hero() {
   const reducedMotion = useReducedMotion();
   const reducedData = useReducedData();
   const [canvasFailed, setCanvasFailed] = useState(false);
+  const [liquidFailed, setLiquidFailed] = useState(false);
+  const [backgroundCanvas, setBackgroundCanvas] =
+    useState<HTMLCanvasElement | null>(null);
   const { viewportWidth, interactionCapable } = useHeroCapabilities();
   const gpuTier = useGpuTier();
 
@@ -120,6 +127,11 @@ export default function Hero() {
   });
   const particleCount = enableHeroEffects ? (gpuTier === "mid" ? 25 : 30) : 0;
   const handleCanvasFailure = useCallback(() => setCanvasFailed(true), []);
+  const handleLiquidFailure = useCallback(() => setLiquidFailed(true), []);
+  const handleBackgroundCanvasReady = useCallback(
+    (canvas: HTMLCanvasElement) => setBackgroundCanvas(canvas),
+    [],
+  );
 
   const particles = useMemo(
     () =>
@@ -338,9 +350,23 @@ export default function Hero() {
       {/* Three.js backgrounds — disabled on mobile for GPU savings */}
       {enableHeroEffects && !canvasFailed && (
         <ErrorBoundary>
-          <HeroBackground onFailure={handleCanvasFailure} />
+          <HeroBackground
+            onCanvasReady={handleBackgroundCanvasReady}
+            onFailure={handleCanvasFailure}
+          />
         </ErrorBoundary>
       )}
+      {enableHeroEffects &&
+        !canvasFailed &&
+        !liquidFailed &&
+        backgroundCanvas && (
+          <ErrorBoundary>
+            <FluidBackground
+              backgroundCanvas={backgroundCanvas}
+              onFailure={handleLiquidFailure}
+            />
+          </ErrorBoundary>
+        )}
 
       {/* Floating particles */}
       {enableHeroEffects && (
