@@ -87,20 +87,36 @@ export default function FluidBackground({
       return;
     }
 
+    let failureReported = false;
+    const reportFailure = () => {
+      if (failureReported) return;
+      failureReported = true;
+      canvas.style.visibility = "hidden";
+      onFailure?.();
+    };
+
     const handleContextLost = (event: Event) => {
       event.preventDefault();
-      onFailure?.();
+      reportFailure();
     };
     canvas.addEventListener("webglcontextlost", handleContextLost);
 
     let halfFloatExt: { HALF_FLOAT_OES: number } | null = null;
+    let supportsFloatTarget = false;
     if (!isWebGL2) {
       halfFloatExt = gl.getExtension("OES_texture_half_float");
       gl.getExtension("OES_texture_half_float_linear");
+      supportsFloatTarget = halfFloatExt !== null;
     }
     if (isWebGL2) {
-      gl.getExtension("EXT_color_buffer_float");
+      supportsFloatTarget = gl.getExtension("EXT_color_buffer_float") !== null;
       gl.getExtension("OES_texture_float_linear");
+    }
+
+    if (!supportsFloatTarget) {
+      canvas.removeEventListener("webglcontextlost", handleContextLost);
+      reportFailure();
+      return;
     }
 
     const halfFloatType = isWebGL2
@@ -128,7 +144,8 @@ export default function FluidBackground({
     const RAIN_STRENGTH = tier === "low" ? 0.008 : 0.01;
     const TRAIL_MAX_STEPS = tier === "low" ? 1 : tier === "mid" ? 2 : 3;
 
-    const dpr = Math.min(window.devicePixelRatio, tier === "low" ? 1.5 : 2);
+    const dprCap = tier === "high" ? 1.5 : 1.25;
+    const dpr = Math.min(window.devicePixelRatio, dprCap);
 
     // --- Resize canvas ---
     const resize = () => {
@@ -232,6 +249,13 @@ export default function FluidBackground({
         texture,
         0,
       );
+      if (
+        gl!.checkFramebufferStatus(gl!.FRAMEBUFFER) !== gl!.FRAMEBUFFER_COMPLETE
+      ) {
+        gl!.deleteFramebuffer(fbo);
+        gl!.deleteTexture(texture);
+        return null;
+      }
       gl!.viewport(0, 0, w, h);
       gl!.clear(gl!.COLOR_BUFFER_BIT);
 
@@ -248,11 +272,20 @@ export default function FluidBackground({
       };
     };
 
+    const destroyFBO = (fbo: FBO) => {
+      gl!.deleteTexture(fbo.texture);
+      gl!.deleteFramebuffer(fbo.fbo);
+    };
+
     // --- Create double FBO (ping-pong) ---
     const createDoubleFBO = (w: number, h: number): DoubleFBO | null => {
       const fbo1 = createFBO(w, h);
+      if (!fbo1) return null;
       const fbo2 = createFBO(w, h);
-      if (!fbo1 || !fbo2) return null;
+      if (!fbo2) {
+        destroyFBO(fbo1);
+        return null;
+      }
 
       return {
         width: w,
@@ -305,7 +338,7 @@ export default function FluidBackground({
     if (!dropProg || !updateProg || !renderProg) {
       console.warn("FluidBackground: shader compilation failed");
       canvas.removeEventListener("webglcontextlost", handleContextLost);
-      onFailure?.();
+      reportFailure();
       return;
     }
 
@@ -328,45 +361,61 @@ export default function FluidBackground({
     if (!ripples) {
       console.warn("FluidBackground: FBO creation failed");
       canvas.removeEventListener("webglcontextlost", handleContextLost);
-      onFailure?.();
+      reportFailure();
       return;
     }
 
     // --- Background texture (uploaded from HeroBackground canvas each frame) ---
     const bgTexture = gl.createTexture();
+    if (!bgTexture) {
+      [dropProg, updateProg, renderProg].forEach((program) =>
+        gl!.deleteProgram(program.program),
+      );
+      destroyFBO(ripples.read);
+      destroyFBO(ripples.write);
+      canvas.removeEventListener("webglcontextlost", handleContextLost);
+      reportFailure();
+      return;
+    }
     gl.activeTexture(gl.TEXTURE2);
     gl.bindTexture(gl.TEXTURE_2D, bgTexture);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-    // Initialize with 1x1 dark pixel as fallback
-    gl.texImage2D(
-      gl.TEXTURE_2D,
-      0,
-      gl.RGBA,
-      1,
-      1,
-      0,
-      gl.RGBA,
-      gl.UNSIGNED_BYTE,
-      new Uint8Array([9, 10, 14, 255]),
-    );
-
     let bgTextureReady = false;
+    let bgTextureWidth = 0;
+    let bgTextureHeight = 0;
 
     const updateBackgroundTexture = (sourceCanvas: HTMLCanvasElement) => {
       if (sourceCanvas.width === 0 || sourceCanvas.height === 0) return;
       gl!.activeTexture(gl!.TEXTURE2);
       gl!.bindTexture(gl!.TEXTURE_2D, bgTexture);
-      gl!.texImage2D(
-        gl!.TEXTURE_2D,
-        0,
-        gl!.RGBA,
-        gl!.RGBA,
-        gl!.UNSIGNED_BYTE,
-        sourceCanvas,
-      );
+      if (
+        sourceCanvas.width !== bgTextureWidth ||
+        sourceCanvas.height !== bgTextureHeight
+      ) {
+        gl!.texImage2D(
+          gl!.TEXTURE_2D,
+          0,
+          gl!.RGBA,
+          gl!.RGBA,
+          gl!.UNSIGNED_BYTE,
+          sourceCanvas,
+        );
+        bgTextureWidth = sourceCanvas.width;
+        bgTextureHeight = sourceCanvas.height;
+      } else {
+        gl!.texSubImage2D(
+          gl!.TEXTURE_2D,
+          0,
+          0,
+          0,
+          gl!.RGBA,
+          gl!.UNSIGNED_BYTE,
+          sourceCanvas,
+        );
+      }
       bgTextureReady = true;
     };
 
@@ -384,7 +433,8 @@ export default function FluidBackground({
     canvas.parentElement?.addEventListener("pointermove", handlePointerMove);
 
     let lastRainTime = 0;
-    let frameCount = 0;
+    let lastFrameTime = 0;
+    const FRAME_INTERVAL_MS = 1000 / 30;
 
     // --- Main loop ---
     const step = (time: number) => {
@@ -393,11 +443,15 @@ export default function FluidBackground({
         return;
       }
 
-      frameCount++;
+      if (time - lastFrameTime < FRAME_INTERVAL_MS) {
+        animRef.current = requestAnimationFrame(step);
+        return;
+      }
+      lastFrameTime = time;
 
-      // Upload background texture (every frame on desktop, every 2nd on mobile)
+      // The source renderer is also capped at 30 fps, so upload at the same cadence.
       const bgCanvas = bgCanvasRef.current;
-      if (bgCanvas && (tier !== "low" || frameCount % 2 === 0)) {
+      if (bgCanvas) {
         updateBackgroundTexture(bgCanvas);
       }
 
@@ -521,6 +575,12 @@ export default function FluidBackground({
       gl!.uniform1i(renderProg.uniforms.uLowTier, tier === "low" ? 1 : 0);
       blit(null);
 
+      if (gl!.getError() !== gl!.NO_ERROR) {
+        reportFailure();
+        return;
+      }
+      canvas.style.visibility = "visible";
+
       animRef.current = requestAnimationFrame(step);
     };
 
@@ -539,20 +599,23 @@ export default function FluidBackground({
     const handleResize = () => {
       resize();
       const newSimSize = getResolution(SIM_RES);
-
-      // Cleanup old FBOs
-      if (ripples) {
-        gl!.deleteTexture(ripples.read.texture);
-        gl!.deleteFramebuffer(ripples.read.fbo);
-        gl!.deleteTexture(ripples.write.texture);
-        gl!.deleteFramebuffer(ripples.write.fbo);
-      }
-
-      // Create new FBOs at updated resolution
       const newRipples = createDoubleFBO(newSimSize.width, newSimSize.height);
-      if (newRipples) {
-        ripples = newRipples;
+      if (!newRipples) {
+        reportFailure();
+        return;
       }
+
+      const previousRipples = ripples;
+      if (!previousRipples) {
+        destroyFBO(newRipples.read);
+        destroyFBO(newRipples.write);
+        reportFailure();
+        return;
+      }
+
+      destroyFBO(previousRipples.read);
+      destroyFBO(previousRipples.write);
+      ripples = newRipples;
     };
     window.addEventListener("resize", handleResize);
 
@@ -571,10 +634,8 @@ export default function FluidBackground({
       );
 
       if (ripples) {
-        gl!.deleteTexture(ripples.read.texture);
-        gl!.deleteFramebuffer(ripples.read.fbo);
-        gl!.deleteTexture(ripples.write.texture);
-        gl!.deleteFramebuffer(ripples.write.fbo);
+        destroyFBO(ripples.read);
+        destroyFBO(ripples.write);
       }
       if (bgTexture) gl!.deleteTexture(bgTexture);
       gl!.deleteBuffer(quadBuffer);
@@ -594,6 +655,7 @@ export default function FluidBackground({
         inset: 0,
         width: "100%",
         height: "100%",
+        visibility: "hidden",
         pointerEvents: "none",
         zIndex: 1,
       }}

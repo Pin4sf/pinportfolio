@@ -265,6 +265,17 @@ test("the capable desktop hero restores the original liquid-water layer", () => 
   assert.match(fluid, /tabIndex=\{-1\}/);
 });
 
+test("the liquid renderer fails closed and avoids full-frame texture allocation", () => {
+  const fluid = read("src/app/components/three/FluidBackground.tsx");
+
+  assert.match(fluid, /checkFramebufferStatus/);
+  assert.match(fluid, /FRAMEBUFFER_COMPLETE/);
+  assert.match(fluid, /texSubImage2D/);
+  assert.match(fluid, /FRAME_INTERVAL_MS\s*=\s*1000\s*\/\s*30/);
+  assert.match(fluid, /visibility:\s*"hidden"/);
+  assert.match(fluid, /canvas\.style\.visibility\s*=\s*"visible"/);
+});
+
 test("the public resume is linked from typed contact data", async () => {
   const { contactData } = await import("../src/data/portfolio.ts");
   const contact = read("src/app/components/sections/Contact.tsx");
