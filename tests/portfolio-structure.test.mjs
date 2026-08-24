@@ -133,7 +133,7 @@ test("homepage follows the approved signal-observatory sequence", () => {
     "<Hero />",
     "<Now />",
     "<CuriosityThread />",
-    "<Writing featuredPosts={featuredPosts} />",
+    "<Writing",
     "<ReadingPreview entries={readingEntries} />",
     "<SelectedChapters />",
     "<PersonalPreview />",

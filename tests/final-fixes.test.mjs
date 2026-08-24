@@ -210,3 +210,35 @@ test("Reading models internal and external sources explicitly", () => {
   assert.match(reading, /<ExternalLink/);
   assert.match(reading, /entry\.annotation/);
 });
+
+test("the fieldbook is featured from typed data without duplicating its copy in presentation", () => {
+  const home = read("src/app/page.tsx");
+  const homeWriting = read("src/app/components/sections/Writing.tsx");
+  const writingPage = read("src/app/writing/page.tsx");
+  const feature = read("src/app/components/editorial/FeaturedPublication.tsx");
+  const machines = [
+    read("public/agents.txt"),
+    read("public/llms.txt"),
+    read("public/llms-full.txt"),
+  ];
+
+  assert.match(home, /getFeaturedAuthoredPublications\(1\)/);
+  assert.match(home, /featuredPublication=\{featuredPublications\[0\]\}/);
+  assert.match(homeWriting, /<FeaturedPublication/);
+  assert.match(writingPage, /getFeaturedAuthoredPublications\(1\)/);
+  assert.match(writingPage, /<FeaturedPublication/);
+  assert.match(feature, /<ExternalLink/);
+  assert.match(feature, /publication\.summary/);
+  assert.match(feature, /publication\.detail/);
+  assert.match(feature, /publication\.cta/);
+
+  for (const source of [homeWriting, writingPage, feature]) {
+    assert.doesNotMatch(source, /systems-around-models\.vercel\.app/);
+    assert.doesNotMatch(source, /40-chapter working map/);
+  }
+  for (const surface of machines) {
+    assert.match(surface, /Systems Around Models/);
+    assert.match(surface, /https:\/\/systems-around-models\.vercel\.app\//);
+    assert.match(surface, /canonical (?:home|personal home)/);
+  }
+});

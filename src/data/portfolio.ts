@@ -209,6 +209,24 @@ export interface PublicArtifact {
   annotation?: string;
 }
 
+export interface AuthoredPublication {
+  slug: string;
+  title: string;
+  label: string;
+  summary: string;
+  detail: string;
+  cta: string;
+  href: string;
+  external: true;
+  featured: boolean;
+  publicationState: PublicationState;
+  evidenceStatus: EvidenceStatus;
+}
+
+export interface AuthoredPublicationFilter {
+  featured?: boolean;
+}
+
 export interface ResearchCluster {
   slug: string;
   title: string;
@@ -1674,7 +1692,46 @@ export const timelineData: TimelineEntry[] = [
 
 // ==================== LIVING NOTEBOOK ====================
 
+const systemsAroundModelsIdentity = {
+  slug: "systems-around-models",
+  title: "Systems Around Models",
+  href: "https://systems-around-models.vercel.app/",
+  external: true,
+  featured: true,
+  publicationState: "public",
+  evidenceStatus: "demonstrated",
+} as const satisfies Pick<
+  AuthoredPublication,
+  | "slug"
+  | "title"
+  | "href"
+  | "external"
+  | "featured"
+  | "publicationState"
+  | "evidenceStatus"
+>;
+
+export const authoredPublications: AuthoredPublication[] = [
+  {
+    ...systemsAroundModelsIdentity,
+    label: "Fieldbook · Course",
+    summary:
+      "I’ve been writing down what I’m learning about the systems around AI models—the harness, memory, authority, recovery, and what it takes to know the work is actually done. I turned those learnings into two practical study guides, a working course map, and a comparison of real agent architectures.",
+    detail:
+      "Two practical guides · 40-chapter working map · 9 architecture profiles",
+    cta: "Explore the fieldbook",
+  },
+];
+
 export const publicArtifacts: PublicArtifact[] = [
+  {
+    ...systemsAroundModelsIdentity,
+    kind: "research",
+    theme: "agents",
+    date: "2026",
+    summary:
+      "A practical fieldbook where I share what I’m learning about harnesses, memory, authority, recovery, evidence, and completion.",
+  },
   {
     slug: "waldo",
     title: "Waldo",
@@ -1842,12 +1899,12 @@ export const writingPageData = {
   eyebrow: "Writing",
   title: "Notes from the work.",
   introduction:
-    "Research essays, field notes, and historical chapters from building and studying agent systems.",
+    "Research notes, field notes, and a practical fieldbook from building and studying agent systems.",
   metadata: {
     description:
-      "Research essays and field notes by Shivansh Fulper on agent harnesses, memory and state, outcome evaluation, and agents in the physical world.",
+      "Research notes, field notes, and a practical fieldbook by Shivansh Fulper on agent harnesses, memory and state, outcome evaluation, and agents in the physical world.",
     openGraphDescription:
-      "Research essays and field notes on agent harnesses, memory and state, and outcome evaluation.",
+      "Research notes, field notes, and a practical fieldbook on agent harnesses, memory and state, and outcome evaluation.",
   },
 } as const;
 
@@ -1875,6 +1932,7 @@ export const researchClusters: ResearchCluster[] = [
     artifactSlugs: [
       "waldo",
       "atlan",
+      "systems-around-models",
       "memory-is-not-storage",
       "harness-is-part-of-the-agent",
     ],
@@ -2146,6 +2204,38 @@ export function getPublicArtifacts(
     }
     return true;
   });
+}
+
+export function selectPublicAuthoredPublications(
+  publications: readonly AuthoredPublication[],
+  filter: AuthoredPublicationFilter = {},
+  limit?: number,
+): AuthoredPublication[] {
+  const publicPublications = publications.filter(
+    (publication) =>
+      publication.publicationState === "public" &&
+      (filter.featured === undefined ||
+        publication.featured === filter.featured),
+  );
+  return limit === undefined
+    ? publicPublications
+    : publicPublications.slice(0, limit);
+}
+
+export function getPublicAuthoredPublications(
+  limit?: number,
+): AuthoredPublication[] {
+  return selectPublicAuthoredPublications(authoredPublications, {}, limit);
+}
+
+export function getFeaturedAuthoredPublications(
+  limit?: number,
+): AuthoredPublication[] {
+  return selectPublicAuthoredPublications(
+    authoredPublications,
+    { featured: true },
+    limit,
+  );
 }
 
 export function getPublicReadingEntries(limit?: number): ReadingEntry[] {

@@ -1,13 +1,18 @@
 import Link from "next/link";
-import { homepageData } from "@/data/portfolio";
+import { homepageData, type AuthoredPublication } from "@/data/portfolio";
 import type { PostMeta } from "@/lib/mdx";
+import FeaturedPublication from "@/app/components/editorial/FeaturedPublication";
 import styles from "./Writing.module.scss";
 
 interface WritingProps {
   featuredPosts: PostMeta[];
+  featuredPublication?: AuthoredPublication;
 }
 
-export default function Writing({ featuredPosts }: WritingProps) {
+export default function Writing({
+  featuredPosts,
+  featuredPublication,
+}: WritingProps) {
   return (
     <section id="research" className={styles.section}>
       <div className={styles.notesHeader}>
@@ -23,6 +28,14 @@ export default function Writing({ featuredPosts }: WritingProps) {
           {homepageData.writing.cta.label} <span aria-hidden="true">↗</span>
         </Link>
       </div>
+
+      {featuredPublication && (
+        <FeaturedPublication
+          publication={featuredPublication}
+          variant="home"
+          headingLevel="h3"
+        />
+      )}
 
       <ol className={styles.essays}>
         {featuredPosts.map((post, index) => (

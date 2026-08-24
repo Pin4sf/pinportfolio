@@ -1,9 +1,14 @@
 import { getAllPosts } from "@/lib/mdx";
-import { siteConfig, writingPageData } from "@/data/portfolio";
+import {
+  getFeaturedAuthoredPublications,
+  siteConfig,
+  writingPageData,
+} from "@/data/portfolio";
 import type { Metadata } from "next";
 import Link from "next/link";
 import EditorialHeader from "@/app/components/editorial/EditorialHeader";
 import EditorialFooter from "@/app/components/editorial/EditorialFooter";
+import FeaturedPublication from "@/app/components/editorial/FeaturedPublication";
 import WritingArchive from "./WritingArchive";
 import styles from "./WritingArchive.module.scss";
 
@@ -23,6 +28,7 @@ export const metadata: Metadata = {
 
 export default function WritingPage() {
   const posts = getAllPosts();
+  const featuredPublications = getFeaturedAuthoredPublications(1);
 
   return (
     <>
@@ -39,6 +45,13 @@ export default function WritingPage() {
         <Link className={styles.readingLink} href="/reading">
           Read what shapes the work →
         </Link>
+        {featuredPublications[0] && (
+          <FeaturedPublication
+            publication={featuredPublications[0]}
+            variant="archive"
+            headingLevel="h2"
+          />
+        )}
         <WritingArchive posts={posts} />
       </main>
       <EditorialFooter />

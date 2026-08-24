@@ -782,8 +782,13 @@ test("machine surfaces keep Reading summaries public and distribution canonical"
     assert.match(source, /annotated intellectual record/i);
     assert.match(
       source,
-      /portfolio remains canonical/i,
-      "machine copy must keep this portfolio canonical",
+      /portfolio remains Shivansh's canonical personal home/i,
+      "machine copy must keep this portfolio the canonical personal home",
+    );
+    assert.match(
+      source,
+      /Systems Around Models is the canonical home for its fieldbook/i,
+      "machine copy must scope fieldbook canonicality to Systems Around Models",
     );
     assert.match(source, /mirror|cross-post/i);
     assert.doesNotMatch(source, /substack\.com/i);

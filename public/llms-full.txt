@@ -21,6 +21,12 @@ Shivansh is studying four connected questions:
 3. How can an agent distinguish completing an artifact from producing an accepted outcome?
 4. What changes when agents perceive and act in the physical world, where uncertainty and consequences are harder to hide?
 
+## Systems Around Models
+
+Systems Around Models is Shivansh's public fieldbook for sharing what he is learning about the systems around AI models: harnesses, memory, authority, recovery, evidence, and completion. It currently includes two practical guides, a forty-chapter working course map, and a source-pinned architecture comparison with nine public profiles. The labs and capstone remain mapped future work rather than published material.
+
+- Fieldbook: https://systems-around-models.vercel.app/
+
 ## Waldo
 
 Waldo is the current company. Its public portfolio presents a user-owned personal-agent thesis: machine execution can expand while the person retains understanding and responsibility.
@@ -37,7 +43,7 @@ Reading is an annotated intellectual record of confirmed public influences. Pers
 
 Use the route map above for current public context. The research and writing routes contain the detailed questions and essays; the Waldo route contains the current product thesis and its boundaries.
 
-This portfolio remains canonical. External distribution may mirror or cross-post authored work without replacing its portfolio URL.
+This portfolio remains Shivansh's canonical personal home. Systems Around Models is the canonical home for its fieldbook; other external distribution may mirror or cross-post portfolio-authored work without replacing its portfolio URL.
 
 ## Contact
 

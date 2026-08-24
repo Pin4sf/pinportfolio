@@ -9,11 +9,15 @@ import ReadingPreview from "./components/sections/ReadingPreview";
 import SelectedChapters from "./components/sections/SelectedChapters";
 import Writing from "./components/sections/Writing";
 import Footer from "./components/sections/Footer";
-import { getPublicReadingEntries } from "@/data/portfolio";
+import {
+  getFeaturedAuthoredPublications,
+  getPublicReadingEntries,
+} from "@/data/portfolio";
 import { getFeaturedPosts } from "@/lib/mdx";
 
 export default function Page() {
   const featuredPosts = getFeaturedPosts(3);
+  const featuredPublications = getFeaturedAuthoredPublications(1);
   const readingEntries = getPublicReadingEntries(3);
 
   return (
@@ -23,7 +27,10 @@ export default function Page() {
         <Hero />
         <Now />
         <CuriosityThread />
-        <Writing featuredPosts={featuredPosts} />
+        <Writing
+          featuredPosts={featuredPosts}
+          featuredPublication={featuredPublications[0]}
+        />
         <ReadingPreview entries={readingEntries} />
         <SelectedChapters />
         <PersonalPreview />

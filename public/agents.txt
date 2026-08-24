@@ -9,6 +9,9 @@ description: A public notebook about building Waldo and studying how agents can 
 
 current-questions: Agent harnesses; memory and state; outcome evaluation; agents in the physical world.
 
+authored-publication: Systems Around Models is Shivansh Fulper's public fieldbook for sharing what he is learning about harnesses, memory, authority, recovery, evidence, and completion.
+authored-publication-url: https://systems-around-models.vercel.app/
+
 evidence-boundaries: Built describes an implemented contribution. Demonstrated describes bounded public behavior. Hypothesis describes a claim still being tested. Historical material retains its original context. Direction describes longer-term work, not a current capability.
 
 primary-page: https://shivanshfulper.com/about
@@ -20,7 +23,7 @@ primary-page: https://shivanshfulper.com/work/waldo
 
 reading: Reading is an annotated intellectual record of confirmed public influences. Entry annotations remain on the canonical Reading page rather than being republished here.
 
-distribution: This portfolio remains canonical. External distribution may mirror or cross-post authored work without replacing its portfolio URL.
+distribution: This portfolio remains Shivansh's canonical personal home. Systems Around Models is the canonical home for its fieldbook; other external distribution may mirror or cross-post portfolio-authored work without replacing its portfolio URL.
 
 work: Waldo is the current company. Its public record distinguishes working internal foundations and demonstrations from integrated external behavior, external validation, product hypotheses, and future direction.
 

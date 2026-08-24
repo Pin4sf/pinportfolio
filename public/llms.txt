@@ -22,11 +22,14 @@ The falsifier is explicit: Waldo should reduce sessions or raw artifacts opened 
 
 ## Read
 
+- [Systems Around Models](https://systems-around-models.vercel.app/) — two practical guides, a forty-chapter working course map, and a comparison of real agent architectures.
 - [When an Agent Says Done, What Is Actually True?](https://shivanshfulper.com/writing/agent-done-outcome-truth)
 - [Memory Is Not Storage](https://shivanshfulper.com/writing/memory-is-not-storage)
 - [The Harness Is Part of the Agent](https://shivanshfulper.com/writing/harness-is-part-of-the-agent)
 - [Waldo case study](https://shivanshfulper.com/work/waldo)
 - [Writing archive](https://shivanshfulper.com/writing)
+
+The portfolio is Shivansh's canonical personal home. Systems Around Models is the canonical home for the fieldbook itself.
 
 ## Links
 
