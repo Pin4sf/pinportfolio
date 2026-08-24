@@ -101,13 +101,31 @@ test("homepage restores the personal founder introduction", () => {
   assert.doesNotMatch(hero, /heroData\.actions|actionPrimary/i);
 });
 
-test("homepage restores the predesign visual shell without dropping reading", () => {
+test("homepage restores the original portfolio sections while keeping detailed routes", () => {
   assert.match(header, /styles\.progress/);
   assert.match(hero, /nameChars/);
   assert.match(hero, /styles\.particles/);
-  assert.match(page, /<ReadingPreview entries=\{readingEntries\} \/>/);
+  for (const component of [
+    "<SelectedWork />",
+    "<About />",
+    "<Timeline />",
+    "<SkillsExperience />",
+  ]) {
+    assert.match(page, new RegExp(component.replaceAll("/", "\\/")));
+  }
+  assert.doesNotMatch(
+    page,
+    /<Now \/>|<ReadingPreview|<SelectedChapters \/>|<PersonalPreview \/>/,
+  );
   assert.match(page, /<Footer \/>/);
   assert.doesNotMatch(page, /<EditorialFooter \/>/);
+});
+
+test("restored homepage work links navigate without transition-only context", () => {
+  const selectedWork = read("src/app/components/sections/SelectedWork.tsx");
+  assert.match(selectedWork, /import Link from "next\/link"/);
+  assert.match(selectedWork, /<Link/);
+  assert.doesNotMatch(selectedWork, /TransitionLink|useTransition/);
 });
 
 test("homepage markup lookup ignores commented component lookalikes", () => {
@@ -128,15 +146,15 @@ test("homepage markup lookup ignores commented component lookalikes", () => {
   assert.notEqual(findMarkupPosition(commentedFixture, "<Contact />"), -1);
 });
 
-test("homepage follows the approved signal-observatory sequence", () => {
+test("homepage follows the original portfolio sequence with one compact research section", () => {
   const sequence = [
     "<Hero />",
-    "<Now />",
+    "<SelectedWork />",
     "<CuriosityThread />",
+    "<About />",
     "<Writing",
-    "<ReadingPreview entries={readingEntries} />",
-    "<SelectedChapters />",
-    "<PersonalPreview />",
+    "<Timeline />",
+    "<SkillsExperience />",
     "<Contact />",
   ];
   const positions = sequence.map((component) => {
@@ -159,45 +177,26 @@ test("homepage follows the approved signal-observatory sequence", () => {
   );
 });
 
-test("connected research direction has one path and one action", () => {
+test("research direction is one paragraph with one fieldbook action", () => {
   const source = read("src/app/components/sections/CuriosityThread.tsx");
   assert.match(researchDirectionSource, /eyebrow: "A thread of curiosity"/);
   assert.match(researchDirectionSource, /title: "Models → Agents → World\."/);
-  assert.match(
-    researchDirectionSource,
-    /cta: \{ label: "Explore the research", href: "\/research" \}/,
-  );
-  for (const binding of ["eyebrow", "title", "introduction"]) {
+  for (const binding of ["eyebrow", "title", "homepageIntroduction"]) {
     assert.match(source, new RegExp(`researchDirectionData\\.${binding}`));
   }
-
-  const mapStart = source.indexOf("researchDirectionData.waypoints.map");
-  const mapEnd = source.indexOf("</ol>", mapStart);
-  assert.notEqual(mapStart, -1, "Research waypoint map is missing");
-  assert.notEqual(mapEnd, -1, "Research waypoint list is not closed");
-  const waypointCallback = source.slice(mapStart, mapEnd);
-  assert.doesNotMatch(
-    waypointCallback,
-    /<Link\b|href=/,
-    "Waypoints must not contain links",
-  );
-
-  assert.equal((source.match(/<Link\b/g) ?? []).length, 1);
-  assert.match(
-    source,
-    /<Link href=\{researchDirectionData\.cta\.href\} className=\{styles\.cta\}>[\s\S]*?\{researchDirectionData\.cta\.label\}/,
-  );
+  assert.match(source, /getFeaturedAuthoredPublications\(1\)/);
+  assert.match(source, /<ExternalLink/);
+  assert.equal((source.match(/<p\b/g) ?? []).length, 1);
+  assert.match(source, /href=\{fieldbook\.href\}[\s\S]*?\{fieldbook\.cta\}/);
   assert.doesNotMatch(
     source,
-    /Research direction|From capability to consequence\.|Follow the thread/,
+    /waypoints\.map|<ol\b|<li\b|Research direction|From capability to consequence\.|Follow the thread/,
   );
 });
 
-test("homepage writing and reading are editorial lists", () => {
+test("homepage writing keeps the three research essays in an editorial list", async () => {
   const writing = read("src/app/components/sections/Writing.tsx");
-  const reading = read("src/app/components/sections/ReadingPreview.tsx");
   assert.match(homepageDataSource, /title: "Notes from the work\."/);
-  assert.match(homepageDataSource, /title: "Things I keep returning to\."/);
   assert.match(writing, /<ol/);
   assert.match(writing, /post\.format/);
   assert.match(writing, /post\.date/);
@@ -207,11 +206,16 @@ test("homepage writing and reading are editorial lists", () => {
     writing,
     /Notes from the work\.|Research questions usually arrive after something breaks/,
   );
-  assert.match(reading, /<ol/);
-  assert.match(reading, /homepageData\.reading\.title/);
-  assert.match(reading, /homepageData\.reading\.introduction/);
-  assert.doesNotMatch(reading, /Things I keep returning to\./);
-  assert.doesNotMatch(reading, /rating|cover|coming soon/i);
+
+  const { getFeaturedPosts } = await import("../src/lib/mdx.ts");
+  assert.deepEqual(
+    getFeaturedPosts(3).map(({ slug }) => slug),
+    [
+      "agent-done-outcome-truth",
+      "memory-is-not-storage",
+      "harness-is-part-of-the-agent",
+    ],
+  );
 });
 
 test("homepage Waldo and contact remain compact", () => {

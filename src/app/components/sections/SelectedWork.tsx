@@ -1,12 +1,12 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ArrowUpRight, ExternalLink } from "lucide-react";
 import { getVentures } from "@/data/portfolio";
 import { useReducedMotion } from "@/app/hooks/useReducedMotion";
-import TransitionLink from "../ui/TransitionLink";
 import styles from "./SelectedWork.module.scss";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -51,7 +51,7 @@ export default function SelectedWork() {
       <div className={styles.list}>
         {projects.map((project, index) => (
           <article key={project.slug} className={styles.card}>
-            <TransitionLink
+            <Link
               href={`/work/${project.slug}`}
               className={styles.caseStudyLink}
               aria-label={`View ${project.name} case study`}
@@ -84,7 +84,7 @@ export default function SelectedWork() {
                   View case study <ArrowUpRight size={15} aria-hidden="true" />
                 </span>
               </div>
-            </TransitionLink>
+            </Link>
 
             {project.liveUrl && (
               <a

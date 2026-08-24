@@ -526,6 +526,8 @@ const trajectoryNarrative = {
 export const researchDirectionData = {
   eyebrow: "A thread of curiosity",
   title: "Models → Agents → World.",
+  homepageIntroduction:
+    "I started with the layers below the model, then watched models become agents with tools, memory, permissions, and real users. Now I’m trying to understand what changes when those systems act in the world. Systems Around Models is where I write down what I’m learning about the harness around the model—and what it takes to know the work is actually done.",
   introduction: [
     trajectoryNarrative.models,
     trajectoryNarrative.agents,

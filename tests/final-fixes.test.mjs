@@ -214,6 +214,7 @@ test("Reading models internal and external sources explicitly", () => {
 test("the fieldbook is featured from typed data without duplicating its copy in presentation", () => {
   const home = read("src/app/page.tsx");
   const homeWriting = read("src/app/components/sections/Writing.tsx");
+  const homeResearch = read("src/app/components/sections/CuriosityThread.tsx");
   const writingPage = read("src/app/writing/page.tsx");
   const feature = read("src/app/components/editorial/FeaturedPublication.tsx");
   const machines = [
@@ -222,9 +223,12 @@ test("the fieldbook is featured from typed data without duplicating its copy in 
     read("public/llms-full.txt"),
   ];
 
-  assert.match(home, /getFeaturedAuthoredPublications\(1\)/);
-  assert.match(home, /featuredPublication=\{featuredPublications\[0\]\}/);
-  assert.match(homeWriting, /<FeaturedPublication/);
+  assert.match(home, /<CuriosityThread \/>/);
+  assert.doesNotMatch(homeWriting, /<FeaturedPublication/);
+  assert.match(homeResearch, /getFeaturedAuthoredPublications\(1\)/);
+  assert.match(homeResearch, /<ExternalLink/);
+  assert.match(homeResearch, /fieldbook\.href/);
+  assert.match(homeResearch, /fieldbook\.cta/);
   assert.match(writingPage, /getFeaturedAuthoredPublications\(1\)/);
   assert.match(writingPage, /<FeaturedPublication/);
   assert.match(feature, /<ExternalLink/);
@@ -232,7 +236,7 @@ test("the fieldbook is featured from typed data without duplicating its copy in 
   assert.match(feature, /publication\.detail/);
   assert.match(feature, /publication\.cta/);
 
-  for (const source of [homeWriting, writingPage, feature]) {
+  for (const source of [homeWriting, homeResearch, writingPage, feature]) {
     assert.doesNotMatch(source, /systems-around-models\.vercel\.app/);
     assert.doesNotMatch(source, /40-chapter working map/);
   }
