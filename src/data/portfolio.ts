@@ -1442,6 +1442,15 @@ export const caseStudies: CaseStudy[] = [
         },
         {
           kind: "link",
+          eyebrow: "External signal · LangChain",
+          title: "The intelligence around an agent should remain ownable",
+          description:
+            "LangChain argues that companies should control the model, harness, context, and memory that shape an agent—and the learning loop that compounds with use. Waldo asks the personal question: how can one person keep that context, memory, authority, and continuity portable and on their side as models and tools change?",
+          href: "https://www.langchain.com/blog/own-your-intelligence",
+          cta: "Read Own Your Intelligence",
+        },
+        {
+          kind: "link",
           eyebrow: "External signal · YC RFS",
           title: "The consumer moment follows the cost curve",
           description:

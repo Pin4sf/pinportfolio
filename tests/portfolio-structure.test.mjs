@@ -557,6 +557,26 @@ test("Waldo pins current system truth to its actual public data", () => {
   assert.match(waldoCaseStudySource, /https:\/\/www\.heywaldo\.in\//);
 });
 
+test("Waldo publishes LangChain's ownership thesis as an external signal, not validation", async () => {
+  const { getPublicCaseStudies } = await import("../src/data/portfolio.ts");
+  const waldo = getPublicCaseStudies().find(({ slug }) => slug === "waldo");
+  assert.ok(waldo?.narrative, "Waldo should expose its public source list");
+
+  const source = waldo.narrative.artifacts.find(
+    ({ href }) =>
+      href === "https://www.langchain.com/blog/own-your-intelligence",
+  );
+  assert.ok(source, "LangChain's ownership signal is missing from Waldo");
+  assert.equal(source.eyebrow, "External signal · LangChain");
+  assert.match(source.description, /model, harness, context, and memory/i);
+  assert.match(source.description, /companies/i);
+  assert.match(source.description, /Waldo asks the personal question/i);
+  assert.doesNotMatch(
+    `${source.title} ${source.description}`,
+    /endors(?:e|ed|ement)|validat(?:e|ed|ion)|traction|product-market fit|proves?/i,
+  );
+});
+
 test("Waldo renders one section-boundary status path and no card status path", () => {
   assert.equal(
     [...caseStudyComponent.matchAll(/styles\.sectionStatus/g)].length,
