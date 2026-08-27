@@ -933,11 +933,11 @@ export const caseStudies: CaseStudy[] = [
       },
       heroEyebrow: "Waldo · The revised thesis",
       heroStatement:
-        "Machine execution is scaling. Human understanding and responsibility are not.",
+        "Agent capability is becoming abundant. Human attention, context, and responsibility are not.",
       heroQuote:
         "Machine execution can scale. Consequences do not automatically transfer with it.",
       heroBody:
-        "I’m building Waldo from an emerging pool of interlinked human constraints—not from one fixed workflow. As personal agents reach more people and specialist execution multiplies, Waldo is testing how one user-owned relationship can preserve understanding, authority, continuity, and responsibility across whatever agents and interfaces come next.",
+        "As people use more agents, they inherit coordination debt across sessions, decisions, tools, and unfinished work. As execution gets cheaper, the useful unit shifts from tokens consumed or runs completed to outcomes actually achieved and accepted.",
       heroImageAlt:
         "Waldo product system map connecting a person with agents, accounts, and work tools",
       heroImageCaption:
@@ -1040,8 +1040,8 @@ export const caseStudies: CaseStudy[] = [
           body: [
             "Kennel, a durable harness, and Waldo mobile are working internal foundations. Their integration, external product behavior, and market validation remain open work.",
             "Kennel has the strongest internal acceptance record: attributable Codex sessions, conversation history, live processing state, same-task continuation, first-message handling, and archive cleanup.",
-            "Kennel is the first home, not the whole vision. It is Waldo’s initial wedge for work already spread across several agents, giving that work one calm place to land—showing what the agent reports, what supports it, what needs judgment, and what remains unresolved without making the transcript the primary unit of value.",
-            "The current hypothesis is responsibility continuity. The longer direction is one user-owned Waldo carrying responsibilities across work and life. Production integrations, broad provider coverage, automatic artifact checks, and the complete cross-surface experience remain open work.",
+            "We start with Kennel on the Mac, where the problem is already acute for people running multiple coding agents. Kennel absorbs session-level coordination and brings back what changed, what is supported by evidence, what needs judgment, and what remains open.",
+            "Waldo is the layer above it: one private, user-owned personal agent designed to carry intent, context, permissions, memory, commitments, and responsibility across agents, tools, work, and life. Models and interfaces can change; Waldo remains on your side.",
           ],
           cards: [
             {
@@ -1081,7 +1081,7 @@ export const caseStudies: CaseStudy[] = [
             "I don’t believe one model or interface will own our entire digital life. People will use many models, specialist agents, tools, services, and devices. Waldo is being designed to join personal assistance and work orchestration around the same Outcome, authority boundaries, source material, and continuity.",
             "An organization may own some infrastructure. The individual should own the continuing relationship. Models, tools, employers, and surfaces can change; the context a person chooses to share, their permissions, corrections, responsibility history, and unresolved work should remain with them.",
             "The models may be rented and replaceable. What should compound for the person is their context, corrections, permissions, procedures, responsibility history, and accepted outcomes. Waldo is being built to keep that intelligence on the person’s side even as the machinery underneath changes.",
-            "Waldo may appear as mobile, a judgment in Kennel, messaging, voice, or eventually a physical form. Those are presences of one user-owned personal agent—not disconnected assistants that make the person rebuild context every time. One agent. Many presences. Still yours.",
+            "Over time, that same relationship can move beyond the chatbox into mobile, voice, wearables, ambient devices, and eventually physical interfaces. Those are presences of one user-owned personal agent—not disconnected assistants that make the person rebuild context every time. One agent. Many presences. Still yours.",
           ],
           cards: [
             {
@@ -1469,7 +1469,7 @@ export const caseStudies: CaseStudy[] = [
         },
       ],
       closing:
-        "Many agents may work for you. One should always remain on your side.",
+        "Many agents can work for you. One agent should know you, stay with you, and care whether the outcome actually became true.",
     },
     order: 1,
   },

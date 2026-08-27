@@ -528,6 +528,44 @@ test("Waldo thesis contains the self-falsifier", () => {
   assert.match(portfolio, /interruptions per accepted outcome/i);
 });
 
+test("Waldo connects abundant capability to Kennel, durable personal continuity, and outcome truth", async () => {
+  const { getPublicCaseStudies } = await import("../src/data/portfolio.ts");
+  const waldo = getPublicCaseStudies().find(({ slug }) => slug === "waldo");
+  assert.ok(waldo?.narrative, "Waldo should expose its public thesis");
+
+  assert.equal(
+    waldo.narrative.heroStatement,
+    "Agent capability is becoming abundant. Human attention, context, and responsibility are not.",
+  );
+  assert.match(waldo.narrative.heroBody, /coordination debt/i);
+  assert.match(
+    waldo.narrative.heroBody,
+    /outcomes actually achieved and accepted/i,
+  );
+
+  const kennel = waldo.narrative.sections.find(({ id }) => id === "kennel");
+  assert.ok(kennel, "Waldo should explain its first product wedge");
+  assert.match(kennel.body.join(" "), /We start with Kennel on the Mac/i);
+  assert.match(kennel.body.join(" "), /Waldo is the layer above it/i);
+  assert.match(
+    kennel.body.join(" "),
+    /intent, context, permissions, memory, commitments, and responsibility/i,
+  );
+
+  const relationship = waldo.narrative.sections.find(
+    ({ id }) => id === "one-system",
+  );
+  assert.ok(relationship, "Waldo should explain its longer relationship arc");
+  assert.match(
+    relationship.body.join(" "),
+    /mobile, voice, wearables, ambient devices, and eventually physical interfaces/i,
+  );
+  assert.equal(
+    waldo.narrative.closing,
+    "Many agents can work for you. One agent should know you, stay with you, and care whether the outcome actually became true.",
+  );
+});
+
 test("Waldo pins current system truth to its actual public data", () => {
   assert.match(
     waldoCaseStudySource,
